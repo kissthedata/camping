@@ -63,6 +63,19 @@ class _QuestionScreenState extends State<QuestionScreen> {
                 });
               },
             ),
+            CheckboxListTile(
+              title: const Text('등산'),
+              value: selectedAnswers.contains('등산'),
+              onChanged: (value) {
+                setState(() {
+                  if (value!) {
+                    selectedAnswers.add('등산');
+                  } else {
+                    selectedAnswers.remove('등산');
+                  }
+                });
+              },
+            ),
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
