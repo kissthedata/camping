@@ -1,4 +1,9 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.map_sample">
+
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+
     <application
         android:label="map_sample"
         android:name="${applicationName}"
@@ -29,7 +34,13 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+        
+        <!-- 네이버 맵 SDK의 Client ID를 설정 -->
+        <meta-data
+            android:name="com.naver.maps.map.CLIENT_ID"
+            android:value="2f9jiniswu" />
     </application>
+    
     <!-- Required to query activities that can process text, see:
          https://developer.android.com/training/package-visibility?hl=en and
          https://developer.android.com/reference/android/content/Intent#ACTION_PROCESS_TEXT.
