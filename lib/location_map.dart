@@ -1,5 +1,5 @@
-import 'package:geolocator/geolocator.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 
 class MyLocationWidget extends StatefulWidget {
   final Function(double, double) onLocationFetched;
@@ -11,9 +11,6 @@ class MyLocationWidget extends StatefulWidget {
 }
 
 class _MyLocationWidgetState extends State<MyLocationWidget> {
-  late String latitude;
-  late String longitude;
-
   Future<void> getGeoData() async {
     LocationPermission permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
@@ -25,10 +22,6 @@ class _MyLocationWidgetState extends State<MyLocationWidget> {
 
     Position position = await Geolocator.getCurrentPosition();
     widget.onLocationFetched(position.latitude, position.longitude);
-    setState(() {
-      latitude = position.latitude.toString();
-      longitude = position.longitude.toString();
-    });
   }
 
   @override
@@ -39,8 +32,13 @@ class _MyLocationWidgetState extends State<MyLocationWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: CircularProgressIndicator(),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('My Location'),
+      ),
+      body: Center(
+        child: CircularProgressIndicator(),
+      ),
     );
   }
 }

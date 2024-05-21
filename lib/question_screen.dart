@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:map_sample/map.dart';
+import 'package:map_sample/region.dart';
 
 class QuestionScreen extends StatefulWidget {
   @override
@@ -81,7 +82,7 @@ class _QuestionScreenState extends State<QuestionScreen> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => MyMap()),
+                  MaterialPageRoute(builder: (context) => RegionPage()),
                 );
               },
               child: const Icon(Icons.arrow_circle_right),
