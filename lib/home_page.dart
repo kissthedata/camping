@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:map_sample/question_screen.dart';
+import 'map_screen.dart';
+import 'question_screen.dart';
 
 class MyHomePage extends StatelessWidget {
   @override
@@ -33,13 +34,24 @@ class MyHomePage extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 30),
-                    ElevatedButton(onPressed: () {}, child: const Text("시작하기"))
+                    ElevatedButton(
+                      onPressed: () {
+                        final csvFiles = [
+                          {'path': 'assets/restroom.csv', 'image': 'assets/images/restroom.webp'},
+                          {'path': 'assets/locations.csv', 'image': 'assets/images/sunny.jpeg'}
+                        ];
+
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => MapScreen(csvFiles: csvFiles)),
+                        );
+                      },
+                      child: const Text("시작하기"),
+                    ),
                   ],
                 ),
               ),
-              SizedBox(
-                height: 100,
-              ),
+              SizedBox(height: 100),
               Container(
                 child: Column(
                   children: [

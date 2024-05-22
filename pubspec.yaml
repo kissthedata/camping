@@ -31,6 +31,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_naver_map: ^1.0.2
+  csv: ^6.0.0
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -65,6 +66,9 @@ flutter:
     - assets/images/차박.jpg
     - assets/images/지도.png
     - assets/images/코스.jpg
+    - assets/images/restroom.webp
+    - assets/locations.csv
+    - assets/restroom.csv
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 

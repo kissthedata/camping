@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:map_sample/map.dart';
+import 'map.dart';
 
 class CarCampingSite {
   final String name;
@@ -21,15 +21,13 @@ class RegionPage extends StatelessWidget {
       name: "동촌유원지",
       latitude: 35.8848,
       longitude: 128.6513,
-      imageUrl:
-          "https://blog.kakaocdn.net/dn/bMz8MN/btq2OqiQQUt/MEczMFE4GVVIUkiFItsDtK/img.jpg",
+      imageUrl: "https://blog.kakaocdn.net/dn/bMz8MN/btq2OqiQQUt/MEczMFE4GVVIUkiFItsDtK/img.jpg",
     ),
     CarCampingSite(
       name: "캠핑장 2",
       latitude: 35.1796,
       longitude: 129.0756,
-      imageUrl:
-          "https://mblogthumb-phinf.pstatic.net/MjAyMDA5MTZfODMg/MDAxNjAwMjU0NTU4NjUy.uDMBNtO1oB1jTNmRv3FsAlSPPv4LI8qqFSZuZfJkLoAg.exorX29ceGyWIqX292PECKha9Hx9iA4ifClIc5pqlIgg.JPEG.eum553/commonMBFCD332.jpg?type=w800",
+      imageUrl: "https://mblogthumb-phinf.pstatic.net/MjAyMDA5MTZfODMg/MDAxNjAwMjU0NTU4NjUy.uDMBNtO1oB1jTNmRv3FsAlSPPv4LI8qqFSZuZfJkLoAg.exorX29ceGyWIqX292PECKha9Hx9iA4ifClIc5pqlIgg.JPEG.eum553/commonMBFCD332.jpg?type=w800",
     ),
     // Add more sites here
   ];

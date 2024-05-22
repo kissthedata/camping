@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:map_sample/map.dart';
-import 'package:map_sample/region.dart';
+import 'region.dart';
 
 class QuestionScreen extends StatefulWidget {
   @override

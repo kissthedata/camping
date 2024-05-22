@@ -1,16 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
-import 'package:map_sample/home_page.dart';
-import 'package:geolocator/geolocator.dart';
+import 'home_page.dart';
 
-//a
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await NaverMapSdk.instance.initialize(
-      clientId: "2f9jiniswu",
-      onAuthFailed: (ex) {
-        print("********* 네이버맵 인증오류 : $ex *********");
-      });
+    clientId: "2f9jiniswu",
+  );
   runApp(MyApp());
 }
 
