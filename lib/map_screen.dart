@@ -26,7 +26,8 @@ class _MapScreenState extends State<MapScreen> {
     List<MapLocation> allLocations = [];
     for (var file in widget.csvFiles) {
       try {
-        List<MapLocation> locations = await loadLocationsFromCsv(file['path']!, file['image']!);
+        List<MapLocation> locations =
+            await loadLocationsFromCsv(file['path']!, file['image']!);
         allLocations.addAll(locations);
       } catch (e) {
         print('Error loading locations from ${file['path']}');
@@ -44,16 +45,29 @@ class _MapScreenState extends State<MapScreen> {
       return Center(child: CircularProgressIndicator());
     }
     return Scaffold(
-      body: NaverMap(
-        options: NaverMapViewOptions(
-          symbolScale: 1.2,
-          pickTolerance: 2,
-          initialCameraPosition: NCameraPosition(target: NLatLng(35.83840532, 128.5603346), zoom: 12),
-          mapType: NMapType.basic,
-        ),
-        onMapReady: (controller) {
-          _addMarkers(controller);
-        },
+      appBar: AppBar(
+        title: const Text("Naver Map"),
+      ),
+      body: Column(
+        children: [
+          Container(
+            alignment: Alignment.topCenter,
+            width: double.infinity,
+            height: 600,
+            child: NaverMap(
+              options: NaverMapViewOptions(
+                symbolScale: 1.2,
+                pickTolerance: 2,
+                initialCameraPosition: NCameraPosition(
+                    target: NLatLng(35.83840532, 128.5603346), zoom: 12),
+                mapType: NMapType.basic,
+              ),
+              onMapReady: (controller) {
+                _addMarkers(controller);
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -61,7 +75,8 @@ class _MapScreenState extends State<MapScreen> {
   Future<void> _addMarkers(NaverMapController controller) async {
     for (var location in _locations) {
       try {
-        final overlayImage = await NOverlayImage.fromAssetImage(location.imagePath);
+        final overlayImage =
+            await NOverlayImage.fromAssetImage(location.imagePath);
 
         final marker = NMarker(
           id: location.num,
