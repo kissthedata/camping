@@ -2,7 +2,7 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'package:csv/csv.dart';
 import 'map_location.dart';
 
-Future<List<MapLocation>> loadLocationsFromCsv(String csvFilePath, String imagePath) async {
+Future<List<MapLocation>> loadLocationsFromCsv(String csvFilePath) async {
   final locations = <MapLocation>[];
 
   try {
@@ -10,9 +10,7 @@ Future<List<MapLocation>> loadLocationsFromCsv(String csvFilePath, String imageP
     final List<List<dynamic>> rowsAsListOfValues = const CsvToListConverter().convert(csvString);
 
     for (var row in rowsAsListOfValues.skip(1)) {
-      if (row.length < 5) {
-        continue;
-      }
+      if (row.length < 8) continue;
 
       try {
         final location = MapLocation(
@@ -21,7 +19,10 @@ Future<List<MapLocation>> loadLocationsFromCsv(String csvFilePath, String imageP
           number: row[2].toString(),
           latitude: double.parse(row[3].toString()),
           longitude: double.parse(row[4].toString()),
-          imagePath: imagePath,
+          imagePath: row[5].toString(),
+          cookingAllowed: row[6].toString().toLowerCase() == 'true',
+          hasSink: row[7].toString().toLowerCase() == 'true',
+          isRestroom: csvFilePath.contains('restroom'),
         );
         locations.add(location);
       } catch (e) {

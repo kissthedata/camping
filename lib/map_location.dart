@@ -1,11 +1,13 @@
-// map_location.dart
 class MapLocation {
   final String num;
   final String place;
   final String number;
   final double latitude;
   final double longitude;
-  String imagePath; // 이미지 경로 추가
+  final String imagePath;
+  final bool cookingAllowed;
+  final bool hasSink;
+  final bool isRestroom;
 
   MapLocation({
     required this.num,
@@ -13,6 +15,9 @@ class MapLocation {
     required this.number,
     required this.latitude,
     required this.longitude,
-    this.imagePath = ''
+    required this.imagePath,
+    required this.cookingAllowed,
+    required this.hasSink,
+    required this.isRestroom,
   });
 }

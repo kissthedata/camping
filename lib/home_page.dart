@@ -16,76 +16,66 @@ class MyHomePage extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Container(
-                margin: EdgeInsets.only(bottom: 20.0),
-                child: Column(
-                  children: [
-                    Image.asset(
-                      "assets/images/지도.png",
-                      width: 100,
-                      fit: BoxFit.cover,
+              _buildSection(
+                context,
+                '지도 보기',
+                'assets/images/지도.png',
+                () {
+                  final csvFiles = [
+                    'assets/locations.csv',
+                    'assets/restroom.csv',
+                  ];
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => MapScreen(csvFiles: csvFiles),
                     ),
-                    const SizedBox(height: 20),
-                    const Text(
-                      '지도 보기',
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 30),
-                    ElevatedButton(
-                      onPressed: () {
-                        final csvFiles = [
-                          {'path': 'assets/restroom.csv', 'image': 'assets/images/restroom.webp'},
-                          {'path': 'assets/locations.csv', 'image': 'assets/images/sunny.jpeg'}
-                        ];
-
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => MapScreen(csvFiles: csvFiles)),
-                        );
-                      },
-                      child: const Text("시작하기"),
-                    ),
-                  ],
-                ),
+                  );
+                },
               ),
               SizedBox(height: 100),
-              Container(
-                child: Column(
-                  children: [
-                    Image.asset(
-                      "assets/images/코스.jpg",
-                      width: 100,
+              _buildSection(
+                context,
+                '차박지 코스 추천',
+                'assets/images/코스.jpg',
+                () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => QuestionScreen(),
                     ),
-                    const SizedBox(height: 20),
-                    const Text(
-                      '차박지 코스 추천',
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 20), // 간격 조정
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => QuestionScreen(),
-                          ),
-                        );
-                      },
-                      child: const Text('시작하기'),
-                    ),
-                  ],
-                ),
+                  );
+                },
               ),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildSection(BuildContext context, String title, String imagePath, VoidCallback onPressed) {
+    return Column(
+      children: [
+        Image.asset(
+          imagePath,
+          width: 100,
+          fit: BoxFit.cover,
+        ),
+        const SizedBox(height: 20),
+        Text(
+          title,
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: 20),
+        ElevatedButton(
+          onPressed: onPressed,
+          child: const Text("시작하기"),
+        ),
+      ],
     );
   }
 }

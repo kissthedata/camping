@@ -4,7 +4,7 @@ import 'utils.dart';
 import 'map_location.dart';
 
 class MapScreen extends StatefulWidget {
-  final List<Map<String, String>> csvFiles;
+  final List<String> csvFiles;
 
   MapScreen({required this.csvFiles});
 
@@ -15,6 +15,10 @@ class MapScreen extends StatefulWidget {
 class _MapScreenState extends State<MapScreen> {
   List<MapLocation> _locations = [];
   bool _loading = true;
+  bool _showRestrooms = true;
+  bool _showCampsites = true;
+  NaverMapController? _mapController;
+  List<NMarker> _markers = [];
 
   @override
   void initState() {
@@ -26,47 +30,34 @@ class _MapScreenState extends State<MapScreen> {
     List<MapLocation> allLocations = [];
     for (var file in widget.csvFiles) {
       try {
-        List<MapLocation> locations = await loadLocationsFromCsv(file['path']!, file['image']!);
+        List<MapLocation> locations = await loadLocationsFromCsv(file);
         allLocations.addAll(locations);
       } catch (e) {
-        print('Error loading locations from ${file['path']}');
+        print('Error loading locations from $file');
       }
     }
     setState(() {
       _locations = allLocations;
       _loading = false;
+      _updateMarkers();
     });
   }
 
-  @override
-  Widget build(BuildContext context) {
-    if (_loading) {
-      return Center(child: CircularProgressIndicator());
+  void _updateMarkers() {
+    if (_mapController != null) {
+      _mapController!.clearOverlays();
+      _addMarkers();
     }
-    return Scaffold(
-      body: NaverMap(
-        options: NaverMapViewOptions(
-          symbolScale: 1.2,
-          pickTolerance: 2,
-          initialCameraPosition: NCameraPosition(target: NLatLng(35.83840532, 128.5603346), zoom: 12),
-          mapType: NMapType.basic,
-        ),
-        onMapReady: (controller) {
-          _addMarkers(controller);
-        },
-      ),
-    );
   }
 
-  Future<void> _addMarkers(NaverMapController controller) async {
+  void _addMarkers() {
+    _markers.clear();
     for (var location in _locations) {
-      try {
-        final overlayImage = await NOverlayImage.fromAssetImage(location.imagePath);
-
+      if ((location.isRestroom && _showRestrooms) || (!location.isRestroom && _showCampsites)) {
         final marker = NMarker(
           id: location.num,
           position: NLatLng(location.latitude, location.longitude),
-          icon: overlayImage,
+          icon: NOverlayImage.fromAssetImage(location.imagePath.trim()),
           size: Size(30, 30),
         );
 
@@ -76,7 +67,14 @@ class _MapScreenState extends State<MapScreen> {
             builder: (context) {
               return AlertDialog(
                 title: Text(location.place),
-                content: Text('전화번호: ${location.number}'),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text('전화번호: ${location.number}'),
+                    Text('취사 가능 여부: ${location.cookingAllowed ? "가능" : "불가능"}'),
+                    Text('계수대 유무: ${location.hasSink ? "있음" : "없음"}'),
+                  ],
+                ),
                 actions: [
                   TextButton(
                     onPressed: () => Navigator.pop(context),
@@ -89,10 +87,73 @@ class _MapScreenState extends State<MapScreen> {
           return true;
         });
 
-        await controller.addOverlay(marker);
-      } catch (e) {
-        print('Error adding marker for ${location.place}');
+        _markers.add(marker);
+        _mapController!.addOverlay(marker);
       }
     }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('지도 보기'),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.filter_list),
+            onPressed: () {
+              showModalBottomSheet(
+                context: context,
+                builder: (context) {
+                  return StatefulBuilder(
+                    builder: (context, setState) {
+                      return Column(
+                        children: [
+                          SwitchListTile(
+                            title: Text('화장실'),
+                            value: _showRestrooms,
+                            onChanged: (value) {
+                              setState(() {
+                                _showRestrooms = value;
+                                _updateMarkers();
+                              });
+                            },
+                          ),
+                          SwitchListTile(
+                            title: Text('캠핑장'),
+                            value: _showCampsites,
+                            onChanged: (value) {
+                              setState(() {
+                                _showCampsites = value;
+                                _updateMarkers();
+                              });
+                            },
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                },
+              );
+            },
+          ),
+        ],
+      ),
+      body: _loading
+          ? Center(child: CircularProgressIndicator())
+          : NaverMap(
+              options: NaverMapViewOptions(
+                symbolScale: 1.2,
+                pickTolerance: 2,
+                initialCameraPosition: NCameraPosition(
+                    target: NLatLng(35.83840532, 128.5603346), zoom: 12),
+                mapType: NMapType.basic,
+              ),
+              onMapReady: (controller) {
+                _mapController = controller;
+                _addMarkers();
+              },
+            ),
+    );
   }
 }
