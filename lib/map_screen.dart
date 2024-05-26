@@ -53,7 +53,7 @@ class _MapScreenState extends State<MapScreen> {
           Container(
             alignment: Alignment.topCenter,
             width: double.infinity,
-            height: 600,
+            height: 700,
             child: NaverMap(
               options: NaverMapViewOptions(
                 symbolScale: 1.2,
