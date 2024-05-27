@@ -50,53 +50,38 @@ class _MyMapState extends State<MyMap> {
             ),
             Row(
               children: [
-                Container(
-                    alignment: Alignment.center,
-                    width: 130,
-                    height: 160,
-                    child: Column(
-                      children: [
-                        Image.asset(
-                          "assets/images/차박.jpg",
-                          width: 80,
-                        ),
-                        const SizedBox(
-                          height: 30,
-                        ),
-                        ElevatedButton(
-                          onPressed: () {},
-                          child: const Text(
-                            'T maps',
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                      ],
-                    )),
-                Container(
-                  alignment: Alignment.center,
-                  width: 130,
-                  height: 160,
-                  child: ElevatedButton(
-                    onPressed: () {},
-                    child: const Text(
-                      "Kakao Maps",
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                ),
-                Container(
-                  alignment: Alignment.center,
-                  width: 130,
-                  height: 160,
-                  child: ElevatedButton(
-                    onPressed: () {},
-                    child: const Text("Naver Maps", textAlign: TextAlign.center),
-                  ),
-                )
+                _buildMapButton(context, "", "T maps"),
+                _buildMapButton(context, "", "Kakao Maps"),
+                _buildMapButton(context, "", "Naver Maps"),
               ],
-            )
+            ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildMapButton(BuildContext context, String imagePath, String buttonText) {
+    return Container(
+      alignment: Alignment.center,
+      width: 130,
+      height: 160,
+      child: Column(
+        children: [
+          if (imagePath.isNotEmpty)
+            Image.asset(
+              imagePath,
+              width: 80,
+            ),
+          const SizedBox(height: 30),
+          ElevatedButton(
+            onPressed: () {},
+            child: Text(
+              buttonText,
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ],
       ),
     );
   }

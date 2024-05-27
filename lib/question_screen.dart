@@ -24,58 +24,10 @@ class _QuestionScreenState extends State<QuestionScreen> {
               style: TextStyle(fontSize: 24),
             ),
             const SizedBox(height: 20),
-            CheckboxListTile(
-              title: const Text('낚시'),
-              value: selectedAnswers.contains('낚시'),
-              onChanged: (value) {
-                setState(() {
-                  if (value!) {
-                    selectedAnswers.add('낚시');
-                  } else {
-                    selectedAnswers.remove('낚시');
-                  }
-                });
-              },
-            ),
-            CheckboxListTile(
-              title: const Text('축제'),
-              value: selectedAnswers.contains('축제'),
-              onChanged: (value) {
-                setState(() {
-                  if (value!) {
-                    selectedAnswers.add('축제');
-                  } else {
-                    selectedAnswers.remove('축제');
-                  }
-                });
-              },
-            ),
-            CheckboxListTile(
-              title: const Text('맛집탐방'),
-              value: selectedAnswers.contains('맛집탐방'),
-              onChanged: (value) {
-                setState(() {
-                  if (value!) {
-                    selectedAnswers.add('맛집탐방');
-                  } else {
-                    selectedAnswers.remove('맛집탐방');
-                  }
-                });
-              },
-            ),
-            CheckboxListTile(
-              title: const Text('등산'),
-              value: selectedAnswers.contains('등산'),
-              onChanged: (value) {
-                setState(() {
-                  if (value!) {
-                    selectedAnswers.add('등산');
-                  } else {
-                    selectedAnswers.remove('등산');
-                  }
-                });
-              },
-            ),
+            _buildCheckbox('낚시'),
+            _buildCheckbox('축제'),
+            _buildCheckbox('맛집탐방'),
+            _buildCheckbox('등산'),
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
@@ -89,6 +41,22 @@ class _QuestionScreenState extends State<QuestionScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildCheckbox(String title) {
+    return CheckboxListTile(
+      title: Text(title),
+      value: selectedAnswers.contains(title),
+      onChanged: (value) {
+        setState(() {
+          if (value!) {
+            selectedAnswers.add(title);
+          } else {
+            selectedAnswers.remove(title);
+          }
+        });
+      },
     );
   }
 }
