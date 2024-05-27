@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:map_sample/region.dart';
 import 'map_screen.dart';
 import 'question_screen.dart';
 
@@ -37,13 +38,21 @@ class MyHomePage extends StatelessWidget {
                     ElevatedButton(
                       onPressed: () {
                         final csvFiles = [
-                          {'path': 'assets/restroom.csv', 'image': 'assets/images/restroom.webp'},
-                          {'path': 'assets/locations.csv', 'image': 'assets/images/sunny.jpeg'}
+                          {
+                            'path': 'assets/restroom.csv',
+                            'image': 'assets/images/restroom.webp'
+                          },
+                          {
+                            'path': 'assets/locations.csv',
+                            'image': 'assets/images/sunny.jpeg'
+                          }
                         ];
 
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => MapScreen(csvFiles: csvFiles)),
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  MapScreen(csvFiles: csvFiles)),
                         );
                       },
                       child: const Text("시작하기"),
@@ -52,35 +61,73 @@ class MyHomePage extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 100),
-              Container(
-                child: Column(
-                  children: [
-                    Image.asset(
-                      "assets/images/코스.jpg",
-                      width: 100,
-                    ),
-                    const SizedBox(height: 20),
-                    const Text(
-                      '차박지 코스 추천',
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 20), // 간격 조정
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => QuestionScreen(),
+              Row(
+                children: [
+                  SizedBox(
+                    width: 40,
+                  ),
+                  Container(
+                    child: Column(
+                      children: [
+                        Image.asset(
+                          "assets/images/코스.jpg",
+                          width: 100,
+                        ),
+                        const SizedBox(height: 20),
+                        const Text(
+                          '차박지 보기',
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
                           ),
-                        );
-                      },
-                      child: const Text('시작하기'),
+                        ),
+                        const SizedBox(height: 20), // 간격 조정
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => RegionPage(),
+                              ),
+                            );
+                          },
+                          child: const Text('시작하기'),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                  SizedBox(width: 60),
+                  Container(
+                    child: Column(
+                      children: [
+                        Image.asset(
+                          "assets/images/추가.png",
+                          width: 100,
+                        ),
+                        const SizedBox(height: 20),
+                        const Text(
+                          '차박지 등록',
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 20), // 간격 조정
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => RegionPage(),
+                              ),
+                            );
+                          },
+                          child: const Text('시작하기'),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
