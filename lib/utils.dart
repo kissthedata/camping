@@ -32,8 +32,7 @@ Future<List<MapLocation>> loadLocationsFromCsv(String csvFilePath, String catego
       }
     }
   } catch (e) {
-    print('Error loading CSV: $csvFilePath');
-    print('Exception: $e');
+    print('Error loading CSV: $csvFilePath: $e');
   }
 
   return locations;

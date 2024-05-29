@@ -52,6 +52,7 @@ class _MapScreenState extends State<MapScreen> {
       _loading = false;
     });
     print('Total locations loaded: ${_locations.length}');
+    _updateMarkers();
   }
 
   @override
@@ -79,7 +80,9 @@ class _MapScreenState extends State<MapScreen> {
           mapType: NMapType.basic,
         ),
         onMapReady: (controller) {
-          _mapController = controller;
+          setState(() {
+            _mapController = controller;
+          });
           _addMarkers();
         },
       ),
@@ -147,50 +150,59 @@ class _MapScreenState extends State<MapScreen> {
       builder: (context) {
         return AlertDialog(
           title: Text('필터링'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              SwitchListTile(
-                title: Text('마트'),
-                value: showMarts,
-                onChanged: (value) {
-                  setState(() {
-                    showMarts = value;
-                  });
-                  Navigator.pop(context);
-                  _updateMarkers();
-                },
-              ),
-              SwitchListTile(
-                title: Text('편의점'),
-                value: showConvenienceStores,
-                onChanged: (value) {
-                  setState(() {
-                    showConvenienceStores = value;
-                  });
-                  Navigator.pop(context);
-                  _updateMarkers();
-                },
-              ),
-              SwitchListTile(
-                title: Text('화장실'),
-                value: showRestrooms,
-                onChanged: (value) {
-                  setState(() {
-                    showRestrooms = value;
-                  });
-                  Navigator.pop(context);
-                  _updateMarkers();
-                },
-              ),
-            ],
+          content: StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SwitchListTile(
+                    title: Text('마트'),
+                    value: showMarts,
+                    onChanged: (value) {
+                      setState(() {
+                        showMarts = value;
+                      });
+                      _updateMarkers();
+                    },
+                  ),
+                  SwitchListTile(
+                    title: Text('편의점'),
+                    value: showConvenienceStores,
+                    onChanged: (value) {
+                      setState(() {
+                        showConvenienceStores = value;
+                      });
+                      _updateMarkers();
+                    },
+                  ),
+                  SwitchListTile(
+                    title: Text('화장실'),
+                    value: showRestrooms,
+                    onChanged: (value) {
+                      setState(() {
+                        showRestrooms = value;
+                      });
+                      _updateMarkers();
+                    },
+                  ),
+                ],
+              );
+            },
           ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text('닫기'),
+            ),
+          ],
         );
       },
     );
   }
 
   void _updateMarkers() async {
+    if (_mapController == null) return; // Null check for _mapController
+
     _markers.clear();
     _mapController!.clearOverlays();
     await _addMarkers();

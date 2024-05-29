@@ -38,8 +38,8 @@ class MyHomePage extends StatelessWidget {
                       onPressed: () {
                         final csvFiles = [
                           'assets/convenience_store.csv',
-                          'assets/mart.csv',
                           'assets/restroom.csv',
+                          'assets/mart.csv',
                         ];
 
                         Navigator.push(
