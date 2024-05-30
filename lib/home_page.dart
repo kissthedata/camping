@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:map_sample/add_region.dart';
 import 'package:map_sample/region.dart';
 import 'map_screen.dart';
 import 'question_screen.dart';
@@ -118,7 +119,7 @@ class MyHomePage extends StatelessWidget {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => RegionPage(),
+                                builder: (context) => AddRegionScreen(),
                               ),
                             );
                           },
