@@ -36,15 +36,9 @@ class MyHomePage extends StatelessWidget {
                     const SizedBox(height: 30),
                     ElevatedButton(
                       onPressed: () {
-                        final csvFiles = [
-                          'assets/convenience_store.csv',
-                          'assets/restroom.csv',
-                          'assets/mart.csv',
-                        ];
-
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => MapScreen(csvFiles: csvFiles)),
+                          MaterialPageRoute(builder: (context) => MapScreen()),
                         );
                       },
                       child: const Text("시작하기"),
