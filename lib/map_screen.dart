@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'map_location.dart';
+import 'marker_utils.dart';
+import 'filter_dialog.dart';
 
 class MapScreen extends StatefulWidget {
   @override
@@ -73,7 +75,7 @@ class _MapScreenState extends State<MapScreen> {
         actions: [
           IconButton(
             icon: Icon(Icons.filter_list),
-            onPressed: _showFilterDialog, // 필터링 다이얼로그 표시
+            onPressed: () => _showFilterDialog(context), // 필터링 다이얼로그 표시
           ),
         ],
       ),
@@ -98,52 +100,11 @@ class _MapScreenState extends State<MapScreen> {
   Future<void> _addMarkers() async {
     if (_mapController == null) return;
 
-    List<NMarker> newMarkers = [];
-    for (var location in _locations) {
-      bool shouldAddMarker = false;
+    _markers = MarkerUtils.createMarkers(_locations, showMarts, showConvenienceStores, showRestrooms, context);
+    setState(() {});
 
-      // 필터 조건에 따라 마커를 추가할지 결정
-      if (location.category == 'mart' && showMarts) shouldAddMarker = true;
-      if (location.category == 'convenience_store' && showConvenienceStores) shouldAddMarker = true;
-      if (location.category == 'restroom' && showRestrooms) shouldAddMarker = true;
-
-      if (shouldAddMarker) {
-        final marker = NMarker(
-          id: location.num,
-          position: NLatLng(location.latitude, location.longitude),
-          caption: NOverlayCaption(text: location.place),
-          icon: NOverlayImage.fromAssetImage('assets/images/${location.category}.jpeg'),
-          size: Size(30, 30),
-        );
-
-        // 마커 클릭 시 다이얼로그 표시
-        marker.setOnTapListener((overlay) {
-          showDialog(
-            context: context,
-            builder: (context) {
-              return AlertDialog(
-                title: Text(location.place),
-                actions: [
-                  TextButton(
-                    onPressed: () => Navigator.pop(context),
-                    child: Text('닫기'),
-                  ),
-                ],
-              );
-            },
-          );
-          return true;
-        });
-
-        newMarkers.add(marker);
-      }
-    }
-
-    setState(() {
-      _markers = newMarkers;
-    });
-
-    for (var marker in newMarkers) {
+    // 마커를 비동기로 추가하여 메인 스레드 부하를 줄임
+    for (var marker in _markers) {
       try {
         await _mapController!.addOverlay(marker);
       } catch (e) {
@@ -153,57 +114,22 @@ class _MapScreenState extends State<MapScreen> {
   }
 
   // 필터링 다이얼로그를 표시하는 함수
-  void _showFilterDialog() {
+  void _showFilterDialog(BuildContext context) {
     showDialog(
       context: context,
       builder: (context) {
-        return AlertDialog(
-          title: Text('필터링'),
-          content: StatefulBuilder(
-            builder: (BuildContext context, StateSetter setState) {
-              return Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  SwitchListTile(
-                    title: Text('마트'),
-                    value: showMarts,
-                    onChanged: (value) {
-                      setState(() {
-                        showMarts = value;
-                      });
-                      _updateMarkers(); // 마커 업데이트
-                    },
-                  ),
-                  SwitchListTile(
-                    title: Text('편의점'),
-                    value: showConvenienceStores,
-                    onChanged: (value) {
-                      setState(() {
-                        showConvenienceStores = value;
-                      });
-                      _updateMarkers(); // 마커 업데이트
-                    },
-                  ),
-                  SwitchListTile(
-                    title: Text('화장실'),
-                    value: showRestrooms,
-                    onChanged: (value) {
-                      setState(() {
-                        showRestrooms = value;
-                      });
-                      _updateMarkers(); // 마커 업데이트
-                    },
-                  ),
-                ],
-              );
-            },
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text('닫기'),
-            ),
-          ],
+        return FilterDialog(
+          showMarts: showMarts,
+          showConvenienceStores: showConvenienceStores,
+          showRestrooms: showRestrooms,
+          onFilterChanged: (bool marts, bool convenienceStores, bool restrooms) {
+            setState(() {
+              showMarts = marts;
+              showConvenienceStores = convenienceStores;
+              showRestrooms = restrooms;
+            });
+            _updateMarkers(); // 마커 업데이트
+          },
         );
       },
     );

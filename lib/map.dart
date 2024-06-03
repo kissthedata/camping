@@ -50,9 +50,9 @@ class _MyMapState extends State<MyMap> {
             ),
             Row(
               children: [
-                _buildMapButton(context, "", "T maps"),
-                _buildMapButton(context, "", "Kakao Maps"),
-                _buildMapButton(context, "", "Naver Maps"),
+                _buildMapButton(context, "assets/images/tmap.jpeg", "T maps"),
+                _buildMapButton(context, "assets/images/kakao.png", "Kakao Maps"),
+                _buildMapButton(context, "assets/images/navermap.jpeg", "Naver Maps"),
               ],
             ),
           ],

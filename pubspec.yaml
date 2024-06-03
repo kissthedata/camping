@@ -40,6 +40,7 @@ dependencies:
   geolocator: ^11.0.0
   firebase_core: ^2.32.0
   firebase_database: ^10.5.7
+  geocoding: ^2.0.0
 
 dev_dependencies:
   flutter_test:
@@ -64,17 +65,19 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - assets/images/sunny.jpeg
+    - assets/images/차박지.jpeg
     - assets/images/차박.jpg
     - assets/images/지도.png
     - assets/images/코스.jpg
     - assets/images/restroom.jpeg
-    - assets/convenience_store.csv
-    - assets/mart.csv
-    - assets/restroom.csv
-    - assets/images/default_marker.png
     - assets/images/convenience_store.jpeg
+    - assets/images/추가.png
+    - assets/images/kakao.png
+    - assets/images/tmap.jpeg
+    - assets/images/navermap.jpeg
     - assets/images/mart.jpeg
+
+
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 
