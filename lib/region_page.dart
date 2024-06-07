@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
+import 'package:geolocator/geolocator.dart';
 
 class CarCampingSite {
   final String name;
@@ -39,12 +40,14 @@ class _RegionPageState extends State<RegionPage> {
   final List<CarCampingSite> _filteredCampingSites = [];
   NaverMapController? _mapController;
   final PanelController _panelController = PanelController();
-  bool showRestRoom = false;
-  bool showSink = false;
-  bool showCook = false;
-  bool showAnimal = false;
-  bool showWater = false;
-  bool showParkinglot = false;
+  bool showRestRoom = true;
+  bool showSink = true;
+  bool showCook = true;
+  bool showAnimal = true;
+  bool showWater = true;
+  bool showParkinglot = true;
+
+  NMarker? _currentLocationMarker;
 
   @override
   void initState() {
@@ -94,35 +97,6 @@ class _RegionPageState extends State<RegionPage> {
       icon: NOverlayImage.fromAssetImage('assets/images/camping_site.png'),
       size: Size(30, 30),
     );
-    marker.setOnTapListener((overlay) {
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text(site.name),
-            content: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                if (site.restRoom) Text('공중화장실'),
-                if (site.sink) Text('개수대'),
-                if (site.cook) Text('취사'),
-                if (site.animal) Text('반려동물'),
-                if (site.water) Text('수돗물'),
-                if (site.parkinglot) Text('주차장'),
-              ],
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: Text('닫기'),
-              ),
-            ],
-          );
-        },
-      );
-      return true;
-    });
     _mapController?.addOverlay(marker);
   }
 
@@ -130,12 +104,12 @@ class _RegionPageState extends State<RegionPage> {
     setState(() {
       _filteredCampingSites.clear();
       for (var site in _campingSites) {
-        if ((!showRestRoom || site.restRoom) &&
-            (!showSink || site.sink) &&
-            (!showCook || site.cook) &&
-            (!showAnimal || site.animal) &&
-            (!showWater || site.water) &&
-            (!showParkinglot || site.parkinglot)) {
+        if ((showRestRoom && site.restRoom) ||
+            (showSink && site.sink) ||
+            (showCook && site.cook) ||
+            (showAnimal && site.animal) ||
+            (showWater && site.water) ||
+            (showParkinglot && site.parkinglot)) {
           _filteredCampingSites.add(site);
         }
       }
@@ -221,6 +195,29 @@ class _RegionPageState extends State<RegionPage> {
     );
   }
 
+  Future<void> _getCurrentLocation() async {
+    LocationPermission permission = await Geolocator.requestPermission();
+    if (permission == LocationPermission.denied || permission == LocationPermission.deniedForever) {
+      // Handle the case where permission is denied
+      return;
+    }
+
+    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    NLatLng currentPosition = NLatLng(position.latitude, position.longitude);
+
+    setState(() {
+      _currentLocationMarker = NMarker(
+        id: 'current_location',
+        position: currentPosition,
+        caption: NOverlayCaption(text: '현재 위치'),
+        icon: NOverlayImage.fromAssetImage('assets/images/current_location.png'), // Use a suitable icon
+        size: Size(30, 30),
+      );
+      _mapController?.addOverlay(_currentLocationMarker!);
+      _updateCameraPosition(currentPosition);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -291,21 +288,14 @@ class _RegionPageState extends State<RegionPage> {
               },
             ),
           ),
-          if (_panelController.isAttached)
-            Positioned(
-              top: MediaQuery.of(context).size.height * 0.1,
-              right: 16,
-              child: ElevatedButton(
-                onPressed: () {
-                  if (_panelController.isPanelOpen) {
-                    _panelController.close();
-                  } else {
-                    _panelController.open();
-                  }
-                },
-                child: Text(_panelController.isPanelOpen ? '리스트보기' : '리스트보기'),
-              ),
+          Positioned(
+            left: 16,
+            top: 80,
+            child: FloatingActionButton(
+              onPressed: _getCurrentLocation,
+              child: Icon(Icons.gps_fixed),
             ),
+          ),
         ],
       ),
     );
