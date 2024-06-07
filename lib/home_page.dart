@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'map_screen.dart';
-import 'question_screen.dart';
 import 'add_camping_site.dart';
+import 'region_page.dart';
 
 class MyHomePage extends StatelessWidget {
   @override
@@ -45,11 +45,11 @@ class MyHomePage extends StatelessWidget {
               ),
             ),
           ),
-          // 하단 영역: 차박지 코스 추천과 차박지 등록 버튼을 좌우로 배치
+          // 하단 영역: 차박지 보기와 차박지 등록 버튼을 좌우로 배치
           Expanded(
             child: Row(
               children: [
-                // 왼쪽: 차박지 코스 추천
+                // 왼쪽: 차박지 보기
                 Expanded(
                   child: Center(
                     child: Column(
@@ -73,7 +73,7 @@ class MyHomePage extends StatelessWidget {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => QuestionScreen(),
+                                builder: (context) => RegionPage(),
                               ),
                             );
                           },

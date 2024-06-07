@@ -23,7 +23,7 @@ class MarkerUtils {
           id: location.num,
           position: NLatLng(location.latitude, location.longitude),
           caption: NOverlayCaption(text: location.place),
-          icon: NOverlayImage.fromAssetImage('assets/images/${location.category}.jpeg'),
+          icon: NOverlayImage.fromAssetImage('assets/images/${location.category}.png'),
           size: Size(30, 30),
         );
 
