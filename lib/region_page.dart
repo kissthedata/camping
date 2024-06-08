@@ -127,6 +127,7 @@ class _RegionPageState extends State<RegionPage> {
       title: Text(title),
       value: value,
       onChanged: onChanged,
+      activeColor: Color(0xFF162233), // Navy 색상
     );
   }
 
@@ -210,7 +211,7 @@ class _RegionPageState extends State<RegionPage> {
         id: 'current_location',
         position: currentPosition,
         caption: NOverlayCaption(text: '현재 위치'),
-        icon: NOverlayImage.fromAssetImage('assets/images/current_location.png'), // Use a suitable icon
+        icon: NOverlayImage.fromAssetImage('assets/images/지도.png'), // Use a suitable icon
         size: Size(30, 30),
       );
       _mapController?.addOverlay(_currentLocationMarker!);
@@ -253,47 +254,72 @@ class _RegionPageState extends State<RegionPage> {
             panelSnapping: true,
             minHeight: 100,
             maxHeight: MediaQuery.of(context).size.height * 0.7,
-            panel: ListView.builder(
-              itemCount: _filteredCampingSites.length,
-              itemBuilder: (context, index) {
-                final site = _filteredCampingSites[index];
-                return Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: Card(
-                    child: ListTile(
-                      leading: site.imageUrl.isNotEmpty
-                          ? Image.network(
-                              site.imageUrl,
-                              width: 150,
-                            )
-                          : null,
-                      title: Text(site.name),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          if (site.restRoom) Text('공중화장실'),
-                          if (site.sink) Text('개수대'),
-                          if (site.cook) Text('취사'),
-                          if (site.animal) Text('반려동물'),
-                          if (site.water) Text('수돗물'),
-                          if (site.parkinglot) Text('주차장'),
-                        ],
+            panel: Stack(
+              children: [
+                ListView.builder(
+                  itemCount: _filteredCampingSites.length,
+                  itemBuilder: (context, index) {
+                    final site = _filteredCampingSites[index];
+                    return Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: Card(
+                        shape: RoundedRectangleBorder(
+                          side: BorderSide(color: Color(0xFF162233), width: 2), // Navy 색상 테두리
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: ListTile(
+                          leading: site.imageUrl.isNotEmpty
+                              ? Image.network(
+                                  site.imageUrl,
+                                  width: 150,
+                                )
+                              : null,
+                          title: Text(site.name),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              if (site.restRoom) Text('공중화장실'),
+                              if (site.sink) Text('개수대'),
+                              if (site.cook) Text('취사'),
+                              if (site.animal) Text('반려동물'),
+                              if (site.water) Text('수돗물'),
+                              if (site.parkinglot) Text('주차장'),
+                            ],
+                          ),
+                          onTap: () {
+                            _updateCameraPosition(NLatLng(site.latitude, site.longitude));
+                          },
+                        ),
                       ),
-                      onTap: () {
-                        _updateCameraPosition(NLatLng(site.latitude, site.longitude));
-                      },
-                    ),
+                    );
+                  },
+                ),
+                Positioned(
+                  right: 16,
+                  top: 16,
+                  child: FloatingActionButton(
+                    backgroundColor: Color(0xFF162233), // Navy 색상
+                    onPressed: () {
+                      if (_panelController.isPanelOpen) {
+                        _panelController.close();
+                      } else {
+                        _panelController.open();
+                      }
+                    },
+                    child: Icon(Icons.list, color: Colors.white), // 하얀색 아이콘
                   ),
-                );
-              },
+                ),
+              ],
             ),
           ),
           Positioned(
             left: 16,
             top: 80,
             child: FloatingActionButton(
+              backgroundColor: Color(0xFF162233), // Navy 색상
               onPressed: _getCurrentLocation,
-              child: Icon(Icons.gps_fixed),
+              heroTag: 'regionPageHeroTag',
+              child: Icon(Icons.gps_fixed, color: Colors.white), // 하얀색 아이콘
             ),
           ),
         ],

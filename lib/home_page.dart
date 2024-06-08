@@ -8,7 +8,8 @@ class MyHomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('편안차박'),
+        title: Text('편안차박', style: TextStyle(color: Colors.white)),
+        centerTitle: true,
       ),
       body: Column(
         children: [
@@ -18,20 +19,27 @@ class MyHomePage extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Image.asset(
-                    "assets/images/지도.png",
-                    width: 100,
-                    fit: BoxFit.cover,
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 20),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Color(0xFF162233), width: 2),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Image.asset(
+                      "assets/images/지도.png",
+                      width: 100,
+                      fit: BoxFit.cover,
+                    ),
                   ),
-                  const SizedBox(height: 20),
                   const Text(
                     '지도 보기',
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
+                      color: Color(0xFF162233),
                     ),
                   ),
-                  const SizedBox(height: 30),
+                  const SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: () {
                       Navigator.push(
@@ -39,7 +47,7 @@ class MyHomePage extends StatelessWidget {
                         MaterialPageRoute(builder: (context) => MapScreen()),
                       );
                     },
-                    child: const Text("시작하기"),
+                    child: const Text("시작하기", style: TextStyle(color: Colors.white)),
                   ),
                 ],
               ),
@@ -55,16 +63,23 @@ class MyHomePage extends StatelessWidget {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Image.asset(
-                          "assets/images/코스.jpg",
-                          width: 100,
+                        Container(
+                          margin: const EdgeInsets.only(bottom: 20),
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Color(0xFF162233), width: 2),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Image.asset(
+                            "assets/images/코스.jpg",
+                            width: 100,
+                          ),
                         ),
-                        const SizedBox(height: 20),
                         const Text(
                           '차박지 보기',
                           style: TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
+                            color: Color(0xFF162233),
                           ),
                         ),
                         const SizedBox(height: 20),
@@ -77,7 +92,7 @@ class MyHomePage extends StatelessWidget {
                               ),
                             );
                           },
-                          child: const Text('시작하기'),
+                          child: const Text('시작하기', style: TextStyle(color: Colors.white)),
                         ),
                       ],
                     ),
@@ -89,16 +104,23 @@ class MyHomePage extends StatelessWidget {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Image.asset(
-                          "assets/images/추가.png",
-                          width: 100,
+                        Container(
+                          margin: const EdgeInsets.only(bottom: 20),
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Color(0xFF162233), width: 2),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Image.asset(
+                            "assets/images/추가.png",
+                            width: 100,
+                          ),
                         ),
-                        const SizedBox(height: 20),
                         const Text(
                           '차박지 등록',
                           style: TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
+                            color: Color(0xFF162233),
                           ),
                         ),
                         const SizedBox(height: 20),
@@ -111,7 +133,7 @@ class MyHomePage extends StatelessWidget {
                               ),
                             );
                           },
-                          child: const Text('등록하기'),
+                          child: const Text('등록하기', style: TextStyle(color: Colors.white)),
                         ),
                       ],
                     ),

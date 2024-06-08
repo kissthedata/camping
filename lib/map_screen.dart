@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:geolocator/geolocator.dart';
 import 'map_location.dart';
 import 'marker_utils.dart';
 import 'filter_dialog.dart';
@@ -18,6 +19,7 @@ class _MapScreenState extends State<MapScreen> {
   bool showMarts = true;
   bool showConvenienceStores = true;
   bool showRestrooms = true;
+  NMarker? _currentLocationMarker;
 
   @override
   void initState() {
@@ -62,6 +64,35 @@ class _MapScreenState extends State<MapScreen> {
     }
   }
 
+  Future<void> _getCurrentLocation() async {
+    LocationPermission permission = await Geolocator.requestPermission();
+    if (permission == LocationPermission.denied || permission == LocationPermission.deniedForever) {
+      // Handle the case where permission is denied
+      return;
+    }
+
+    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    NLatLng currentPosition = NLatLng(position.latitude, position.longitude);
+
+    setState(() {
+      _currentLocationMarker = NMarker(
+        id: 'current_location',
+        position: currentPosition,
+        caption: NOverlayCaption(text: '현재 위치'),
+        icon: NOverlayImage.fromAssetImage('assets/images/지도.png'), // Use a suitable icon
+        size: Size(30, 30),
+      );
+      _mapController?.addOverlay(_currentLocationMarker!);
+      _updateCameraPosition(currentPosition);
+    });
+  }
+
+  void _updateCameraPosition(NLatLng position) {
+    _mapController?.updateCamera(
+      NCameraUpdate.scrollAndZoomTo(target: position, zoom: 15),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     if (_loading) {
@@ -79,19 +110,33 @@ class _MapScreenState extends State<MapScreen> {
           ),
         ],
       ),
-      body: NaverMap(
-        options: NaverMapViewOptions(
-          symbolScale: 1.2,
-          pickTolerance: 2,
-          initialCameraPosition: NCameraPosition(target: NLatLng(35.83840532, 128.5603346), zoom: 12),
-          mapType: NMapType.basic,
-        ),
-        onMapReady: (controller) {
-          setState(() {
-            _mapController = controller;
-          });
-          _addMarkers(); // 마커 추가
-        },
+      body: Stack(
+        children: [
+          NaverMap(
+            options: NaverMapViewOptions(
+              symbolScale: 1.2,
+              pickTolerance: 2,
+              initialCameraPosition: NCameraPosition(target: NLatLng(35.83840532, 128.5603346), zoom: 12),
+              mapType: NMapType.basic,
+            ),
+            onMapReady: (controller) {
+              setState(() {
+                _mapController = controller;
+              });
+              _addMarkers(); // 마커 추가
+            },
+          ),
+          Positioned(
+            left: 16,
+            top: 80,
+            child: FloatingActionButton(
+              onPressed: _getCurrentLocation,
+              child: Icon(Icons.gps_fixed, color: Colors.white),
+              backgroundColor: Color(0xFF162233),
+              heroTag: 'regionPageHeroTag', // 버튼의 배경색을 변경
+            ),
+          ),
+        ],
       ),
     );
   }

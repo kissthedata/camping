@@ -29,7 +29,7 @@ class _MyMapState extends State<MyMap> {
             Container(
               alignment: Alignment.topCenter,
               width: double.infinity,
-              height: 600, // 원하는 높이로 설정
+              height: 600,
               child: NaverMap(
                 options: NaverMapViewOptions(
                   initialCameraPosition: NCameraPosition(

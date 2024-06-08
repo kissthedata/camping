@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:map_sample/home_page.dart';
+import 'full_screen_map.dart';
 
 class AddCampingSiteScreen extends StatefulWidget {
   @override
@@ -24,6 +26,8 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
 
   NaverMapController? _mapController;
   NLatLng? _selectedLocation;
+  NMarker? _selectedMarker;
+  NMarker? _currentLocationMarker;
 
   // 데이터베이스에 차박지 추가
   void _addCampingSite() {
@@ -67,6 +71,83 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
     }
   }
 
+  void _updateMarker(NLatLng position) {
+    if (_selectedMarker != null) {
+      _mapController?.deleteOverlay(_selectedMarker!.info);
+    }
+    _selectedMarker = NMarker(
+      id: 'selectedMarker',
+      position: position,
+      caption: NOverlayCaption(text: '선택한 위치'),
+      icon: NOverlayImage.fromAssetImage('assets/images/camping_site.png'),
+      size: Size(30, 30),
+    );
+    _mapController?.addOverlay(_selectedMarker!);
+  }
+
+  void _onMapTapped(NPoint point, NLatLng latLng) {
+    setState(() {
+      _selectedLocation = latLng;
+      _latitudeController.text = latLng.latitude.toString();
+      _longitudeController.text = latLng.longitude.toString();
+      _updateMarker(latLng);
+    });
+  }
+
+  Future<void> _getCurrentLocation() async {
+    LocationPermission permission = await Geolocator.requestPermission();
+    if (permission == LocationPermission.denied || permission == LocationPermission.deniedForever) {
+      return;
+    }
+
+    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    NLatLng currentPosition = NLatLng(position.latitude, position.longitude);
+
+    setState(() {
+      _currentLocationMarker = NMarker(
+        id: 'current_location',
+        position: currentPosition,
+        caption: NOverlayCaption(text: '현재 위치'),
+        icon: NOverlayImage.fromAssetImage('assets/images/지도.png'), // Use a suitable icon
+        size: Size(30, 30),
+      );
+      _mapController?.addOverlay(_currentLocationMarker!);
+      _mapController?.updateCamera(
+        NCameraUpdate.scrollAndZoomTo(target: currentPosition, zoom: 15),
+      );
+    });
+  }
+
+  void _openFullScreenMap() async {
+    if (_selectedLocation == null) return;
+
+    NLatLng selectedPosition = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => FullScreenMap(
+          initialPosition: _selectedLocation!,
+          onLocationSelected: (latLng) {
+            setState(() {
+              _selectedLocation = latLng;
+              _latitudeController.text = latLng.latitude.toString();
+              _longitudeController.text = latLng.longitude.toString();
+              _updateMarker(latLng);
+            });
+          },
+        ),
+      ),
+    );
+
+    if (selectedPosition != null) {
+      setState(() {
+        _selectedLocation = selectedPosition;
+        _latitudeController.text = selectedPosition.latitude.toString();
+        _longitudeController.text = selectedPosition.longitude.toString();
+        _updateMarker(selectedPosition);
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -83,26 +164,43 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
                 Container(
                   height: 200,
                   width: double.infinity,
-                  child: NaverMap(
-                    options: NaverMapViewOptions(
-                      symbolScale: 1.2,
-                      pickTolerance: 2,
-                      initialCameraPosition: NCameraPosition(
-                        target: NLatLng(35.83840532, 128.5603346),
-                        zoom: 12,
+                  child: Stack(
+                    children: [
+                      NaverMap(
+                        options: NaverMapViewOptions(
+                          symbolScale: 1.2,
+                          pickTolerance: 2,
+                          initialCameraPosition: NCameraPosition(
+                            target: NLatLng(35.83840532, 128.5603346),
+                            zoom: 12,
+                          ),
+                          mapType: NMapType.basic,
+                        ),
+                        onMapReady: (controller) {
+                          _mapController = controller;
+                        },
+                        onMapTapped: _onMapTapped,
                       ),
-                      mapType: NMapType.basic,
-                    ),
-                    onMapReady: (controller) {
-                      _mapController = controller;
-                    },
-                    onMapTapped: (point, latLng) {
-                      setState(() {
-                        _selectedLocation = latLng;
-                        _latitudeController.text = latLng.latitude.toString();
-                        _longitudeController.text = latLng.longitude.toString();
-                      });
-                    },
+                      Positioned(
+                        left: 16,
+                        top: 16,
+                        child: FloatingActionButton(
+                          onPressed: _getCurrentLocation,
+                          child: Icon(Icons.gps_fixed, color: Colors.white),
+                          backgroundColor: Color(0xFF162233),// 버튼의 배경색을 변경
+                          heroTag: 'regionPageHeroTag', // 고유한 heroTag 추가 
+                        ),
+                      ),
+                      Positioned(
+                        right: 16,
+                        top: 16,
+                        child: FloatingActionButton(
+                          onPressed: _openFullScreenMap,
+                          child: Icon(Icons.fullscreen, color: Colors.white),
+                          backgroundColor: Color(0xFF162233), // 버튼의 배경색을 변경
+                        ),
+                      ),
+                    ],
                   ),
                 ),
                 const SizedBox(height: 20),
