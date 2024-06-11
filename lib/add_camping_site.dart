@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart';
-import 'package:firebase_database/firebase_database.dart';
-import 'package:flutter_naver_map/flutter_naver_map.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:map_sample/home_page.dart';
-import 'full_screen_map.dart';
+import 'package:flutter/material.dart'; // Flutter 기본 UI 구성 요소
+import 'package:firebase_database/firebase_database.dart'; // Firebase Realtime Database 패키지
+import 'package:flutter_naver_map/flutter_naver_map.dart'; // Naver Map SDK 패키지
+import 'package:geolocator/geolocator.dart'; // 위치 정보 패키지
+import 'package:map_sample/home_page.dart'; // 홈 페이지 파일
+import 'full_screen_map.dart'; // 전체 화면 지도 파일
 
 class AddCampingSiteScreen extends StatefulWidget {
   @override
@@ -11,29 +11,29 @@ class AddCampingSiteScreen extends StatefulWidget {
 }
 
 class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
-  final _formKey = GlobalKey<FormState>();
-  final _placeController = TextEditingController();
-  final _detailsController = TextEditingController();
-  final _latitudeController = TextEditingController();
-  final _longitudeController = TextEditingController();
-  bool _isRestRoom = false;
-  bool _isSink = false;
-  bool _isCook = false;
-  bool _isAnimal = false;
-  bool _isWater = false;
-  bool _isParkinglot = false;
-  String _category = 'camping_site';
+  final _formKey = GlobalKey<FormState>(); // 폼 키
+  final _placeController = TextEditingController(); // 장소 컨트롤러
+  final _detailsController = TextEditingController(); // 상세 정보 컨트롤러
+  final _latitudeController = TextEditingController(); // 위도 컨트롤러
+  final _longitudeController = TextEditingController(); // 경도 컨트롤러
+  bool _isRestRoom = false; // 공중화장실 여부
+  bool _isSink = false; // 개수대 여부
+  bool _isCook = false; // 취사 여부
+  bool _isAnimal = false; // 반려동물 여부
+  bool _isWater = false; // 수돗물 여부
+  bool _isParkinglot = false; // 주차장 여부
+  String _category = 'camping_site'; // 카테고리
 
-  NaverMapController? _mapController;
-  NLatLng? _selectedLocation;
-  NMarker? _selectedMarker;
-  NMarker? _currentLocationMarker;
+  NaverMapController? _mapController; // 네이버 지도 컨트롤러
+  NLatLng? _selectedLocation; // 선택된 위치
+  NMarker? _selectedMarker; // 선택된 마커
+  NMarker? _currentLocationMarker; // 현재 위치 마커
 
   // 데이터베이스에 차박지 추가
   void _addCampingSite() {
-    if (_formKey.currentState!.validate()) {
-      DatabaseReference databaseReference = FirebaseDatabase.instance.ref().child('car_camping_sites').push();
-      Map<String, dynamic> data = {
+    if (_formKey.currentState!.validate()) { // 폼이 유효한지 확인
+      DatabaseReference databaseReference = FirebaseDatabase.instance.ref().child('car_camping_sites').push(); // 데이터베이스 참조 생성
+      Map<String, dynamic> data = { // 저장할 데이터 맵
         'place': _placeController.text,
         'latitude': _selectedLocation!.latitude,
         'longitude': _selectedLocation!.longitude,
@@ -47,15 +47,15 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
         'details': _detailsController.text,
       };
 
-      databaseReference.set(data).then((_) {
+      databaseReference.set(data).then((_) { // 데이터베이스에 데이터 저장
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('차박지가 성공적으로 등록되었습니다.')),
+          SnackBar(content: Text('차박지가 성공적으로 등록되었습니다.')), // 성공 메시지 표시
         );
-        _placeController.clear();
+        _placeController.clear(); // 입력 필드 초기화
         _detailsController.clear();
         _latitudeController.clear();
         _longitudeController.clear();
-        setState(() {
+        setState(() { // 상태 초기화
           _isRestRoom = false;
           _isSink = false;
           _isCook = false;
@@ -63,9 +63,9 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
           _isWater = false;
           _isParkinglot = false;
         });
-      }).catchError((error) {
+      }).catchError((error) { // 오류 처리
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('차박지 등록에 실패했습니다: $error')),
+          SnackBar(content: Text('차박지 등록에 실패했습니다: $error')), // 오류 메시지 표시
         );
       });
     }
@@ -73,7 +73,7 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
 
   void _updateMarker(NLatLng position) {
     if (_selectedMarker != null) {
-      _mapController?.deleteOverlay(_selectedMarker!.info);
+      _mapController?.deleteOverlay(_selectedMarker!.info); // 기존 마커 삭제
     }
     _selectedMarker = NMarker(
       id: 'selectedMarker',
@@ -82,25 +82,26 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
       icon: NOverlayImage.fromAssetImage('assets/images/camping_site.png'),
       size: Size(30, 30),
     );
-    _mapController?.addOverlay(_selectedMarker!);
+    _mapController?.addOverlay(_selectedMarker!); // 새 마커 추가
   }
 
+  // 지도를 탭했을 때 호출되는 함수
   void _onMapTapped(NPoint point, NLatLng latLng) {
     setState(() {
-      _selectedLocation = latLng;
-      _latitudeController.text = latLng.latitude.toString();
-      _longitudeController.text = latLng.longitude.toString();
-      _updateMarker(latLng);
+      _selectedLocation = latLng; // 선택된 위치 업데이트
+      _latitudeController.text = latLng.latitude.toString(); // 위도 업데이트
+      _longitudeController.text = latLng.longitude.toString(); // 경도 업데이트
+      _updateMarker(latLng); // 마커 업데이트
     });
   }
 
   Future<void> _getCurrentLocation() async {
-    LocationPermission permission = await Geolocator.requestPermission();
+    LocationPermission permission = await Geolocator.requestPermission(); // 위치 권한 요청
     if (permission == LocationPermission.denied || permission == LocationPermission.deniedForever) {
       return;
     }
 
-    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high); // 현재 위치 가져오기
     NLatLng currentPosition = NLatLng(position.latitude, position.longitude);
 
     setState(() {
@@ -108,10 +109,10 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
         id: 'current_location',
         position: currentPosition,
         caption: NOverlayCaption(text: '현재 위치'),
-        icon: NOverlayImage.fromAssetImage('assets/images/지도.png'), // Use a suitable icon
+        icon: NOverlayImage.fromAssetImage('assets/images/지도.png'),
         size: Size(30, 30),
       );
-      _mapController?.addOverlay(_currentLocationMarker!);
+      _mapController?.addOverlay(_currentLocationMarker!); // 현재 위치 마커 추가
       _mapController?.updateCamera(
         NCameraUpdate.scrollAndZoomTo(target: currentPosition, zoom: 15),
       );
@@ -128,10 +129,10 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
           initialPosition: _selectedLocation!,
           onLocationSelected: (latLng) {
             setState(() {
-              _selectedLocation = latLng;
-              _latitudeController.text = latLng.latitude.toString();
-              _longitudeController.text = latLng.longitude.toString();
-              _updateMarker(latLng);
+              _selectedLocation = latLng; // 선택된 위치 업데이트
+              _latitudeController.text = latLng.latitude.toString(); // 위도 업데이트
+              _longitudeController.text = latLng.longitude.toString(); // 경도 업데이트
+              _updateMarker(latLng); // 마커 업데이트
             });
           },
         ),
@@ -140,10 +141,10 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
 
     if (selectedPosition != null) {
       setState(() {
-        _selectedLocation = selectedPosition;
-        _latitudeController.text = selectedPosition.latitude.toString();
-        _longitudeController.text = selectedPosition.longitude.toString();
-        _updateMarker(selectedPosition);
+        _selectedLocation = selectedPosition; // 선택된 위치 업데이트
+        _latitudeController.text = selectedPosition.latitude.toString(); // 위도 업데이트
+        _longitudeController.text = selectedPosition.longitude.toString(); // 경도 업데이트
+        _updateMarker(selectedPosition); // 마커 업데이트
       });
     }
   }
@@ -177,27 +178,27 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
                           mapType: NMapType.basic,
                         ),
                         onMapReady: (controller) {
-                          _mapController = controller;
+                          _mapController = controller; // 지도 컨트롤러 초기화
                         },
-                        onMapTapped: _onMapTapped,
+                        onMapTapped: _onMapTapped, // 지도 탭 콜백 함수 설정
                       ),
                       Positioned(
                         left: 16,
                         top: 16,
                         child: FloatingActionButton(
-                          onPressed: _getCurrentLocation,
+                          onPressed: _getCurrentLocation, // 현재 위치 가져오기 함수 호출
                           child: Icon(Icons.gps_fixed, color: Colors.white),
-                          backgroundColor: Color(0xFF162233),// 버튼의 배경색을 변경
-                          heroTag: 'regionPageHeroTag', // 고유한 heroTag 추가 
+                          backgroundColor: Color(0xFF162233),
+                          heroTag: 'regionPageHeroTag',
                         ),
                       ),
                       Positioned(
                         right: 16,
                         top: 16,
                         child: FloatingActionButton(
-                          onPressed: _openFullScreenMap,
+                          onPressed: _openFullScreenMap, // 전체 화면 지도 열기 함수 호출
                           child: Icon(Icons.fullscreen, color: Colors.white),
-                          backgroundColor: Color(0xFF162233), // 버튼의 배경색을 변경
+                          backgroundColor: Color(0xFF162233),
                         ),
                       ),
                     ],
@@ -207,21 +208,21 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
                 Container(
                   width: double.infinity,
                   child: TextFormField(
-                    controller: _placeController,
+                    controller: _placeController, // 장소 입력 컨트롤러
                     maxLines: null,
                     minLines: 1,
                     keyboardType: TextInputType.multiline,
                     decoration: InputDecoration(
                       suffixIcon: GestureDetector(
                         child: const Icon(Icons.cancel, color: Colors.blueAccent),
-                        onTap: () => _placeController.clear(),
+                        onTap: () => _placeController.clear(), // 장소 입력 초기화
                       ),
                       border: const OutlineInputBorder(),
                       labelText: "차박지명",
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return '차박지명을 입력해주세요';
+                        return '차박지명을 입력해주세요'; // 유효성 검사 메시지
                       }
                       return null;
                     },
@@ -231,21 +232,21 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
                 Container(
                   width: double.infinity,
                   child: TextFormField(
-                    controller: _latitudeController,
+                    controller: _latitudeController, // 위도 입력 컨트롤러
                     maxLines: null,
                     minLines: 1,
                     readOnly: true,
                     decoration: InputDecoration(
                       suffixIcon: GestureDetector(
                         child: const Icon(Icons.cancel, color: Colors.blueAccent),
-                        onTap: () => _latitudeController.clear(),
+                        onTap: () => _latitudeController.clear(), // 위도 입력 초기화
                       ),
                       border: const OutlineInputBorder(),
                       labelText: "위도",
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return '지도에서 위치를 선택해주세요';
+                        return '지도에서 위치를 선택해주세요'; // 유효성 검사 메시지
                       }
                       return null;
                     },
@@ -255,21 +256,21 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
                 Container(
                   width: double.infinity,
                   child: TextFormField(
-                    controller: _longitudeController,
+                    controller: _longitudeController, // 경도 입력 컨트롤러
                     maxLines: null,
                     minLines: 1,
                     readOnly: true,
                     decoration: InputDecoration(
                       suffixIcon: GestureDetector(
                         child: const Icon(Icons.cancel, color: Colors.blueAccent),
-                        onTap: () => _longitudeController.clear(),
+                        onTap: () => _longitudeController.clear(), // 경도 입력 초기화
                       ),
                       border: const OutlineInputBorder(),
                       labelText: "경도",
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return '지도에서 위치를 선택해주세요';
+                        return '지도에서 위치를 선택해주세요'; // 유효성 검사 메시지
                       }
                       return null;
                     },
@@ -290,10 +291,10 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
                         Row(
                           children: [
                             Checkbox(
-                              value: _isRestRoom,
+                              value: _isRestRoom, // 공중화장실 여부
                               onChanged: (bool? value) {
                                 setState(() {
-                                  _isRestRoom = value ?? false;
+                                  _isRestRoom = value ?? false; // 공중화장실 여부 업데이트
                                 });
                               },
                             ),
@@ -303,10 +304,10 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
                         Row(
                           children: [
                             Checkbox(
-                              value: _isSink,
+                              value: _isSink, // 개수대 여부
                               onChanged: (bool? value) {
                                 setState(() {
-                                  _isSink = value ?? false;
+                                  _isSink = value ?? false; // 개수대 여부 업데이트
                                 });
                               },
                             ),
@@ -316,10 +317,10 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
                         Row(
                           children: [
                             Checkbox(
-                              value: _isCook,
+                              value: _isCook, // 취사 여부
                               onChanged: (bool? value) {
                                 setState(() {
-                                  _isCook = value ?? false;
+                                  _isCook = value ?? false; // 취사 여부 업데이트
                                 });
                               },
                             ),
@@ -334,10 +335,10 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
                         Row(
                           children: [
                             Checkbox(
-                              value: _isAnimal,
+                              value: _isAnimal, // 반려동물 여부
                               onChanged: (bool? value) {
                                 setState(() {
-                                  _isAnimal = value ?? false;
+                                  _isAnimal = value ?? false; // 반려동물 여부 업데이트
                                 });
                               },
                             ),
@@ -347,10 +348,10 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
                         Row(
                           children: [
                             Checkbox(
-                              value: _isWater,
+                              value: _isWater, // 수돗물 여부
                               onChanged: (bool? value) {
                                 setState(() {
-                                  _isWater = value ?? false;
+                                  _isWater = value ?? false; // 수돗물 여부 업데이트
                                 });
                               },
                             ),
@@ -360,10 +361,10 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
                         Row(
                           children: [
                             Checkbox(
-                              value: _isParkinglot,
+                              value: _isParkinglot, // 주차장 여부
                               onChanged: (bool? value) {
                                 setState(() {
-                                  _isParkinglot = value ?? false;
+                                  _isParkinglot = value ?? false; // 주차장 여부 업데이트
                                 });
                               },
                             ),
@@ -383,7 +384,7 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
                 Container(
                   width: double.infinity,
                   child: TextFormField(
-                    controller: _detailsController,
+                    controller: _detailsController, // 추가 사항 입력 컨트롤러
                     maxLines: null,
                     minLines: 1,
                     keyboardType: TextInputType.multiline,
@@ -391,7 +392,7 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
                       contentPadding: EdgeInsets.all(10),
                       suffixIcon: GestureDetector(
                         child: const Icon(Icons.cancel, color: Colors.blueAccent),
-                        onTap: () => _detailsController.clear(),
+                        onTap: () => _detailsController.clear(), // 추가 사항 입력 초기화
                       ),
                       border: const OutlineInputBorder(),
                       labelText: "구체적으로 적어주세요.",
@@ -404,15 +405,15 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
                   children: [
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.grey[300], // Background Color
-                        elevation: 3, // Defines Elevation
+                        backgroundColor: Colors.grey[300], // 배경색
+                        elevation: 3, // 그림자
                         shadowColor: Colors.grey[400],
                       ),
                       onPressed: () {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => MyHomePage()));
+                                builder: (context) => MyHomePage())); // 홈 페이지로 이동
                       },
                       child: const Text(
                         "취소하기",
@@ -421,7 +422,7 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
                     ),
                     const SizedBox(width: 60),
                     ElevatedButton(
-                      onPressed: _addCampingSite,
+                      onPressed: _addCampingSite, // 차박지 추가 함수 호출
                       child: const Text("저장하기"),
                     ),
                   ],
