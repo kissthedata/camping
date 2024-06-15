@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
-import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 class CarCampingSite {
   final String name;
@@ -127,7 +128,7 @@ class _RegionPageState extends State<RegionPage> {
       title: Text(title),
       value: value,
       onChanged: onChanged,
-      activeColor: Color(0xFF162233), // Navy 색상
+      activeColor: Color(0xFF162233),
     );
   }
 
@@ -199,7 +200,6 @@ class _RegionPageState extends State<RegionPage> {
   Future<void> _getCurrentLocation() async {
     LocationPermission permission = await Geolocator.requestPermission();
     if (permission == LocationPermission.denied || permission == LocationPermission.deniedForever) {
-      // Handle the case where permission is denied
       return;
     }
 
@@ -211,12 +211,52 @@ class _RegionPageState extends State<RegionPage> {
         id: 'current_location',
         position: currentPosition,
         caption: NOverlayCaption(text: '현재 위치'),
-        icon: NOverlayImage.fromAssetImage('assets/images/지도.png'), // Use a suitable icon
+        icon: NOverlayImage.fromAssetImage('assets/images/지도.png'),
         size: Size(30, 30),
       );
       _mapController?.addOverlay(_currentLocationMarker!);
       _updateCameraPosition(currentPosition);
     });
+  }
+
+  void _scrapCampingSpot(CarCampingSite site) async {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      DatabaseReference userScrapsRef = FirebaseDatabase.instance.ref().child('scraps').child(user.uid);
+      DataSnapshot snapshot = await userScrapsRef.get();
+
+      bool alreadyScrapped = false;
+      if (snapshot.exists) {
+        Map<dynamic, dynamic> data = snapshot.value as Map<dynamic, dynamic>;
+        data.forEach((key, value) {
+          if (value['name'] == site.name &&
+              value['latitude'] == site.latitude &&
+              value['longitude'] == site.longitude) {
+            alreadyScrapped = true;
+          }
+        });
+      }
+
+      if (alreadyScrapped) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('이미 스크랩한 차박지입니다.')),
+        );
+      } else {
+        String newScrapKey = userScrapsRef.push().key!;
+        await userScrapsRef.child(newScrapKey).set({
+          'name': site.name,
+          'latitude': site.latitude,
+          'longitude': site.longitude,
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('차박지를 스크랩했습니다.')),
+        );
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('로그인이 필요합니다.')),
+      );
+    }
   }
 
   @override
@@ -264,16 +304,10 @@ class _RegionPageState extends State<RegionPage> {
                       padding: const EdgeInsets.all(12.0),
                       child: Card(
                         shape: RoundedRectangleBorder(
-                          side: BorderSide(color: Color(0xFF162233), width: 2), // Navy 색상 테두리
+                          side: BorderSide(color: Color(0xFF162233), width: 2),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: ListTile(
-                          leading: site.imageUrl.isNotEmpty
-                              ? Image.network(
-                                  site.imageUrl,
-                                  width: 150,
-                                )
-                              : null,
                           title: Text(site.name),
                           subtitle: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -284,6 +318,10 @@ class _RegionPageState extends State<RegionPage> {
                               if (site.animal) Text('반려동물'),
                               if (site.water) Text('수돗물'),
                               if (site.parkinglot) Text('주차장'),
+                              TextButton(
+                                onPressed: () => _scrapCampingSpot(site),
+                                child: Text('스크랩'),
+                              ),
                             ],
                           ),
                           onTap: () {
@@ -298,7 +336,7 @@ class _RegionPageState extends State<RegionPage> {
                   right: 16,
                   top: 16,
                   child: FloatingActionButton(
-                    backgroundColor: Color(0xFF162233), // Navy 색상
+                    backgroundColor: Color(0xFF162233),
                     onPressed: () {
                       if (_panelController.isPanelOpen) {
                         _panelController.close();
@@ -306,7 +344,7 @@ class _RegionPageState extends State<RegionPage> {
                         _panelController.open();
                       }
                     },
-                    child: Icon(Icons.list, color: Colors.white), // 하얀색 아이콘
+                    child: Icon(Icons.list, color: Colors.white),
                   ),
                 ),
               ],
@@ -316,10 +354,10 @@ class _RegionPageState extends State<RegionPage> {
             left: 16,
             top: 80,
             child: FloatingActionButton(
-              backgroundColor: Color(0xFF162233), // Navy 색상
+              backgroundColor: Color(0xFF162233),
               onPressed: _getCurrentLocation,
               heroTag: 'regionPageHeroTag',
-              child: Icon(Icons.gps_fixed, color: Colors.white), // 하얀색 아이콘
+              child: Icon(Icons.gps_fixed, color: Colors.white),
             ),
           ),
         ],

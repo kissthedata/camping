@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'map_screen.dart';
 import 'add_camping_site.dart';
 import 'region_page.dart';
+import 'my_page.dart';
 
 class MyHomePage extends StatelessWidget {
   @override
@@ -10,6 +11,17 @@ class MyHomePage extends StatelessWidget {
       appBar: AppBar(
         title: Text('편안차박', style: TextStyle(color: Colors.white)),
         centerTitle: true,
+        actions: [
+          IconButton(
+            icon: Icon(Icons.account_circle),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => MyPage()),
+              );
+            },
+          ),
+        ],
       ),
       body: Column(
         children: [

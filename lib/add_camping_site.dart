@@ -31,45 +31,53 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
 
   // 데이터베이스에 차박지 추가
   void _addCampingSite() {
-    if (_formKey.currentState!.validate()) { // 폼이 유효한지 확인
-      DatabaseReference databaseReference = FirebaseDatabase.instance.ref().child('car_camping_sites').push(); // 데이터베이스 참조 생성
-      Map<String, dynamic> data = { // 저장할 데이터 맵
-        'place': _placeController.text,
-        'latitude': _selectedLocation!.latitude,
-        'longitude': _selectedLocation!.longitude,
-        'category': _category,
-        'restRoom': _isRestRoom,
-        'sink': _isSink,
-        'cook': _isCook,
-        'animal': _isAnimal,
-        'water': _isWater,
-        'parkinglot': _isParkinglot,
-        'details': _detailsController.text,
-      };
-
-      databaseReference.set(data).then((_) { // 데이터베이스에 데이터 저장
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('차박지가 성공적으로 등록되었습니다.')), // 성공 메시지 표시
-        );
-        _placeController.clear(); // 입력 필드 초기화
-        _detailsController.clear();
-        _latitudeController.clear();
-        _longitudeController.clear();
-        setState(() { // 상태 초기화
-          _isRestRoom = false;
-          _isSink = false;
-          _isCook = false;
-          _isAnimal = false;
-          _isWater = false;
-          _isParkinglot = false;
-        });
-      }).catchError((error) { // 오류 처리
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('차박지 등록에 실패했습니다: $error')), // 오류 메시지 표시
-        );
-      });
+  assert(_formKey.currentState != null);
+  if (_formKey.currentState!.validate()) {
+    if (_selectedLocation == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('지도를 클릭하여 위치를 선택해주세요.')),
+      );
+      return;
     }
+    DatabaseReference databaseReference = FirebaseDatabase.instance.ref().child('car_camping_sites').push();
+    Map<String, dynamic> data = {
+      'place': _placeController.text,
+      'latitude': _selectedLocation!.latitude,
+      'longitude': _selectedLocation!.longitude,
+      'category': _category,
+      'restRoom': _isRestRoom,
+      'sink': _isSink,
+      'cook': _isCook,
+      'animal': _isAnimal,
+      'water': _isWater,
+      'parkinglot': _isParkinglot,
+      'details': _detailsController.text,
+    };
+
+    databaseReference.set(data).then((_) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('차박지가 성공적으로 등록되었습니다.')),
+      );
+      _placeController.clear();
+      _detailsController.clear();
+      _latitudeController.clear();
+      _longitudeController.clear();
+      setState(() {
+        _isRestRoom = false;
+        _isSink = false;
+        _isCook = false;
+        _isAnimal = false;
+        _isWater = false;
+        _isParkinglot = false;
+      });
+    }).catchError((error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('차박지 등록에 실패했습니다: $error')),
+      );
+    });
   }
+}
+
 
   void _updateMarker(NLatLng position) {
     if (_selectedMarker != null) {
@@ -96,28 +104,31 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
   }
 
   Future<void> _getCurrentLocation() async {
-    LocationPermission permission = await Geolocator.requestPermission(); // 위치 권한 요청
-    if (permission == LocationPermission.denied || permission == LocationPermission.deniedForever) {
-      return;
-    }
-
-    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high); // 현재 위치 가져오기
-    NLatLng currentPosition = NLatLng(position.latitude, position.longitude);
-
-    setState(() {
-      _currentLocationMarker = NMarker(
-        id: 'current_location',
-        position: currentPosition,
-        caption: NOverlayCaption(text: '현재 위치'),
-        icon: NOverlayImage.fromAssetImage('assets/images/지도.png'),
-        size: Size(30, 30),
-      );
-      _mapController?.addOverlay(_currentLocationMarker!); // 현재 위치 마커 추가
-      _mapController?.updateCamera(
-        NCameraUpdate.scrollAndZoomTo(target: currentPosition, zoom: 15),
-      );
-    });
+  LocationPermission permission = await Geolocator.requestPermission();
+  if (permission == LocationPermission.denied || permission == LocationPermission.deniedForever) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('위치 권한이 필요합니다. 설정에서 권한을 허용해주세요.')),
+    );
+    return;
   }
+
+  Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+  NLatLng currentPosition = NLatLng(position.latitude, position.longitude);
+
+  setState(() {
+    _currentLocationMarker = NMarker(
+      id: 'current_location',
+      position: currentPosition,
+      caption: NOverlayCaption(text: '현재 위치'),
+      icon: NOverlayImage.fromAssetImage('assets/images/지도.png'),
+      size: Size(30, 30),
+    );
+    _mapController?.addOverlay(_currentLocationMarker!);
+    _mapController?.updateCamera(
+      NCameraUpdate.scrollAndZoomTo(target: currentPosition, zoom: 15),
+    );
+  });
+}
 
   void _openFullScreenMap() async {
     if (_selectedLocation == null) return;

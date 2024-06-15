@@ -13,6 +13,14 @@ class FilterDialog extends StatelessWidget {
     required this.onFilterChanged,
   });
 
+  Widget _buildSwitchListTile(String title, bool value, ValueChanged<bool> onChanged) {
+    return SwitchListTile(
+      title: Text(title),
+      value: value,
+      onChanged: onChanged,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     bool _showMarts = showMarts;
@@ -26,33 +34,21 @@ class FilterDialog extends StatelessWidget {
           return Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              SwitchListTile(
-                title: Text('마트'),
-                value: _showMarts,
-                onChanged: (value) {
-                  setState(() {
-                    _showMarts = value;
-                  });
-                },
-              ),
-              SwitchListTile(
-                title: Text('편의점'),
-                value: _showConvenienceStores,
-                onChanged: (value) {
-                  setState(() {
-                    _showConvenienceStores = value;
-                  });
-                },
-              ),
-              SwitchListTile(
-                title: Text('화장실'),
-                value: _showRestrooms,
-                onChanged: (value) {
-                  setState(() {
-                    _showRestrooms = value;
-                  });
-                },
-              ),
+              _buildSwitchListTile('마트', _showMarts, (value) {
+                setState(() {
+                  _showMarts = value;
+                });
+              }),
+              _buildSwitchListTile('편의점', _showConvenienceStores, (value) {
+                setState(() {
+                  _showConvenienceStores = value;
+                });
+              }),
+              _buildSwitchListTile('화장실', _showRestrooms, (value) {
+                setState(() {
+                  _showRestrooms = value;
+                });
+              }),
             ],
           );
         },
@@ -73,3 +69,4 @@ class FilterDialog extends StatelessWidget {
     );
   }
 }
+
