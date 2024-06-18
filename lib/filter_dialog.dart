@@ -14,6 +14,7 @@ class FilterDialog extends StatelessWidget {
   });
 
   Widget _buildSwitchListTile(String title, bool value, ValueChanged<bool> onChanged) {
+    // 스위치 리스트 타일을 빌드하는 함수
     return SwitchListTile(
       title: Text(title),
       value: value,
@@ -23,6 +24,7 @@ class FilterDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // 필터 다이얼로그 UI 빌드
     bool _showMarts = showMarts;
     bool _showConvenienceStores = showConvenienceStores;
     bool _showRestrooms = showRestrooms;
@@ -69,4 +71,3 @@ class FilterDialog extends StatelessWidget {
     );
   }
 }
-

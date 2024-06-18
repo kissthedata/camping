@@ -1,23 +1,26 @@
+// main.dart
+
 import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'splash_screen.dart';
-import 'login_screen.dart'; // 여기에 LoginScreen 파일 경로를 추가합니다
-import 'register_screen.dart'; // 여기에 RegisterScreen 파일 경로를 추가합니다
+import 'login_screen.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  await NaverMapSdk.instance.initialize(clientId: "2f9jiniswu");
-  runApp(MyApp());
+  // Flutter 앱의 진입점
+  WidgetsFlutterBinding.ensureInitialized(); // Flutter 엔진 초기화
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform); // Firebase 초기화
+  await NaverMapSdk.instance.initialize(clientId: "2f9jiniswu"); // Naver Map SDK 초기화
+  runApp(MyApp()); // MyApp 위젯 실행
 }
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    // 앱의 루트 위젯
     return MaterialApp(
       theme: ThemeData(
+        // 테마 설정
         primaryColor: Color(0xFF162233),
         scaffoldBackgroundColor: Colors.white,
         appBarTheme: AppBarTheme(
@@ -31,11 +34,11 @@ class MyApp extends StatelessWidget {
           ),
         ),
         textTheme: TextTheme(
-          bodyText1: TextStyle(color: Colors.black),
-          bodyText2: TextStyle(color: Colors.black),
+          bodyLarge: TextStyle(color: Colors.black),
+          bodyMedium: TextStyle(color: Colors.black),
         ),
       ),
-      home: LoginScreen(),
+      home: LoginScreen(), // 첫 화면으로 LoginScreen 설정
     );
   }
 }

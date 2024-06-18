@@ -17,13 +17,15 @@ class _FullScreenMapState extends State<FullScreenMap> {
   NMarker? _selectedMarker;
 
   void _onMapTapped(NPoint point, NLatLng latLng) {
+    // 지도 탭 콜백 함수
     setState(() {
-      _selectedLocation = latLng;
-      _updateMarker(latLng);
+      _selectedLocation = latLng; // 선택된 위치 업데이트
+      _updateMarker(latLng); // 마커 업데이트
     });
   }
 
   void _updateMarker(NLatLng position) {
+    // 지도 마커 업데이트
     if (_selectedMarker != null) {
       _mapController?.deleteOverlay(_selectedMarker!.info);
     }
@@ -38,21 +40,23 @@ class _FullScreenMapState extends State<FullScreenMap> {
   }
 
   void _confirmLocation() {
+    // 선택된 위치 확인
     if (_selectedLocation != null) {
       widget.onLocationSelected(_selectedLocation!);
-      Navigator.pop(context);
+      Navigator.pop(context); // 현재 화면 닫기
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    // 전체 화면 지도 빌드
     return Scaffold(
       appBar: AppBar(
         title: Text('지도 확대 보기'),
         actions: [
           IconButton(
             icon: Icon(Icons.check),
-            onPressed: _confirmLocation,
+            onPressed: _confirmLocation, // 선택된 위치 확인
           ),
         ],
       ),
@@ -64,9 +68,9 @@ class _FullScreenMapState extends State<FullScreenMap> {
           ),
         ),
         onMapReady: (controller) {
-          _mapController = controller;
+          _mapController = controller; // 지도 컨트롤러 초기화
         },
-        onMapTapped: _onMapTapped,
+        onMapTapped: _onMapTapped, // 지도 탭 콜백 함수 설정
       ),
     );
   }

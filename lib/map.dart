@@ -19,6 +19,7 @@ class _MyMapState extends State<MyMap> {
 
   @override
   Widget build(BuildContext context) {
+    // 지도 화면 빌드
     return Scaffold(
       appBar: AppBar(
         title: const Text('Naver Map'),
@@ -62,6 +63,7 @@ class _MyMapState extends State<MyMap> {
   }
 
   Widget _buildMapButton(BuildContext context, String imagePath, String buttonText) {
+    // 지도 버튼 빌드
     return Container(
       alignment: Alignment.center,
       width: 130,

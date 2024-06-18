@@ -53,10 +53,11 @@ class _RegionPageState extends State<RegionPage> {
   @override
   void initState() {
     super.initState();
-    _loadCampingSites();
+    _loadCampingSites(); // 차박지 정보 불러오기
   }
 
   Future<void> _loadCampingSites() async {
+    // 차박지 정보를 데이터베이스에서 불러오는 함수
     DatabaseReference databaseReference = FirebaseDatabase.instance.ref().child('car_camping_sites');
     DataSnapshot snapshot = await databaseReference.get();
 
@@ -85,12 +86,14 @@ class _RegionPageState extends State<RegionPage> {
   }
 
   void _updateCameraPosition(NLatLng position) {
+    // 카메라 위치 업데이트
     _mapController?.updateCamera(
       NCameraUpdate.scrollAndZoomTo(target: position, zoom: 15),
     );
   }
 
   void _addMarker(CarCampingSite site) {
+    // 마커 추가
     final marker = NMarker(
       id: site.name,
       position: NLatLng(site.latitude, site.longitude),
@@ -102,6 +105,7 @@ class _RegionPageState extends State<RegionPage> {
   }
 
   void _filterCampingSites() {
+    // 차박지 필터링
     setState(() {
       _filteredCampingSites.clear();
       for (var site in _campingSites) {
@@ -118,12 +122,14 @@ class _RegionPageState extends State<RegionPage> {
   }
 
   void _applyFilter() {
+    // 필터 적용
     setState(() {
       _filterCampingSites();
     });
   }
 
   Widget _buildFilterSwitch(String title, bool value, ValueChanged<bool> onChanged) {
+    // 필터 스위치 빌드
     return SwitchListTile(
       title: Text(title),
       value: value,
@@ -133,6 +139,7 @@ class _RegionPageState extends State<RegionPage> {
   }
 
   void _showFilterDialog(BuildContext context) {
+    // 필터 다이얼로그 표시
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -198,6 +205,7 @@ class _RegionPageState extends State<RegionPage> {
   }
 
   Future<void> _getCurrentLocation() async {
+    // 현재 위치 가져오기
     LocationPermission permission = await Geolocator.requestPermission();
     if (permission == LocationPermission.denied || permission == LocationPermission.deniedForever) {
       return;
@@ -220,6 +228,7 @@ class _RegionPageState extends State<RegionPage> {
   }
 
   void _scrapCampingSpot(CarCampingSite site) async {
+    // 차박지 스크랩
     User? user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       DatabaseReference userScrapsRef = FirebaseDatabase.instance.ref().child('scraps').child(user.uid);
@@ -259,8 +268,76 @@ class _RegionPageState extends State<RegionPage> {
     }
   }
 
+  void _shareCampingSpot(CarCampingSite site) {
+    // 차박지 공유
+    final _nicknameController = TextEditingController();
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('공유할 사용자 닉네임 입력'),
+          content: TextField(
+            controller: _nicknameController,
+            decoration: InputDecoration(labelText: '닉네임'),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () async {
+                final nickname = _nicknameController.text;
+                if (nickname.isNotEmpty) {
+                  DatabaseReference nicknamesRef = FirebaseDatabase.instance.ref().child('nicknames');
+                  DataSnapshot snapshot = await nicknamesRef.child(nickname).get();
+                  if (snapshot.exists) {
+                    String userId = snapshot.value as String;
+                    DatabaseReference sharedScrapsRef = FirebaseDatabase.instance
+                        .ref()
+                        .child('shared_scraps')
+                        .child(userId);
+                    String newShareKey = sharedScrapsRef.push().key!;
+                    await sharedScrapsRef.child(newShareKey).set({
+                      'name': site.name,
+                      'latitude': site.latitude,
+                      'longitude': site.longitude,
+                      'imageUrl': site.imageUrl,
+                      'restRoom': site.restRoom,
+                      'sink': site.sink,
+                      'cook': site.cook,
+                      'animal': site.animal,
+                      'water': site.water,
+                      'parkinglot': site.parkinglot,
+                    });
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('차박지를 공유했습니다.')),
+                    );
+                    Navigator.pop(context);
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('닉네임이 존재하지 않습니다.')),
+                    );
+                  }
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('닉네임을 입력하세요.')),
+                  );
+                }
+              },
+              child: Text('공유'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text('취소'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    // 지역 페이지 빌드
     return Scaffold(
       appBar: AppBar(
         title: Text('차박지 리스트'),
@@ -268,7 +345,7 @@ class _RegionPageState extends State<RegionPage> {
           IconButton(
             icon: Icon(Icons.filter_list),
             onPressed: () {
-              _showFilterDialog(context);
+              _showFilterDialog(context); // 필터 다이얼로그 표시
             },
           ),
         ],
@@ -283,9 +360,9 @@ class _RegionPageState extends State<RegionPage> {
               ),
             ),
             onMapReady: (controller) {
-              _mapController = controller;
+              _mapController = controller; // 지도 컨트롤러 초기화
               for (var site in _campingSites) {
-                _addMarker(site);
+                _addMarker(site); // 마커 추가
               }
             },
           ),
@@ -318,14 +395,22 @@ class _RegionPageState extends State<RegionPage> {
                               if (site.animal) Text('반려동물'),
                               if (site.water) Text('수돗물'),
                               if (site.parkinglot) Text('주차장'),
-                              TextButton(
-                                onPressed: () => _scrapCampingSpot(site),
-                                child: Text('스크랩'),
+                              Row(
+                                children: [
+                                  TextButton(
+                                    onPressed: () => _scrapCampingSpot(site),
+                                    child: Text('스크랩'),
+                                  ),
+                                  TextButton(
+                                    onPressed: () => _shareCampingSpot(site),
+                                    child: Text('공유'),
+                                  ),
+                                ],
                               ),
                             ],
                           ),
                           onTap: () {
-                            _updateCameraPosition(NLatLng(site.latitude, site.longitude));
+                            _updateCameraPosition(NLatLng(site.latitude, site.longitude)); // 카메라 위치 업데이트
                           },
                         ),
                       ),
@@ -355,7 +440,7 @@ class _RegionPageState extends State<RegionPage> {
             top: 80,
             child: FloatingActionButton(
               backgroundColor: Color(0xFF162233),
-              onPressed: _getCurrentLocation,
+              onPressed: _getCurrentLocation, // 현재 위치 가져오기
               heroTag: 'regionPageHeroTag',
               child: Icon(Icons.gps_fixed, color: Colors.white),
             ),

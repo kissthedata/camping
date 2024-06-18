@@ -13,15 +13,18 @@ class _MyPageState extends State<MyPage> {
   final _emailController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   List<Map<String, dynamic>> _scraps = [];
+  List<Map<String, dynamic>> _sharedScraps = [];
 
   @override
   void initState() {
     super.initState();
     _loadUserInfo();
     _loadScraps();
+    _loadSharedScraps();
   }
 
   void _loadUserInfo() async {
+    // 사용자 정보 불러오기
     User? user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       DatabaseReference userRef = FirebaseDatabase.instance.ref().child('users').child(user.uid);
@@ -37,6 +40,7 @@ class _MyPageState extends State<MyPage> {
   }
 
   void _loadScraps() async {
+    // 스크랩 정보 불러오기
     User? user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       DatabaseReference userScrapsRef = FirebaseDatabase.instance.ref().child('scraps').child(user.uid);
@@ -54,7 +58,27 @@ class _MyPageState extends State<MyPage> {
     }
   }
 
+  void _loadSharedScraps() async {
+    // 공유된 스크랩 정보 불러오기
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      DatabaseReference sharedScrapsRef = FirebaseDatabase.instance.ref().child('shared_scraps').child(user.uid);
+      DataSnapshot snapshot = await sharedScrapsRef.get();
+      if (snapshot.exists) {
+        List<Map<String, dynamic>> sharedScraps = [];
+        Map<dynamic, dynamic> data = snapshot.value as Map<dynamic, dynamic>;
+        data.forEach((key, value) {
+          sharedScraps.add(Map<String, dynamic>.from(value as Map));
+        });
+        setState(() {
+          _sharedScraps = sharedScraps;
+        });
+      }
+    }
+  }
+
   void _updateUserInfo() async {
+    // 사용자 정보 업데이트
     if (_formKey.currentState!.validate()) {
       User? user = FirebaseAuth.instance.currentUser;
       if (user != null) {
@@ -71,6 +95,7 @@ class _MyPageState extends State<MyPage> {
   }
 
   void _logout() async {
+    // 로그아웃
     await FirebaseAuth.instance.signOut();
     Navigator.pushReplacement(
       context,
@@ -79,6 +104,7 @@ class _MyPageState extends State<MyPage> {
   }
 
   void _showUserInfoDialog() {
+    // 사용자 정보 수정 다이얼로그 표시
     showDialog(
       context: context,
       builder: (context) {
@@ -128,6 +154,7 @@ class _MyPageState extends State<MyPage> {
   }
 
   void _showScrapsDialog() {
+    // 스크랩 목록 다이얼로그 표시
     showDialog(
       context: context,
       builder: (context) {
@@ -157,8 +184,40 @@ class _MyPageState extends State<MyPage> {
     );
   }
 
+  void _showSharedScrapsDialog() {
+    // 공유받은 스크랩 목록 다이얼로그 표시
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('공유받은 차박지'),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: _sharedScraps.map((sharedScrap) {
+                return ListTile(
+                  title: Text(sharedScrap['name']),
+                  subtitle: Text('위도: ${sharedScrap['latitude']}, 경도: ${sharedScrap['longitude']}'),
+                );
+              }).toList(),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text('닫기'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    // 마이 페이지 빌드
     return Scaffold(
       appBar: AppBar(
         title: Text('마이페이지'),
@@ -193,6 +252,7 @@ class _MyPageState extends State<MyPage> {
             Container(
               width: double.infinity,
               height: 50,
+              margin: EdgeInsets.only(bottom: 16.0),
               child: ElevatedButton(
                 onPressed: _showScrapsDialog,
                 style: ElevatedButton.styleFrom(
@@ -202,6 +262,22 @@ class _MyPageState extends State<MyPage> {
                 ),
                 child: Text(
                   '스크랩한 차박지 보기',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ),
+            Container(
+              width: double.infinity,
+              height: 50,
+              child: ElevatedButton(
+                onPressed: _showSharedScrapsDialog,
+                style: ElevatedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.zero,
+                  ),
+                ),
+                child: Text(
+                  '공유받은 차박지 보기',
                   style: TextStyle(color: Colors.white),
                 ),
               ),

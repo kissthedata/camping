@@ -27,8 +27,8 @@ class _MapScreenState extends State<MapScreen> {
     _loadLocationsFromDatabase(); // 데이터베이스에서 위치 정보를 불러옴
   }
 
-  // 데이터베이스에서 위치 정보를 불러오는 함수
   Future<void> _loadLocationsFromDatabase() async {
+    // 데이터베이스에서 위치 정보를 불러오는 함수
     try {
       final databaseReference = FirebaseDatabase.instance.ref().child('locations');
       final DataSnapshot snapshot = await databaseReference.get();
@@ -65,9 +65,9 @@ class _MapScreenState extends State<MapScreen> {
   }
 
   Future<void> _getCurrentLocation() async {
+    // 현재 위치 가져오기
     LocationPermission permission = await Geolocator.requestPermission();
     if (permission == LocationPermission.denied || permission == LocationPermission.deniedForever) {
-      // Handle the case where permission is denied
       return;
     }
 
@@ -79,7 +79,7 @@ class _MapScreenState extends State<MapScreen> {
         id: 'current_location',
         position: currentPosition,
         caption: NOverlayCaption(text: '현재 위치'),
-        icon: NOverlayImage.fromAssetImage('assets/images/지도.png'), // Use a suitable icon
+        icon: NOverlayImage.fromAssetImage('assets/images/지도.png'),
         size: Size(30, 30),
       );
       _mapController?.addOverlay(_currentLocationMarker!);
@@ -88,6 +88,7 @@ class _MapScreenState extends State<MapScreen> {
   }
 
   void _updateCameraPosition(NLatLng position) {
+    // 카메라 위치 업데이트
     _mapController?.updateCamera(
       NCameraUpdate.scrollAndZoomTo(target: position, zoom: 15),
     );
@@ -141,14 +142,13 @@ class _MapScreenState extends State<MapScreen> {
     );
   }
 
-  // 마커를 지도에 추가하는 함수
   Future<void> _addMarkers() async {
+    // 마커를 지도에 추가하는 함수
     if (_mapController == null) return;
 
     _markers = MarkerUtils.createMarkers(_locations, showMarts, showConvenienceStores, showRestrooms, context);
     setState(() {});
 
-    // 마커를 비동기로 추가하여 메인 스레드 부하를 줄임
     for (var marker in _markers) {
       try {
         await _mapController!.addOverlay(marker);
@@ -158,8 +158,8 @@ class _MapScreenState extends State<MapScreen> {
     }
   }
 
-  // 필터링 다이얼로그를 표시하는 함수
   void _showFilterDialog(BuildContext context) {
+    // 필터링 다이얼로그를 표시하는 함수
     showDialog(
       context: context,
       builder: (context) {
@@ -180,8 +180,8 @@ class _MapScreenState extends State<MapScreen> {
     );
   }
 
-  // 마커를 업데이트하는 함수
   Future<void> _updateMarkers() async {
+    // 마커를 업데이트하는 함수
     if (_mapController == null) return;
 
     _markers.clear();

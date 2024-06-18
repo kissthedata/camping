@@ -38,24 +38,25 @@ class CampingSpotWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // 차박지 정보를 카드 형태로 보여주는 위젯
     return Card(
       margin: const EdgeInsets.all(10),
       child: Column(
         children: [
-          Image.network(imageUrl),
+          Image.network(imageUrl), // 차박지 이미지
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(
-              name,
+              name, // 차박지 이름
               style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Text('위도: $latitude, 경도: $longitude'),
+            child: Text('위도: $latitude, 경도: $longitude'), // 차박지 위도와 경도
           ),
           ElevatedButton(
-            onPressed: () => _scrapCampingSpot(context),
+            onPressed: () => _scrapCampingSpot(context), // 스크랩 버튼 클릭 시 동작
             child: const Text('스크랩'),
           ),
         ],

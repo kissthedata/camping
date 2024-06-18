@@ -14,6 +14,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
 
   void _login() async {
+    // 로그인 함수
     if (_formKey.currentState!.validate()) {
       try {
         await FirebaseAuth.instance.signInWithEmailAndPassword(
@@ -22,7 +23,7 @@ class _LoginScreenState extends State<LoginScreen> {
         );
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => MyHomePage()),
+          MaterialPageRoute(builder: (context) => MyHomePage()), // 로그인 성공 시 홈 페이지로 이동
         );
       } on FirebaseAuthException catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -34,6 +35,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // 로그인 화면 빌드
     return Scaffold(
       appBar: AppBar(
         title: Text('로그인'),
@@ -49,7 +51,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 decoration: InputDecoration(labelText: '이메일'),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return '이메일을 입력하세요';
+                    return '이메일을 입력하세요'; // 유효성 검사 메시지
                   }
                   return null;
                 },
@@ -60,21 +62,21 @@ class _LoginScreenState extends State<LoginScreen> {
                 obscureText: true,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return '비밀번호를 입력하세요';
+                    return '비밀번호를 입력하세요'; // 유효성 검사 메시지
                   }
                   return null;
                 },
               ),
               SizedBox(height: 20),
               ElevatedButton(
-                onPressed: _login,
+                onPressed: _login, // 로그인 함수 호출
                 child: Text('로그인'),
               ),
               TextButton(
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => RegisterScreen()),
+                    MaterialPageRoute(builder: (context) => RegisterScreen()), // 회원가입 화면으로 이동
                   );
                 },
                 child: Text('회원가입'),

@@ -9,6 +9,7 @@ class MarkerUtils {
       bool showConvenienceStores,
       bool showRestrooms,
       BuildContext context) {
+    // 마커를 생성하는 함수
     List<NMarker> markers = [];
     for (var location in locations) {
       bool shouldAddMarker = false;

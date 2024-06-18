@@ -7,6 +7,7 @@ import 'my_page.dart';
 class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    // 홈 페이지 빌드
     return Scaffold(
       appBar: AppBar(
         title: Text('편안차박', style: TextStyle(color: Colors.white)),
@@ -17,7 +18,7 @@ class MyHomePage extends StatelessWidget {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => MyPage()),
+                MaterialPageRoute(builder: (context) => MyPage()), // 마이 페이지로 이동
               );
             },
           ),
@@ -56,7 +57,7 @@ class MyHomePage extends StatelessWidget {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => MapScreen()),
+                        MaterialPageRoute(builder: (context) => MapScreen()), // 지도 화면으로 이동
                       );
                     },
                     child: const Text("시작하기", style: TextStyle(color: Colors.white)),
@@ -100,7 +101,7 @@ class MyHomePage extends StatelessWidget {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => RegionPage(),
+                                builder: (context) => RegionPage(), // 지역 페이지로 이동
                               ),
                             );
                           },
@@ -141,7 +142,7 @@ class MyHomePage extends StatelessWidget {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => AddCampingSiteScreen(),
+                                builder: (context) => AddCampingSiteScreen(), // 차박지 등록 화면으로 이동
                               ),
                             );
                           },
