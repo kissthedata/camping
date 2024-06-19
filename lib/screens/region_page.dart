@@ -275,26 +275,35 @@ class _RegionPageState extends State<RegionPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('차박지 리스트'),
+        title: Text('차박지 보기'),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.list, color: Colors.white),
+            onPressed: () {
+              if (_panelController.isPanelOpen) {
+                _panelController.close();
+              } else {
+                _panelController.open();
+              }
+            },
+          ),
+        ],
       ),
       body: Column(
         children: [
           SizedBox(height: 20),
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
-            child: Container(
-              color: Colors.transparent, // 투명 배경 설정
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  _buildFilterButton('공중화장실', 'restRoom', showRestRoom),
-                  _buildFilterButton('개수대', 'sink', showSink),
-                  _buildFilterButton('취사', 'cook', showCook),
-                  _buildFilterButton('반려동물', 'animal', showAnimal),
-                  _buildFilterButton('수돗물', 'water', showWater),
-                  _buildFilterButton('주차장', 'parkinglot', showParkinglot),
-                ],
-              ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                _buildFilterButton('공중화장실', 'restRoom', showRestRoom),
+                _buildFilterButton('개수대', 'sink', showSink),
+                _buildFilterButton('취사', 'cook', showCook),
+                _buildFilterButton('반려동물', 'animal', showAnimal),
+                _buildFilterButton('수돗물', 'water', showWater),
+                _buildFilterButton('주차장', 'parkinglot', showParkinglot),
+              ],
             ),
           ),
           Expanded(
@@ -317,7 +326,7 @@ class _RegionPageState extends State<RegionPage> {
                 SlidingUpPanel(
                   controller: _panelController,
                   panelSnapping: true,
-                  minHeight: 100,
+                  minHeight: 0,
                   maxHeight: MediaQuery.of(context).size.height * 0.7,
                   panel: Stack(
                     children: [
@@ -364,21 +373,6 @@ class _RegionPageState extends State<RegionPage> {
                             ),
                           );
                         },
-                      ),
-                      Positioned(
-                        right: 16,
-                        top: 16,
-                        child: FloatingActionButton(
-                          backgroundColor: Color(0xFF162233),
-                          onPressed: () {
-                            if (_panelController.isPanelOpen) {
-                              _panelController.close();
-                            } else {
-                              _panelController.open();
-                            }
-                          },
-                          child: Icon(Icons.list, color: Colors.white),
-                        ),
                       ),
                     ],
                   ),
