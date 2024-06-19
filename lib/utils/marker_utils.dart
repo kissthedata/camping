@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
-import 'map_location.dart';
+import '../models/map_location.dart';
 
 class MarkerUtils {
   static List<NMarker> createMarkers(

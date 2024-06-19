@@ -2,9 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
-import 'firebase_options.dart';
+import 'config/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'login_screen.dart';
+import 'screens/login_screen.dart';
 
 void main() async {
   // Flutter 앱의 진입점

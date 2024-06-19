@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:geolocator/geolocator.dart';
-import 'map_location.dart';
-import 'marker_utils.dart';
-import 'filter_dialog.dart';
+import 'package:map_sample/models/map_location.dart';
+import 'package:map_sample/utils/marker_utils.dart';
 
 class MapScreen extends StatefulWidget {
   @override
@@ -16,10 +15,10 @@ class _MapScreenState extends State<MapScreen> {
   bool _loading = true;
   NaverMapController? _mapController;
   List<NMarker> _markers = [];
+  NMarker? _currentLocationMarker;
   bool showMarts = true;
   bool showConvenienceStores = true;
   bool showRestrooms = true;
-  NMarker? _currentLocationMarker;
 
   @override
   void initState() {
@@ -27,8 +26,8 @@ class _MapScreenState extends State<MapScreen> {
     _loadLocationsFromDatabase(); // 데이터베이스에서 위치 정보를 불러옴
   }
 
+  // 데이터베이스에서 위치 정보를 불러오는 함수
   Future<void> _loadLocationsFromDatabase() async {
-    // 데이터베이스에서 위치 정보를 불러오는 함수
     try {
       final databaseReference = FirebaseDatabase.instance.ref().child('locations');
       final DataSnapshot snapshot = await databaseReference.get();
@@ -65,9 +64,9 @@ class _MapScreenState extends State<MapScreen> {
   }
 
   Future<void> _getCurrentLocation() async {
-    // 현재 위치 가져오기
     LocationPermission permission = await Geolocator.requestPermission();
     if (permission == LocationPermission.denied || permission == LocationPermission.deniedForever) {
+      // Handle the case where permission is denied
       return;
     }
 
@@ -79,7 +78,7 @@ class _MapScreenState extends State<MapScreen> {
         id: 'current_location',
         position: currentPosition,
         caption: NOverlayCaption(text: '현재 위치'),
-        icon: NOverlayImage.fromAssetImage('assets/images/지도.png'),
+        icon: NOverlayImage.fromAssetImage('assets/images/지도.png'), // Use a suitable icon
         size: Size(30, 30),
       );
       _mapController?.addOverlay(_currentLocationMarker!);
@@ -88,10 +87,26 @@ class _MapScreenState extends State<MapScreen> {
   }
 
   void _updateCameraPosition(NLatLng position) {
-    // 카메라 위치 업데이트
     _mapController?.updateCamera(
       NCameraUpdate.scrollAndZoomTo(target: position, zoom: 15),
     );
+  }
+
+  void _toggleFilter(String category) {
+    setState(() {
+      switch (category) {
+        case 'mart':
+          showMarts = !showMarts;
+          break;
+        case 'convenience_store':
+          showConvenienceStores = !showConvenienceStores;
+          break;
+        case 'restroom':
+          showRestrooms = !showRestrooms;
+          break;
+      }
+      _updateMarkers(); // 마커 업데이트
+    });
   }
 
   @override
@@ -104,12 +119,6 @@ class _MapScreenState extends State<MapScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Naver Map Sample'),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.filter_list),
-            onPressed: () => _showFilterDialog(context), // 필터링 다이얼로그 표시
-          ),
-        ],
       ),
       body: Stack(
         children: [
@@ -137,18 +146,42 @@ class _MapScreenState extends State<MapScreen> {
               heroTag: 'regionPageHeroTag', // 버튼의 배경색을 변경
             ),
           ),
+          Positioned(
+            top: 20,
+            left: 20,
+            right: 20,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                _buildFilterButton('마트', 'mart', showMarts),
+                _buildFilterButton('편의점', 'convenience_store', showConvenienceStores),
+                _buildFilterButton('화장실', 'restroom', showRestrooms),
+              ],
+            ),
+          ),
         ],
       ),
     );
   }
 
+  Widget _buildFilterButton(String label, String category, bool isActive) {
+    return ElevatedButton(
+      onPressed: () => _toggleFilter(category),
+      style: ElevatedButton.styleFrom(
+        backgroundColor: isActive ? Colors.lightBlue : Colors.grey, // 버튼 색상 설정
+      ),
+      child: Text(label),
+    );
+  }
+
+  // 마커를 지도에 추가하는 함수
   Future<void> _addMarkers() async {
-    // 마커를 지도에 추가하는 함수
     if (_mapController == null) return;
 
     _markers = MarkerUtils.createMarkers(_locations, showMarts, showConvenienceStores, showRestrooms, context);
     setState(() {});
 
+    // 마커를 비동기로 추가하여 메인 스레드 부하를 줄임
     for (var marker in _markers) {
       try {
         await _mapController!.addOverlay(marker);
@@ -158,30 +191,8 @@ class _MapScreenState extends State<MapScreen> {
     }
   }
 
-  void _showFilterDialog(BuildContext context) {
-    // 필터링 다이얼로그를 표시하는 함수
-    showDialog(
-      context: context,
-      builder: (context) {
-        return FilterDialog(
-          showMarts: showMarts,
-          showConvenienceStores: showConvenienceStores,
-          showRestrooms: showRestrooms,
-          onFilterChanged: (bool marts, bool convenienceStores, bool restrooms) {
-            setState(() {
-              showMarts = marts;
-              showConvenienceStores = convenienceStores;
-              showRestrooms = restrooms;
-            });
-            _updateMarkers(); // 마커 업데이트
-          },
-        );
-      },
-    );
-  }
-
+  // 마커를 업데이트하는 함수
   Future<void> _updateMarkers() async {
-    // 마커를 업데이트하는 함수
     if (_mapController == null) return;
 
     _markers.clear();
