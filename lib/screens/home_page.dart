@@ -26,6 +26,9 @@ class FigmaToCodeApp extends StatelessWidget {
 class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final double screenWidth = MediaQuery.of(context).size.width;
+    final double screenHeight = MediaQuery.of(context).size.height;
+    
     return Scaffold(
       body: ListView(
         children: [
@@ -40,7 +43,7 @@ class MyHomePage extends StatelessWidget {
                   left: 0,
                   top: 0,
                   child: Container(
-                    width: 393,
+                    width: MediaQuery.of(context).size.width,
                     height: 128,
                     decoration: ShapeDecoration(
                       color: Colors.white,
@@ -56,26 +59,11 @@ class MyHomePage extends StatelessWidget {
                 Positioned(
                   left: 30,
                   top: 40,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        '편안차박',
-                        style: TextStyle(
-                          color: Color(0xFF162243),
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Text(
-                        '편리하고 안전한 차박',
-                        style: TextStyle(
-                          color: Colors.grey,
-                          fontSize: 14,
-                          fontWeight: FontWeight.normal,
-                        ),
-                      ),
-                    ],
+                  child: Image.asset(
+                    'assets/images/편안차박.png',
+                    width: 150,
+                    height: 75,
+                    fit: BoxFit.contain,
                   ),
                 ),
                 Positioned(
@@ -92,8 +80,8 @@ class MyHomePage extends StatelessWidget {
                   ),
                 ),
                 Positioned(
-                  left: 24,
-                  top: 183,
+                  left: (screenWidth - 344) / 2,
+                  top: screenHeight * 0.2,
                   child: InkWell(
                     onTap: () {
                       Navigator.push(
@@ -153,8 +141,8 @@ class MyHomePage extends StatelessWidget {
                   ),
                 ),
                 Positioned(
-                  left: 24,
-                  top: 389,
+                  left: (screenWidth - 344) / 2,
+                  top: screenHeight * 0.45,
                   child: InkWell(
                     onTap: () {
                       Navigator.push(
@@ -179,7 +167,7 @@ class MyHomePage extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Image.asset(
-                                  'assets/images/코스.jpg',
+                                  'assets/images/차박지 보기.png',
                                   width: 50,
                                   height: 50,
                                 ),
@@ -214,125 +202,127 @@ class MyHomePage extends StatelessWidget {
                   ),
                 ),
                 Positioned(
-                  left: 24,
-                  top: 595,
-                  child: InkWell(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => AddCampingSiteScreen()),
-                      );
-                    },
-                    child: Container(
-                      width: 164,
-                      height: 191,
-                      decoration: ShapeDecoration(
-                        color: Color(0xFF25345B),
-                        shape: RoundedRectangleBorder(
-                          side: BorderSide(width: 0.70, color: Color(0xFF324476)),
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                      ),
-                      child: Stack(
-                        children: [
-                          Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Image.asset(
-                                  'assets/images/추가.png',
-                                  width: 50,
-                                  height: 50,
-                                ),
-                                const SizedBox(height: 10),
-                                Text(
-                                  '차박지 등록',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 20.06,
-                                    fontFamily: 'Pretendard',
-                                    fontWeight: FontWeight.w600,
-                                    height: 0,
-                                  ),
-                                ),
-                                const SizedBox(height: 2),
-                                Text(
-                                  '나만의 차박지를 등록해보세요!',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 10.03,
-                                    fontFamily: 'Pretendard',
-                                    fontWeight: FontWeight.w400,
-                                    height: 0,
-                                  ),
-                                ),
-                              ],
+                  left: (screenWidth - 344) / 2,
+                  top: screenHeight * 0.7,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => AddCampingSiteScreen()),
+                          );
+                        },
+                        child: Container(
+                          width: 164,
+                          height: 191,
+                          decoration: ShapeDecoration(
+                            color: Color(0xFF25345B),
+                            shape: RoundedRectangleBorder(
+                              side: BorderSide(width: 0.70, color: Color(0xFF324476)),
+                              borderRadius: BorderRadius.circular(16),
                             ),
                           ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                Positioned(
-                  left: 204,
-                  top: 595,
-                  child: InkWell(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => FeedbackScreen()),
-                      );
-                    },
-                    child: Container(
-                      width: 164,
-                      height: 191,
-                      decoration: ShapeDecoration(
-                        color: Color(0xFF25345B),
-                        shape: RoundedRectangleBorder(
-                          side: BorderSide(width: 0.70, color: Color(0xFF324476)),
-                          borderRadius: BorderRadius.circular(16),
+                          child: Stack(
+                            children: [
+                              Center(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Image.asset(
+                                      'assets/images/추가.png',
+                                      width: 50,
+                                      height: 50,
+                                    ),
+                                    const SizedBox(height: 10),
+                                    Text(
+                                      '차박지 등록',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 20.06,
+                                        fontFamily: 'Pretendard',
+                                        fontWeight: FontWeight.w600,
+                                        height: 0,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 2),
+                                    Text(
+                                      '나만의 차박지를 등록해보세요!',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 10.03,
+                                        fontFamily: 'Pretendard',
+                                        fontWeight: FontWeight.w400,
+                                        height: 0,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                      child: Stack(
-                        children: [
-                          Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  Icons.feedback,
-                                  color: Colors.white,
-                                  size: 50,
-                                ),
-                                const SizedBox(height: 10),
-                                Text(
-                                  '피드백 보내기',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 20.06,
-                                    fontFamily: 'Pretendard',
-                                    fontWeight: FontWeight.w600,
-                                    height: 0,
-                                  ),
-                                ),
-                                const SizedBox(height: 2),
-                                Text(
-                                  '자유롭게 피드백 해주세요!',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 10.03,
-                                    fontFamily: 'Pretendard',
-                                    fontWeight: FontWeight.w400,
-                                    height: 0,
-                                  ),
-                                ),
-                              ],
+                      const SizedBox(width: 16),
+                      InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => FeedbackScreen()),
+                          );
+                        },
+                        child: Container(
+                          width: 164,
+                          height: 191,
+                          decoration: ShapeDecoration(
+                            color: Color(0xFF25345B),
+                            shape: RoundedRectangleBorder(
+                              side: BorderSide(width: 0.70, color: Color(0xFF324476)),
+                              borderRadius: BorderRadius.circular(16),
                             ),
                           ),
-                        ],
+                          child: Stack(
+                            children: [
+                              Center(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Image.asset(
+                                      'assets/images/피드백.png',
+                                      width: 50,
+                                      height: 50,
+                                    ),
+                                    const SizedBox(height: 10),
+                                    Text(
+                                      '피드백 보내기',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 20.06,
+                                        fontFamily: 'Pretendard',
+                                        fontWeight: FontWeight.w600,
+                                        height: 0,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 2),
+                                    Text(
+                                      '자유롭게 피드백 해주세요!',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 10.03,
+                                        fontFamily: 'Pretendard',
+                                        fontWeight: FontWeight.w400,
+                                        height: 0,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
-                    ),
+                    ],
                   ),
                 ),
               ],
