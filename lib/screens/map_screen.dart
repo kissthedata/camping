@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
-import 'package:firebase_database/firebase_database.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:map_sample/models/map_location.dart';
 import 'package:map_sample/utils/marker_utils.dart';
+import 'package:map_sample/services/kakao_location_service.dart'; // 새로 추가된 서비스 임포트
 
 class MapScreen extends StatefulWidget {
   @override
@@ -23,40 +24,48 @@ class _MapScreenState extends State<MapScreen> {
   @override
   void initState() {
     super.initState();
-    _loadLocationsFromDatabase(); // 데이터베이스에서 위치 정보를 불러옴
+    _fetchAndUploadLocations();
   }
 
-  // 데이터베이스에서 위치 정보를 불러오는 함수
-  Future<void> _loadLocationsFromDatabase() async {
-    try {
-      final databaseReference = FirebaseDatabase.instance.ref().child('locations');
-      final DataSnapshot snapshot = await databaseReference.get();
-      if (snapshot.exists) {
-        final Map<String, dynamic> data = Map<String, dynamic>.from(snapshot.value as Map);
-        final locations = data.entries.map((entry) {
-          final value = Map<String, dynamic>.from(entry.value);
-          return MapLocation(
-            num: entry.key,
-            place: value['place'],
-            latitude: value['latitude'],
-            longitude: value['longitude'],
-            category: value['category'],
-          );
-        }).toList();
+  Future<void> _fetchAndUploadLocations() async {
+    setState(() {
+      _loading = true;
+    });
 
-        setState(() {
-          _locations = locations;
-          _loading = false;
-        });
-        await _updateMarkers(); // 마커 업데이트
-      } else {
-        print('No data available.');
-        setState(() {
-          _loading = false;
-        });
-      }
+    try {
+      await KakaoLocationService().fetchAndUploadLocations();
+      await _loadLocationsFromFirestore();
     } catch (e) {
-      print('Error loading locations from database: $e');
+      print('Error fetching and uploading locations: $e');
+    } finally {
+      setState(() {
+        _loading = false;
+      });
+    }
+  }
+
+  Future<void> _loadLocationsFromFirestore() async {
+    try {
+      final firestore = FirebaseFirestore.instance;
+      final snapshot = await firestore.collection('locations').get();
+      final locations = snapshot.docs.map((doc) {
+        final data = doc.data();
+        return MapLocation(
+          num: doc.id,
+          place: data['place'],
+          latitude: data['latitude'],
+          longitude: data['longitude'],
+          category: data['category'],
+        );
+      }).toList();
+
+      setState(() {
+        _locations = locations;
+        _loading = false;
+      });
+      await _updateMarkers(); // 마커 업데이트
+    } catch (e) {
+      print('Error loading locations from Firestore: $e');
       setState(() {
         _loading = false;
       });
@@ -66,7 +75,6 @@ class _MapScreenState extends State<MapScreen> {
   Future<void> _getCurrentLocation() async {
     LocationPermission permission = await Geolocator.requestPermission();
     if (permission == LocationPermission.denied || permission == LocationPermission.deniedForever) {
-      // Handle the case where permission is denied
       return;
     }
 

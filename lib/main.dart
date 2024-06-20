@@ -1,26 +1,37 @@
-// main.dart
-
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'config/firebase_options.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'screens/login_screen.dart';
+import 'services/kakao_location_service.dart';
 
 void main() async {
-  // Flutter 앱의 진입점
-  WidgetsFlutterBinding.ensureInitialized(); // Flutter 엔진 초기화
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform); // Firebase 초기화
-  await NaverMapSdk.instance.initialize(clientId: "2f9jiniswu"); // Naver Map SDK 초기화
-  runApp(MyApp()); // MyApp 위젯 실행
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  NaverMapSdk.instance.initialize(clientId: "2f9jiniswu");
+
+  // Kakao SDK 초기화
+  KakaoSdk.init(
+    nativeAppKey: '15680e17c8b4ddbcef701a292ab5e26e', // 여기에 실제 네이티브 앱 키를 넣으세요
+  );
+
+  runApp(MyApp());
+
+  // 데이터 가져와서 Firestore에 저장
+  final kakaoLocationService = KakaoLocationService();
+  try {
+    await kakaoLocationService.fetchAndUploadLocations();
+  } catch (e) {
+    print('Error in main: $e');
+  }
 }
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // 앱의 루트 위젯
     return MaterialApp(
       theme: ThemeData(
-        // 테마 설정
         primaryColor: Color(0xFF162233),
         scaffoldBackgroundColor: Colors.white,
         appBarTheme: AppBarTheme(
@@ -38,7 +49,7 @@ class MyApp extends StatelessWidget {
           bodyMedium: TextStyle(color: Colors.black),
         ),
       ),
-      home: LoginScreen(), // 첫 화면으로 LoginScreen 설정
+      home: LoginScreen(),
     );
   }
 }

@@ -3,6 +3,7 @@
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
         android:label="map_sample"
@@ -41,6 +42,12 @@
         <meta-data
             android:name="com.naver.maps.map.CLIENT_ID"
             android:value="2f9jiniswu" />
+
+        <!-- Kakao SDK 설정 추가 -->
+        <meta-data
+            android:name="com.kakao.sdk.AppKey"
+            android:value="15680e17c8b4ddbcef701a292ab5e26e" />
+
     </application>
     
     <!-- Required to query activities that can process text, see:

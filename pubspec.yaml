@@ -31,8 +31,12 @@ dependencies:
   flutter:
     sdk: flutter
   http: ^1.2.1
+  share_plus: ^9.0.0
   flutter_naver_map: ^1.0.2
   sliding_up_panel: ^2.0.0
+  kakao_flutter_sdk: ^1.9.2
+  url_launcher: ^6.3.0
+  cloud_firestore: ^4.17.5
 
 
   # The following adds the Cupertino Icons font to your application.

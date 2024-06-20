@@ -3,7 +3,11 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
+import 'package:kakao_flutter_sdk_common/kakao_flutter_sdk_common.dart';
+import 'package:kakao_flutter_sdk_share/kakao_flutter_sdk_share.dart';
+import 'package:kakao_flutter_sdk_template/kakao_flutter_sdk_template.dart';
 
 class CarCampingSite {
   final String name;
@@ -166,7 +170,7 @@ class _RegionPageState extends State<RegionPage> {
   }
 
   void _scrapCampingSpot(CarCampingSite site) async {
-    User? user = FirebaseAuth.instance.currentUser;
+    var user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       DatabaseReference userScrapsRef = FirebaseDatabase.instance.ref().child('scraps').child(user.uid);
       DataSnapshot snapshot = await userScrapsRef.get();
@@ -205,67 +209,70 @@ class _RegionPageState extends State<RegionPage> {
     }
   }
 
-  void _shareCampingSpot(CarCampingSite site) {
-    final _nicknameController = TextEditingController();
+  void _shareCampingSpot(CarCampingSite site) async {
     showDialog(
       context: context,
-      builder: (context) {
+      builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('공유할 사용자 닉네임 입력'),
-          content: TextField(
-            controller: _nicknameController,
-            decoration: InputDecoration(labelText: '닉네임'),
+          title: Text('공유하기'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                ListTile(
+                  leading: Icon(Icons.share),
+                  title: Text('일반 공유'),
+                  onTap: () async {
+                    Navigator.of(context).pop();
+                    try {
+                      await Share.share(
+                        '차박지 정보\n이름: ${site.name}\n위치: ${site.latitude}, ${site.longitude}\n',
+                        subject: '차박지 정보 공유',
+                      );
+                    } catch (e) {
+                      print('공유 오류: $e');
+                    }
+                  },
+                ),
+                ListTile(
+                  leading: Icon(Icons.message),
+                  title: Text('카카오톡 공유'),
+                  onTap: () async {
+                    Navigator.of(context).pop();
+                    try {
+                      final FeedTemplate defaultFeed = FeedTemplate(
+                        content: Content(
+                          title: site.name,
+                          description: '차박지 위치: ${site.latitude}, ${site.longitude}',
+                          imageUrl: Uri.parse(site.imageUrl),
+                          link: Link(
+                            webUrl: Uri.parse('https://yourwebsite.com'),
+                            mobileWebUrl: Uri.parse('https://yourwebsite.com'),
+                          ),
+                        ),
+                        buttons: [
+                          Button(
+                            title: '자세히 보기',
+                            link: Link(
+                              webUrl: Uri.parse('https://yourwebsite.com'),
+                              mobileWebUrl: Uri.parse('https://yourwebsite.com'),
+                            ),
+                          ),
+                        ],
+                      );
+
+                      if (await ShareClient.instance.isKakaoTalkSharingAvailable()) {
+                        await ShareClient.instance.shareDefault(template: defaultFeed);
+                      } else {
+                        print('카카오톡이 설치되지 않았습니다.');
+                      }
+                    } catch (e) {
+                      print('카카오톡 공유 오류: $e');
+                    }
+                  },
+                ),
+              ],
+            ),
           ),
-          actions: [
-            TextButton(
-              onPressed: () async {
-                final nickname = _nicknameController.text;
-                if (nickname.isNotEmpty) {
-                  DatabaseReference nicknamesRef = FirebaseDatabase.instance.ref().child('nicknames');
-                  DataSnapshot snapshot = await nicknamesRef.child(nickname).get();
-                  if (snapshot.exists) {
-                    String userId = snapshot.value as String;
-                    DatabaseReference sharedScrapsRef = FirebaseDatabase.instance
-                        .ref()
-                        .child('shared_scraps')
-                        .child(userId);
-                    String newShareKey = sharedScrapsRef.push().key!;
-                    await sharedScrapsRef.child(newShareKey).set({
-                      'name': site.name,
-                      'latitude': site.latitude,
-                      'longitude': site.longitude,
-                      'imageUrl': site.imageUrl,
-                      'restRoom': site.restRoom,
-                      'sink': site.sink,
-                      'cook': site.cook,
-                      'animal': site.animal,
-                      'water': site.water,
-                      'parkinglot': site.parkinglot,
-                    });
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('차박지를 공유했습니다.')),
-                    );
-                    Navigator.pop(context);
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('닉네임이 존재하지 않습니다.')),
-                    );
-                  }
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('닉네임을 입력하세요.')),
-                  );
-                }
-              },
-              child: Text('공유'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: Text('취소'),
-            ),
-          ],
         );
       },
     );
