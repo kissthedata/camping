@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:map_sample/models/map_location.dart';
 import 'package:map_sample/utils/marker_utils.dart';
-import 'package:map_sample/services/kakao_location_service.dart'; // 새로 추가된 서비스 임포트
 
 class MapScreen extends StatefulWidget {
   @override
@@ -17,55 +16,49 @@ class _MapScreenState extends State<MapScreen> {
   NaverMapController? _mapController;
   List<NMarker> _markers = [];
   NMarker? _currentLocationMarker;
-  bool showMarts = true;
-  bool showConvenienceStores = true;
-  bool showRestrooms = true;
+  bool showMarts = false; // 초기값을 false로 설정
+  bool showConvenienceStores = false; // 초기값을 false로 설정
+  bool showRestrooms = false; // 초기값을 false로 설정
 
   @override
   void initState() {
     super.initState();
-    _fetchAndUploadLocations();
+    _loadLocationsFromDatabase();
   }
 
-  Future<void> _fetchAndUploadLocations() async {
-    setState(() {
-      _loading = true;
-    });
-
+  Future<void> _loadLocationsFromDatabase() async {
     try {
-      await KakaoLocationService().fetchAndUploadLocations();
-      await _loadLocationsFromFirestore();
-    } catch (e) {
-      print('Error fetching and uploading locations: $e');
-    } finally {
-      setState(() {
-        _loading = false;
-      });
-    }
-  }
+      final databaseReference = FirebaseDatabase.instance.ref().child('locations');
+      final DataSnapshot snapshot = await databaseReference.get();
+      if (snapshot.exists) {
+        final Map<String, dynamic> data = Map<String, dynamic>.from(snapshot.value as Map);
+        final locations = data.entries.map((entry) {
+          final value = Map<String, dynamic>.from(entry.value);
+          return MapLocation(
+            num: entry.key,
+            place: value['place'],
+            latitude: value['latitude'],
+            longitude: value['longitude'],
+            category: value['category'],
+          );
+        }).toList();
 
-  Future<void> _loadLocationsFromFirestore() async {
-    try {
-      final firestore = FirebaseFirestore.instance;
-      final snapshot = await firestore.collection('locations').get();
-      final locations = snapshot.docs.map((doc) {
-        final data = doc.data();
-        return MapLocation(
-          num: doc.id,
-          place: data['place'],
-          latitude: data['latitude'],
-          longitude: data['longitude'],
-          category: data['category'],
-        );
-      }).toList();
-
-      setState(() {
-        _locations = locations;
-        _loading = false;
-      });
-      await _updateMarkers(); // 마커 업데이트
+        setState(() {
+          _locations = locations;
+          _loading = false;
+        });
+        print('Locations loaded: ${_locations.length}');
+        if (_mapController != null) {
+          await _addMarkers();
+        }
+      } else {
+        print('No data available.');
+        setState(() {
+          _loading = false;
+        });
+      }
     } catch (e) {
-      print('Error loading locations from Firestore: $e');
+      print('Error loading locations from database: $e');
       setState(() {
         _loading = false;
       });
@@ -86,12 +79,13 @@ class _MapScreenState extends State<MapScreen> {
         id: 'current_location',
         position: currentPosition,
         caption: NOverlayCaption(text: '현재 위치'),
-        icon: NOverlayImage.fromAssetImage('assets/images/지도.png'), // Use a suitable icon
+        icon: NOverlayImage.fromAssetImage('assets/images/지도.png'), // 적절한 아이콘 이미지 사용
         size: Size(30, 30),
       );
       _mapController?.addOverlay(_currentLocationMarker!);
       _updateCameraPosition(currentPosition);
     });
+    print('Current location marker added at position: $currentPosition');
   }
 
   void _updateCameraPosition(NLatLng position) {
@@ -113,7 +107,9 @@ class _MapScreenState extends State<MapScreen> {
           showRestrooms = !showRestrooms;
           break;
       }
-      _updateMarkers(); // 마커 업데이트
+      if (_mapController != null) {
+        _updateMarkers();
+      }
     });
   }
 
@@ -121,7 +117,7 @@ class _MapScreenState extends State<MapScreen> {
   Widget build(BuildContext context) {
     if (_loading) {
       return Scaffold(
-        body: Center(child: CircularProgressIndicator()), // 로딩 중 표시
+        body: Center(child: CircularProgressIndicator()),
       );
     }
     return Scaffold(
@@ -141,7 +137,8 @@ class _MapScreenState extends State<MapScreen> {
               setState(() {
                 _mapController = controller;
               });
-              _addMarkers(); // 마커 추가
+              print('Map is ready');
+              _addMarkers();
             },
           ),
           Positioned(
@@ -151,7 +148,7 @@ class _MapScreenState extends State<MapScreen> {
               onPressed: _getCurrentLocation,
               child: Icon(Icons.gps_fixed, color: Colors.white),
               backgroundColor: Color(0xFF162233),
-              heroTag: 'regionPageHeroTag', // 버튼의 배경색을 변경
+              heroTag: 'regionPageHeroTag',
             ),
           ),
           Positioned(
@@ -176,32 +173,37 @@ class _MapScreenState extends State<MapScreen> {
     return ElevatedButton(
       onPressed: () => _toggleFilter(category),
       style: ElevatedButton.styleFrom(
-        backgroundColor: isActive ? Colors.lightBlue : Colors.grey, // 버튼 색상 설정
+        backgroundColor: isActive ? Colors.lightBlue : Colors.grey,
       ),
       child: Text(label),
     );
   }
 
-  // 마커를 지도에 추가하는 함수
   Future<void> _addMarkers() async {
-    if (_mapController == null) return;
+    if (_mapController == null) {
+      print('Map controller is null, cannot add markers yet');
+      return;
+    }
 
     _markers = MarkerUtils.createMarkers(_locations, showMarts, showConvenienceStores, showRestrooms, context);
     setState(() {});
 
-    // 마커를 비동기로 추가하여 메인 스레드 부하를 줄임
     for (var marker in _markers) {
       try {
         await _mapController!.addOverlay(marker);
+        print('Marker added at position: ${marker.position}');
       } catch (e) {
         print('Error adding marker: $e');
       }
     }
+    print('Markers created: ${_markers.length}');
   }
 
-  // 마커를 업데이트하는 함수
   Future<void> _updateMarkers() async {
-    if (_mapController == null) return;
+    if (_mapController == null) {
+      print('Map controller is null, cannot update markers');
+      return;
+    }
 
     _markers.clear();
     try {

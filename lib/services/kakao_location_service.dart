@@ -1,10 +1,10 @@
 import 'package:dio/dio.dart';
-import 'package:map_sample/models/map_location.dart';
-import 'package:map_sample/services/firestore_service.dart';
+import 'package:firebase_database/firebase_database.dart';
+import '../models/map_location.dart';
 
 class KakaoLocationService {
   final String kakaoApiKey = '0e700e905c04d44114aca5514a7bdd86';
-  final FirestoreService firestoreService = FirestoreService();
+  final DatabaseReference _dbRef = FirebaseDatabase.instance.reference().child('locations');
 
   Future<void> fetchAndUploadLocations() async {
     List<MapLocation> locations = [];
@@ -35,12 +35,18 @@ class KakaoLocationService {
         }
       }
       
-      // Firestore에 데이터 업로드
-      await firestoreService.addLocations(locations);
+      // Firebase Realtime Database에 데이터 업로드
+      await _uploadToFirebase(locations);
 
     } catch (e) {
       print('Error fetching and uploading locations: $e');
       throw Exception('Failed to load locations');
+    }
+  }
+
+  Future<void> _uploadToFirebase(List<MapLocation> locations) async {
+    for (MapLocation location in locations) {
+      await _dbRef.push().set(location.toJson());
     }
   }
 }

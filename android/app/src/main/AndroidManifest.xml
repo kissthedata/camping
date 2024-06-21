@@ -9,7 +9,7 @@
         android:label="map_sample"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
-        android:enableOnBackInvokedCallback="true"> <!-- 이 부분을 추가 -->
+        android:enableOnBackInvokedCallback="true">
 
         <activity
             android:name=".MainActivity"

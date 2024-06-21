@@ -18,7 +18,7 @@ void main() async {
 
   runApp(MyApp());
 
-  // 데이터 가져와서 Firestore에 저장
+  // 데이터 가져와서 Realtime Database에 저장
   final kakaoLocationService = KakaoLocationService();
   try {
     await kakaoLocationService.fetchAndUploadLocations();
