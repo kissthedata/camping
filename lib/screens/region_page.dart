@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:share_plus/share_plus.dart';
@@ -45,12 +46,13 @@ class _RegionPageState extends State<RegionPage> {
   final List<CarCampingSite> _filteredCampingSites = [];
   NaverMapController? _mapController;
   final PanelController _panelController = PanelController();
-  bool showRestRoom = true;
-  bool showSink = true;
-  bool showCook = true;
-  bool showAnimal = true;
-  bool showWater = true;
-  bool showParkinglot = true;
+  bool showRestRoom = false;
+  bool showSink = false;
+  bool showCook = false;
+  bool showAnimal = false;
+  bool showWater = false;
+  bool showParkinglot = false;
+  bool isPanelOpen = false;
 
   NMarker? _currentLocationMarker;
 
@@ -281,120 +283,258 @@ class _RegionPageState extends State<RegionPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('차박지 보기'),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.list, color: Colors.white),
-            onPressed: () {
-              if (_panelController.isPanelOpen) {
-                _panelController.close();
-              } else {
-                _panelController.open();
+      body: Stack(
+        children: [
+          NaverMap(
+            options: NaverMapViewOptions(
+              symbolScale: 1.2,
+              pickTolerance: 2,
+              initialCameraPosition: NCameraPosition(target: NLatLng(36.34, 127.77), zoom: 6.3),
+              mapType: NMapType.basic,
+            ),
+            onMapReady: (controller) {
+              setState(() {
+                _mapController = controller;
+              });
+              print('Map is ready');
+              for (var site in _campingSites) {
+                _addMarker(site);
               }
             },
           ),
-        ],
-      ),
-      body: Column(
-        children: [
-          SizedBox(height: 20),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                _buildFilterButton('공중화장실', 'restRoom', showRestRoom),
-                _buildFilterButton('개수대', 'sink', showSink),
-                _buildFilterButton('취사', 'cook', showCook),
-                _buildFilterButton('반려동물', 'animal', showAnimal),
-                _buildFilterButton('수돗물', 'water', showWater),
-                _buildFilterButton('주차장', 'parkinglot', showParkinglot),
-              ],
+          Positioned(
+            left: 35,
+            top: 200,
+            child: FloatingActionButton(
+              onPressed: _getCurrentLocation,
+              child: Icon(Icons.gps_fixed, color: Colors.white),
+              backgroundColor: Color(0xFF162233),
+              heroTag: 'regionPageHeroTag',
             ),
           ),
-          Expanded(
-            child: Stack(
-              children: [
-                NaverMap(
-                  options: NaverMapViewOptions(
-                    initialCameraPosition: NCameraPosition(
-                      target: NLatLng(35.83840532, 128.5603346),
-                      zoom: 10,
+          Positioned(
+            left: 0,
+            top: 0,
+            child: Container(
+              width: MediaQuery.of(context).size.width,
+              height: 115, // 상단 바 크기 조정
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(16),
+                  bottomRight: Radius.circular(16),
+                ),
+                border: Border.all(color: Colors.grey, width: 1), // 테두리 추가
+              ),
+              child: Stack(
+                children: [
+                  Positioned(
+                    left: 16,
+                    top: 40, // 상단 바 크기에 맞게 위치 조정
+                    child: IconButton(
+                      icon: Icon(Icons.arrow_back, size: 45), // 버튼 크기 조정
+                      color: Color(0xFF162233),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
                     ),
                   ),
-                  onMapReady: (controller) {
-                    _mapController = controller;
-                    for (var site in _campingSites) {
-                      _addMarker(site);
-                    }
-                  },
-                ),
-                SlidingUpPanel(
-                  controller: _panelController,
-                  panelSnapping: true,
-                  minHeight: 0,
-                  maxHeight: MediaQuery.of(context).size.height * 0.7,
-                  panel: Stack(
-                    children: [
-                      ListView.builder(
-                        itemCount: _filteredCampingSites.length,
-                        itemBuilder: (context, index) {
-                          final site = _filteredCampingSites[index];
-                          return Padding(
-                            padding: const EdgeInsets.all(12.0),
-                            child: Card(
-                              shape: RoundedRectangleBorder(
-                                side: BorderSide(color: Color(0xFF162233), width: 2),
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: ListTile(
-                                title: Text(site.name),
-                                subtitle: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    if (site.restRoom) Text('공중화장실'),
-                                    if (site.sink) Text('개수대'),
-                                    if (site.cook) Text('취사'),
-                                    if (site.animal) Text('반려동물'),
-                                    if (site.water) Text('수돗물'),
-                                    if (site.parkinglot) Text('주차장'),
-                                    Row(
-                                      children: [
-                                        TextButton(
-                                          onPressed: () => _scrapCampingSpot(site),
-                                          child: Text('스크랩'),
-                                        ),
-                                        TextButton(
-                                          onPressed: () => _shareCampingSpot(site),
-                                          child: Text('공유'),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                                onTap: () {
-                                  _updateCameraPosition(NLatLng(site.latitude, site.longitude));
-                                },
+                  Positioned(
+                    left: MediaQuery.of(context).size.width / 2 - 63,
+                    top: 50, // 상단 바 크기에 맞게 위치 조정
+                    child: Container(
+                      width: 126,
+                      height: 48,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage('assets/images/편안차박.png'),
+                          fit: BoxFit.contain,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Positioned(
+            top: 120, // 상단 바 크기에 맞게 위치 조정
+            left: 20,
+            right: 20,
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  _buildFilterButtonWithIcon('반려동물', 'animal', showAnimal, 'assets/images/반려동물.png'),
+                  _buildFilterButtonWithIcon('화장실', 'restRoom', showRestRoom, 'assets/images/화장실.png'),
+                  _buildFilterButtonWithIcon('계수대', 'sink', showSink, 'assets/images/계수대.png'),
+                  _buildFilterButtonWithIcon('샤워실', 'water', showWater, 'assets/images/샤워실.png'),
+                ],
+              ),
+            ),
+          ),
+          SlidingUpPanel(
+            controller: _panelController,
+            panelSnapping: true,
+            minHeight: 0,
+            maxHeight: MediaQuery.of(context).size.height * 0.7,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+            panel: ListView.builder(
+              itemCount: _filteredCampingSites.length,
+              itemBuilder: (context, index) {
+                final site = _filteredCampingSites[index];
+                return Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Container(
+                    width: 400,
+                    height: 160,
+                    decoration: BoxDecoration(
+                      color: Color(0xFFD9D9D9),
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: Color(0xFFBCBCBC), width: 2),
+                    ),
+                    child: Stack(
+                      children: [
+                        Positioned(
+                          left: 26,
+                          top: 12,
+                          child: Text(
+                            site.name,
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 18,
+                              fontFamily: 'Pretendard',
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                        ),
+                        Positioned(
+                          left: 26,
+                          right: 26,
+                          top: 35,
+                          child: Divider(
+                            color: Color(0xFFBCBCBC),
+                            thickness: 1,
+                          ),
+                        ),
+                        if (site.restRoom)
+                          Positioned(
+                            left: 26,
+                            top: 47,
+                            child: Text(
+                              '화장실',
+                              style: TextStyle(
+                                color: Color(0xFF323232),
+                                fontSize: 16,
+                                fontFamily: 'Pretendard',
+                                fontWeight: FontWeight.w400,
                               ),
                             ),
-                          );
-                        },
-                      ),
-                    ],
+                          ),
+                        if (site.animal)
+                          Positioned(
+                            left: 26,
+                            top: 75,
+                            child: Text(
+                              '반려동물',
+                              style: TextStyle(
+                                color: Color(0xFF323232),
+                                fontSize: 16,
+                                fontFamily: 'Pretendard',
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                          ),
+                        if (site.sink)
+                          Positioned(
+                            left: 26,
+                            top: 103,
+                            child: Text(
+                              '계수대',
+                              style: TextStyle(
+                                color: Color(0xFF323232),
+                                fontSize: 16,
+                                fontFamily: 'Pretendard',
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                          ),
+                        if (site.water)
+                          Positioned(
+                            left: 26,
+                            top: 131,
+                            child: Text(
+                              '수돗물',
+                              style: TextStyle(
+                                color: Color(0xFF323232),
+                                fontSize: 16,
+                                fontFamily: 'Pretendard',
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                          ),
+                        Positioned(
+                          right: 26,
+                          top: 2,
+                          child: Row(
+                            children: [
+                              IconButton(
+                                icon: Image.asset('assets/images/반려동물.png'),
+                                onPressed: () => _scrapCampingSpot(site),
+                              ),
+                              IconButton(
+                                icon: Image.asset('assets/images/반려동물.png'),
+                                onPressed: () => _shareCampingSpot(site),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+          Positioned(
+            left: 66,
+            bottom: 50,
+            child: Container(
+              width: 280,
+              height: 60,
+              decoration: ShapeDecoration(
+                color: Color(0xFF172243),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(36.50),
+                ),
+              ),
+              child: Center(
+                child: GestureDetector(
+                  onTap: () {
+                    if (_panelController.isPanelOpen) {
+                      _panelController.close();
+                      setState(() {
+                        isPanelOpen = false;
+                      });
+                    } else {
+                      _panelController.open();
+                      setState(() {
+                        isPanelOpen = true;
+                      });
+                    }
+                  },
+                  child: Text(
+                    isPanelOpen ? '차박지 목록 닫기' : '차박지 목록 열기',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontFamily: 'Pretendard',
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                 ),
-                Positioned(
-                  left: 16,
-                  top: 80,
-                  child: FloatingActionButton(
-                    backgroundColor: Color(0xFF162233),
-                    onPressed: _getCurrentLocation,
-                    heroTag: 'regionPageHeroTag',
-                    child: Icon(Icons.gps_fixed, color: Colors.white),
-                  ),
-                ),
-              ],
+              ),
             ),
           ),
         ],
@@ -402,14 +542,27 @@ class _RegionPageState extends State<RegionPage> {
     );
   }
 
-  Widget _buildFilterButton(String label, String category, bool isActive) {
-    return OutlinedButton(
-      onPressed: () => _toggleFilter(category),
-      style: OutlinedButton.styleFrom(
-        side: BorderSide(color: isActive ? Colors.lightBlue : Colors.grey), // 테두리 색상 설정
-        backgroundColor: Colors.transparent, // 배경색을 투명으로 설정
+  Widget _buildFilterButtonWithIcon(String label, String category, bool isActive, String iconPath) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 4.0),
+      child: ElevatedButton.icon(
+        onPressed: () => _toggleFilter(category),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: isActive ? Colors.lightBlue : Colors.white, // 비활성화 시 흰 배경 사용
+          side: BorderSide(color: isActive ? Colors.lightBlue : Colors.grey), // 테두리 추가
+        ),
+        icon: Image.asset(
+          iconPath,
+          width: 20,
+          height: 20,
+        ),
+        label: Text(
+          label,
+          style: TextStyle(
+            color: isActive ? Colors.white : Colors.black,
+          ),
+        ),
       ),
-      child: Text(label, style: TextStyle(color: isActive ? Colors.lightBlue : Colors.grey)),
     );
   }
 }

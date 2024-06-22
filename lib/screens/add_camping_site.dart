@@ -1,5 +1,3 @@
-// add_camping_site.dart
-
 import 'package:flutter/material.dart'; // Flutter 기본 UI 구성 요소
 import 'package:firebase_database/firebase_database.dart'; // Firebase Realtime Database 패키지
 import 'package:flutter_naver_map/flutter_naver_map.dart'; // Naver Map SDK 패키지
@@ -9,7 +7,8 @@ import 'full_screen_map.dart'; // 전체 화면 지도 파일
 
 class AddCampingSiteScreen extends StatefulWidget {
   @override
-  _AddCampingSiteScreenState createState() => _AddCampingSiteScreenState(); // AddCampingSiteScreen의 상태 생성
+  _AddCampingSiteScreenState createState() =>
+      _AddCampingSiteScreenState(); // AddCampingSiteScreen의 상태 생성
 }
 
 class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
@@ -42,7 +41,8 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
         return;
       }
 
-      DatabaseReference databaseReference = FirebaseDatabase.instance.ref().child('car_camping_sites').push();
+      DatabaseReference databaseReference =
+          FirebaseDatabase.instance.ref().child('car_camping_sites').push();
       // Firebase Realtime Database 참조 생성
       Map<String, dynamic> data = {
         // 데이터 맵 생성
@@ -114,14 +114,16 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
   Future<void> _getCurrentLocation() async {
     // 현재 위치 가져오기
     LocationPermission permission = await Geolocator.requestPermission();
-    if (permission == LocationPermission.denied || permission == LocationPermission.deniedForever) {
+    if (permission == LocationPermission.denied ||
+        permission == LocationPermission.deniedForever) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('위치 권한이 필요합니다. 설정에서 권한을 허용해주세요.')),
       );
       return;
     }
 
-    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
     NLatLng currentPosition = NLatLng(position.latitude, position.longitude);
 
     setState(() {
@@ -152,7 +154,8 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
             setState(() {
               _selectedLocation = latLng; // 선택된 위치 업데이트
               _latitudeController.text = latLng.latitude.toString(); // 위도 업데이트
-              _longitudeController.text = latLng.longitude.toString(); // 경도 업데이트
+              _longitudeController.text =
+                  latLng.longitude.toString(); // 경도 업데이트
               _updateMarker(latLng); // 마커 업데이트
             });
           },
@@ -163,8 +166,10 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
     if (selectedPosition != null) {
       setState(() {
         _selectedLocation = selectedPosition; // 선택된 위치 업데이트
-        _latitudeController.text = selectedPosition.latitude.toString(); // 위도 업데이트
-        _longitudeController.text = selectedPosition.longitude.toString(); // 경도 업데이트
+        _latitudeController.text =
+            selectedPosition.latitude.toString(); // 위도 업데이트
+        _longitudeController.text =
+            selectedPosition.longitude.toString(); // 경도 업데이트
         _updateMarker(selectedPosition); // 마커 업데이트
       });
     }
@@ -174,285 +179,406 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
   Widget build(BuildContext context) {
     // 화면 빌드
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("차박지 등록"),
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              children: [
-                Container(
-                  height: 200,
-                  width: double.infinity,
-                  child: Stack(
+      body: Stack(
+        children: [
+          Positioned(
+            left: 0,
+            top: 0,
+            child: Container(
+              width: MediaQuery.of(context).size.width,
+              height: 115, // 상단 바 크기 조정
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(16),
+                  bottomRight: Radius.circular(16),
+                ),
+                border: Border.all(color: Colors.grey, width: 1), // 테두리 추가
+              ),
+              child: Stack(
+                children: [
+                  Positioned(
+                    left: 16,
+                    top: 40, // 상단 바 크기에 맞게 위치 조정
+                    child: IconButton(
+                      icon: Icon(Icons.arrow_back, size: 45), // 버튼 크기 조정
+                      color: Color(0xFF162233),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ),
+                  Positioned(
+                    left: MediaQuery.of(context).size.width / 2 - 63,
+                    top: 50, // 상단 바 크기에 맞게 위치 조정
+                    child: Container(
+                      width: 126,
+                      height: 48,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage('assets/images/편안차박.png'),
+                          fit: BoxFit.contain,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Positioned(
+            top: 130,
+            left: 0,
+            right: 0,
+            bottom: 0, // 추가: 하단까지 채우도록 설정
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      NaverMap(
-                        options: NaverMapViewOptions(
-                          symbolScale: 1.2,
-                          pickTolerance: 2,
-                          initialCameraPosition: NCameraPosition(
-                            target: NLatLng(35.83840532, 128.5603346),
-                            zoom: 12,
-                          ),
-                          mapType: NMapType.basic,
+                      Container(
+                        height: 250, // 지도의 높이를 조금 더 키움
+                        width: double.infinity,
+                        child: Stack(
+                          children: [
+                            NaverMap(
+                              options: NaverMapViewOptions(
+                                symbolScale: 1.2,
+                                pickTolerance: 2,
+                                initialCameraPosition: NCameraPosition(
+                                  target: NLatLng(35.83840532, 128.5603346),
+                                  zoom: 12,
+                                ),
+                                mapType: NMapType.basic,
+                              ),
+                              onMapReady: (controller) {
+                                _mapController = controller; // 지도 컨트롤러 초기화
+                              },
+                              onMapTapped: _onMapTapped, // 지도 탭 콜백 함수 설정
+                            ),
+                            Positioned(
+                              left: 16,
+                              top: 16,
+                              child: FloatingActionButton(
+                                onPressed:
+                                    _getCurrentLocation, // 현재 위치 가져오기 함수 호출
+                                child:
+                                    Icon(Icons.gps_fixed, color: Colors.white),
+                                backgroundColor: Color(0xFF162233),
+                                heroTag: 'regionPageHeroTag',
+                              ),
+                            ),
+                            Positioned(
+                              right: 16,
+                              top: 16,
+                              child: FloatingActionButton(
+                                onPressed:
+                                    _openFullScreenMap, // 전체 화면 지도 열기 함수 호출
+                                child:
+                                    Icon(Icons.fullscreen, color: Colors.white),
+                                backgroundColor: Color(0xFF162233),
+                              ),
+                            ),
+                          ],
                         ),
-                        onMapReady: (controller) {
-                          _mapController = controller; // 지도 컨트롤러 초기화
-                        },
-                        onMapTapped: _onMapTapped, // 지도 탭 콜백 함수 설정
                       ),
-                      Positioned(
-                        left: 16,
-                        top: 16,
-                        child: FloatingActionButton(
-                          onPressed: _getCurrentLocation, // 현재 위치 가져오기 함수 호출
-                          child: Icon(Icons.gps_fixed, color: Colors.white),
-                          backgroundColor: Color(0xFF162233),
-                          heroTag: 'regionPageHeroTag',
+                      const SizedBox(height: 20),
+                      Container(
+                        width: MediaQuery.of(context).size.width, // 가로를 꽉 채움
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(color: Colors.grey, width: 1),
                         ),
-                      ),
-                      Positioned(
-                        right: 16,
-                        top: 16,
-                        child: FloatingActionButton(
-                          onPressed: _openFullScreenMap, // 전체 화면 지도 열기 함수 호출
-                          child: Icon(Icons.fullscreen, color: Colors.white),
-                          backgroundColor: Color(0xFF162233),
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              '나의 차박지 등록하기',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 30,
+                                fontFamily: 'Pretendard',
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            const SizedBox(height: 20),
+                            Container(
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                color: Color(0xFFF3F3F3),
+                                borderRadius: BorderRadius.circular(16),
+                                border: Border.all(
+                                    color: Color(0xFF474747), width: 1),
+                              ),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 16),
+                              child: TextFormField(
+                                controller: _placeController, // 장소 입력 컨트롤러
+                                maxLines: null,
+                                minLines: 1,
+                                keyboardType: TextInputType.multiline,
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  hintText: '차박지명',
+                                  hintStyle: TextStyle(
+                                    color: Color(0xFF868686),
+                                    fontSize: 16,
+                                    fontFamily: 'Pretendard',
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                ),
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return '차박지명을 입력해주세요'; // 유효성 검사 메시지
+                                  }
+                                  return null;
+                                },
+                              ),
+                            ),
+                            const SizedBox(height: 20),
+                            Container(
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                color: Color(0xFFF3F3F3),
+                                borderRadius: BorderRadius.circular(16),
+                                border: Border.all(
+                                    color: Color(0xFF474747), width: 1),
+                              ),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 16),
+                              child: TextFormField(
+                                controller: _latitudeController, // 위도 입력 컨트롤러
+                                maxLines: null,
+                                minLines: 1,
+                                readOnly: true,
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  hintText: '위도',
+                                  hintStyle: TextStyle(
+                                    color: Color(0xFF868686),
+                                    fontSize: 16,
+                                    fontFamily: 'Pretendard',
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                ),
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return '지도에서 위치를 선택해주세요'; // 유효성 검사 메시지
+                                  }
+                                  return null;
+                                },
+                              ),
+                            ),
+                            const SizedBox(height: 20),
+                            Container(
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                color: Color(0xFFF3F3F3),
+                                borderRadius: BorderRadius.circular(16),
+                                border: Border.all(
+                                    color: Color(0xFF474747), width: 1),
+                              ),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 16),
+                              child: TextFormField(
+                                controller: _longitudeController, // 경도 입력 컨트롤러
+                                maxLines: null,
+                                minLines: 1,
+                                readOnly: true,
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  hintText: '경도',
+                                  hintStyle: TextStyle(
+                                    color: Color(0xFF868686),
+                                    fontSize: 16,
+                                    fontFamily: 'Pretendard',
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                ),
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return '지도에서 위치를 선택해주세요'; // 유효성 검사 메시지
+                                  }
+                                  return null;
+                                },
+                              ),
+                            ),
+                            const SizedBox(height: 20),
+                            Text(
+                              '카테고리',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 20,
+                                fontFamily: 'Pretendard',
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            const SizedBox(height: 20),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Checkbox(
+                                          value: _isRestRoom, // 공중화장실 여부
+                                          onChanged: (bool? value) {
+                                            setState(() {
+                                              _isRestRoom = value ??
+                                                  false; // 공중화장실 여부 업데이트
+                                            });
+                                          },
+                                          activeColor:
+                                              Color(0xFF162233), // 체크했을 때 색상 변경
+                                        ),
+                                        const Text("화장실"),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        Checkbox(
+                                          value: _isSink, // 개수대 여부
+                                          onChanged: (bool? value) {
+                                            setState(() {
+                                              _isSink =
+                                                  value ?? false; // 개수대 여부 업데이트
+                                            });
+                                          },
+                                          activeColor:
+                                              Color(0xFF162233), // 체크했을 때 색상 변경
+                                        ),
+                                        const Text("계수대"),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Checkbox(
+                                          value: _isAnimal, // 반려동물 여부
+                                          onChanged: (bool? value) {
+                                            setState(() {
+                                              _isAnimal = value ??
+                                                  false; // 반려동물 여부 업데이트
+                                            });
+                                          },
+                                          activeColor:
+                                              Color(0xFF162233), // 체크했을 때 색상 변경
+                                        ),
+                                        const Text("반려동물"),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        Checkbox(
+                                          value: _isWater, // 수돗물 여부
+                                          onChanged: (bool? value) {
+                                            setState(() {
+                                              _isWater =
+                                                  value ?? false; // 수돗물 여부 업데이트
+                                            });
+                                          },
+                                          activeColor:
+                                              Color(0xFF162233), // 체크했을 때 색상 변경
+                                        ),
+                                        const Text("샤워실"),
+                                      ],
+                                    ),
+                                  ],
+                                )
+                              ],
+                            ),
+                            const SizedBox(height: 20),
+                            Text(
+                              '추가사항',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 20,
+                                fontFamily: 'Pretendard',
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            const SizedBox(height: 20),
+                            Container(
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                color: Color(0xFFF3F3F3),
+                                borderRadius: BorderRadius.circular(16),
+                                border: Border.all(
+                                    color: Color(0xFF474747), width: 1),
+                              ),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 16),
+                              child: TextFormField(
+                                controller: _detailsController, // 추가 사항 입력 컨트롤러
+                                maxLines: null,
+                                minLines: 1,
+                                keyboardType: TextInputType.multiline,
+                                decoration: InputDecoration(
+                                  contentPadding: EdgeInsets.all(10),
+                                  border: InputBorder.none,
+                                  hintText: "구체적으로 적어주세요.",
+                                  hintStyle: TextStyle(
+                                    color: Color(0xFF868686),
+                                    fontSize: 16,
+                                    fontFamily: 'Pretendard',
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 20),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.grey[300], // 배경색
+                                    elevation: 3, // 그림자
+                                    shadowColor: Colors.grey[400],
+                                  ),
+                                  onPressed: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                MyHomePage())); // 홈 페이지로 이동
+                                  },
+                                  child: const Text(
+                                    "취소하기",
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ),
+                                const SizedBox(width: 60),
+                                ElevatedButton(
+                                  onPressed: _addCampingSite, // 차박지 추가 함수 호출
+                                  child: const Text(
+                                    "저장하기",
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
                       ),
                     ],
                   ),
                 ),
-                const SizedBox(height: 20),
-                Container(
-                  width: double.infinity,
-                  child: TextFormField(
-                    controller: _placeController, // 장소 입력 컨트롤러
-                    maxLines: null,
-                    minLines: 1,
-                    keyboardType: TextInputType.multiline,
-                    decoration: InputDecoration(
-                      suffixIcon: GestureDetector(
-                        child: const Icon(Icons.cancel, color: Colors.blueAccent),
-                        onTap: () => _placeController.clear(), // 장소 입력 초기화
-                      ),
-                      border: const OutlineInputBorder(),
-                      labelText: "차박지명",
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return '차박지명을 입력해주세요'; // 유효성 검사 메시지
-                      }
-                      return null;
-                    },
-                  ),
-                ),
-                const SizedBox(height: 20),
-                Container(
-                  width: double.infinity,
-                  child: TextFormField(
-                    controller: _latitudeController, // 위도 입력 컨트롤러
-                    maxLines: null,
-                    minLines: 1,
-                    readOnly: true,
-                    decoration: InputDecoration(
-                      suffixIcon: GestureDetector(
-                        child: const Icon(Icons.cancel, color: Colors.blueAccent),
-                        onTap: () => _latitudeController.clear(), // 위도 입력 초기화
-                      ),
-                      border: const OutlineInputBorder(),
-                      labelText: "위도",
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return '지도에서 위치를 선택해주세요'; // 유효성 검사 메시지
-                      }
-                      return null;
-                    },
-                  ),
-                ),
-                const SizedBox(height: 20),
-                Container(
-                  width: double.infinity,
-                  child: TextFormField(
-                    controller: _longitudeController, // 경도 입력 컨트롤러
-                    maxLines: null,
-                    minLines: 1,
-                    readOnly: true,
-                    decoration: InputDecoration(
-                      suffixIcon: GestureDetector(
-                        child: const Icon(Icons.cancel, color: Colors.blueAccent),
-                        onTap: () => _longitudeController.clear(), // 경도 입력 초기화
-                      ),
-                      border: const OutlineInputBorder(),
-                      labelText: "경도",
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return '지도에서 위치를 선택해주세요'; // 유효성 검사 메시지
-                      }
-                      return null;
-                    },
-                  ),
-                ),
-                const SizedBox(height: 20),
-                const Text(
-                  "카테고리",
-                  style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Checkbox(
-                              value: _isRestRoom, // 공중화장실 여부
-                              onChanged: (bool? value) {
-                                setState(() {
-                                  _isRestRoom = value ?? false; // 공중화장실 여부 업데이트
-                                });
-                              },
-                            ),
-                            const Text("공중화장실"),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Checkbox(
-                              value: _isSink, // 개수대 여부
-                              onChanged: (bool? value) {
-                                setState(() {
-                                  _isSink = value ?? false; // 개수대 여부 업데이트
-                                });
-                              },
-                            ),
-                            const Text("개수대"),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Checkbox(
-                              value: _isCook, // 취사 여부
-                              onChanged: (bool? value) {
-                                setState(() {
-                                  _isCook = value ?? false; // 취사 여부 업데이트
-                                });
-                              },
-                            ),
-                            const Text("취사"),
-                          ],
-                        ),
-                      ],
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Checkbox(
-                              value: _isAnimal, // 반려동물 여부
-                              onChanged: (bool? value) {
-                                setState(() {
-                                  _isAnimal = value ?? false; // 반려동물 여부 업데이트
-                                });
-                              },
-                            ),
-                            const Text("반려동물"),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Checkbox(
-                              value: _isWater, // 수돗물 여부
-                              onChanged: (bool? value) {
-                                setState(() {
-                                  _isWater = value ?? false; // 수돗물 여부 업데이트
-                                });
-                              },
-                            ),
-                            const Text("수돗물"),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Checkbox(
-                              value: _isParkinglot, // 주차장 여부
-                              onChanged: (bool? value) {
-                                setState(() {
-                                  _isParkinglot = value ?? false; // 주차장 여부 업데이트
-                                });
-                              },
-                            ),
-                            const Text("주차장"),
-                          ],
-                        ),
-                      ],
-                    )
-                  ],
-                ),
-                const SizedBox(height: 20),
-                const Text(
-                  "추가사항",
-                  style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 20),
-                Container(
-                  width: double.infinity,
-                  child: TextFormField(
-                    controller: _detailsController, // 추가 사항 입력 컨트롤러
-                    maxLines: null,
-                    minLines: 1,
-                    keyboardType: TextInputType.multiline,
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.all(10),
-                      suffixIcon: GestureDetector(
-                        child: const Icon(Icons.cancel, color: Colors.blueAccent),
-                        onTap: () => _detailsController.clear(), // 추가 사항 입력 초기화
-                      ),
-                      border: const OutlineInputBorder(),
-                      labelText: "구체적으로 적어주세요.",
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.grey[300], // 배경색
-                        elevation: 3, // 그림자
-                        shadowColor: Colors.grey[400],
-                      ),
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => MyHomePage())); // 홈 페이지로 이동
-                      },
-                      child: const Text(
-                        "취소하기",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                    const SizedBox(width: 60),
-                    ElevatedButton(
-                      onPressed: _addCampingSite, // 차박지 추가 함수 호출
-                      child: const Text("저장하기"),
-                    ),
-                  ],
-                ),
-              ],
+              ),
             ),
           ),
-        ),
+        ],
       ),
     );
   }

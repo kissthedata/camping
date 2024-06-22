@@ -84,6 +84,10 @@ flutter:
     - assets/images/피드백.png
     - assets/images/차박지 보기.png
     - assets/images/편안차박.png
+    - assets/images/반려동물.png
+    - assets/images/화장실.png
+    - assets/images/샤워실.png
+    - assets/images/계수대.png
 
 
   #   - images/a_dot_burr.jpeg

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'map_screen.dart';
-import 'add_camping_site.dart';
-import 'region_page.dart';
-import 'my_page.dart';
-import 'feedback_screen.dart';
+import 'package:map_sample/screens/map_screen.dart';
+import 'package:map_sample/screens/add_camping_site.dart';
+import 'package:map_sample/screens/region_page.dart';
+import 'package:map_sample/screens/my_page.dart';
+import 'package:map_sample/screens/feedback_screen.dart';
 
 void main() {
   runApp(const FigmaToCodeApp());
