@@ -3,41 +3,38 @@ import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:map_sample/models/map_location.dart';
 
 class MarkerUtils {
-  static List<NMarker> createMarkers(
-    List<MapLocation> locations,
-    bool showMarts,
-    bool showConvenienceStores,
-    bool showRestrooms,
-    BuildContext context,
-  ) {
+  static List<NMarker> createMarkers(List<MapLocation> locations, bool showMarts, bool showConvenienceStores, bool showGasStations, BuildContext context) {
     List<NMarker> markers = [];
 
     for (var location in locations) {
-      String iconPath;
-      if (location.category == 'MT1') {
-        iconPath = 'assets/images/mart.png';
-      } else if (location.category == 'CS2') {
-        iconPath = 'assets/images/convenience_store.png';
-      } else if (location.category == 'PM9') {
-        iconPath = 'assets/images/restroom.png';
-      } else {
-        continue; // 해당하지 않는 카테고리는 스킵
-      }
-
-      if ((showMarts && location.category == 'MT1') ||
-          (showConvenienceStores && location.category == 'CS2') ||
-          (showRestrooms && location.category == 'PM9')) {
-        NMarker marker = NMarker(
-          id: location.num,
-          position: NLatLng(location.latitude, location.longitude),
-          caption: NOverlayCaption(text: location.place),
-          icon: NOverlayImage.fromAssetImage(iconPath),
-          size: Size(30, 30),
+      if ((location.category == '마트' && showMarts) ||
+          (location.category == '편의점' && showConvenienceStores) ||
+          (location.category == '주유소' && showGasStations)) {
+        markers.add(
+          NMarker(
+            id: location.num.toString(),
+            position: NLatLng(location.latitude, location.longitude),
+            caption: NOverlayCaption(text: location.place),
+            icon: NOverlayImage.fromAssetImage('assets/images/${_getCategoryImage(location.category)}.png'),
+            size: Size(40, 40),
+          ),
         );
-        markers.add(marker);
       }
     }
-    print('Total markers created: ${markers.length}');
+
     return markers;
+  }
+
+  static String _getCategoryImage(String category) {
+    switch (category) {
+      case '마트':
+        return 'mart';
+      case '편의점':
+        return 'convenience_store';
+      case '주유소':
+        return 'gas_station';
+      default:
+        return 'kakao'; // 기본 이미지 경로를 지정해 주세요.
+    }
   }
 }

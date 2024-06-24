@@ -1,20 +1,36 @@
 import 'package:flutter/material.dart';
 
-class FilterDialog extends StatelessWidget {
+class FilterDialog extends StatefulWidget {
   final bool showMarts;
   final bool showConvenienceStores;
-  final bool showRestrooms;
+  final bool showGasStations;
   final Function(bool, bool, bool) onFilterChanged;
 
   FilterDialog({
     required this.showMarts,
     required this.showConvenienceStores,
-    required this.showRestrooms,
+    required this.showGasStations,
     required this.onFilterChanged,
   });
 
+  @override
+  _FilterDialogState createState() => _FilterDialogState();
+}
+
+class _FilterDialogState extends State<FilterDialog> {
+  late bool _showMarts;
+  late bool _showConvenienceStores;
+  late bool _showGasStations;
+
+  @override
+  void initState() {
+    super.initState();
+    _showMarts = widget.showMarts;
+    _showConvenienceStores = widget.showConvenienceStores;
+    _showGasStations = widget.showGasStations;
+  }
+
   Widget _buildSwitchListTile(String title, bool value, ValueChanged<bool> onChanged) {
-    // 스위치 리스트 타일을 빌드하는 함수
     return SwitchListTile(
       title: Text(title),
       value: value,
@@ -24,41 +40,32 @@ class FilterDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // 필터 다이얼로그 UI 빌드
-    bool _showMarts = showMarts;
-    bool _showConvenienceStores = showConvenienceStores;
-    bool _showRestrooms = showRestrooms;
-
     return AlertDialog(
       title: Text('필터링'),
-      content: StatefulBuilder(
-        builder: (BuildContext context, StateSetter setState) {
-          return Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              _buildSwitchListTile('마트', _showMarts, (value) {
-                setState(() {
-                  _showMarts = value;
-                });
-              }),
-              _buildSwitchListTile('편의점', _showConvenienceStores, (value) {
-                setState(() {
-                  _showConvenienceStores = value;
-                });
-              }),
-              _buildSwitchListTile('화장실', _showRestrooms, (value) {
-                setState(() {
-                  _showRestrooms = value;
-                });
-              }),
-            ],
-          );
-        },
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _buildSwitchListTile('마트', _showMarts, (value) {
+            setState(() {
+              _showMarts = value;
+            });
+          }),
+          _buildSwitchListTile('편의점', _showConvenienceStores, (value) {
+            setState(() {
+              _showConvenienceStores = value;
+            });
+          }),
+          _buildSwitchListTile('주유소', _showGasStations, (value) {
+            setState(() {
+              _showGasStations = value;
+            });
+          }),
+        ],
       ),
       actions: [
         TextButton(
           onPressed: () {
-            onFilterChanged(_showMarts, _showConvenienceStores, _showRestrooms);
+            widget.onFilterChanged(_showMarts, _showConvenienceStores, _showGasStations);
             Navigator.pop(context);
           },
           child: Text('적용'),

@@ -4,6 +4,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:map_sample/models/map_location.dart';
 import 'package:map_sample/utils/marker_utils.dart';
+import 'package:map_sample/services/kakao_location_service.dart';
 
 class MapScreen extends StatefulWidget {
   @override
@@ -16,9 +17,9 @@ class _MapScreenState extends State<MapScreen> {
   NaverMapController? _mapController;
   List<NMarker> _markers = [];
   NMarker? _currentLocationMarker;
-  bool showMarts = false; // 초기값을 false로 설정
-  bool showConvenienceStores = false; // 초기값을 false로 설정
-  bool showRestrooms = false; // 초기값을 false로 설정
+  bool showMarts = false;
+  bool showConvenienceStores = false;
+  bool showGasStations = false;
 
   @override
   void initState() {
@@ -47,18 +48,15 @@ class _MapScreenState extends State<MapScreen> {
           _locations = locations;
           _loading = false;
         });
-        print('Locations loaded: ${_locations.length}');
         if (_mapController != null) {
           await _addMarkers();
         }
       } else {
-        print('No data available.');
         setState(() {
           _loading = false;
         });
       }
     } catch (e) {
-      print('Error loading locations from database: $e');
       setState(() {
         _loading = false;
       });
@@ -71,7 +69,7 @@ class _MapScreenState extends State<MapScreen> {
       return;
     }
 
-    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    Position position = await Geolocator.getCurrentPosition();
     NLatLng currentPosition = NLatLng(position.latitude, position.longitude);
 
     setState(() {
@@ -79,13 +77,12 @@ class _MapScreenState extends State<MapScreen> {
         id: 'current_location',
         position: currentPosition,
         caption: NOverlayCaption(text: '현재 위치'),
-        icon: NOverlayImage.fromAssetImage('assets/images/지도.png'), // 적절한 아이콘 이미지 사용
+        icon: NOverlayImage.fromAssetImage('assets/images/current_location.png'), // 아이콘 경로 확인
         size: Size(30, 30),
       );
       _mapController?.addOverlay(_currentLocationMarker!);
       _updateCameraPosition(currentPosition);
     });
-    print('Current location marker added at position: $currentPosition');
   }
 
   void _updateCameraPosition(NLatLng position) {
@@ -103,8 +100,8 @@ class _MapScreenState extends State<MapScreen> {
         case 'convenience_store':
           showConvenienceStores = !showConvenienceStores;
           break;
-        case 'restroom':
-          showRestrooms = !showRestrooms;
+        case 'gas_station':
+          showGasStations = !showGasStations;
           break;
       }
       if (_mapController != null) {
@@ -134,7 +131,6 @@ class _MapScreenState extends State<MapScreen> {
               setState(() {
                 _mapController = controller;
               });
-              print('Map is ready');
               _addMarkers();
             },
           ),
@@ -153,22 +149,22 @@ class _MapScreenState extends State<MapScreen> {
             top: 0,
             child: Container(
               width: MediaQuery.of(context).size.width,
-              height: 115, // 상단 바 크기 조정
+              height: 115,
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.only(
                   bottomLeft: Radius.circular(16),
                   bottomRight: Radius.circular(16),
                 ),
-                border: Border.all(color: Colors.grey, width: 1), // 테두리 추가
+                border: Border.all(color: Colors.grey, width: 1),
               ),
               child: Stack(
                 children: [
                   Positioned(
                     left: 16,
-                    top: 40, // 상단 바 크기에 맞게 위치 조정
+                    top: 40,
                     child: IconButton(
-                      icon: Icon(Icons.arrow_back, size: 45), // 버튼 크기 조정
+                      icon: Icon(Icons.arrow_back, size: 45),
                       color: Color(0xFF162233),
                       onPressed: () {
                         Navigator.pop(context);
@@ -177,7 +173,7 @@ class _MapScreenState extends State<MapScreen> {
                   ),
                   Positioned(
                     left: MediaQuery.of(context).size.width / 2 - 63,
-                    top: 50, // 상단 바 크기에 맞게 위치 조정
+                    top: 50,
                     child: Container(
                       width: 126,
                       height: 48,
@@ -194,7 +190,7 @@ class _MapScreenState extends State<MapScreen> {
             ),
           ),
           Positioned(
-            top: 120, // 상단 바 크기에 맞게 위치 조정
+            top: 120,
             left: 20,
             right: 20,
             child: Row(
@@ -202,7 +198,7 @@ class _MapScreenState extends State<MapScreen> {
               children: [
                 _buildFilterButtonWithIcon('마트', 'mart', showMarts, 'assets/images/mart.png'),
                 _buildFilterButtonWithIcon('편의점', 'convenience_store', showConvenienceStores, 'assets/images/convenience_store.png'),
-                _buildFilterButtonWithIcon('화장실', 'restroom', showRestrooms, 'assets/images/restroom.png'),
+                _buildFilterButtonWithIcon('주유소', 'gas_station', showGasStations, 'assets/images/gas_station.png'),
               ],
             ),
           ),
@@ -215,8 +211,8 @@ class _MapScreenState extends State<MapScreen> {
     return ElevatedButton.icon(
       onPressed: () => _toggleFilter(category),
       style: ElevatedButton.styleFrom(
-        backgroundColor: isActive ? Colors.lightBlue : Colors.white, // 비활성화 시 흰 배경 사용
-        side: BorderSide(color: isActive ? Colors.lightBlue : Colors.grey), // 테두리 추가
+        backgroundColor: isActive ? Colors.lightBlue : Colors.white,
+        side: BorderSide(color: isActive ? Colors.lightBlue : Colors.grey),
       ),
       icon: Image.asset(
         iconPath,
@@ -234,27 +230,23 @@ class _MapScreenState extends State<MapScreen> {
 
   Future<void> _addMarkers() async {
     if (_mapController == null) {
-      print('Map controller is null, cannot add markers yet');
       return;
     }
 
-    _markers = MarkerUtils.createMarkers(_locations, showMarts, showConvenienceStores, showRestrooms, context);
+    _markers = MarkerUtils.createMarkers(_locations, showMarts, showConvenienceStores, showGasStations, context);
     setState(() {});
 
     for (var marker in _markers) {
       try {
         await _mapController!.addOverlay(marker);
-        print('Marker added at position: ${marker.position}');
       } catch (e) {
         print('Error adding marker: $e');
       }
     }
-    print('Markers created: ${_markers.length}');
   }
 
   Future<void> _updateMarkers() async {
     if (_mapController == null) {
-      print('Map controller is null, cannot update markers');
       return;
     }
 
