@@ -16,8 +16,6 @@ void main() async {
     nativeAppKey: '15680e17c8b4ddbcef701a292ab5e26e', // 여기에 실제 네이티브 앱 키를 넣으세요
   );
 
-  runApp(MyApp());
-
   // 데이터 가져와서 Realtime Database에 저장
   final kakaoLocationService = KakaoLocationService();
   try {
@@ -25,6 +23,8 @@ void main() async {
   } catch (e) {
     print('Error in main: $e');
   }
+
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
