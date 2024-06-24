@@ -445,7 +445,7 @@ class _RegionPageState extends State<RegionPage> {
                 children: [
                   _buildFilterButtonWithIcon('반려동물', 'animal', showAnimal, 'assets/images/반려동물.png'),
                   _buildFilterButtonWithIcon('화장실', 'restRoom', showRestRoom, 'assets/images/화장실.png'),
-                  _buildFilterButtonWithIcon('계수대', 'sink', showSink, 'assets/images/계수대.png'),
+                  _buildFilterButtonWithIcon('개수대', 'sink', showSink, 'assets/images/개수대.png'),
                   _buildFilterButtonWithIcon('샤워실', 'water', showWater, 'assets/images/샤워실.png'),
                 ],
               ),
@@ -543,7 +543,7 @@ class _RegionPageState extends State<RegionPage> {
                                   ),
                                 if (site.sink)
                                   Text(
-                                    '계수대',
+                                    '개수대',
                                     style: TextStyle(
                                       color: Color(0xFF323232),
                                       fontSize: 16,

@@ -543,7 +543,7 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
                                           },
                                           activeColor: Color(0xFF162233),
                                         ),
-                                        const Text("계수대"),
+                                        const Text("개수대"),
                                       ],
                                     ),
                                   ],
