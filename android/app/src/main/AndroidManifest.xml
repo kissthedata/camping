@@ -41,7 +41,7 @@
         <!-- 네이버 맵 SDK의 Client ID를 설정 -->
         <meta-data
             android:name="com.naver.maps.map.CLIENT_ID"
-            android:value="2f9jiniswu" />
+            android:value="s017qk3xj5" />
 
         <!-- Kakao SDK 설정 추가 -->
         <meta-data

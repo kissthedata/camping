@@ -10,7 +10,7 @@ import 'services/kakao_location_service.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  NaverMapSdk.instance.initialize(clientId: "2f9jiniswu");
+  NaverMapSdk.instance.initialize(clientId: "s017qk3xj5");
 
   // Kakao SDK 초기화
   KakaoSdk.init(

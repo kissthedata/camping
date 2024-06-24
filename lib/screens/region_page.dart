@@ -21,6 +21,7 @@ class CarCampingSite {
   final bool animal;
   final bool water;
   final bool parkinglot;
+  final String details;
 
   CarCampingSite({
     required this.name,
@@ -33,6 +34,7 @@ class CarCampingSite {
     this.animal = false,
     this.water = false,
     this.parkinglot = false,
+    this.details = '',
   });
 }
 
@@ -81,6 +83,7 @@ class _RegionPageState extends State<RegionPage> {
           animal: siteData['animal'] ?? false,
           water: siteData['water'] ?? false,
           parkinglot: siteData['parkinglot'] ?? false,
+          details: siteData['details'] ?? '',
         );
         setState(() {
           _campingSites.add(site);
@@ -92,7 +95,7 @@ class _RegionPageState extends State<RegionPage> {
 
   void _updateCameraPosition(NLatLng position) {
     _mapController?.updateCamera(
-      NCameraUpdate.scrollAndZoomTo(target: position, zoom: 15),
+      NCameraUpdate.scrollAndZoomTo(target: position, zoom: 8),
     );
   }
 
@@ -280,6 +283,81 @@ class _RegionPageState extends State<RegionPage> {
     );
   }
 
+  void _showRegionSelectionDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('지역 선택'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                ListTile(
+                  title: Text('강원도'),
+                  onTap: () => _onRegionSelected('강원도'),
+                ),
+                ListTile(
+                  title: Text('경기도'),
+                  onTap: () => _onRegionSelected('경기도'),
+                ),
+                ListTile(
+                  title: Text('경상도'),
+                  onTap: () => _onRegionSelected('경상도'),
+                ),
+                ListTile(
+                  title: Text('전라도'),
+                  onTap: () => _onRegionSelected('전라도'),
+                ),
+                ListTile(
+                  title: Text('충청도'),
+                  onTap: () => _onRegionSelected('충청도'),
+                ),
+                ListTile(
+                  title: Text('제주도'),
+                  onTap: () => _onRegionSelected('제주도'),
+                ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('취소'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _onRegionSelected(String region) {
+    Navigator.of(context).pop();
+    setState(() {
+      switch (region) {
+        case '강원도':
+          _updateCameraPosition(NLatLng(37.8228, 128.1555));
+          break;
+        case '경기도':
+          _updateCameraPosition(NLatLng(37.4138, 127.5183));
+          break;
+        case '경상도':
+          _updateCameraPosition(NLatLng(35.5384, 128.3507));
+          break;
+        case '전라도':
+          _updateCameraPosition(NLatLng(35.7175, 127.1530));
+          break;
+        case '충청도':
+          _updateCameraPosition(NLatLng(36.5184, 127.8395));
+          break;
+        case '제주도':
+          _updateCameraPosition(NLatLng(33.4890, 126.4983));
+          break;
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -301,16 +379,6 @@ class _RegionPageState extends State<RegionPage> {
                 _addMarker(site);
               }
             },
-          ),
-          Positioned(
-            left: 35,
-            top: 200,
-            child: FloatingActionButton(
-              onPressed: _getCurrentLocation,
-              child: Icon(Icons.gps_fixed, color: Colors.white),
-              backgroundColor: Color(0xFF162233),
-              heroTag: 'regionPageHeroTag',
-            ),
           ),
           Positioned(
             left: 0,
@@ -353,6 +421,15 @@ class _RegionPageState extends State<RegionPage> {
                       ),
                     ),
                   ),
+                  Positioned(
+                    right: 16,
+                    top: 40, // 상단 바 크기에 맞게 위치 조정
+                    child: IconButton(
+                      icon: Icon(Icons.filter_list, size: 40),
+                      color: Colors.black,
+                      onPressed: () => _showRegionSelectionDialog(),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -384,113 +461,121 @@ class _RegionPageState extends State<RegionPage> {
               itemCount: _filteredCampingSites.length,
               itemBuilder: (context, index) {
                 final site = _filteredCampingSites[index];
-                return Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: Container(
-                    width: 400,
-                    height: 160,
-                    decoration: BoxDecoration(
-                      color: Color(0xFFD9D9D9),
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: Color(0xFFBCBCBC), width: 2),
-                    ),
-                    child: Stack(
-                      children: [
-                        Positioned(
-                          left: 26,
-                          top: 12,
-                          child: Text(
-                            site.name,
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 18,
-                              fontFamily: 'Pretendard',
-                              fontWeight: FontWeight.w400,
+                return GestureDetector(
+                  onTap: () {
+                    _updateCameraPosition(NLatLng(site.latitude, site.longitude));
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Container(
+                      width: 400,
+                      height: 160,
+                      decoration: BoxDecoration(
+                        color: Color(0xFFD9D9D9),
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: Color(0xFFBCBCBC), width: 2),
+                      ),
+                      child: Stack(
+                        children: [
+                          Positioned(
+                            left: 26,
+                            top: 12,
+                            child: Text(
+                              site.name,
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 18,
+                                fontFamily: 'Pretendard',
+                                fontWeight: FontWeight.w400,
+                              ),
                             ),
                           ),
-                        ),
-                        Positioned(
-                          left: 26,
-                          right: 26,
-                          top: 35,
-                          child: Divider(
-                            color: Color(0xFFBCBCBC),
-                            thickness: 1,
+                          Positioned(
+                            right: 26,
+                            top: 12,
+                            child: Row(
+                              children: [
+                                IconButton(
+                                  icon: Icon(Icons.star, color: Colors.black),
+                                  onPressed: () => _scrapCampingSpot(site),
+                                ),
+                                IconButton(
+                                  icon: Icon(Icons.share, color: Colors.black),
+                                  onPressed: () => _shareCampingSpot(site),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                        if (site.restRoom)
+                          Positioned(
+                            left: 26,
+                            right: 26,
+                            top: 35,
+                            child: Divider(
+                              color: Color(0xFFBCBCBC),
+                              thickness: 1,
+                            ),
+                          ),
                           Positioned(
                             left: 26,
                             top: 47,
-                            child: Text(
-                              '화장실',
-                              style: TextStyle(
-                                color: Color(0xFF323232),
-                                fontSize: 16,
-                                fontFamily: 'Pretendard',
-                                fontWeight: FontWeight.w400,
-                              ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                if (site.restRoom)
+                                  Text(
+                                    '화장실',
+                                    style: TextStyle(
+                                      color: Color(0xFF323232),
+                                      fontSize: 16,
+                                      fontFamily: 'Pretendard',
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ),
+                                if (site.animal)
+                                  Text(
+                                    '반려동물',
+                                    style: TextStyle(
+                                      color: Color(0xFF323232),
+                                      fontSize: 16,
+                                      fontFamily: 'Pretendard',
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ),
+                                if (site.sink)
+                                  Text(
+                                    '계수대',
+                                    style: TextStyle(
+                                      color: Color(0xFF323232),
+                                      fontSize: 16,
+                                      fontFamily: 'Pretendard',
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ),
+                                if (site.water)
+                                  Text(
+                                    '샤워실',
+                                    style: TextStyle(
+                                      color: Color(0xFF323232),
+                                      fontSize: 16,
+                                      fontFamily: 'Pretendard',
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ),
+                                if (site.details.isNotEmpty)
+                                  Text(
+                                    '기타: ${site.details}',
+                                    style: TextStyle(
+                                      color: Color(0xFF323232),
+                                      fontSize: 16,
+                                      fontFamily: 'Pretendard',
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ),
+                              ],
                             ),
                           ),
-                        if (site.animal)
-                          Positioned(
-                            left: 26,
-                            top: 75,
-                            child: Text(
-                              '반려동물',
-                              style: TextStyle(
-                                color: Color(0xFF323232),
-                                fontSize: 16,
-                                fontFamily: 'Pretendard',
-                                fontWeight: FontWeight.w400,
-                              ),
-                            ),
-                          ),
-                        if (site.sink)
-                          Positioned(
-                            left: 26,
-                            top: 103,
-                            child: Text(
-                              '계수대',
-                              style: TextStyle(
-                                color: Color(0xFF323232),
-                                fontSize: 16,
-                                fontFamily: 'Pretendard',
-                                fontWeight: FontWeight.w400,
-                              ),
-                            ),
-                          ),
-                        if (site.water)
-                          Positioned(
-                            left: 26,
-                            top: 131,
-                            child: Text(
-                              '수돗물',
-                              style: TextStyle(
-                                color: Color(0xFF323232),
-                                fontSize: 16,
-                                fontFamily: 'Pretendard',
-                                fontWeight: FontWeight.w400,
-                              ),
-                            ),
-                          ),
-                        Positioned(
-                          right: 26,
-                          top: 2,
-                          child: Row(
-                            children: [
-                              IconButton(
-                                icon: Image.asset('assets/images/반려동물.png'),
-                                onPressed: () => _scrapCampingSpot(site),
-                              ),
-                              IconButton(
-                                icon: Image.asset('assets/images/반려동물.png'),
-                                onPressed: () => _shareCampingSpot(site),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 );
