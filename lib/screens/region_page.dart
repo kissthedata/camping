@@ -90,8 +90,6 @@ class _RegionPageState extends State<RegionPage> {
         _filteredCampingSites.add(site);
       });
       setState(() {});
-      // 마커를 추가하는 작업을 비동기로 처리
-      _addMarkers();
     }
   }
 
@@ -101,13 +99,9 @@ class _RegionPageState extends State<RegionPage> {
     );
   }
 
-  Future<void> _addMarkers() async {
-    if (_mapController != null) {
-      for (var site in _campingSites) {
-        _addMarker(site);
-        // 마커 추가 시 약간의 지연을 두어 비동기 작업이 제대로 처리되도록 함
-        await Future.delayed(Duration(milliseconds: 100));
-      }
+  void _addMarkers() {
+    for (var site in _campingSites) {
+      _addMarker(site);
     }
   }
 
@@ -377,6 +371,39 @@ class _RegionPageState extends State<RegionPage> {
     });
   }
 
+  void _showSiteInfoDialog(CarCampingSite site) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(site.name),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('위치: ${site.latitude}, ${site.longitude}'),
+                if (site.restRoom) Text('화장실: 있음'),
+                if (site.sink) Text('개수대: 있음'),
+                if (site.cook) Text('취사 가능: 있음'),
+                if (site.animal) Text('반려동물: 가능'),
+                if (site.water) Text('샤워실: 있음'),
+                if (site.parkinglot) Text('주차장: 있음'),
+                if (site.details.isNotEmpty) Text('기타: ${site.details}'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('닫기'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -395,10 +422,19 @@ class _RegionPageState extends State<RegionPage> {
                 _mapController = controller;
               });
               print('Map is ready');
-              // 마커 추가 작업을 지도 준비 완료 후 비동기로 처리
               _addMarkers();
             },
           ),
+          ..._campingSites.map((site) {
+            return Positioned(
+              left: (site.longitude * 1.0),
+              top: (site.latitude * 1.0),
+              child: GestureDetector(
+                onTap: () => _showSiteInfoDialog(site),
+                child: Icon(Icons.location_on, color: Colors.red),
+              ),
+            );
+          }).toList(),
           Positioned(
             left: 0,
             top: 0,
