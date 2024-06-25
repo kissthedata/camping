@@ -113,6 +113,10 @@ class _RegionPageState extends State<RegionPage> {
       icon: NOverlayImage.fromAssetImage('assets/images/camping_site.png'),
       size: Size(30, 30),
     );
+    marker.setOnTapListener((NMarker marker) {
+      _showSiteInfoDialog(site);
+      return true;
+    });
     _mapController?.addOverlay(marker);
   }
 
@@ -425,16 +429,6 @@ class _RegionPageState extends State<RegionPage> {
               _addMarkers();
             },
           ),
-          ..._campingSites.map((site) {
-            return Positioned(
-              left: (site.longitude * 1.0),
-              top: (site.latitude * 1.0),
-              child: GestureDetector(
-                onTap: () => _showSiteInfoDialog(site),
-                child: Icon(Icons.location_on, color: Colors.red),
-              ),
-            );
-          }).toList(),
           Positioned(
             left: 0,
             top: 0,
