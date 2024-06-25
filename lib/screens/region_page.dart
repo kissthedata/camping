@@ -6,7 +6,6 @@ import 'package:geolocator/geolocator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
-import 'package:kakao_flutter_sdk_common/kakao_flutter_sdk_common.dart';
 import 'package:kakao_flutter_sdk_share/kakao_flutter_sdk_share.dart';
 import 'package:kakao_flutter_sdk_template/kakao_flutter_sdk_template.dart';
 
@@ -65,11 +64,13 @@ class _RegionPageState extends State<RegionPage> {
   }
 
   Future<void> _loadCampingSites() async {
-    DatabaseReference databaseReference = FirebaseDatabase.instance.ref().child('car_camping_sites');
+    DatabaseReference databaseReference =
+        FirebaseDatabase.instance.ref().child('car_camping_sites');
     DataSnapshot snapshot = await databaseReference.get();
 
     if (snapshot.exists) {
-      Map<String, dynamic> data = Map<String, dynamic>.from(snapshot.value as Map);
+      Map<String, dynamic> data =
+          Map<String, dynamic>.from(snapshot.value as Map);
       data.forEach((key, value) {
         Map<String, dynamic> siteData = Map<String, dynamic>.from(value);
         CarCampingSite site = CarCampingSite(
@@ -85,18 +86,29 @@ class _RegionPageState extends State<RegionPage> {
           parkinglot: siteData['parkinglot'] ?? false,
           details: siteData['details'] ?? '',
         );
-        setState(() {
-          _campingSites.add(site);
-          _filteredCampingSites.add(site);
-        });
+        _campingSites.add(site);
+        _filteredCampingSites.add(site);
       });
+      setState(() {});
+      // 마커를 추가하는 작업을 비동기로 처리
+      _addMarkers();
     }
   }
 
-  void _updateCameraPosition(NLatLng position) {
+  void _updateCameraPosition(NLatLng position, {double zoom = 7.5}) {
     _mapController?.updateCamera(
-      NCameraUpdate.scrollAndZoomTo(target: position, zoom: 8),
+      NCameraUpdate.scrollAndZoomTo(target: position, zoom: zoom),
     );
+  }
+
+  Future<void> _addMarkers() async {
+    if (_mapController != null) {
+      for (var site in _campingSites) {
+        _addMarker(site);
+        // 마커 추가 시 약간의 지연을 두어 비동기 작업이 제대로 처리되도록 함
+        await Future.delayed(Duration(milliseconds: 100));
+      }
+    }
   }
 
   void _addMarker(CarCampingSite site) {
@@ -154,11 +166,13 @@ class _RegionPageState extends State<RegionPage> {
 
   Future<void> _getCurrentLocation() async {
     LocationPermission permission = await Geolocator.requestPermission();
-    if (permission == LocationPermission.denied || permission == LocationPermission.deniedForever) {
+    if (permission == LocationPermission.denied ||
+        permission == LocationPermission.deniedForever) {
       return;
     }
 
-    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
     NLatLng currentPosition = NLatLng(position.latitude, position.longitude);
 
     setState(() {
@@ -170,14 +184,15 @@ class _RegionPageState extends State<RegionPage> {
         size: Size(30, 30),
       );
       _mapController?.addOverlay(_currentLocationMarker!);
-      _updateCameraPosition(currentPosition);
+      _updateCameraPosition(currentPosition, zoom: 10);
     });
   }
 
   void _scrapCampingSpot(CarCampingSite site) async {
     var user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      DatabaseReference userScrapsRef = FirebaseDatabase.instance.ref().child('scraps').child(user.uid);
+      DatabaseReference userScrapsRef =
+          FirebaseDatabase.instance.ref().child('scraps').child(user.uid);
       DataSnapshot snapshot = await userScrapsRef.get();
 
       bool alreadyScrapped = false;
@@ -247,7 +262,8 @@ class _RegionPageState extends State<RegionPage> {
                       final FeedTemplate defaultFeed = FeedTemplate(
                         content: Content(
                           title: site.name,
-                          description: '차박지 위치: ${site.latitude}, ${site.longitude}',
+                          description:
+                              '차박지 위치: ${site.latitude}, ${site.longitude}',
                           imageUrl: Uri.parse(site.imageUrl),
                           link: Link(
                             webUrl: Uri.parse('https://yourwebsite.com'),
@@ -259,14 +275,17 @@ class _RegionPageState extends State<RegionPage> {
                             title: '자세히 보기',
                             link: Link(
                               webUrl: Uri.parse('https://yourwebsite.com'),
-                              mobileWebUrl: Uri.parse('https://yourwebsite.com'),
+                              mobileWebUrl:
+                                  Uri.parse('https://yourwebsite.com'),
                             ),
                           ),
                         ],
                       );
 
-                      if (await ShareClient.instance.isKakaoTalkSharingAvailable()) {
-                        await ShareClient.instance.shareDefault(template: defaultFeed);
+                      if (await ShareClient.instance
+                          .isKakaoTalkSharingAvailable()) {
+                        await ShareClient.instance
+                            .shareDefault(template: defaultFeed);
                       } else {
                         print('카카오톡이 설치되지 않았습니다.');
                       }
@@ -367,7 +386,8 @@ class _RegionPageState extends State<RegionPage> {
             options: NaverMapViewOptions(
               symbolScale: 1.2,
               pickTolerance: 2,
-              initialCameraPosition: NCameraPosition(target: NLatLng(36.34, 127.77), zoom: 6.3),
+              initialCameraPosition:
+                  NCameraPosition(target: NLatLng(36.34, 127.77), zoom: 6.3),
               mapType: NMapType.basic,
             ),
             onMapReady: (controller) {
@@ -375,9 +395,8 @@ class _RegionPageState extends State<RegionPage> {
                 _mapController = controller;
               });
               print('Map is ready');
-              for (var site in _campingSites) {
-                _addMarker(site);
-              }
+              // 마커 추가 작업을 지도 준비 완료 후 비동기로 처리
+              _addMarkers();
             },
           ),
           Positioned(
@@ -443,12 +462,26 @@ class _RegionPageState extends State<RegionPage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  _buildFilterButtonWithIcon('반려동물', 'animal', showAnimal, 'assets/images/반려동물.png'),
-                  _buildFilterButtonWithIcon('화장실', 'restRoom', showRestRoom, 'assets/images/화장실.png'),
-                  _buildFilterButtonWithIcon('개수대', 'sink', showSink, 'assets/images/개수대.png'),
-                  _buildFilterButtonWithIcon('샤워실', 'water', showWater, 'assets/images/샤워실.png'),
+                  _buildFilterButtonWithIcon(
+                      '반려동물', 'animal', showAnimal, 'assets/images/반려동물.png'),
+                  _buildFilterButtonWithIcon(
+                      '화장실', 'restRoom', showRestRoom, 'assets/images/화장실.png'),
+                  _buildFilterButtonWithIcon(
+                      '개수대', 'sink', showSink, 'assets/images/개수대.png'),
+                  _buildFilterButtonWithIcon(
+                      '샤워실', 'water', showWater, 'assets/images/샤워실.png'),
                 ],
               ),
+            ),
+          ),
+          Positioned(
+            top: 180, // 반려동물 아래에 실시간 위치 아이콘을 위치시킴
+            left: 20,
+            child: FloatingActionButton(
+              onPressed: _getCurrentLocation,
+              child: Icon(Icons.gps_fixed, color: Colors.white),
+              backgroundColor: Color(0xFF162233),
+              heroTag: 'regionPageHeroTag',
             ),
           ),
           SlidingUpPanel(
@@ -463,7 +496,10 @@ class _RegionPageState extends State<RegionPage> {
                 final site = _filteredCampingSites[index];
                 return GestureDetector(
                   onTap: () {
-                    _updateCameraPosition(NLatLng(site.latitude, site.longitude));
+                    _updateCameraPosition(
+                      NLatLng(site.latitude, site.longitude),
+                      zoom: 15,
+                    );
                   },
                   child: Padding(
                     padding: const EdgeInsets.all(12.0),
@@ -492,7 +528,6 @@ class _RegionPageState extends State<RegionPage> {
                           ),
                           Positioned(
                             right: 26,
-                            top: 12,
                             child: Row(
                               children: [
                                 IconButton(
@@ -627,14 +662,17 @@ class _RegionPageState extends State<RegionPage> {
     );
   }
 
-  Widget _buildFilterButtonWithIcon(String label, String category, bool isActive, String iconPath) {
+  Widget _buildFilterButtonWithIcon(
+      String label, String category, bool isActive, String iconPath) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 4.0),
       child: ElevatedButton.icon(
         onPressed: () => _toggleFilter(category),
         style: ElevatedButton.styleFrom(
-          backgroundColor: isActive ? Colors.lightBlue : Colors.white, // 비활성화 시 흰 배경 사용
-          side: BorderSide(color: isActive ? Colors.lightBlue : Colors.grey), // 테두리 추가
+          backgroundColor:
+              isActive ? Colors.lightBlue : Colors.white, // 비활성화 시 흰 배경 사용
+          side: BorderSide(
+              color: isActive ? Colors.lightBlue : Colors.grey), // 테두리 추가
         ),
         icon: Image.asset(
           iconPath,

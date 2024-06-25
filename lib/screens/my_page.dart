@@ -13,7 +13,6 @@ class MyPage extends StatefulWidget {
 class _MyPageState extends State<MyPage> {
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
-  final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {

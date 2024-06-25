@@ -4,7 +4,6 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:map_sample/models/map_location.dart';
 import 'package:map_sample/utils/marker_utils.dart';
-import 'package:map_sample/services/kakao_location_service.dart';
 
 class MapScreen extends StatefulWidget {
   @override
