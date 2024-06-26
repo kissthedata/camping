@@ -130,7 +130,7 @@ class MyHomePage extends StatelessWidget {
                                 ),
                                 const SizedBox(height: 2),
                                 Text(
-                                  '마트, 편의점, 화장실 등을 확인 할 수 있습니다.',
+                                  '마트, 편의점, 주유소 등을 확인 할 수 있습니다.',
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 12,
