@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
@@ -8,6 +9,7 @@ import 'package:share_plus/share_plus.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:kakao_flutter_sdk_share/kakao_flutter_sdk_share.dart';
 import 'package:kakao_flutter_sdk_template/kakao_flutter_sdk_template.dart';
+import 'package:http/http.dart' as http;
 
 class CarCampingSite {
   final String name;
@@ -91,6 +93,35 @@ class _RegionPageState extends State<RegionPage> {
       });
       setState(() {});
     }
+  }
+
+  Future<String> _getAddressFromLatLng(double lat, double lng) async {
+    final String clientId = 's017qk3xj5'; // 네이버 클라우드 플랫폼에서 발급받은 Client ID
+    final String clientSecret =
+        'HQopWhspmeu4pZTmIIfTLM0K7ZkyqKt6E5VeUu7b'; // 네이버 클라우드 플랫폼에서 발급받은 Client Secret
+    final String apiUrl =
+        'https://naveropenapi.apigw.ntruss.com/map-reversegeocode/v2/gc';
+
+    final response = await http.get(
+      Uri.parse('$apiUrl?coords=$lng,$lat&orders=roadaddr,addr&output=json'),
+      headers: {
+        'X-NCP-APIGW-API-KEY-ID': clientId,
+        'X-NCP-APIGW-API-KEY': clientSecret,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      final results = data['results'] as List<dynamic>;
+      if (results.isNotEmpty) {
+        final region = results[0]['region'];
+        final land = results[0]['land'];
+        final address =
+            '${region['area1']['name']} ${region['area2']['name']} ${region['area3']['name']} ${region['area4']['name']} ${land['number1']}';
+        return address;
+      }
+    }
+    return '주소를 찾을 수 없습니다';
   }
 
   void _updateCameraPosition(NLatLng position, {double zoom = 7.5}) {
@@ -375,36 +406,202 @@ class _RegionPageState extends State<RegionPage> {
     });
   }
 
-  void _showSiteInfoDialog(CarCampingSite site) {
+  void _showSiteInfoDialog(CarCampingSite site) async {
+    String address = await _getAddressFromLatLng(site.latitude, site.longitude);
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(site.name),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                Text('위치: ${site.latitude}, ${site.longitude}'),
-                if (site.restRoom) Text('화장실: 있음'),
-                if (site.sink) Text('개수대: 있음'),
-                if (site.cook) Text('취사 가능: 있음'),
-                if (site.animal) Text('반려동물: 가능'),
-                if (site.water) Text('샤워실: 있음'),
-                if (site.parkinglot) Text('주차장: 있음'),
-                if (site.details.isNotEmpty) Text('기타: ${site.details}'),
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16.0),
+          ),
+          child: Container(
+            padding: EdgeInsets.all(16.0),
+            decoration: BoxDecoration(
+              color: Color(0xFFEFEFEF),
+              borderRadius: BorderRadius.circular(16.0),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        site.name,
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 24,
+                          fontFamily: 'Pretendard',
+                          fontWeight: FontWeight.w600,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    Row(
+                      children: [
+                        IconButton(
+                          icon: Icon(Icons.star, color: Colors.black),
+                          onPressed: () => _scrapCampingSpot(site),
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.share, color: Colors.black),
+                          onPressed: () => _shareCampingSpot(site),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                SizedBox(height: 10),
+                Text(
+                  '$address',
+                  style: TextStyle(
+                    color: Color(0xFF454545),
+                    fontSize: 17,
+                    fontFamily: 'Pretendard',
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+                SizedBox(height: 10),
+                Row(
+                  children: [
+                    Text(
+                      '위도: ${site.latitude}',
+                      style: TextStyle(
+                        color: Color(0xFF727272),
+                        fontSize: 12,
+                        fontFamily: 'Pretendard',
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    SizedBox(width: 10),
+                    Text(
+                      '경도: ${site.longitude}',
+                      style: TextStyle(
+                        color: Color(0xFF727272),
+                        fontSize: 12,
+                        fontFamily: 'Pretendard',
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 20),
+                Text(
+                  '분류',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 14,
+                    fontFamily: 'Pretendard',
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                SizedBox(height: 10),
+                Wrap(
+                  spacing: 10,
+                  runSpacing: 10,
+                  children: [
+                    if (site.restRoom) _buildTag('화장실'),
+                    if (site.sink) _buildTag('개수대'),
+                    if (site.cook) _buildTag('취사 가능'),
+                    if (site.animal) _buildTag('반려동물 가능'),
+                    if (site.water) _buildTag('샤워실'),
+                    if (site.parkinglot) _buildTag('주차장'),
+                  ],
+                ),
+                SizedBox(height: 20),
+                Text(
+                  '실제 리뷰',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 14,
+                    fontFamily: 'Pretendard',
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                SizedBox(height: 10),
+                Container(
+                  width: double.infinity,
+                  padding: EdgeInsets.all(16.0),
+                  decoration: ShapeDecoration(
+                    color: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      side: BorderSide(width: 1, color: Color(0xFFDBDBDB)),
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                  ),
+                  child: Text(
+                    site.details.isNotEmpty ? site.details : '리뷰가 없습니다.',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 14,
+                      fontFamily: 'Pretendard',
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                ),
+                SizedBox(height: 20),
+                Container(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Color(0xFFB0B2B9),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                    ),
+                    child: Text(
+                      '닫기',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontFamily: 'Pretendard',
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
-          actions: <Widget>[
-            TextButton(
-              child: Text('닫기'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
         );
       },
+    );
+  }
+
+  Widget _buildTag(String label) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 8),
+      decoration: ShapeDecoration(
+        color: Colors.white,
+        shape: RoundedRectangleBorder(
+          side: BorderSide(width: 0.60, color: Color(0xFF162243)),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        shadows: [
+          BoxShadow(
+            color: Color(0x21000000),
+            blurRadius: 6.70,
+            offset: Offset(0, 2),
+            spreadRadius: 0,
+          ),
+        ],
+      ),
+      child: Text(
+        label,
+        style: TextStyle(
+          color: Color(0xFF162243),
+          fontSize: 12,
+          fontFamily: 'Pretendard',
+          fontWeight: FontWeight.w400,
+        ),
+      ),
     );
   }
 
