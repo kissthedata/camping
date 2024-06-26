@@ -1,5 +1,3 @@
-// 패키지 불러오기
-
 // Flutter의 Material 디자인 패키지를 불러오기
 import 'package:flutter/material.dart';
 // Firebase 인증과 데이터베이스를 사용하기 위한 패키지를 불러오기
