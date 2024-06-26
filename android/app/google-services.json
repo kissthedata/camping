@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "719993274224",
+    "firebase_url": "https://flutter-camping-default-rtdb.firebaseio.com",
+    "project_id": "flutter-camping",
+    "storage_bucket": "flutter-camping.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:719993274224:android:68ddec949799c458fdd9b5",
+        "android_client_info": {
+          "package_name": "com.example.map_sample"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDSMecElIr_wOb-CH3YzBnz8kYpqgYsU14"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

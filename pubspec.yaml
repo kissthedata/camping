@@ -30,18 +30,22 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_naver_map: ^1.0.2
-  csv: ^6.0.0
+  http: ^1.2.1
+  share_plus: ^9.0.0
+  flutter_naver_map: ^1.2.0
+  sliding_up_panel: ^2.0.0
+  kakao_flutter_sdk: ^1.9.2
+  url_launcher: ^6.3.0
 
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.6
   geolocator: ^11.0.0
-  image_picker: ^0.8.4+4
-  url_launcher: ^6.0.0
-  dio: ^4.0.0
-  group_button: ^5.3.4
+  firebase_core: ^2.32.0
+  firebase_database: ^10.5.7
+  geocoding: ^3.0.0
+  firebase_auth: ^4.20.0
 
 dev_dependencies:
   flutter_test:
@@ -66,17 +70,26 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - assets/images/sunny.jpeg
-    - assets/images/차박.jpg
+    - assets/images/camping_site.png
     - assets/images/지도.png
     - assets/images/코스.jpg
-    - assets/images/restroom.webp
-    - assets/images/kakao.png
-    - assets/images/navermap.jpeg
-    - assets/images/tmap.jpeg
-    - assets/locations.csv
-    - assets/restroom.csv
+    - assets/images/gas_station.png
+    - assets/images/convenience_store.png
     - assets/images/추가.png
+    - assets/images/kakao.png
+    - assets/images/tmap.jpeg
+    - assets/images/navermap.jpeg
+    - assets/images/mart.png
+    - assets/images/로고.png
+    - assets/images/피드백.png
+    - assets/images/차박지 보기.png
+    - assets/images/편안차박.png
+    - assets/images/반려동물.png
+    - assets/images/화장실.png
+    - assets/images/샤워실.png
+    - assets/images/개수대.png
+
+
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 
