@@ -1,10 +1,16 @@
+// Flutter의 Material 디자인 패키지를 불러오기
 import 'package:flutter/material.dart';
+// 네이버 맵 SDK를 사용하기 위한 패키지를 불러오기
 import 'package:flutter_naver_map/flutter_naver_map.dart';
+// Firebase Realtime Database를 사용하기 위한 패키지를 불러오기
 import 'package:firebase_database/firebase_database.dart';
+// 위치 정보 서비스를 제공하는 Geolocator 패키지를 불러오기
 import 'package:geolocator/geolocator.dart';
+// 맵 로케이션 모델과 마커 유틸리티를 불러오기
 import 'package:map_sample/models/map_location.dart';
 import 'package:map_sample/utils/marker_utils.dart';
 
+// 맵 화면을 위한 StatefulWidget 정의
 class MapScreen extends StatefulWidget {
   @override
   _MapScreenState createState() => _MapScreenState();
@@ -26,12 +32,15 @@ class _MapScreenState extends State<MapScreen> {
     _loadLocationsFromDatabase();
   }
 
+  // 데이터베이스에서 위치 정보를 불러오는 함수
   Future<void> _loadLocationsFromDatabase() async {
     try {
-      final databaseReference = FirebaseDatabase.instance.ref().child('locations');
+      final databaseReference =
+          FirebaseDatabase.instance.ref().child('locations');
       final DataSnapshot snapshot = await databaseReference.get();
       if (snapshot.exists) {
-        final Map<String, dynamic> data = Map<String, dynamic>.from(snapshot.value as Map);
+        final Map<String, dynamic> data =
+            Map<String, dynamic>.from(snapshot.value as Map);
         final locations = data.entries.map((entry) {
           final value = Map<String, dynamic>.from(entry.value);
           return MapLocation(
@@ -62,9 +71,11 @@ class _MapScreenState extends State<MapScreen> {
     }
   }
 
+  // 현재 위치를 가져오는 함수
   Future<void> _getCurrentLocation() async {
     LocationPermission permission = await Geolocator.requestPermission();
-    if (permission == LocationPermission.denied || permission == LocationPermission.deniedForever) {
+    if (permission == LocationPermission.denied ||
+        permission == LocationPermission.deniedForever) {
       return;
     }
 
@@ -76,7 +87,8 @@ class _MapScreenState extends State<MapScreen> {
         id: 'current_location',
         position: currentPosition,
         caption: NOverlayCaption(text: '현재 위치'),
-        icon: NOverlayImage.fromAssetImage('assets/images/current_location.png'), // 아이콘 경로 확인
+        icon:
+            NOverlayImage.fromAssetImage('assets/images/current_location.png'),
         size: Size(30, 30),
       );
       _mapController?.addOverlay(_currentLocationMarker!);
@@ -84,12 +96,14 @@ class _MapScreenState extends State<MapScreen> {
     });
   }
 
+  // 카메라 위치를 업데이트하는 함수
   void _updateCameraPosition(NLatLng position) {
     _mapController?.updateCamera(
       NCameraUpdate.scrollAndZoomTo(target: position, zoom: 15),
     );
   }
 
+  // 필터 토글 함수
   void _toggleFilter(String category) {
     setState(() {
       switch (category) {
@@ -123,7 +137,8 @@ class _MapScreenState extends State<MapScreen> {
             options: NaverMapViewOptions(
               symbolScale: 1.2,
               pickTolerance: 2,
-              initialCameraPosition: NCameraPosition(target: NLatLng(36.34, 127.77), zoom: 6.3),
+              initialCameraPosition:
+                  NCameraPosition(target: NLatLng(36.34, 127.77), zoom: 6.3),
               mapType: NMapType.basic,
             ),
             onMapReady: (controller) {
@@ -195,9 +210,15 @@ class _MapScreenState extends State<MapScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                _buildFilterButtonWithIcon('마트', 'mart', showMarts, 'assets/images/mart.png'),
-                _buildFilterButtonWithIcon('편의점', 'convenience_store', showConvenienceStores, 'assets/images/convenience_store.png'),
-                _buildFilterButtonWithIcon('주유소', 'gas_station', showGasStations, 'assets/images/gas_station.png'),
+                _buildFilterButtonWithIcon(
+                    '마트', 'mart', showMarts, 'assets/images/mart.png'),
+                _buildFilterButtonWithIcon(
+                    '편의점',
+                    'convenience_store',
+                    showConvenienceStores,
+                    'assets/images/convenience_store.png'),
+                _buildFilterButtonWithIcon('주유소', 'gas_station',
+                    showGasStations, 'assets/images/gas_station.png'),
               ],
             ),
           ),
@@ -206,7 +227,9 @@ class _MapScreenState extends State<MapScreen> {
     );
   }
 
-  Widget _buildFilterButtonWithIcon(String label, String category, bool isActive, String iconPath) {
+  // 필터 버튼을 생성하는 함수
+  Widget _buildFilterButtonWithIcon(
+      String label, String category, bool isActive, String iconPath) {
     return ElevatedButton.icon(
       onPressed: () => _toggleFilter(category),
       style: ElevatedButton.styleFrom(
@@ -227,12 +250,14 @@ class _MapScreenState extends State<MapScreen> {
     );
   }
 
+  // 마커를 추가하는 함수
   Future<void> _addMarkers() async {
     if (_mapController == null) {
       return;
     }
 
-    _markers = MarkerUtils.createMarkers(_locations, showMarts, showConvenienceStores, showGasStations, context);
+    _markers = MarkerUtils.createMarkers(
+        _locations, showMarts, showConvenienceStores, showGasStations, context);
     setState(() {});
 
     for (var marker in _markers) {
@@ -244,6 +269,7 @@ class _MapScreenState extends State<MapScreen> {
     }
   }
 
+  // 마커를 업데이트하는 함수
   Future<void> _updateMarkers() async {
     if (_mapController == null) {
       return;

@@ -1,12 +1,17 @@
+// Flutter의 Material 디자인 패키지를 불러오기
 import 'package:flutter/material.dart';
+// Firebase 인증을 사용하기 위한 패키지를 불러오기
 import 'package:firebase_auth/firebase_auth.dart';
+// 홈 페이지와 회원가입 페이지 스크린을 불러오기
 import 'home_page.dart';
-import 'register_screen.dart';
+//추후에 회원가입 진행할 때 하기 import 'register_screen.dart';
 
+// 앱의 진입점 정의
 void main() {
   runApp(const FigmaToCodeApp());
 }
 
+// 앱의 메인 클래스 정의
 class FigmaToCodeApp extends StatelessWidget {
   const FigmaToCodeApp({super.key});
 
@@ -21,18 +26,20 @@ class FigmaToCodeApp extends StatelessWidget {
   }
 }
 
+// 로그인 화면을 위한 StatefulWidget 정의
 class LoginScreen extends StatefulWidget {
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  // 텍스트 입력 컨트롤러와 폼 상태 키 정의
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
+  // 로그인 함수 정의
   void _login() async {
-    // 로그인 함수
     if (_formKey.currentState!.validate()) {
       try {
         await FirebaseAuth.instance.signInWithEmailAndPassword(
@@ -41,7 +48,7 @@ class _LoginScreenState extends State<LoginScreen> {
         );
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => MyHomePage()), // 로그인 성공 시 홈 페이지로 이동
+          MaterialPageRoute(builder: (context) => MyHomePage()),
         );
       } on FirebaseAuthException catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -51,13 +58,13 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
+  // 익명 로그인 함수 정의
   void _signInAnonymously() async {
-    // 익명 로그인 함수
     try {
       await FirebaseAuth.instance.signInAnonymously();
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => MyHomePage()), // 익명 로그인 성공 시 홈 페이지로 이동
+        MaterialPageRoute(builder: (context) => MyHomePage()),
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -68,7 +75,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // 로그인 화면 빌드
     return Scaffold(
       body: ListView(
         children: [
@@ -108,7 +114,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
                         child: TextButton(
-                          onPressed: _signInAnonymously, // 익명 로그인 함수 호출
+                          onPressed: _signInAnonymously,
                           child: Text(
                             '베타 테스트 로그인',
                             style: TextStyle(

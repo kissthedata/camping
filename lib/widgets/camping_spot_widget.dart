@@ -1,13 +1,18 @@
+// Flutter의 Material 디자인 패키지를 불러오기
 import 'package:flutter/material.dart';
+// Firebase 인증을 사용하기 위한 패키지를 불러오기
 import 'package:firebase_auth/firebase_auth.dart';
+// Firebase Realtime Database를 사용하기 위한 패키지를 불러오기
 import 'package:firebase_database/firebase_database.dart';
 
+// 차박지 정보를 보여주는 위젯 정의
 class CampingSpotWidget extends StatelessWidget {
   final String name;
   final String imageUrl;
   final double latitude;
   final double longitude;
 
+  // 생성자
   const CampingSpotWidget({
     required this.name,
     required this.imageUrl,
@@ -15,10 +20,12 @@ class CampingSpotWidget extends StatelessWidget {
     required this.longitude,
   });
 
+  // 차박지를 스크랩하는 함수
   void _scrapCampingSpot(BuildContext context) async {
     User? user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      DatabaseReference userScrapsRef = FirebaseDatabase.instance.ref().child('scraps').child(user.uid);
+      DatabaseReference userScrapsRef =
+          FirebaseDatabase.instance.ref().child('scraps').child(user.uid);
       String newScrapKey = userScrapsRef.push().key!;
       await userScrapsRef.child(newScrapKey).set({
         'name': name,
@@ -43,7 +50,7 @@ class CampingSpotWidget extends StatelessWidget {
       margin: const EdgeInsets.all(10),
       child: Column(
         children: [
-          Image.network(imageUrl), // 차박지 이미지
+          Image.network(imageUrl),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(
@@ -53,10 +60,10 @@ class CampingSpotWidget extends StatelessWidget {
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Text('위도: $latitude, 경도: $longitude'), // 차박지 위도와 경도
+            child: Text('위도: $latitude, 경도: $longitude'),
           ),
           ElevatedButton(
-            onPressed: () => _scrapCampingSpot(context), // 스크랩 버튼 클릭 시 동작
+            onPressed: () => _scrapCampingSpot(context),
             child: const Text('스크랩'),
           ),
         ],

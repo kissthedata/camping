@@ -1,13 +1,19 @@
+// 패키지 불러오기
+
+// Flutter의 Material 디자인 패키지를 불러오기
 import 'package:flutter/material.dart';
+// Firebase 인증과 데이터베이스를 사용하기 위한 패키지를 불러오기
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 
+// 사용자 정보를 수정할 수 있는 화면을 위한 StatefulWidget 정의
 class InfoEditScreen extends StatefulWidget {
   @override
   _InfoEditScreenState createState() => _InfoEditScreenState();
 }
 
 class _InfoEditScreenState extends State<InfoEditScreen> {
+  // 텍스트 입력 컨트롤러와 폼 상태 키 정의
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
@@ -15,16 +21,19 @@ class _InfoEditScreenState extends State<InfoEditScreen> {
   @override
   void initState() {
     super.initState();
-    _loadUserInfo();
+    _loadUserInfo(); // 사용자 정보 불러오기
   }
 
+  // 사용자 정보를 불러오는 함수
   void _loadUserInfo() async {
     User? user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      DatabaseReference userRef = FirebaseDatabase.instance.ref().child('users').child(user.uid);
+      DatabaseReference userRef =
+          FirebaseDatabase.instance.ref().child('users').child(user.uid);
       DataSnapshot snapshot = await userRef.get();
       if (snapshot.exists) {
-        Map<String, dynamic> userData = Map<String, dynamic>.from(snapshot.value as Map);
+        Map<String, dynamic> userData =
+            Map<String, dynamic>.from(snapshot.value as Map);
         setState(() {
           _emailController.text = userData['email'];
           _nameController.text = userData['name'];
@@ -33,11 +42,13 @@ class _InfoEditScreenState extends State<InfoEditScreen> {
     }
   }
 
+  // 사용자 정보를 업데이트하는 함수
   void _updateUserInfo() async {
     if (_formKey.currentState!.validate()) {
       User? user = FirebaseAuth.instance.currentUser;
       if (user != null) {
-        DatabaseReference userRef = FirebaseDatabase.instance.ref().child('users').child(user.uid);
+        DatabaseReference userRef =
+            FirebaseDatabase.instance.ref().child('users').child(user.uid);
         await userRef.update({
           'name': _nameController.text,
         });
@@ -95,7 +106,8 @@ class _InfoEditScreenState extends State<InfoEditScreen> {
                             decoration: ShapeDecoration(
                               color: Color(0xFFF3F3F3),
                               shape: RoundedRectangleBorder(
-                                side: BorderSide(width: 1, color: Color(0xFF474747)),
+                                side: BorderSide(
+                                    width: 1, color: Color(0xFF474747)),
                                 borderRadius: BorderRadius.circular(16),
                               ),
                             ),
@@ -110,7 +122,8 @@ class _InfoEditScreenState extends State<InfoEditScreen> {
                                   fontFamily: 'Pretendard',
                                   fontWeight: FontWeight.w400,
                                 ),
-                                contentPadding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
+                                contentPadding: EdgeInsets.symmetric(
+                                    horizontal: 16.0, vertical: 20.0),
                               ),
                               readOnly: true,
                             ),
@@ -122,7 +135,8 @@ class _InfoEditScreenState extends State<InfoEditScreen> {
                             decoration: ShapeDecoration(
                               color: Color(0xFFF3F3F3),
                               shape: RoundedRectangleBorder(
-                                side: BorderSide(width: 1, color: Color(0xFF474747)),
+                                side: BorderSide(
+                                    width: 1, color: Color(0xFF474747)),
                                 borderRadius: BorderRadius.circular(16),
                               ),
                             ),
@@ -137,7 +151,8 @@ class _InfoEditScreenState extends State<InfoEditScreen> {
                                   fontFamily: 'Pretendard',
                                   fontWeight: FontWeight.w400,
                                 ),
-                                contentPadding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
+                                contentPadding: EdgeInsets.symmetric(
+                                    horizontal: 16.0, vertical: 20.0),
                               ),
                               validator: (value) {
                                 if (value == null || value.isEmpty) {

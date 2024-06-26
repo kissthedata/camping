@@ -1,33 +1,40 @@
+// Flutter의 Material 디자인 패키지를 불러오기
 import 'package:flutter/material.dart';
+// Firebase 인증과 데이터베이스를 사용하기 위한 패키지를 불러오기
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+// 로그인 화면과 정보 수정 화면, 스크랩 리스트 화면을 불러오기
 import 'login_screen.dart';
 import 'info_edit_screen.dart';
 import 'scrap_list_screen.dart'; // ScrapListScreen import 추가
 
+// 마이페이지를 위한 StatefulWidget 정의
 class MyPage extends StatefulWidget {
   @override
   _MyPageState createState() => _MyPageState();
 }
 
 class _MyPageState extends State<MyPage> {
+  // 텍스트 입력 컨트롤러 정의
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    _loadUserInfo();
+    _loadUserInfo(); // 사용자 정보 불러오기
   }
 
+  // 사용자 정보를 불러오는 함수
   void _loadUserInfo() async {
-    // 사용자 정보 불러오기
     User? user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      DatabaseReference userRef = FirebaseDatabase.instance.ref().child('users').child(user.uid);
+      DatabaseReference userRef =
+          FirebaseDatabase.instance.ref().child('users').child(user.uid);
       DataSnapshot snapshot = await userRef.get();
       if (snapshot.exists) {
-        Map<String, dynamic> userData = Map<String, dynamic>.from(snapshot.value as Map);
+        Map<String, dynamic> userData =
+            Map<String, dynamic>.from(snapshot.value as Map);
         setState(() {
           _emailController.text = userData['email'];
           _nameController.text = userData['name'];
@@ -36,8 +43,8 @@ class _MyPageState extends State<MyPage> {
     }
   }
 
+  // 로그아웃 함수
   void _logout() async {
-    // 로그아웃
     await FirebaseAuth.instance.signOut();
     Navigator.pushReplacement(
       context,
@@ -52,9 +59,9 @@ class _MyPageState extends State<MyPage> {
         children: [
           Positioned(
             left: 16,
-            top: 50, // 상단 바 크기에 맞게 위치 조정
+            top: 50,
             child: IconButton(
-              icon: Icon(Icons.arrow_back, size: 35), // 버튼 크기 조정
+              icon: Icon(Icons.arrow_back, size: 35),
               color: Color(0xFF162233),
               onPressed: () {
                 Navigator.pop(context);
@@ -92,7 +99,8 @@ class _MyPageState extends State<MyPage> {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => InfoEditScreen()), // InfoEditScreen으로 이동
+                        MaterialPageRoute(
+                            builder: (context) => InfoEditScreen()),
                       );
                     },
                     style: TextButton.styleFrom(
@@ -126,7 +134,8 @@ class _MyPageState extends State<MyPage> {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => ScrapListScreen()), // ScrapListScreen으로 이동
+                        MaterialPageRoute(
+                            builder: (context) => ScrapListScreen()),
                       );
                     },
                     style: TextButton.styleFrom(

@@ -1,9 +1,11 @@
+// Flutter의 Material 디자인 패키지를 불러오기
 import 'package:flutter/material.dart';
+// 위치 정보 서비스를 제공하는 Geolocator 패키지를 불러오기
 import 'package:geolocator/geolocator.dart';
 
+// MyLocationWidget 클래스 정의 (위치 정보를 가져오는 위젯)
 class MyLocationWidget extends StatefulWidget {
   final Function(double, double) onLocationFetched;
-
   MyLocationWidget({required this.onLocationFetched});
 
   @override
@@ -11,8 +13,8 @@ class MyLocationWidget extends StatefulWidget {
 }
 
 class _MyLocationWidgetState extends State<MyLocationWidget> {
+  // 위치 데이터를 가져오는 함수
   Future<void> getGeoData() async {
-    // 위치 데이터 가져오기
     LocationPermission permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
@@ -20,20 +22,18 @@ class _MyLocationWidgetState extends State<MyLocationWidget> {
         throw Exception('Permissions are denied');
       }
     }
-
     Position position = await Geolocator.getCurrentPosition();
-    widget.onLocationFetched(position.latitude, position.longitude); // 위치 정보 전달
+    widget.onLocationFetched(position.latitude, position.longitude);
   }
 
   @override
   void initState() {
     super.initState();
-    getGeoData(); // 위젯 초기화 시 위치 데이터 가져오기
+    getGeoData();
   }
 
   @override
   Widget build(BuildContext context) {
-    // 위치 정보 로딩 중 화면
     return Scaffold(
       appBar: AppBar(
         title: Text('My Location'),

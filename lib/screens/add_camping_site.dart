@@ -1,24 +1,36 @@
+// Flutter의 Material 디자인 패키지를 불러오기
 import 'package:flutter/material.dart';
+// Firebase Realtime Database를 사용하기 위한 패키지를 불러오기
 import 'package:firebase_database/firebase_database.dart';
+// 네이버 맵 SDK를 사용하기 위한 패키지를 불러오기
 import 'package:flutter_naver_map/flutter_naver_map.dart';
+// 위치 정보 서비스를 제공하는 Geolocator 패키지를 불러오기
 import 'package:geolocator/geolocator.dart';
+// 홈 페이지 스크린을 불러오기
 import 'home_page.dart';
+// 전체 화면 맵 스크린을 불러오기
 import 'full_screen_map.dart';
+// HTTP 요청을 위해 http 패키지를 불러오기
 import 'package:http/http.dart' as http;
+// JSON 데이터를 다루기 위한 dart:convert 패키지를 불러오기
 import 'dart:convert';
 
+// 캠핑 사이트 추가 화면을 위한 StatefulWidget 정의
 class AddCampingSiteScreen extends StatefulWidget {
   @override
   _AddCampingSiteScreenState createState() => _AddCampingSiteScreenState();
 }
 
 class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
+  // 폼 상태를 관리하기 위한 키 정의
   final _formKey = GlobalKey<FormState>();
+  // 텍스트 입력 컨트롤러 정의
   final _placeController = TextEditingController();
   final _detailsController = TextEditingController();
   final _latitudeController = TextEditingController();
   final _longitudeController = TextEditingController();
   final _addressController = TextEditingController();
+  // 캠핑 사이트 옵션 상태 정의
   bool _isRestRoom = false;
   bool _isSink = false;
   bool _isCook = false;
@@ -26,12 +38,13 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
   bool _isWater = false;
   bool _isParkinglot = false;
 
+  // 네이버 맵 컨트롤러 및 마커 정의
   NaverMapController? _mapController;
   NLatLng? _selectedLocation;
   NMarker? _selectedMarker;
   NMarker? _currentLocationMarker;
 
-  // 데이터베이스에 차박지 추가
+  // 데이터베이스에 캠핑 사이트 추가하기
   void _addCampingSite() {
     if (_formKey.currentState?.validate() ?? false) {
       if (_selectedLocation == null) {
@@ -81,6 +94,7 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
     }
   }
 
+  // 지도에 선택한 위치를 업데이트하기
   void _updateMarker(NLatLng position) {
     if (_selectedMarker != null) {
       _mapController?.deleteOverlay(_selectedMarker!.info);
@@ -95,6 +109,7 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
     _mapController?.addOverlay(_selectedMarker!);
   }
 
+  // 지도를 클릭했을 때 호출되는 함수
   void _onMapTapped(NPoint point, NLatLng latLng) {
     setState(() {
       _selectedLocation = latLng;
@@ -104,6 +119,7 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
     });
   }
 
+  // 현재 위치를 가져오는 함수
   Future<void> _getCurrentLocation() async {
     LocationPermission permission = await Geolocator.requestPermission();
     if (permission == LocationPermission.denied ||
@@ -133,6 +149,7 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
     });
   }
 
+  // 전체 화면 맵을 여는 함수
   void _openFullScreenMap() async {
     if (_selectedLocation == null) return;
 
@@ -161,6 +178,7 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
     });
   }
 
+  // 주소를 검색하는 함수
   Future<void> _searchAddress() async {
     final apiKey = 's017qk3xj5';
     final query = _addressController.text;
@@ -198,6 +216,7 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
     }
   }
 
+  // 위도와 경도 입력이 변경될 때 호출되는 함수
   void _onLatitudeLongitudeChanged() {
     if (_latitudeController.text.isNotEmpty &&
         _longitudeController.text.isNotEmpty) {

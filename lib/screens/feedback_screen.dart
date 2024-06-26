@@ -1,18 +1,25 @@
+// Flutter의 Material 디자인 패키지를 불러오기
 import 'package:flutter/material.dart';
+// Firebase Realtime Database를 사용하기 위한 패키지를 불러오기
 import 'package:firebase_database/firebase_database.dart';
 
+// 피드백 화면을 위한 StatefulWidget 정의
 class FeedbackScreen extends StatefulWidget {
   @override
   _FeedbackScreenState createState() => _FeedbackScreenState();
 }
 
 class _FeedbackScreenState extends State<FeedbackScreen> {
+  // 폼 상태를 관리하기 위한 키 정의
   final _formKey = GlobalKey<FormState>();
+  // 피드백 입력을 위한 텍스트 컨트롤러 정의
   final _feedbackController = TextEditingController();
 
+  // 피드백을 제출하는 함수
   void _submitFeedback() {
     if (_formKey.currentState!.validate()) {
-      DatabaseReference feedbackRef = FirebaseDatabase.instance.ref().child('feedbacks').push();
+      DatabaseReference feedbackRef =
+          FirebaseDatabase.instance.ref().child('feedbacks').push();
       feedbackRef.set({
         'feedback': _feedbackController.text,
         'timestamp': DateTime.now().millisecondsSinceEpoch,
@@ -25,6 +32,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
     }
   }
 
+  // 알림 다이얼로그를 표시하는 함수
   void _showAlertDialog(String message) {
     showDialog(
       context: context,
@@ -132,15 +140,18 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                               decoration: BoxDecoration(
                                 color: Color(0xFFF3F3F3),
                                 borderRadius: BorderRadius.circular(16),
-                                border: Border.all(color: Color(0xFF474747), width: 1),
+                                border: Border.all(
+                                    color: Color(0xFF474747), width: 1),
                               ),
-                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 16),
                               child: TextFormField(
                                 controller: _feedbackController,
                                 maxLines: 20, // 상자 크기 확대
                                 decoration: InputDecoration(
                                   border: InputBorder.none,
-                                  hintText: '안녕하세요! 편안차박입니다. 여러분의 피드백이 저희에겐 큰 도움이 됩니다. 의견을 적극 반영할 수 있게 의견을 내주세요!',
+                                  hintText:
+                                      '안녕하세요! 편안차박입니다. 여러분의 피드백이 저희에겐 큰 도움이 됩니다. 의견을 적극 반영할 수 있게 의견을 내주세요!',
                                   hintStyle: TextStyle(
                                     color: Color(0xFF868686),
                                     fontSize: 16,
@@ -177,9 +188,8 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                                 const SizedBox(width: 60),
                                 ElevatedButton(
                                   onPressed: _submitFeedback,
-                                  child: const Text(
-                                    "제출하기",
-                                    style: TextStyle(color: Colors.white)),
+                                  child: const Text("제출하기",
+                                      style: TextStyle(color: Colors.white)),
                                 ),
                               ],
                             ),

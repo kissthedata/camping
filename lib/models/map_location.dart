@@ -5,6 +5,7 @@ class MapLocation {
   final double longitude;
   final String category;
 
+  // 생성자
   MapLocation({
     required this.num,
     required this.place,
@@ -13,6 +14,7 @@ class MapLocation {
     required this.category,
   });
 
+  // JSON 데이터를 MapLocation 객체로 변환하는 팩토리 생성자
   factory MapLocation.fromJson(Map<String, dynamic> json) {
     return MapLocation(
       num: json['num'],
@@ -23,6 +25,7 @@ class MapLocation {
     );
   }
 
+  // MapLocation 객체를 JSON 형태로 변환하는 메서드
   Map<String, dynamic> toJson() {
     return {
       'num': num,
