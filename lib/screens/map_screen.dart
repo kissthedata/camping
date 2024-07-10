@@ -1,16 +1,10 @@
-// Flutter의 Material 디자인 패키지를 불러오기
 import 'package:flutter/material.dart';
-// 네이버 맵 SDK를 사용하기 위한 패키지를 불러오기
 import 'package:flutter_naver_map/flutter_naver_map.dart';
-// Firebase Realtime Database를 사용하기 위한 패키지를 불러오기
 import 'package:firebase_database/firebase_database.dart';
-// 위치 정보 서비스를 제공하는 Geolocator 패키지를 불러오기
 import 'package:geolocator/geolocator.dart';
-// 맵 로케이션 모델과 마커 유틸리티를 불러오기
 import 'package:map_sample/models/map_location.dart';
 import 'package:map_sample/utils/marker_utils.dart';
 
-// 맵 화면을 위한 StatefulWidget 정의
 class MapScreen extends StatefulWidget {
   @override
   _MapScreenState createState() => _MapScreenState();
@@ -25,14 +19,49 @@ class _MapScreenState extends State<MapScreen> {
   bool showMarts = false;
   bool showConvenienceStores = false;
   bool showGasStations = false;
+  Position? _currentPosition;
 
   @override
   void initState() {
     super.initState();
-    _loadLocationsFromDatabase();
+    _getCurrentLocation();
   }
 
-  // 데이터베이스에서 위치 정보를 불러오는 함수
+  Future<void> _getCurrentLocation() async {
+    LocationPermission permission = await Geolocator.requestPermission();
+    if (permission == LocationPermission.denied ||
+        permission == LocationPermission.deniedForever) {
+      setState(() {
+        _loading = false;
+      });
+      return;
+    }
+
+    Position position = await Geolocator.getCurrentPosition();
+    NLatLng currentPosition = NLatLng(position.latitude, position.longitude);
+
+    setState(() {
+      _currentPosition = position;
+      _currentLocationMarker = NMarker(
+        id: 'current_location',
+        position: currentPosition,
+        caption: NOverlayCaption(text: '현재 위치'),
+        icon:
+            NOverlayImage.fromAssetImage('assets/images/current_location.png'),
+        size: Size(30, 30),
+      );
+      _updateCameraPosition(currentPosition);
+    });
+
+    await _loadLocationsFromDatabase();
+  }
+
+  void _updateCameraPosition(NLatLng position) {
+    _mapController?.updateCamera(
+      NCameraUpdate.scrollAndZoomTo(target: position, zoom: 15),
+    );
+  }
+
   Future<void> _loadLocationsFromDatabase() async {
     try {
       final databaseReference =
@@ -71,39 +100,6 @@ class _MapScreenState extends State<MapScreen> {
     }
   }
 
-  // 현재 위치를 가져오는 함수
-  Future<void> _getCurrentLocation() async {
-    LocationPermission permission = await Geolocator.requestPermission();
-    if (permission == LocationPermission.denied ||
-        permission == LocationPermission.deniedForever) {
-      return;
-    }
-
-    Position position = await Geolocator.getCurrentPosition();
-    NLatLng currentPosition = NLatLng(position.latitude, position.longitude);
-
-    setState(() {
-      _currentLocationMarker = NMarker(
-        id: 'current_location',
-        position: currentPosition,
-        caption: NOverlayCaption(text: '현재 위치'),
-        icon:
-            NOverlayImage.fromAssetImage('assets/images/current_location.png'),
-        size: Size(30, 30),
-      );
-      _mapController?.addOverlay(_currentLocationMarker!);
-      _updateCameraPosition(currentPosition);
-    });
-  }
-
-  // 카메라 위치를 업데이트하는 함수
-  void _updateCameraPosition(NLatLng position) {
-    _mapController?.updateCamera(
-      NCameraUpdate.scrollAndZoomTo(target: position, zoom: 15),
-    );
-  }
-
-  // 필터 토글 함수
   void _toggleFilter(String category) {
     setState(() {
       switch (category) {
@@ -227,7 +223,6 @@ class _MapScreenState extends State<MapScreen> {
     );
   }
 
-  // 필터 버튼을 생성하는 함수
   Widget _buildFilterButtonWithIcon(
       String label, String category, bool isActive, String iconPath) {
     return ElevatedButton.icon(
@@ -250,14 +245,30 @@ class _MapScreenState extends State<MapScreen> {
     );
   }
 
-  // 마커를 추가하는 함수
   Future<void> _addMarkers() async {
-    if (_mapController == null) {
+    if (_mapController == null || _currentPosition == null) {
       return;
     }
 
+    // 현재 위치로부터 반경 5km 이내의 위치만 필터링
+    final double radius = 5000; // 5km
+    final nearbyLocations = _locations.where((location) {
+      final double distance = Geolocator.distanceBetween(
+        _currentPosition!.latitude,
+        _currentPosition!.longitude,
+        location.latitude,
+        location.longitude,
+      );
+      return distance <= radius;
+    }).toList();
+
     _markers = MarkerUtils.createMarkers(
-        _locations, showMarts, showConvenienceStores, showGasStations, context);
+      nearbyLocations,
+      showMarts,
+      showConvenienceStores,
+      showGasStations,
+      context,
+    );
     setState(() {});
 
     for (var marker in _markers) {
@@ -269,7 +280,6 @@ class _MapScreenState extends State<MapScreen> {
     }
   }
 
-  // 마커를 업데이트하는 함수
   Future<void> _updateMarkers() async {
     if (_mapController == null) {
       return;

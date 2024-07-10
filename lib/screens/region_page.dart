@@ -1,24 +1,16 @@
-// JSON 인코딩 및 디코딩을 위한 라이브러리 불러오기
 import 'dart:convert';
-// Flutter의 Material 디자인 패키지를 불러오기
 import 'package:flutter/material.dart';
-// 네이버 맵 SDK를 사용하기 위한 패키지를 불러오기
 import 'package:flutter_naver_map/flutter_naver_map.dart';
-// Firebase Realtime Database를 사용하기 위한 패키지를 불러오기
 import 'package:firebase_database/firebase_database.dart';
-// 위치 정보 서비스를 제공하는 Geolocator 패키지를 불러오기
 import 'package:geolocator/geolocator.dart';
-// Firebase 인증을 사용하기 위한 패키지를 불러오기
 import 'package:firebase_auth/firebase_auth.dart';
-// Share Plus 패키지와 Kakao SDK를 사용하기 위한 패키지를 불러오기
 import 'package:share_plus/share_plus.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:kakao_flutter_sdk_share/kakao_flutter_sdk_share.dart';
 import 'package:kakao_flutter_sdk_template/kakao_flutter_sdk_template.dart';
-// HTTP 요청을 위해 http 패키지를 불러오기
 import 'package:http/http.dart' as http;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-// 차박지 정보 클래스 정의
 class CarCampingSite {
   final String name;
   final double latitude;
@@ -47,7 +39,6 @@ class CarCampingSite {
   });
 }
 
-// 지역 페이지를 위한 StatefulWidget 정의
 class RegionPage extends StatefulWidget {
   @override
   _RegionPageState createState() => _RegionPageState();
@@ -74,7 +65,6 @@ class _RegionPageState extends State<RegionPage> {
     _loadCampingSites();
   }
 
-  // 차박지 정보를 데이터베이스에서 불러오는 함수
   Future<void> _loadCampingSites() async {
     DatabaseReference databaseReference =
         FirebaseDatabase.instance.ref().child('car_camping_sites');
@@ -102,13 +92,13 @@ class _RegionPageState extends State<RegionPage> {
         _filteredCampingSites.add(site);
       });
       setState(() {});
+      _addMarkers();
     }
   }
 
-  // 좌표를 주소로 변환하는 함수
   Future<String> _getAddressFromLatLng(double lat, double lng) async {
-    final String clientId = 's017qk3xj5';
-    final String clientSecret = 'HQopWhspmeu4pZTmIIfTLM0K7ZkyqKt6E5VeUu7b';
+    final String clientId = dotenv.env['NAVER_CLIENT_ID']!;
+    final String clientSecret = dotenv.env['NAVER_CLIENT_SECRET']!;
     final String apiUrl =
         'https://naveropenapi.apigw.ntruss.com/map-reversegeocode/v2/gc';
 
@@ -134,21 +124,18 @@ class _RegionPageState extends State<RegionPage> {
     return '주소를 찾을 수 없습니다';
   }
 
-  // 카메라 위치를 업데이트하는 함수
   void _updateCameraPosition(NLatLng position, {double zoom = 7.5}) {
     _mapController?.updateCamera(
       NCameraUpdate.scrollAndZoomTo(target: position, zoom: zoom),
     );
   }
 
-  // 마커를 추가하는 함수
   void _addMarkers() {
     for (var site in _campingSites) {
       _addMarker(site);
     }
   }
 
-  // 특정 차박지에 마커를 추가하는 함수
   void _addMarker(CarCampingSite site) {
     final marker = NMarker(
       id: site.name,
@@ -164,7 +151,6 @@ class _RegionPageState extends State<RegionPage> {
     _mapController?.addOverlay(marker);
   }
 
-  // 필터를 토글하는 함수
   void _toggleFilter(String category) {
     setState(() {
       switch (category) {
@@ -191,7 +177,6 @@ class _RegionPageState extends State<RegionPage> {
     });
   }
 
-  // 필터를 적용하는 함수
   void _applyFilter() {
     setState(() {
       _filteredCampingSites.clear();
@@ -208,7 +193,6 @@ class _RegionPageState extends State<RegionPage> {
     });
   }
 
-  // 현재 위치를 가져오는 함수
   Future<void> _getCurrentLocation() async {
     LocationPermission permission = await Geolocator.requestPermission();
     if (permission == LocationPermission.denied ||
@@ -233,7 +217,6 @@ class _RegionPageState extends State<RegionPage> {
     });
   }
 
-  // 차박지를 스크랩하는 함수
   void _scrapCampingSpot(CarCampingSite site) async {
     var user = FirebaseAuth.instance.currentUser;
     if (user != null) {
@@ -275,7 +258,6 @@ class _RegionPageState extends State<RegionPage> {
     }
   }
 
-  // 차박지를 공유하는 함수
   void _shareCampingSpot(CarCampingSite site) async {
     showDialog(
       context: context,
@@ -349,7 +331,6 @@ class _RegionPageState extends State<RegionPage> {
     );
   }
 
-  // 지역 선택 다이얼로그를 보여주는 함수
   void _showRegionSelectionDialog() {
     showDialog(
       context: context,
@@ -399,7 +380,6 @@ class _RegionPageState extends State<RegionPage> {
     );
   }
 
-  // 지역 선택에 따라 카메라 위치를 업데이트하는 함수
   void _onRegionSelected(String region) {
     Navigator.of(context).pop();
     setState(() {
@@ -426,7 +406,6 @@ class _RegionPageState extends State<RegionPage> {
     });
   }
 
-  // 차박지 정보를 보여주는 다이얼로그 함수
   void _showSiteInfoDialog(CarCampingSite site) async {
     String address = await _getAddressFromLatLng(site.latitude, site.longitude);
 
@@ -596,7 +575,6 @@ class _RegionPageState extends State<RegionPage> {
     );
   }
 
-  // 태그를 빌드하는 함수
   Widget _buildTag(String label) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 8),
@@ -644,7 +622,6 @@ class _RegionPageState extends State<RegionPage> {
               setState(() {
                 _mapController = controller;
               });
-              print('Map is ready');
               _addMarkers();
             },
           ),
@@ -911,7 +888,6 @@ class _RegionPageState extends State<RegionPage> {
     );
   }
 
-  // 필터 버튼을 생성하는 함수
   Widget _buildFilterButtonWithIcon(
       String label, String category, bool isActive, String iconPath) {
     return Padding(

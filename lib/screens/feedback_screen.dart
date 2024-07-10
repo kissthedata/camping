@@ -1,21 +1,15 @@
-// Flutter의 Material 디자인 패키지를 불러오기
 import 'package:flutter/material.dart';
-// Firebase Realtime Database를 사용하기 위한 패키지를 불러오기
 import 'package:firebase_database/firebase_database.dart';
 
-// 피드백 화면을 위한 StatefulWidget 정의
 class FeedbackScreen extends StatefulWidget {
   @override
   _FeedbackScreenState createState() => _FeedbackScreenState();
 }
 
 class _FeedbackScreenState extends State<FeedbackScreen> {
-  // 폼 상태를 관리하기 위한 키 정의
   final _formKey = GlobalKey<FormState>();
-  // 피드백 입력을 위한 텍스트 컨트롤러 정의
   final _feedbackController = TextEditingController();
 
-  // 피드백을 제출하는 함수
   void _submitFeedback() {
     if (_formKey.currentState!.validate()) {
       DatabaseReference feedbackRef =
@@ -32,7 +26,6 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
     }
   }
 
-  // 알림 다이얼로그를 표시하는 함수
   void _showAlertDialog(String message) {
     showDialog(
       context: context,
@@ -62,22 +55,22 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
             top: 0,
             child: Container(
               width: MediaQuery.of(context).size.width,
-              height: 115, // 상단 바 크기 조정
+              height: 115,
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.only(
                   bottomLeft: Radius.circular(16),
                   bottomRight: Radius.circular(16),
                 ),
-                border: Border.all(color: Colors.grey, width: 1), // 테두리 추가
+                border: Border.all(color: Colors.grey, width: 1),
               ),
               child: Stack(
                 children: [
                   Positioned(
                     left: 16,
-                    top: 40, // 상단 바 크기에 맞게 위치 조정
+                    top: 40,
                     child: IconButton(
-                      icon: Icon(Icons.arrow_back, size: 45), // 버튼 크기 조정
+                      icon: Icon(Icons.arrow_back, size: 45),
                       color: Color(0xFF162233),
                       onPressed: () {
                         Navigator.pop(context);
@@ -86,7 +79,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                   ),
                   Positioned(
                     left: MediaQuery.of(context).size.width / 2 - 63,
-                    top: 50, // 상단 바 크기에 맞게 위치 조정
+                    top: 50,
                     child: Container(
                       width: 126,
                       height: 48,
@@ -121,7 +114,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                           borderRadius: BorderRadius.circular(16),
                           border: Border.all(color: Colors.grey, width: 1),
                         ),
-                        padding: const EdgeInsets.all(24.0), // 상자 크기 확대
+                        padding: const EdgeInsets.all(24.0),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -147,7 +140,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                                   horizontal: 16, vertical: 16),
                               child: TextFormField(
                                 controller: _feedbackController,
-                                maxLines: 20, // 상자 크기 확대
+                                maxLines: 20,
                                 decoration: InputDecoration(
                                   border: InputBorder.none,
                                   hintText:

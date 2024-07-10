@@ -41,53 +41,53 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyD-nej62UvsueF-UUps3xFiKwLfG7vhFGk',
-    appId: '1:719993274224:web:1f274d32cb62c91ffdd9b5',
-    messagingSenderId: '719993274224',
-    projectId: 'flutter-camping',
-    authDomain: 'flutter-camping.firebaseapp.com',
-    databaseURL: 'https://flutter-camping-default-rtdb.firebaseio.com',
-    storageBucket: 'flutter-camping.appspot.com',
-    measurementId: 'G-1TG086SP8V',
+    apiKey: 'AIzaSyAXDE1_BxiNwe9MyTkrTnZuVSx4hBjiGrg',
+    appId: '1:731389448589:web:bfa93a99a49af57821edc4',
+    messagingSenderId: '731389448589',
+    projectId: 'datatrip-863f8',
+    authDomain: 'datatrip-863f8.firebaseapp.com',
+    databaseURL: 'https://datatrip-863f8-default-rtdb.firebaseio.com',
+    storageBucket: 'datatrip-863f8.appspot.com',
+    measurementId: 'G-TWS9PG17M9',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyDSMecElIr_wOb-CH3YzBnz8kYpqgYsU14',
-    appId: '1:719993274224:android:68ddec949799c458fdd9b5',
-    messagingSenderId: '719993274224',
-    projectId: 'flutter-camping',
-    databaseURL: 'https://flutter-camping-default-rtdb.firebaseio.com',
-    storageBucket: 'flutter-camping.appspot.com',
+    apiKey: 'AIzaSyAA592hrE8Wr87MWYdOxRsRdjmId9l3i6k',
+    appId: '1:731389448589:android:c9f902d0dee452ff21edc4',
+    messagingSenderId: '731389448589',
+    projectId: 'datatrip-863f8',
+    databaseURL: 'https://datatrip-863f8-default-rtdb.firebaseio.com',
+    storageBucket: 'datatrip-863f8.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyDJ2cKUZctuwsVTjPyCBY6aO4yB8mQtr4M',
-    appId: '1:719993274224:ios:aea64faff163e937fdd9b5',
-    messagingSenderId: '719993274224',
-    projectId: 'flutter-camping',
-    databaseURL: 'https://flutter-camping-default-rtdb.firebaseio.com',
-    storageBucket: 'flutter-camping.appspot.com',
+    apiKey: 'AIzaSyDjaqdDnWDvWFjUrYQVy61fhiLiG_kOlP0',
+    appId: '1:731389448589:ios:b4c5e8c77c0bb35221edc4',
+    messagingSenderId: '731389448589',
+    projectId: 'datatrip-863f8',
+    databaseURL: 'https://datatrip-863f8-default-rtdb.firebaseio.com',
+    storageBucket: 'datatrip-863f8.appspot.com',
     iosBundleId: 'com.example.mapSample',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyDJ2cKUZctuwsVTjPyCBY6aO4yB8mQtr4M',
-    appId: '1:719993274224:ios:aea64faff163e937fdd9b5',
-    messagingSenderId: '719993274224',
-    projectId: 'flutter-camping',
-    databaseURL: 'https://flutter-camping-default-rtdb.firebaseio.com',
-    storageBucket: 'flutter-camping.appspot.com',
+    apiKey: 'AIzaSyDjaqdDnWDvWFjUrYQVy61fhiLiG_kOlP0',
+    appId: '1:731389448589:ios:b4c5e8c77c0bb35221edc4',
+    messagingSenderId: '731389448589',
+    projectId: 'datatrip-863f8',
+    databaseURL: 'https://datatrip-863f8-default-rtdb.firebaseio.com',
+    storageBucket: 'datatrip-863f8.appspot.com',
     iosBundleId: 'com.example.mapSample',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyD-nej62UvsueF-UUps3xFiKwLfG7vhFGk',
-    appId: '1:719993274224:web:b0dee8959fde7dfefdd9b5',
-    messagingSenderId: '719993274224',
-    projectId: 'flutter-camping',
-    authDomain: 'flutter-camping.firebaseapp.com',
-    databaseURL: 'https://flutter-camping-default-rtdb.firebaseio.com',
-    storageBucket: 'flutter-camping.appspot.com',
-    measurementId: 'G-E9EVMQKLQ2',
+    apiKey: 'AIzaSyAXDE1_BxiNwe9MyTkrTnZuVSx4hBjiGrg',
+    appId: '1:731389448589:web:05e33087f1ad78a121edc4',
+    messagingSenderId: '731389448589',
+    projectId: 'datatrip-863f8',
+    authDomain: 'datatrip-863f8.firebaseapp.com',
+    databaseURL: 'https://datatrip-863f8-default-rtdb.firebaseio.com',
+    storageBucket: 'datatrip-863f8.appspot.com',
+    measurementId: 'G-BP9LDFK34D',
   );
 }

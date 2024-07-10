@@ -1,14 +1,11 @@
-// Flutter의 Material 디자인 패키지를 불러오기
 import 'package:flutter/material.dart';
 
-// 필터링 다이얼로그를 표시하는 StatefulWidget 정의
 class FilterDialog extends StatefulWidget {
   final bool showMarts;
   final bool showConvenienceStores;
   final bool showGasStations;
   final Function(bool, bool, bool) onFilterChanged;
 
-  // 생성자
   FilterDialog({
     required this.showMarts,
     required this.showConvenienceStores,
@@ -33,7 +30,6 @@ class _FilterDialogState extends State<FilterDialog> {
     _showGasStations = widget.showGasStations;
   }
 
-  // SwitchListTile 위젯을 빌드하는 함수
   Widget _buildSwitchListTile(
       String title, bool value, ValueChanged<bool> onChanged) {
     return SwitchListTile(

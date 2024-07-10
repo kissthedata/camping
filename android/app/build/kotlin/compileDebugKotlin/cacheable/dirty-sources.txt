@@ -1,0 +1,1 @@
+C:\Users\seomi\Documents\GitHub\camping\android\app\src\main\kotlin\com\example\map_sample\MainActivity.kt

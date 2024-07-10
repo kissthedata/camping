@@ -1,36 +1,25 @@
-// Flutter의 Material 디자인 패키지를 불러오기
 import 'package:flutter/material.dart';
-// Firebase Realtime Database를 사용하기 위한 패키지를 불러오기
 import 'package:firebase_database/firebase_database.dart';
-// 네이버 맵 SDK를 사용하기 위한 패키지를 불러오기
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
-// 위치 정보 서비스를 제공하는 Geolocator 패키지를 불러오기
 import 'package:geolocator/geolocator.dart';
-// 홈 페이지 스크린을 불러오기
 import 'home_page.dart';
-// 전체 화면 맵 스크린을 불러오기
-import 'full_screen_map.dart';
-// HTTP 요청을 위해 http 패키지를 불러오기
 import 'package:http/http.dart' as http;
-// JSON 데이터를 다루기 위한 dart:convert 패키지를 불러오기
 import 'dart:convert';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-// 캠핑 사이트 추가 화면을 위한 StatefulWidget 정의
 class AddCampingSiteScreen extends StatefulWidget {
   @override
   _AddCampingSiteScreenState createState() => _AddCampingSiteScreenState();
 }
 
 class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
-  // 폼 상태를 관리하기 위한 키 정의
   final _formKey = GlobalKey<FormState>();
-  // 텍스트 입력 컨트롤러 정의
   final _placeController = TextEditingController();
   final _detailsController = TextEditingController();
   final _latitudeController = TextEditingController();
   final _longitudeController = TextEditingController();
   final _addressController = TextEditingController();
-  // 캠핑 사이트 옵션 상태 정의
   bool _isRestRoom = false;
   bool _isSink = false;
   bool _isCook = false;
@@ -38,13 +27,11 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
   bool _isWater = false;
   bool _isParkinglot = false;
 
-  // 네이버 맵 컨트롤러 및 마커 정의
   NaverMapController? _mapController;
   NLatLng? _selectedLocation;
   NMarker? _selectedMarker;
   NMarker? _currentLocationMarker;
 
-  // 데이터베이스에 캠핑 사이트 추가하기
   void _addCampingSite() {
     if (_formKey.currentState?.validate() ?? false) {
       if (_selectedLocation == null) {
@@ -94,7 +81,6 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
     }
   }
 
-  // 지도에 선택한 위치를 업데이트하기
   void _updateMarker(NLatLng position) {
     if (_selectedMarker != null) {
       _mapController?.deleteOverlay(_selectedMarker!.info);
@@ -104,12 +90,11 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
       position: position,
       caption: NOverlayCaption(text: '선택한 위치'),
       icon: NOverlayImage.fromAssetImage('assets/images/camping_site.png'),
-      size: Size(30, 30),
+      size: Size(30.w, 30.h),
     );
     _mapController?.addOverlay(_selectedMarker!);
   }
 
-  // 지도를 클릭했을 때 호출되는 함수
   void _onMapTapped(NPoint point, NLatLng latLng) {
     setState(() {
       _selectedLocation = latLng;
@@ -119,11 +104,9 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
     });
   }
 
-  // 현재 위치를 가져오는 함수
   Future<void> _getCurrentLocation() async {
     LocationPermission permission = await Geolocator.requestPermission();
-    if (permission == LocationPermission.denied ||
-        permission == LocationPermission.deniedForever) {
+    if (permission == LocationPermission.denied || permission == LocationPermission.deniedForever) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('위치 권한이 필요합니다. 설정에서 권한을 허용해주세요.')),
       );
@@ -140,7 +123,7 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
         position: currentPosition,
         caption: NOverlayCaption(text: '현재 위치'),
         icon: NOverlayImage.fromAssetImage('assets/images/지도.png'),
-        size: Size(30, 30),
+        size: Size(30.w, 30.h),
       );
       _mapController?.addOverlay(_currentLocationMarker!);
       _mapController?.updateCamera(
@@ -149,47 +132,16 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
     });
   }
 
-  // 전체 화면 맵을 여는 함수
-  void _openFullScreenMap() async {
-    if (_selectedLocation == null) return;
-
-    NLatLng selectedPosition = await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => FullScreenMap(
-          initialPosition: _selectedLocation!,
-          onLocationSelected: (latLng) {
-            setState(() {
-              _selectedLocation = latLng;
-              _latitudeController.text = latLng.latitude.toString();
-              _longitudeController.text = latLng.longitude.toString();
-              _updateMarker(latLng);
-            });
-          },
-        ),
-      ),
-    );
-
-    setState(() {
-      _selectedLocation = selectedPosition;
-      _latitudeController.text = selectedPosition.latitude.toString();
-      _longitudeController.text = selectedPosition.longitude.toString();
-      _updateMarker(selectedPosition);
-    });
-  }
-
-  // 주소를 검색하는 함수
   Future<void> _searchAddress() async {
-    final apiKey = 's017qk3xj5';
+    final apiKey = dotenv.env['NAVER_CLIENT_ID'];
     final query = _addressController.text;
-    final url =
-        'https://naveropenapi.apigw.ntruss.com/map-geocode/v2/geocode?query=$query';
+    final url = 'https://naveropenapi.apigw.ntruss.com/map-geocode/v2/geocode?query=$query';
 
     final response = await http.get(
       Uri.parse(url),
       headers: {
-        'X-NCP-APIGW-API-KEY-ID': apiKey,
-        'X-NCP-APIGW-API-KEY': 'HQopWhspmeu4pZTmIIfTLM0K7ZkyqKt6E5VeUu7b'
+        'X-NCP-APIGW-API-KEY-ID': apiKey!,
+        'X-NCP-APIGW-API-KEY': dotenv.env['NAVER_CLIENT_SECRET']!
       },
     );
 
@@ -216,10 +168,8 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
     }
   }
 
-  // 위도와 경도 입력이 변경될 때 호출되는 함수
   void _onLatitudeLongitudeChanged() {
-    if (_latitudeController.text.isNotEmpty &&
-        _longitudeController.text.isNotEmpty) {
+    if (_latitudeController.text.isNotEmpty && _longitudeController.text.isNotEmpty) {
       final lat = double.tryParse(_latitudeController.text);
       final lng = double.tryParse(_longitudeController.text);
       if (lat != null && lng != null) {
@@ -256,23 +206,23 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
             left: 0,
             top: 0,
             child: Container(
-              width: MediaQuery.of(context).size.width,
-              height: 115,
+              width: 1.sw,
+              height: 115.h,
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(16),
-                  bottomRight: Radius.circular(16),
+                  bottomLeft: Radius.circular(16.r),
+                  bottomRight: Radius.circular(16.r),
                 ),
-                border: Border.all(color: Colors.grey, width: 1),
+                border: Border.all(color: Colors.grey, width: 1.w),
               ),
               child: Stack(
                 children: [
                   Positioned(
-                    left: 16,
-                    top: 40,
+                    left: 16.w,
+                    top: 40.h,
                     child: IconButton(
-                      icon: Icon(Icons.arrow_back, size: 45),
+                      icon: Icon(Icons.arrow_back, size: 45.w),
                       color: Color(0xFF162233),
                       onPressed: () {
                         Navigator.pop(context);
@@ -280,11 +230,11 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
                     ),
                   ),
                   Positioned(
-                    left: MediaQuery.of(context).size.width / 2 - 63,
-                    top: 50,
+                    left: 1.sw / 2 - 63.w,
+                    top: 50.h,
                     child: Container(
-                      width: 126,
-                      height: 48,
+                      width: 126.w,
+                      height: 48.h,
                       decoration: BoxDecoration(
                         image: DecorationImage(
                           image: AssetImage('assets/images/편안차박.png'),
@@ -298,20 +248,20 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
             ),
           ),
           Positioned(
-            top: 130,
+            top: 130.h,
             left: 0,
             right: 0,
             bottom: 0,
             child: SingleChildScrollView(
               child: Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: EdgeInsets.all(16.w),
                 child: Form(
                   key: _formKey,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(
-                        height: 250,
+                        height: 250.h,
                         width: double.infinity,
                         child: Stack(
                           children: [
@@ -331,24 +281,13 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
                               onMapTapped: _onMapTapped,
                             ),
                             Positioned(
-                              left: 16,
-                              top: 16,
+                              left: 16.w,
+                              top: 16.h,
                               child: FloatingActionButton(
                                 onPressed: _getCurrentLocation,
-                                child:
-                                    Icon(Icons.gps_fixed, color: Colors.white),
+                                child: Icon(Icons.gps_fixed, color: Colors.white),
                                 backgroundColor: Color(0xFF162233),
                                 heroTag: 'regionPageHeroTag',
-                              ),
-                            ),
-                            Positioned(
-                              right: 16,
-                              top: 16,
-                              child: FloatingActionButton(
-                                onPressed: _openFullScreenMap,
-                                child:
-                                    Icon(Icons.fullscreen, color: Colors.white),
-                                backgroundColor: Color(0xFF162233),
                               ),
                             ),
                           ],
@@ -356,13 +295,13 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
                       ),
                       const SizedBox(height: 20),
                       Container(
-                        width: MediaQuery.of(context).size.width,
+                        width: 1.sw,
                         decoration: BoxDecoration(
                           color: Colors.white,
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(color: Colors.grey, width: 1),
+                          borderRadius: BorderRadius.circular(16.r),
+                          border: Border.all(color: Colors.grey, width: 1.w),
                         ),
-                        padding: const EdgeInsets.all(16.0),
+                        padding: EdgeInsets.all(16.w),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -370,7 +309,7 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
                               '나의 차박지 등록하기',
                               style: TextStyle(
                                 color: Colors.black,
-                                fontSize: 30,
+                                fontSize: 30.sp,
                                 fontFamily: 'Pretendard',
                                 fontWeight: FontWeight.w600,
                               ),
@@ -380,12 +319,10 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
                               width: double.infinity,
                               decoration: BoxDecoration(
                                 color: Color(0xFFF3F3F3),
-                                borderRadius: BorderRadius.circular(16),
-                                border: Border.all(
-                                    color: Color(0xFF474747), width: 1),
+                                borderRadius: BorderRadius.circular(16.r),
+                                border: Border.all(color: Color(0xFF474747), width: 1.w),
                               ),
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 16),
+                              padding: EdgeInsets.symmetric(horizontal: 16.w),
                               child: TextFormField(
                                 controller: _placeController,
                                 maxLines: null,
@@ -396,7 +333,7 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
                                   hintText: '차박지명',
                                   hintStyle: TextStyle(
                                     color: Color(0xFF868686),
-                                    fontSize: 16,
+                                    fontSize: 16.sp,
                                     fontFamily: 'Pretendard',
                                     fontWeight: FontWeight.w400,
                                   ),
@@ -414,12 +351,10 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
                               width: double.infinity,
                               decoration: BoxDecoration(
                                 color: Color(0xFFF3F3F3),
-                                borderRadius: BorderRadius.circular(16),
-                                border: Border.all(
-                                    color: Color(0xFF474747), width: 1),
+                                borderRadius: BorderRadius.circular(16.r),
+                                border: Border.all(color: Color(0xFF474747), width: 1.w),
                               ),
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 16),
+                              padding: EdgeInsets.symmetric(horizontal: 16.w),
                               child: TextFormField(
                                 controller: _addressController,
                                 maxLines: null,
@@ -430,7 +365,7 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
                                   hintText: '주소를 입력하세요',
                                   hintStyle: TextStyle(
                                     color: Color(0xFF868686),
-                                    fontSize: 16,
+                                    fontSize: 16.sp,
                                     fontFamily: 'Pretendard',
                                     fontWeight: FontWeight.w400,
                                   ),
@@ -457,12 +392,10 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
                               width: double.infinity,
                               decoration: BoxDecoration(
                                 color: Color(0xFFF3F3F3),
-                                borderRadius: BorderRadius.circular(16),
-                                border: Border.all(
-                                    color: Color(0xFF474747), width: 1),
+                                borderRadius: BorderRadius.circular(16.r),
+                                border: Border.all(color: Color(0xFF474747), width: 1.w),
                               ),
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 16),
+                              padding: EdgeInsets.symmetric(horizontal: 16.w),
                               child: TextFormField(
                                 controller: _latitudeController,
                                 maxLines: null,
@@ -473,7 +406,7 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
                                   hintText: '위도',
                                   hintStyle: TextStyle(
                                     color: Color(0xFF868686),
-                                    fontSize: 16,
+                                    fontSize: 16.sp,
                                     fontFamily: 'Pretendard',
                                     fontWeight: FontWeight.w400,
                                   ),
@@ -491,12 +424,10 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
                               width: double.infinity,
                               decoration: BoxDecoration(
                                 color: Color(0xFFF3F3F3),
-                                borderRadius: BorderRadius.circular(16),
-                                border: Border.all(
-                                    color: Color(0xFF474747), width: 1),
+                                borderRadius: BorderRadius.circular(16.r),
+                                border: Border.all(color: Color(0xFF474747), width: 1.w),
                               ),
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 16),
+                              padding: EdgeInsets.symmetric(horizontal: 16.w),
                               child: TextFormField(
                                 controller: _longitudeController,
                                 maxLines: null,
@@ -507,7 +438,7 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
                                   hintText: '경도',
                                   hintStyle: TextStyle(
                                     color: Color(0xFF868686),
-                                    fontSize: 16,
+                                    fontSize: 16.sp,
                                     fontFamily: 'Pretendard',
                                     fontWeight: FontWeight.w400,
                                   ),
@@ -525,7 +456,7 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
                               '카테고리',
                               style: TextStyle(
                                 color: Colors.black,
-                                fontSize: 20,
+                                fontSize: 20.sp,
                                 fontFamily: 'Pretendard',
                                 fontWeight: FontWeight.w600,
                               ),
@@ -607,7 +538,7 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
                               '추가사항',
                               style: TextStyle(
                                 color: Colors.black,
-                                fontSize: 20,
+                                fontSize: 20.sp,
                                 fontFamily: 'Pretendard',
                                 fontWeight: FontWeight.w600,
                               ),
@@ -617,24 +548,22 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
                               width: double.infinity,
                               decoration: BoxDecoration(
                                 color: Color(0xFFF3F3F3),
-                                borderRadius: BorderRadius.circular(16),
-                                border: Border.all(
-                                    color: Color(0xFF474747), width: 1),
+                                borderRadius: BorderRadius.circular(16.r),
+                                border: Border.all(color: Color(0xFF474747), width: 1.w),
                               ),
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 16),
+                              padding: EdgeInsets.symmetric(horizontal: 16.w),
                               child: TextFormField(
                                 controller: _detailsController,
                                 maxLines: null,
                                 minLines: 1,
                                 keyboardType: TextInputType.multiline,
                                 decoration: InputDecoration(
-                                  contentPadding: EdgeInsets.all(10),
+                                  contentPadding: EdgeInsets.all(10.w),
                                   border: InputBorder.none,
                                   hintText: "구체적으로 적어주세요.",
                                   hintStyle: TextStyle(
                                     color: Color(0xFF868686),
-                                    fontSize: 16,
+                                    fontSize: 16.sp,
                                     fontFamily: 'Pretendard',
                                     fontWeight: FontWeight.w400,
                                   ),

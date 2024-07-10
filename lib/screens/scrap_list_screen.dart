@@ -1,24 +1,16 @@
-// Flutter의 Material 디자인 패키지를 불러오기
 import 'package:flutter/material.dart';
-// Firebase 인증을 사용하기 위한 패키지를 불러오기
 import 'package:firebase_auth/firebase_auth.dart';
-// Firebase Realtime Database를 사용하기 위한 패키지를 불러오기
 import 'package:firebase_database/firebase_database.dart';
-// 공유 기능을 제공하는 Share Plus 패키지를 불러오기
 import 'package:share_plus/share_plus.dart';
-// 카카오톡 공유를 위한 Kakao Flutter SDK를 불러오기
 import 'package:kakao_flutter_sdk_share/kakao_flutter_sdk_share.dart';
-// 카카오톡 공유 템플릿을 위한 Kakao Flutter SDK 템플릿 패키지를 불러오기
 import 'package:kakao_flutter_sdk_template/kakao_flutter_sdk_template.dart';
 
-// 스크랩한 차박지 목록을 보여주는 StatefulWidget 정의
 class ScrapListScreen extends StatefulWidget {
   @override
   _ScrapListScreenState createState() => _ScrapListScreenState();
 }
 
 class _ScrapListScreenState extends State<ScrapListScreen> {
-  // 스크랩한 차박지 목록을 저장할 리스트
   List<CarCampingSite> _scraps = [];
 
   @override
@@ -27,7 +19,6 @@ class _ScrapListScreenState extends State<ScrapListScreen> {
     _loadScraps();
   }
 
-  // 스크랩한 차박지 목록을 불러오는 함수
   void _loadScraps() async {
     User? user = FirebaseAuth.instance.currentUser;
     if (user != null) {
@@ -51,7 +42,6 @@ class _ScrapListScreenState extends State<ScrapListScreen> {
     }
   }
 
-  // 차박지를 공유하는 함수
   void _shareCampingSpot(CarCampingSite site) async {
     showDialog(
       context: context,
@@ -127,7 +117,6 @@ class _ScrapListScreenState extends State<ScrapListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // 스크랩한 차박지 목록 화면 빌드
     return Scaffold(
       body: Stack(
         children: [
@@ -230,7 +219,6 @@ class _ScrapListScreenState extends State<ScrapListScreen> {
   }
 }
 
-// 차박지 정보를 저장할 클래스 정의
 class CarCampingSite {
   final String name;
   final double latitude;
