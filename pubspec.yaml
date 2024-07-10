@@ -72,13 +72,13 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - assets/images/camping_site.png
+    - assets/images/verified_camping_site.png
     - assets/images/지도.png
     - assets/images/코스.jpg
     - assets/images/gas_station.png
     - assets/images/convenience_store.png
     - assets/images/추가.png
-    - assets/images/kakao.png
+    - assets/images/user_camping_site.png
     - assets/images/tmap.jpeg
     - assets/images/navermap.jpeg
     - assets/images/mart.png

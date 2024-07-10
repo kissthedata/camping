@@ -15,7 +15,6 @@ class _MapScreenState extends State<MapScreen> {
   bool _loading = true;
   NaverMapController? _mapController;
   List<NMarker> _markers = [];
-  NMarker? _currentLocationMarker;
   bool showMarts = false;
   bool showConvenienceStores = false;
   bool showGasStations = false;
@@ -42,14 +41,6 @@ class _MapScreenState extends State<MapScreen> {
 
     setState(() {
       _currentPosition = position;
-      _currentLocationMarker = NMarker(
-        id: 'current_location',
-        position: currentPosition,
-        caption: NOverlayCaption(text: '현재 위치'),
-        icon:
-            NOverlayImage.fromAssetImage('assets/images/current_location.png'),
-        size: Size(30, 30),
-      );
       _updateCameraPosition(currentPosition);
     });
 

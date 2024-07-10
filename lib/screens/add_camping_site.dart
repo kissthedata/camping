@@ -3,10 +3,10 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:geolocator/geolocator.dart';
-import 'home_page.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:map_sample/screens/home_page.dart';
 
 class AddCampingSiteScreen extends StatefulWidget {
   @override
@@ -42,7 +42,7 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
       }
 
       DatabaseReference databaseReference =
-          FirebaseDatabase.instance.ref().child('car_camping_sites').push();
+          FirebaseDatabase.instance.ref().child('user_camping_sites').push();
       Map<String, dynamic> data = {
         'place': _placeController.text,
         'latitude': _selectedLocation!.latitude,
@@ -89,7 +89,7 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
       id: 'selectedMarker',
       position: position,
       caption: NOverlayCaption(text: '선택한 위치'),
-      icon: NOverlayImage.fromAssetImage('assets/images/camping_site.png'),
+      icon: NOverlayImage.fromAssetImage('assets/images/verified_camping_site.png'),
       size: Size(30.w, 30.h),
     );
     _mapController?.addOverlay(_selectedMarker!);
@@ -106,7 +106,8 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
 
   Future<void> _getCurrentLocation() async {
     LocationPermission permission = await Geolocator.requestPermission();
-    if (permission == LocationPermission.denied || permission == LocationPermission.deniedForever) {
+    if (permission == LocationPermission.denied ||
+        permission == LocationPermission.deniedForever) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('위치 권한이 필요합니다. 설정에서 권한을 허용해주세요.')),
       );
@@ -135,7 +136,8 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
   Future<void> _searchAddress() async {
     final apiKey = dotenv.env['NAVER_CLIENT_ID'];
     final query = _addressController.text;
-    final url = 'https://naveropenapi.apigw.ntruss.com/map-geocode/v2/geocode?query=$query';
+    final url =
+        'https://naveropenapi.apigw.ntruss.com/map-geocode/v2/geocode?query=$query';
 
     final response = await http.get(
       Uri.parse(url),
@@ -169,7 +171,8 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
   }
 
   void _onLatitudeLongitudeChanged() {
-    if (_latitudeController.text.isNotEmpty && _longitudeController.text.isNotEmpty) {
+    if (_latitudeController.text.isNotEmpty &&
+        _longitudeController.text.isNotEmpty) {
       final lat = double.tryParse(_latitudeController.text);
       final lng = double.tryParse(_longitudeController.text);
       if (lat != null && lng != null) {
@@ -320,7 +323,8 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
                               decoration: BoxDecoration(
                                 color: Color(0xFFF3F3F3),
                                 borderRadius: BorderRadius.circular(16.r),
-                                border: Border.all(color: Color(0xFF474747), width: 1.w),
+                                border: Border.all(
+                                    color: Color(0xFF474747), width: 1.w),
                               ),
                               padding: EdgeInsets.symmetric(horizontal: 16.w),
                               child: TextFormField(
@@ -352,7 +356,8 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
                               decoration: BoxDecoration(
                                 color: Color(0xFFF3F3F3),
                                 borderRadius: BorderRadius.circular(16.r),
-                                border: Border.all(color: Color(0xFF474747), width: 1.w),
+                                border: Border.all(
+                                    color: Color(0xFF474747), width: 1.w),
                               ),
                               padding: EdgeInsets.symmetric(horizontal: 16.w),
                               child: TextFormField(
@@ -393,7 +398,8 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
                               decoration: BoxDecoration(
                                 color: Color(0xFFF3F3F3),
                                 borderRadius: BorderRadius.circular(16.r),
-                                border: Border.all(color: Color(0xFF474747), width: 1.w),
+                                border: Border.all(
+                                    color: Color(0xFF474747), width: 1.w),
                               ),
                               padding: EdgeInsets.symmetric(horizontal: 16.w),
                               child: TextFormField(
@@ -425,7 +431,8 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
                               decoration: BoxDecoration(
                                 color: Color(0xFFF3F3F3),
                                 borderRadius: BorderRadius.circular(16.r),
-                                border: Border.all(color: Color(0xFF474747), width: 1.w),
+                                border: Border.all(
+                                    color: Color(0xFF474747), width: 1.w),
                               ),
                               padding: EdgeInsets.symmetric(horizontal: 16.w),
                               child: TextFormField(
@@ -549,7 +556,8 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
                               decoration: BoxDecoration(
                                 color: Color(0xFFF3F3F3),
                                 borderRadius: BorderRadius.circular(16.r),
-                                border: Border.all(color: Color(0xFF474747), width: 1.w),
+                                border: Border.all(
+                                    color: Color(0xFF474747), width: 1.w),
                               ),
                               padding: EdgeInsets.symmetric(horizontal: 16.w),
                               child: TextFormField(

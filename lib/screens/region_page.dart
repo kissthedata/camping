@@ -23,6 +23,7 @@ class CarCampingSite {
   final bool water;
   final bool parkinglot;
   final String details;
+  final bool isVerified; // 추가: 검증 여부
 
   CarCampingSite({
     required this.name,
@@ -36,6 +37,7 @@ class CarCampingSite {
     this.water = false,
     this.parkinglot = false,
     this.details = '',
+    this.isVerified = false, // 추가: 검증 여부
   });
 }
 
@@ -63,6 +65,7 @@ class _RegionPageState extends State<RegionPage> {
   void initState() {
     super.initState();
     _loadCampingSites();
+    _loadUserCampingSites(); // 추가: 사용자 차박지 로드
   }
 
   Future<void> _loadCampingSites() async {
@@ -87,6 +90,39 @@ class _RegionPageState extends State<RegionPage> {
           water: siteData['water'] ?? false,
           parkinglot: siteData['parkinglot'] ?? false,
           details: siteData['details'] ?? '',
+          isVerified: true, // 검증된 차박지
+        );
+        _campingSites.add(site);
+        _filteredCampingSites.add(site);
+      });
+      setState(() {});
+      _addMarkers();
+    }
+  }
+
+  Future<void> _loadUserCampingSites() async {
+    DatabaseReference databaseReference =
+        FirebaseDatabase.instance.ref().child('user_camping_sites');
+    DataSnapshot snapshot = await databaseReference.get();
+
+    if (snapshot.exists) {
+      Map<String, dynamic> data =
+          Map<String, dynamic>.from(snapshot.value as Map);
+      data.forEach((key, value) {
+        Map<String, dynamic> siteData = Map<String, dynamic>.from(value);
+        CarCampingSite site = CarCampingSite(
+          name: siteData['place'],
+          latitude: siteData['latitude'],
+          longitude: siteData['longitude'],
+          imageUrl: siteData['imageUrl'] ?? '',
+          restRoom: siteData['restRoom'] ?? false,
+          sink: siteData['sink'] ?? false,
+          cook: siteData['cook'] ?? false,
+          animal: siteData['animal'] ?? false,
+          water: siteData['water'] ?? false,
+          parkinglot: siteData['parkinglot'] ?? false,
+          details: siteData['details'] ?? '',
+          isVerified: false, // 검증되지 않은 사용자 차박지
         );
         _campingSites.add(site);
         _filteredCampingSites.add(site);
@@ -141,7 +177,9 @@ class _RegionPageState extends State<RegionPage> {
       id: site.name,
       position: NLatLng(site.latitude, site.longitude),
       caption: NOverlayCaption(text: site.name),
-      icon: NOverlayImage.fromAssetImage('assets/images/camping_site.png'),
+      icon: NOverlayImage.fromAssetImage(site.isVerified
+          ? 'assets/images/verified_camping_site.png'
+          : 'assets/images/user_camping_site.png'), // 아이콘 경로 수정
       size: Size(30, 30),
     );
     marker.setOnTapListener((NMarker marker) {
