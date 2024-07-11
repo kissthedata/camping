@@ -1,124 +1,151 @@
-// Flutter의 Material 디자인 패키지를 불러오기
 import 'package:flutter/material.dart';
-// Firebase 인증을 사용하기 위한 패키지를 불러오기
-import 'package:firebase_auth/firebase_auth.dart';
-// 홈 페이지와 회원가입 페이지 스크린을 불러오기
+import 'package:firebase_database/firebase_database.dart';
+import 'register_screen.dart';
 import 'home_page.dart';
-//추후에 회원가입 진행할 때 하기 import 'register_screen.dart';
 
-// 앱의 진입점 정의
-void main() {
-  runApp(const FigmaToCodeApp());
-}
-
-// 앱의 메인 클래스 정의
-class FigmaToCodeApp extends StatelessWidget {
-  const FigmaToCodeApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData.dark().copyWith(
-        scaffoldBackgroundColor: const Color.fromARGB(255, 18, 32, 47),
-      ),
-      home: LoginScreen(),
-    );
-  }
-}
-
-// 로그인 화면을 위한 StatefulWidget 정의
 class LoginScreen extends StatefulWidget {
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  // 텍스트 입력 컨트롤러와 폼 상태 키 정의
-  final _emailController = TextEditingController();
+  final _idController = TextEditingController();
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
-  // 로그인 함수 정의
   void _login() async {
     if (_formKey.currentState!.validate()) {
-      try {
-        await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: _emailController.text,
-          password: _passwordController.text,
-        );
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => MyHomePage()),
-        );
-      } on FirebaseAuthException catch (e) {
+      DatabaseReference ref = FirebaseDatabase.instance.ref('users/${_idController.text}');
+      DatabaseEvent event = await ref.once();
+      if (event.snapshot.value != null) {
+        var userData = event.snapshot.value as Map;
+        if (userData['password'] == _passwordController.text) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => MyHomePage()),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('로그인 실패: 비밀번호가 잘못되었습니다.')),
+          );
+        }
+      } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('로그인 실패: ${e.message}')),
+          SnackBar(content: Text('로그인 실패: 아이디가 존재하지 않습니다.')),
         );
       }
-    }
-  }
-
-  // 익명 로그인 함수 정의
-  void _signInAnonymously() async {
-    try {
-      await FirebaseAuth.instance.signInAnonymously();
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => MyHomePage()),
-      );
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('익명 로그인 실패: $e')),
-      );
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ListView(
-        children: [
-          Column(
-            children: [
-              Container(
-                width: 393,
-                height: 852,
-                clipBehavior: Clip.antiAlias,
-                decoration: BoxDecoration(color: Colors.white),
-                child: Stack(
-                  children: [
-                    Positioned(
-                      left: 89,
-                      top: 200,
-                      child: Container(
-                        width: 214,
-                        height: 213,
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: AssetImage("assets/images/로고.png"),
-                            fit: BoxFit.fill,
-                          ),
+      body: Form(
+        key: _formKey,
+        child: ListView(
+          children: [
+            Container(
+              width: 393,
+              height: 852,
+              decoration: BoxDecoration(color: Colors.white),
+              child: Stack(
+                children: [
+                  Positioned(
+                    left: 98,
+                    top: 153,
+                    child: Container(
+                      width: 196,
+                      height: 195,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage("assets/images/로고.png"),
+                          fit: BoxFit.fill,
                         ),
                       ),
                     ),
-                    Positioned(
-                      left: 55,
-                      top: 450,
+                  ),
+                  Positioned(
+                    left: 55,
+                    top: 367,
+                    child: Container(
+                      width: 282,
+                      height: 50,
+                      decoration: ShapeDecoration(
+                        color: Color(0xFFF7F7F7),
+                        shape: RoundedRectangleBorder(
+                          side: BorderSide(width: 0.50, color: Color(0xFFC3C3C3)),
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                        child: TextFormField(
+                          controller: _idController,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            hintText: '아이디 (4자리)',
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty || value.length != 4) {
+                              return '아이디는 4자리여야 합니다.';
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    left: 55,
+                    top: 424,
+                    child: Container(
+                      width: 282,
+                      height: 50,
+                      decoration: ShapeDecoration(
+                        color: Color(0xFFF7F7F7),
+                        shape: RoundedRectangleBorder(
+                          side: BorderSide(width: 0.50, color: Color(0xFFC3C3C3)),
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                        child: TextFormField(
+                          controller: _passwordController,
+                          obscureText: true,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            hintText: '비밀번호 (4자리)',
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty || value.length != 4) {
+                              return '비밀번호는 4자리여야 합니다.';
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    left: 55,
+                    top: 488,
+                    child: InkWell(
+                      onTap: _login,
                       child: Container(
                         width: 282,
-                        height: 58,
+                        height: 50,
                         decoration: ShapeDecoration(
-                          color: Color(0xFF162243),
+                          color: Color(0xFF25345B),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(16),
                           ),
                         ),
-                        child: TextButton(
-                          onPressed: _signInAnonymously,
+                        child: Center(
                           child: Text(
-                            '베타 테스트 로그인',
+                            '로그인',
                             style: TextStyle(
-                              color: Colors.white,
+                              color: Color(0xFFC3C3C3),
                               fontSize: 14,
                               fontFamily: 'Pretendard',
                               fontWeight: FontWeight.w400,
@@ -127,12 +154,33 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                  Positioned(
+                    left: 172,
+                    top: 557,
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => RegisterScreen()),
+                        );
+                      },
+                      child: Text(
+                        '회원가입',
+                        style: TextStyle(
+                          color: Color(0xFF585858),
+                          fontSize: 14,
+                          fontFamily: 'Pretendard',
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
-        ],
+            ),
+          ],
+        ),
       ),
     );
   }
