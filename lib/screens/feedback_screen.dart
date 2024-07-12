@@ -99,6 +99,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
             top: 130,
             left: 0,
             right: 0,
+            bottom: 0,
             child: SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
