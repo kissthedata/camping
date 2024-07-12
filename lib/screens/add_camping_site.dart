@@ -98,8 +98,8 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
   void _onMapTapped(NPoint point, NLatLng latLng) {
     setState(() {
       _selectedLocation = latLng;
-      _latitudeController.text = latLng.latitude.toString();
-      _longitudeController.text = latLng.longitude.toString();
+      _latitudeController.text = latLng.latitude.toStringAsFixed(6);
+      _longitudeController.text = latLng.longitude.toStringAsFixed(6);
       _updateMarker(latLng);
     });
   }
@@ -154,8 +154,8 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
         final lng = double.parse(data['addresses'][0]['x']);
         setState(() {
           _selectedLocation = NLatLng(lat, lng);
-          _latitudeController.text = lat.toString();
-          _longitudeController.text = lng.toString();
+          _latitudeController.text = lat.toStringAsFixed(6);
+          _longitudeController.text = lng.toStringAsFixed(6);
           _updateMarker(_selectedLocation!);
         });
       } else {

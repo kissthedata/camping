@@ -219,12 +219,28 @@ class _RegionPageState extends State<RegionPage> {
     setState(() {
       _filteredCampingSites.clear();
       for (var site in _campingSites) {
-        if ((showRestRoom && site.restRoom) ||
-            (showSink && site.sink) ||
-            (showCook && site.cook) ||
-            (showAnimal && site.animal) ||
-            (showWater && site.water) ||
-            (showParkinglot && site.parkinglot)) {
+        bool matchesAllFilters = true;
+
+        if (showRestRoom && !site.restRoom) {
+          matchesAllFilters = false;
+        }
+        if (showSink && !site.sink) {
+          matchesAllFilters = false;
+        }
+        if (showCook && !site.cook) {
+          matchesAllFilters = false;
+        }
+        if (showAnimal && !site.animal) {
+          matchesAllFilters = false;
+        }
+        if (showWater && !site.water) {
+          matchesAllFilters = false;
+        }
+        if (showParkinglot && !site.parkinglot) {
+          matchesAllFilters = false;
+        }
+
+        if (matchesAllFilters) {
           _filteredCampingSites.add(site);
         }
       }
@@ -374,32 +390,81 @@ class _RegionPageState extends State<RegionPage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('지역 선택'),
+          title: Text(
+            '지역 선택',
+            style: TextStyle(
+              fontFamily: 'Pretendard',
+              fontWeight: FontWeight.w600,
+              fontSize: 20,
+            ),
+          ),
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
                 ListTile(
-                  title: Text('강원도'),
+                  title: Text(
+                    '강원도',
+                    style: TextStyle(
+                      fontFamily: 'Pretendard',
+                      fontWeight: FontWeight.w400,
+                      fontSize: 18,
+                    ),
+                  ),
                   onTap: () => _onRegionSelected('강원도'),
                 ),
                 ListTile(
-                  title: Text('경기도'),
+                  title: Text(
+                    '경기도',
+                    style: TextStyle(
+                      fontFamily: 'Pretendard',
+                      fontWeight: FontWeight.w400,
+                      fontSize: 18,
+                    ),
+                  ),
                   onTap: () => _onRegionSelected('경기도'),
                 ),
                 ListTile(
-                  title: Text('경상도'),
+                  title: Text(
+                    '경상도',
+                    style: TextStyle(
+                      fontFamily: 'Pretendard',
+                      fontWeight: FontWeight.w400,
+                      fontSize: 18,
+                    ),
+                  ),
                   onTap: () => _onRegionSelected('경상도'),
                 ),
                 ListTile(
-                  title: Text('전라도'),
+                  title: Text(
+                    '전라도',
+                    style: TextStyle(
+                      fontFamily: 'Pretendard',
+                      fontWeight: FontWeight.w400,
+                      fontSize: 18,
+                    ),
+                  ),
                   onTap: () => _onRegionSelected('전라도'),
                 ),
                 ListTile(
-                  title: Text('충청도'),
+                  title: Text(
+                    '충청도',
+                    style: TextStyle(
+                      fontFamily: 'Pretendard',
+                      fontWeight: FontWeight.w400,
+                      fontSize: 18,
+                    ),
+                  ),
                   onTap: () => _onRegionSelected('충청도'),
                 ),
                 ListTile(
-                  title: Text('제주도'),
+                  title: Text(
+                    '제주도',
+                    style: TextStyle(
+                      fontFamily: 'Pretendard',
+                      fontWeight: FontWeight.w400,
+                      fontSize: 18,
+                    ),
+                  ),
                   onTap: () => _onRegionSelected('제주도'),
                 ),
               ],
@@ -407,7 +472,15 @@ class _RegionPageState extends State<RegionPage> {
           ),
           actions: <Widget>[
             TextButton(
-              child: Text('취소'),
+              child: Text(
+                '취소',
+                style: TextStyle(
+                  fontFamily: 'Pretendard',
+                  fontWeight: FontWeight.w600,
+                  fontSize: 18,
+                  color: Colors.black,
+                ),
+              ),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -494,6 +567,17 @@ class _RegionPageState extends State<RegionPage> {
                   ],
                 ),
                 SizedBox(height: 10),
+                if (!site.isVerified)
+                  Text(
+                    '* 회원 추천 차박지입니다.',
+                    style: TextStyle(
+                      color: Colors.red,
+                      fontSize: 10,
+                      fontFamily: 'Pretendard',
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                SizedBox(height: 10),
                 Text(
                   '$address',
                   style: TextStyle(
@@ -507,7 +591,7 @@ class _RegionPageState extends State<RegionPage> {
                 Row(
                   children: [
                     Text(
-                      '위도: ${site.latitude}',
+                      '위도: ${site.latitude.toStringAsFixed(6)}',
                       style: TextStyle(
                         color: Color(0xFF727272),
                         fontSize: 12,
@@ -517,7 +601,7 @@ class _RegionPageState extends State<RegionPage> {
                     ),
                     SizedBox(width: 10),
                     Text(
-                      '경도: ${site.longitude}',
+                      '경도: ${site.longitude.toStringAsFixed(6)}',
                       style: TextStyle(
                         color: Color(0xFF727272),
                         fontSize: 12,
@@ -529,7 +613,7 @@ class _RegionPageState extends State<RegionPage> {
                 ),
                 SizedBox(height: 20),
                 Text(
-                  '분류',
+                  '카테고리',
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 14,
@@ -704,15 +788,6 @@ class _RegionPageState extends State<RegionPage> {
                       ),
                     ),
                   ),
-                  Positioned(
-                    right: 16,
-                    top: 40,
-                    child: IconButton(
-                      icon: Icon(Icons.filter_list, size: 40),
-                      color: Colors.black,
-                      onPressed: () => _showRegionSelectionDialog(),
-                    ),
-                  ),
                 ],
               ),
             ),
@@ -748,6 +823,15 @@ class _RegionPageState extends State<RegionPage> {
               heroTag: 'regionPageHeroTag',
             ),
           ),
+          Positioned(
+            top: 180,
+            right: 20,
+            child: FloatingActionButton(
+              onPressed: () => _showRegionSelectionDialog(),
+              child: Icon(Icons.manage_search_sharp, color: Colors.white),
+              backgroundColor: Color(0xFF162233),
+            ),
+          ),
           SlidingUpPanel(
             controller: _panelController,
             panelSnapping: true,
@@ -780,14 +864,19 @@ class _RegionPageState extends State<RegionPage> {
                           Positioned(
                             left: 26,
                             top: 12,
-                            child: Text(
-                              site.name,
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 18,
-                                fontFamily: 'Pretendard',
-                                fontWeight: FontWeight.w400,
-                              ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  site.name,
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 18,
+                                    fontFamily: 'Pretendard',
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                           Positioned(

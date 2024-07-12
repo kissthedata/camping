@@ -241,8 +241,8 @@ class _MapScreenState extends State<MapScreen> {
       return;
     }
 
-    // 현재 위치로부터 반경 5km 이내의 위치만 필터링
-    final double radius = 5000; // 5km
+    // 현재 위치로부터 반경 10km 이내의 위치만 필터링
+    final double radius = 10000; // 10km
     final nearbyLocations = _locations.where((location) {
       final double distance = Geolocator.distanceBetween(
         _currentPosition!.latitude,
