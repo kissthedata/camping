@@ -96,7 +96,7 @@ class _RegionPageState extends State<RegionPage> {
         _filteredCampingSites.add(site);
       });
       setState(() {});
-      _addMarkers();
+      _updateMarkers();
     }
   }
 
@@ -128,7 +128,7 @@ class _RegionPageState extends State<RegionPage> {
         _filteredCampingSites.add(site);
       });
       setState(() {});
-      _addMarkers();
+      _updateMarkers();
     }
   }
 
@@ -164,6 +164,13 @@ class _RegionPageState extends State<RegionPage> {
     _mapController?.updateCamera(
       NCameraUpdate.scrollAndZoomTo(target: position, zoom: zoom),
     );
+  }
+
+  void _updateMarkers() {
+    _mapController?.clearOverlays();
+    for (var site in _filteredCampingSites) {
+      _addMarker(site);
+    }
   }
 
   void _addMarkers() {
@@ -244,6 +251,7 @@ class _RegionPageState extends State<RegionPage> {
           _filteredCampingSites.add(site);
         }
       }
+      _updateMarkers();
     });
   }
 
@@ -629,7 +637,7 @@ class _RegionPageState extends State<RegionPage> {
                     if (site.restRoom) _buildTag('화장실'),
                     if (site.sink) _buildTag('개수대'),
                     if (site.cook) _buildTag('취사 가능'),
-                    if (site.animal) _buildTag('반려동물 가능'),
+                    if (site.animal) _buildTag('반려동물'),
                     if (site.water) _buildTag('샤워실'),
                     if (site.parkinglot) _buildTag('주차장'),
                   ],
@@ -836,7 +844,7 @@ class _RegionPageState extends State<RegionPage> {
             controller: _panelController,
             panelSnapping: true,
             minHeight: 0,
-            maxHeight: MediaQuery.of(context).size.height * 0.7,
+            maxHeight: MediaQuery.of(context).size.height * 0.45,
             borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
             panel: ListView.builder(
               itemCount: _filteredCampingSites.length,
@@ -972,31 +980,31 @@ class _RegionPageState extends State<RegionPage> {
           ),
           Positioned(
             left: 66,
-            bottom: 50,
-            child: Container(
-              width: 280,
-              height: 60,
-              decoration: ShapeDecoration(
-                color: Color(0xFF172243),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(36.50),
+            bottom: 40,
+            child: GestureDetector(
+              onTap: () {
+                if (_panelController.isPanelOpen) {
+                  _panelController.close();
+                  setState(() {
+                    isPanelOpen = false;
+                  });
+                } else {
+                  _panelController.open();
+                  setState(() {
+                    isPanelOpen = true;
+                  });
+                }
+              },
+              child: Container(
+                width: 280,
+                height: 60,
+                decoration: ShapeDecoration(
+                  color: Color(0xFF172243),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(36.50),
+                  ),
                 ),
-              ),
-              child: Center(
-                child: GestureDetector(
-                  onTap: () {
-                    if (_panelController.isPanelOpen) {
-                      _panelController.close();
-                      setState(() {
-                        isPanelOpen = false;
-                      });
-                    } else {
-                      _panelController.open();
-                      setState(() {
-                        isPanelOpen = true;
-                      });
-                    }
-                  },
+                child: Center(
                   child: Text(
                     isPanelOpen ? '차박지 목록 닫기' : '차박지 목록 열기',
                     style: TextStyle(

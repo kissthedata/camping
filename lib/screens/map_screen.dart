@@ -91,6 +91,32 @@ class _MapScreenState extends State<MapScreen> {
     }
   }
 
+  Future<void> _addLocationIfNotExists(MapLocation location) async {
+    final databaseReference =
+        FirebaseDatabase.instance.ref().child('locations');
+
+    final query = databaseReference
+        .orderByChild('latitude')
+        .equalTo(location.latitude)
+        .ref
+        .orderByChild('longitude')
+        .equalTo(location.longitude)
+        .ref
+        .orderByChild('place')
+        .equalTo(location.place)
+        .limitToFirst(1);
+
+    final snapshot = await query.get();
+
+    if (snapshot.exists) {
+      print('Location already exists: ${location.place}');
+      return;
+    }
+
+    await databaseReference.push().set(location.toJson());
+    print('Location added: ${location.place}');
+  }
+
   void _toggleFilter(String category) {
     setState(() {
       switch (category) {
@@ -241,8 +267,8 @@ class _MapScreenState extends State<MapScreen> {
       return;
     }
 
-    // 현재 위치로부터 반경 10km 이내의 위치만 필터링
-    final double radius = 10000; // 10km
+    // 현재 위치로부터 반경 5km 이내의 위치만 필터링
+    final double radius = 5000; // 5km
     final nearbyLocations = _locations.where((location) {
       final double distance = Geolocator.distanceBetween(
         _currentPosition!.latitude,
@@ -283,5 +309,26 @@ class _MapScreenState extends State<MapScreen> {
       print('Error clearing overlays: $e');
     }
     await _addMarkers();
+
+    // 마커 개수 세기
+    int markerCount = _markers.length;
+    String categoryName = '';
+    if (showMarts) {
+      categoryName = '마트';
+    } else if (showConvenienceStores) {
+      categoryName = '편의점';
+    } else if (showGasStations) {
+      categoryName = '주유소';
+    }
+
+    // 마커 개수 표시
+    if (categoryName.isNotEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('$markerCount개의 $categoryName가 있습니다.'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+    }
   }
 }
