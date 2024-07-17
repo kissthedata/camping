@@ -30,6 +30,7 @@ class _ScrapListScreenState extends State<ScrapListScreen> {
         Map<dynamic, dynamic> data = snapshot.value as Map<dynamic, dynamic>;
         data.forEach((key, value) {
           scraps.add(CarCampingSite(
+            key: key,
             name: value['name'] ?? '이름 없음',
             latitude: value['latitude'] ?? 0.0,
             longitude: value['longitude'] ?? 0.0,
@@ -39,6 +40,21 @@ class _ScrapListScreenState extends State<ScrapListScreen> {
           _scraps = scraps;
         });
       }
+    }
+  }
+
+  void _removeScrap(CarCampingSite site) async {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      DatabaseReference userScrapsRef =
+          FirebaseDatabase.instance.ref().child('scraps').child(user.uid);
+      await userScrapsRef.child(site.key).remove();
+      setState(() {
+        _scraps.remove(site);
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('스크랩이 취소되었습니다.')),
+      );
     }
   }
 
@@ -153,29 +169,41 @@ class _ScrapListScreenState extends State<ScrapListScreen> {
                       itemCount: _scraps.length,
                       itemBuilder: (context, index) {
                         final scrap = _scraps[index];
-                        return Container(
-                          margin: EdgeInsets.only(bottom: 16.0),
-                          decoration: ShapeDecoration(
-                            color: Colors.white,
-                            shape: RoundedRectangleBorder(
-                              side: BorderSide(
-                                  width: 1.64, color: Color(0xFFBCBCBC)),
-                              borderRadius: BorderRadius.circular(13.12),
-                            ),
-                          ),
-                          child: ListTile(
-                            title: Text(
-                              scrap.name,
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 18.05,
-                                fontFamily: 'Pretendard',
-                                fontWeight: FontWeight.w500,
+                        return GestureDetector(
+                          onTap: () => _removeScrap(scrap),
+                          child: Container(
+                            margin: EdgeInsets.only(bottom: 16.0),
+                            decoration: ShapeDecoration(
+                              color: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                side: BorderSide(
+                                    width: 1.64, color: Color(0xFFBCBCBC)),
+                                borderRadius: BorderRadius.circular(13.12),
                               ),
                             ),
-                            trailing: IconButton(
-                              icon: Icon(Icons.share),
-                              onPressed: () => _shareCampingSpot(scrap),
+                            child: ListTile(
+                              title: Text(
+                                scrap.name,
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 18.05,
+                                  fontFamily: 'Pretendard',
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              trailing: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  IconButton(
+                                    icon: Icon(Icons.star, color: Colors.black),
+                                    onPressed: () => _removeScrap(scrap),
+                                  ),
+                                  IconButton(
+                                    icon: Icon(Icons.share),
+                                    onPressed: () => _shareCampingSpot(scrap),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         );
@@ -184,20 +212,20 @@ class _ScrapListScreenState extends State<ScrapListScreen> {
                   ),
                 ),
                 SizedBox(height: 16),
-                Container(
-                  width: 280,
-                  height: 60,
-                  decoration: ShapeDecoration(
-                    color: Color(0xFF172243),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(36.50),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: Container(
+                    width: 280,
+                    height: 60,
+                    decoration: ShapeDecoration(
+                      color: Color(0xFF172243),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(36.50),
+                      ),
                     ),
-                  ),
-                  child: Center(
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
+                    child: Center(
                       child: Text(
                         '닫기',
                         style: TextStyle(
@@ -220,6 +248,7 @@ class _ScrapListScreenState extends State<ScrapListScreen> {
 }
 
 class CarCampingSite {
+  final String key;
   final String name;
   final double latitude;
   final double longitude;
@@ -232,6 +261,7 @@ class CarCampingSite {
   final bool parkinglot;
 
   CarCampingSite({
+    required this.key,
     required this.name,
     required this.latitude,
     required this.longitude,
