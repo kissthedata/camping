@@ -89,7 +89,8 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
       id: 'selectedMarker',
       position: position,
       caption: NOverlayCaption(text: '선택한 위치'),
-      icon: NOverlayImage.fromAssetImage('assets/images/verified_camping_site.png'),
+      icon: NOverlayImage.fromAssetImage(
+          'assets/images/verified_camping_site.png'),
       size: Size(30.w, 30.h),
     );
     _mapController?.addOverlay(_selectedMarker!);
@@ -105,11 +106,31 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
   }
 
   Future<void> _getCurrentLocation() async {
-    LocationPermission permission = await Geolocator.requestPermission();
-    if (permission == LocationPermission.denied ||
-        permission == LocationPermission.deniedForever) {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('위치 권한이 필요합니다. 설정에서 권한을 허용해주세요.')),
+        SnackBar(content: Text('위치 서비스가 비활성화되어 있습니다.')),
+      );
+      return;
+    }
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('위치 권한이 거부되었습니다. 설정에서 권한을 허용해주세요.')),
+        );
+        return;
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('위치 권한이 영구적으로 거부되었습니다. 설정에서 권한을 허용해주세요.')),
       );
       return;
     }
@@ -288,7 +309,8 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
                               top: 16.h,
                               child: FloatingActionButton(
                                 onPressed: _getCurrentLocation,
-                                child: Icon(Icons.gps_fixed, color: Colors.white),
+                                child:
+                                    Icon(Icons.gps_fixed, color: Colors.white),
                                 backgroundColor: Color(0xFF162233),
                                 heroTag: 'regionPageHeroTag',
                               ),

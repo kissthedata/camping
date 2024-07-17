@@ -48,6 +48,11 @@
         <meta-data
             android:name="com.kakao.sdk.AppKey"
             android:value="15680e17c8b4ddbcef701a292ab5e26e" />
+        
+        <!-- Flutter OpenGL 설정 추가 -->
+        <meta-data
+            android:name="flutter.embedding.android.ExperimentalRender"
+            android:value="SKIA" />
 
     </application>
     

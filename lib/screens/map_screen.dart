@@ -27,16 +27,36 @@ class _MapScreenState extends State<MapScreen> {
   }
 
   Future<void> _getCurrentLocation() async {
-    LocationPermission permission = await Geolocator.requestPermission();
-    if (permission == LocationPermission.denied ||
-        permission == LocationPermission.deniedForever) {
-      setState(() {
-        _loading = false;
-      });
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('위치 서비스가 비활성화되어 있습니다.')),
+      );
       return;
     }
 
-    Position position = await Geolocator.getCurrentPosition();
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('위치 권한이 거부되었습니다. 설정에서 권한을 허용해주세요.')),
+        );
+        return;
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('위치 권한이 영구적으로 거부되었습니다. 설정에서 권한을 허용해주세요.')),
+      );
+      return;
+    }
+
+    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
     NLatLng currentPosition = NLatLng(position.latitude, position.longitude);
 
     setState(() {
@@ -59,7 +79,7 @@ class _MapScreenState extends State<MapScreen> {
       final DataSnapshot snapshot = await databaseReference.get();
       if (snapshot.exists) {
         final Map<String, dynamic> data = Map<String, dynamic>.from(snapshot.value as Map);
-        final Map<String, MapLocation> uniqueLocations = {}; // 중복 확인을 위한 Map
+        final Map<String, MapLocation> uniqueLocations = {};
 
         data.forEach((key, value) {
           final location = MapLocation(
@@ -69,7 +89,7 @@ class _MapScreenState extends State<MapScreen> {
             longitude: value['longitude'],
             category: value['category'],
           );
-          uniqueLocations[location.place] = location; // place를 기준으로 중복 제거
+          uniqueLocations[location.place] = location;
         });
 
         setState(() {
@@ -259,7 +279,6 @@ class _MapScreenState extends State<MapScreen> {
       return;
     }
 
-    // 현재 위치로부터 반경 5km 이내의 위치만 필터링
     final double radius = 5000; // 5km
     final nearbyLocations = _locations.where((location) {
       final double distance = Geolocator.distanceBetween(
@@ -302,7 +321,6 @@ class _MapScreenState extends State<MapScreen> {
     }
     await _addMarkers();
 
-    // 마커 개수 세기
     int markerCount = _markers.length;
     String categoryName = '';
     if (showMarts) {
@@ -313,7 +331,6 @@ class _MapScreenState extends State<MapScreen> {
       categoryName = '주유소';
     }
 
-    // 마커 개수 표시
     if (categoryName.isNotEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
