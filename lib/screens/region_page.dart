@@ -59,13 +59,12 @@ class _RegionPageState extends State<RegionPage> {
   bool showParkinglot = false;
   bool isPanelOpen = false;
 
-  NMarker? _currentLocationMarker;
-
   @override
   void initState() {
     super.initState();
     _loadCampingSites();
     _loadUserCampingSites(); // 추가: 사용자 차박지 로드
+    _getCurrentLocation(); // 현재 위치 로드 추가
   }
 
   Future<void> _loadCampingSites() async {
@@ -256,51 +255,46 @@ class _RegionPageState extends State<RegionPage> {
   }
 
   Future<void> _getCurrentLocation() async {
-    bool serviceEnabled;
-    LocationPermission permission;
+  bool serviceEnabled;
+  LocationPermission permission;
 
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('위치 서비스가 비활성화되어 있습니다.')),
-      );
-      return;
-    }
-
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('위치 권한이 거부되었습니다.')),
-        );
-        return;
-      }
-    }
-
-    if (permission == LocationPermission.deniedForever) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('위치 권한이 영구적으로 거부되었습니다. 권한을 설정에서 허용해주세요.')),
-      );
-      return;
-    }
-
-    Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
-    NLatLng currentPosition = NLatLng(position.latitude, position.longitude);
-
-    setState(() {
-      _currentLocationMarker = NMarker(
-        id: 'current_location',
-        position: currentPosition,
-        caption: NOverlayCaption(text: '현재 위치'),
-        icon: NOverlayImage.fromAssetImage('assets/images/지도.png'),
-        size: Size(30, 30),
-      );
-      _mapController?.addOverlay(_currentLocationMarker!);
-      _updateCameraPosition(currentPosition, zoom: 10);
-    });
+  serviceEnabled = await Geolocator.isLocationServiceEnabled();
+  if (!serviceEnabled) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('위치 서비스가 비활성화되어 있습니다.')),
+    );
+    return;
   }
+
+  permission = await Geolocator.checkPermission();
+  if (permission == LocationPermission.denied) {
+    permission = await Geolocator.requestPermission();
+    if (permission == LocationPermission.denied) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('위치 권한이 거부되었습니다. 설정에서 권한을 허용해주세요.')),
+      );
+      return;
+    }
+  }
+
+  if (permission == LocationPermission.deniedForever) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('위치 권한이 영구적으로 거부되었습니다. 설정에서 권한을 허용해주세요.')),
+    );
+    return;
+  }
+
+  Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+  NLatLng currentPosition = NLatLng(position.latitude, position.longitude);
+
+  setState(() {
+    _updateCameraPosition(currentPosition);
+  });
+
+  await _loadCampingSites();
+  await _loadUserCampingSites();
+}
+
 
   void _scrapCampingSpot(CarCampingSite site) async {
     var user = FirebaseAuth.instance.currentUser;
