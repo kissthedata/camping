@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 
+/// 피드백 화면을 위한 StatefulWidget 클래스
 class FeedbackScreen extends StatefulWidget {
   @override
   _FeedbackScreenState createState() => _FeedbackScreenState();
 }
 
+/// 피드백 화면의 상태를 관리하기 위한 State 클래스
 class _FeedbackScreenState extends State<FeedbackScreen> {
   final _formKey = GlobalKey<FormState>();
   final _feedbackController = TextEditingController();
 
+  /// 피드백을 제출하는 메서드
   void _submitFeedback() {
     if (_formKey.currentState!.validate()) {
       DatabaseReference feedbackRef =
@@ -26,6 +29,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
     }
   }
 
+  /// 알림 다이얼로그를 표시하는 메서드
   void _showAlertDialog(String message) {
     showDialog(
       context: context,

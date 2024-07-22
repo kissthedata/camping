@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+/// 필터링 다이얼로그를 표시하기 위한 위젯
 class FilterDialog extends StatefulWidget {
   final bool showMarts;
   final bool showConvenienceStores;
@@ -30,6 +31,7 @@ class _FilterDialogState extends State<FilterDialog> {
     _showGasStations = widget.showGasStations;
   }
 
+  /// 스위치 리스트 타일을 생성하기 위한 메서드
   Widget _buildSwitchListTile(
       String title, bool value, ValueChanged<bool> onChanged) {
     return SwitchListTile(

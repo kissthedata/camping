@@ -1,17 +1,15 @@
-// Flutter의 Material 디자인 패키지를 불러오기
 import 'package:flutter/material.dart';
-// Firebase 인증과 데이터베이스를 사용하기 위한 패키지를 불러오기
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 
-// 사용자 정보를 수정할 수 있는 화면을 위한 StatefulWidget 정의
+/// 사용자 정보를 수정할 수 있는 화면을 위한 StatefulWidget 정의
 class InfoEditScreen extends StatefulWidget {
   @override
   _InfoEditScreenState createState() => _InfoEditScreenState();
 }
 
+/// 사용자 정보 수정 화면의 상태를 관리하기 위한 State 클래스
 class _InfoEditScreenState extends State<InfoEditScreen> {
-  // 텍스트 입력 컨트롤러와 폼 상태 키 정의
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
@@ -22,7 +20,7 @@ class _InfoEditScreenState extends State<InfoEditScreen> {
     _loadUserInfo(); // 사용자 정보 불러오기
   }
 
-  // 사용자 정보를 불러오는 함수
+  /// 사용자 정보를 불러오는 함수
   void _loadUserInfo() async {
     User? user = FirebaseAuth.instance.currentUser;
     if (user != null) {
@@ -40,7 +38,7 @@ class _InfoEditScreenState extends State<InfoEditScreen> {
     }
   }
 
-  // 사용자 정보를 업데이트하는 함수
+  /// 사용자 정보를 업데이트하는 함수
   void _updateUserInfo() async {
     if (_formKey.currentState!.validate()) {
       User? user = FirebaseAuth.instance.currentUser;

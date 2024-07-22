@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 
+/// 회원가입 화면을 위한 StatefulWidget 클래스
 class RegisterScreen extends StatefulWidget {
   @override
   _RegisterScreenState createState() => _RegisterScreenState();
 }
 
+/// 회원가입 화면의 상태를 관리하는 State 클래스
 class _RegisterScreenState extends State<RegisterScreen> {
   final _idController = TextEditingController();
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
+  /// 회원가입을 처리하는 함수
   void _register() async {
     if (_formKey.currentState!.validate()) {
       DatabaseReference ref = FirebaseDatabase.instance.ref('users/${_idController.text}');

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 
+/// 차박지 정보를 표시하고 스크랩하기 위한 위젯
 class CampingSpotWidget extends StatelessWidget {
   final String name;
   final String imageUrl;
@@ -15,6 +16,7 @@ class CampingSpotWidget extends StatelessWidget {
     required this.longitude,
   });
 
+  /// 차박지를 스크랩하기 위한 메서드
   void _scrapCampingSpot(BuildContext context) async {
     User? user = FirebaseAuth.instance.currentUser;
     if (user != null) {

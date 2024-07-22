@@ -5,11 +5,13 @@ import 'package:geolocator/geolocator.dart';
 import 'package:map_sample/models/map_location.dart';
 import 'package:map_sample/utils/marker_utils.dart';
 
+/// 지도 화면을 위한 StatefulWidget 클래스
 class MapScreen extends StatefulWidget {
   @override
   _MapScreenState createState() => _MapScreenState();
 }
 
+/// 지도 화면의 상태를 관리하기 위한 State 클래스
 class _MapScreenState extends State<MapScreen> {
   List<MapLocation> _locations = [];
   bool _loading = true;
@@ -26,6 +28,7 @@ class _MapScreenState extends State<MapScreen> {
     _getCurrentLocation();
   }
 
+  /// 현재 위치를 가져오는 메서드
   Future<void> _getCurrentLocation() async {
     bool serviceEnabled;
     LocationPermission permission;
@@ -67,12 +70,14 @@ class _MapScreenState extends State<MapScreen> {
     await _loadLocationsFromDatabase();
   }
 
+  /// 카메라 위치를 업데이트하는 메서드
   void _updateCameraPosition(NLatLng position) {
     _mapController?.updateCamera(
       NCameraUpdate.scrollAndZoomTo(target: position, zoom: 15),
     );
   }
 
+  /// 데이터베이스에서 위치 정보를 불러오는 메서드
   Future<void> _loadLocationsFromDatabase() async {
     try {
       final databaseReference = FirebaseDatabase.instance.ref().child('locations');
@@ -112,6 +117,7 @@ class _MapScreenState extends State<MapScreen> {
     }
   }
 
+  /// 위치가 존재하지 않는 경우 위치를 추가하는 메서드
   Future<void> _addLocationIfNotExists(MapLocation location) async {
     final databaseReference = FirebaseDatabase.instance.ref().child('locations');
 
@@ -137,6 +143,7 @@ class _MapScreenState extends State<MapScreen> {
     print('Location added: ${location.place}');
   }
 
+  /// 필터를 토글하는 메서드
   void _toggleFilter(String category) {
     setState(() {
       switch (category) {
@@ -253,6 +260,7 @@ class _MapScreenState extends State<MapScreen> {
     );
   }
 
+  /// 아이콘이 있는 필터 버튼을 생성하는 메서드
   Widget _buildFilterButtonWithIcon(String label, String category, bool isActive, String iconPath) {
     return ElevatedButton.icon(
       onPressed: () => _toggleFilter(category),
@@ -274,6 +282,7 @@ class _MapScreenState extends State<MapScreen> {
     );
   }
 
+  /// 마커를 추가하는 메서드
   Future<void> _addMarkers() async {
     if (_mapController == null || _currentPosition == null) {
       return;
@@ -308,6 +317,7 @@ class _MapScreenState extends State<MapScreen> {
     }
   }
 
+  /// 마커를 업데이트하는 메서드
   Future<void> _updateMarkers() async {
     if (_mapController == null) {
       return;

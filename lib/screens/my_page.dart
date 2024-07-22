@@ -1,19 +1,17 @@
-// Flutter의 Material 디자인 패키지를 불러오기
 import 'package:flutter/material.dart';
-// Firebase 인증과 데이터베이스를 사용하기 위한 패키지를 불러오기
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
-// 로그인 화면과 정보 수정 화면, 스크랩 리스트 화면을 불러오기
 import 'login_screen.dart';
 import 'info_edit_screen.dart';
-import 'scrap_list_screen.dart'; // ScrapListScreen import 추가
+import 'scrap_list_screen.dart';
 
-// 마이페이지를 위한 StatefulWidget 정의
+/// 마이페이지를 위한 StatefulWidget 정의
 class MyPage extends StatefulWidget {
   @override
   _MyPageState createState() => _MyPageState();
 }
 
+/// 마이페이지의 상태를 관리하는 State 클래스
 class _MyPageState extends State<MyPage> {
   // 텍스트 입력 컨트롤러 정의
   final _nameController = TextEditingController();
@@ -25,7 +23,7 @@ class _MyPageState extends State<MyPage> {
     _loadUserInfo(); // 사용자 정보 불러오기
   }
 
-  // 사용자 정보를 불러오는 함수
+  /// 사용자 정보를 불러오는 함수
   void _loadUserInfo() async {
     User? user = FirebaseAuth.instance.currentUser;
     if (user != null) {
@@ -43,7 +41,7 @@ class _MyPageState extends State<MyPage> {
     }
   }
 
-  // 로그아웃 함수
+  /// 로그아웃 함수
   void _logout() async {
     await FirebaseAuth.instance.signOut();
     Navigator.pushReplacement(

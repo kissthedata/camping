@@ -2,10 +2,12 @@ import 'package:dio/dio.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
+/// 카카오 로케이션 서비스를 이용하여 위치 데이터를 가져와 업로드하기 위한 클래스
 class KakaoLocationService {
   final String kakaoApiKey = dotenv.env['KAKAO_API_KEY']!;
   final DatabaseReference _dbRef = FirebaseDatabase.instance.ref().child('locations');
 
+  /// 주어진 위도와 경도를 바탕으로 위치 데이터를 가져와 업로드하기 위한 메서드
   Future<void> fetchAndUploadLocations(double latitude, double longitude) async {
     List<String> categories = ['MT1', 'CS2', 'OL7'];
     List<String> categoryNames = ['마트', '편의점', '주유소'];
@@ -15,6 +17,7 @@ class KakaoLocationService {
     }
   }
 
+  /// 특정 카테고리의 위치 데이터를 가져와 업로드하기 위한 메서드
   Future<void> _fetchAndUploadCategory(
       String categoryCode, String categoryName, double latitude, double longitude) async {
     try {

@@ -8,11 +8,13 @@ import 'dart:convert';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:map_sample/screens/home_page.dart';
 
+/// 차박지 등록 화면을 위한 StatefulWidget 클래스
 class AddCampingSiteScreen extends StatefulWidget {
   @override
   _AddCampingSiteScreenState createState() => _AddCampingSiteScreenState();
 }
 
+/// 차박지 등록 화면의 상태를 관리하기 위한 State 클래스
 class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
   final _formKey = GlobalKey<FormState>();
   final _placeController = TextEditingController();
@@ -31,6 +33,7 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
   NLatLng? _selectedLocation;
   NMarker? _selectedMarker;
 
+  /// 차박지 정보를 데이터베이스에 저장하기 위한 메서드
   void _addCampingSite() {
     if (_formKey.currentState?.validate() ?? false) {
       if (_selectedLocation == null) {
@@ -80,6 +83,7 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
     }
   }
 
+  /// 지도를 클릭하여 선택한 위치에 마커를 업데이트하기 위한 메서드
   void _updateMarker(NLatLng position) {
     if (_selectedMarker != null) {
       _mapController?.deleteOverlay(_selectedMarker!.info);
@@ -95,6 +99,7 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
     _mapController?.addOverlay(_selectedMarker!);
   }
 
+  /// 지도를 탭하여 위치를 선택하는 메서드
   void _onMapTapped(NPoint point, NLatLng latLng) {
     setState(() {
       _selectedLocation = latLng;
@@ -104,6 +109,7 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
     });
   }
 
+  /// 현재 위치를 가져오는 메서드
   Future<void> _getCurrentLocation() async {
     bool serviceEnabled;
     LocationPermission permission;
@@ -145,6 +151,7 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
     });
   }
 
+  /// 주소를 검색하여 위치를 업데이트하는 메서드
   Future<void> _searchAddress() async {
     final apiKey = dotenv.env['NAVER_CLIENT_ID'];
     final query = _addressController.text;
@@ -182,6 +189,7 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
     }
   }
 
+  /// 위도와 경도 값이 변경될 때 호출되는 메서드
   void _onLatitudeLongitudeChanged() {
     if (_latitudeController.text.isNotEmpty &&
         _longitudeController.text.isNotEmpty) {

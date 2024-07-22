@@ -3,16 +3,19 @@ import 'package:firebase_database/firebase_database.dart';
 import 'register_screen.dart';
 import 'home_page.dart';
 
+/// 로그인 화면을 위한 StatefulWidget 클래스
 class LoginScreen extends StatefulWidget {
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
 
+/// 로그인 화면의 상태를 관리하기 위한 State 클래스
 class _LoginScreenState extends State<LoginScreen> {
   final _idController = TextEditingController();
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
+  /// 로그인 메서드
   void _login() async {
     if (_formKey.currentState!.validate()) {
       DatabaseReference ref =

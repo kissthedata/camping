@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 
+/// 현재 위치 정보를 가져와 위젯에 표시하기 위한 클래스
 class MyLocationWidget extends StatefulWidget {
   final Function(double, double) onLocationFetched;
+
   MyLocationWidget({required this.onLocationFetched});
 
   @override
@@ -10,6 +12,7 @@ class MyLocationWidget extends StatefulWidget {
 }
 
 class _MyLocationWidgetState extends State<MyLocationWidget> {
+  /// 위치 정보를 가져오기 위한 비동기 메서드
   Future<void> getGeoData() async {
     LocationPermission permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {

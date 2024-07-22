@@ -5,11 +5,13 @@ import 'package:share_plus/share_plus.dart';
 import 'package:kakao_flutter_sdk_share/kakao_flutter_sdk_share.dart';
 import 'package:kakao_flutter_sdk_template/kakao_flutter_sdk_template.dart';
 
+/// 스크랩 목록 화면을 위한 StatefulWidget 클래스
 class ScrapListScreen extends StatefulWidget {
   @override
   _ScrapListScreenState createState() => _ScrapListScreenState();
 }
 
+/// 스크랩 목록 화면의 상태를 관리하는 State 클래스
 class _ScrapListScreenState extends State<ScrapListScreen> {
   List<CarCampingSite> _scraps = [];
 
@@ -19,6 +21,7 @@ class _ScrapListScreenState extends State<ScrapListScreen> {
     _loadScraps();
   }
 
+  /// 스크랩 목록을 불러오는 함수
   void _loadScraps() async {
     User? user = FirebaseAuth.instance.currentUser;
     if (user != null) {
@@ -43,6 +46,7 @@ class _ScrapListScreenState extends State<ScrapListScreen> {
     }
   }
 
+  /// 스크랩을 제거하는 함수
   void _removeScrap(CarCampingSite site) async {
     User? user = FirebaseAuth.instance.currentUser;
     if (user != null) {
@@ -58,6 +62,7 @@ class _ScrapListScreenState extends State<ScrapListScreen> {
     }
   }
 
+  /// 차박지를 공유하는 함수
   void _shareCampingSpot(CarCampingSite site) async {
     showDialog(
       context: context,
@@ -247,6 +252,7 @@ class _ScrapListScreenState extends State<ScrapListScreen> {
   }
 }
 
+/// 차박지 정보를 저장하는 클래스
 class CarCampingSite {
   final String key;
   final String name;

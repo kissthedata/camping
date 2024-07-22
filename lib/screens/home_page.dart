@@ -1,18 +1,16 @@
-// Flutter의 Material 디자인 패키지를 불러오기
 import 'package:flutter/material.dart';
-// 각 페이지 스크린을 불러오기
 import 'package:map_sample/screens/map_screen.dart';
 import 'package:map_sample/screens/add_camping_site.dart';
 import 'package:map_sample/screens/region_page.dart';
 import 'package:map_sample/screens/my_page.dart';
 import 'package:map_sample/screens/feedback_screen.dart';
 
-// 앱의 진입점 정의
+/// 앱의 진입점 정의
 void main() {
   runApp(const FigmaToCodeApp());
 }
 
-// 앱의 메인 클래스 정의
+/// 앱의 메인 클래스 정의
 class FigmaToCodeApp extends StatelessWidget {
   const FigmaToCodeApp({super.key});
 
@@ -27,7 +25,7 @@ class FigmaToCodeApp extends StatelessWidget {
   }
 }
 
-// 홈 페이지 클래스 정의
+/// 홈 페이지 클래스 정의
 class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
