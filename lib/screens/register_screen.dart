@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 class RegisterScreen extends StatefulWidget {
   @override
@@ -11,21 +12,39 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
+  @override
+  void initState() {
+    super.initState();
+    _initializeFirebase();
+  }
+
+  Future<void> _initializeFirebase() async {
+    await Firebase.initializeApp();
+  }
+
   void _register() async {
     if (_formKey.currentState!.validate()) {
-      DatabaseReference ref = FirebaseDatabase.instance.ref('users/${_idController.text}');
-      DatabaseEvent event = await ref.once();
-      if (event.snapshot.value == null) {
-        await ref.set({
-          'password': _passwordController.text,
-        });
-        Navigator.pop(context);
+      try {
+        DatabaseReference ref =
+            FirebaseDatabase.instance.ref('users/${_idController.text}');
+        DatabaseEvent event = await ref.once();
+        if (!event.snapshot.exists) {
+          await ref.set({
+            'password': _passwordController.text,
+          });
+          Navigator.pop(context);
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('회원가입 성공! 이제 로그인 할 수 있습니다.')),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('아이디가 이미 존재합니다. 다른 아이디를 사용하세요.')),
+          );
+        }
+      } catch (e) {
+        print('Error: $e');
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('회원가입 성공! 이제 로그인 할 수 있습니다.')),
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('아이디가 이미 존재합니다. 다른 아이디를 사용하세요.')),
+          SnackBar(content: Text('회원가입 중 오류가 발생했습니다. 다시 시도해 주세요.')),
         );
       }
     }
@@ -138,7 +157,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           hintText: '',
                         ),
                         validator: (value) {
-                          if (value == null || value.isEmpty || value.length != 4) {
+                          if (value == null ||
+                              value.isEmpty ||
+                              value.length != 4) {
                             return '아이디는 4자리여야 합니다.';
                           }
                           return null;
@@ -196,7 +217,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           hintText: '',
                         ),
                         validator: (value) {
-                          if (value == null || value.isEmpty || value.length != 4) {
+                          if (value == null ||
+                              value.isEmpty ||
+                              value.length != 4) {
                             return '비밀번호는 4자리여야 합니다.';
                           }
                           return null;

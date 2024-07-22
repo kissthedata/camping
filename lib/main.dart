@@ -22,18 +22,32 @@ Future<void> main() async {
     return;
   }
 
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  // Firebase 초기화
+  try {
+    await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform);
+    print('Firebase initialized successfully');
+  } catch (e) {
+    print('Failed to initialize Firebase: $e');
+    return;
+  }
+
   NaverMapSdk.instance.initialize(clientId: dotenv.env['NAVER_CLIENT_ID']!);
   KakaoSdk.init(nativeAppKey: dotenv.env['KAKAO_API_KEY']!);
 
   runApp(MyApp());
 
   // 위치 권한 요청 및 현재 위치 가져오기
+  await _requestLocationPermissionAndFetchLocation();
+}
+
+Future<void> _requestLocationPermissionAndFetchLocation() async {
   bool serviceEnabled;
   LocationPermission permission;
 
   serviceEnabled = await Geolocator.isLocationServiceEnabled();
   if (!serviceEnabled) {
+    print('Location services are disabled.');
     return Future.error('Location services are disabled.');
   }
 
@@ -41,17 +55,21 @@ Future<void> main() async {
   if (permission == LocationPermission.denied) {
     permission = await Geolocator.requestPermission();
     if (permission == LocationPermission.denied) {
+      print('Location permissions are denied');
       return Future.error('Location permissions are denied');
     }
   }
 
   if (permission == LocationPermission.deniedForever) {
+    print(
+        'Location permissions are permanently denied, we cannot request permissions.');
     return Future.error(
         'Location permissions are permanently denied, we cannot request permissions.');
   }
 
   Position position = await Geolocator.getCurrentPosition(
       desiredAccuracy: LocationAccuracy.high);
+  print('현재 위치: ${position.latitude}, ${position.longitude}');
 
   final kakaoLocationService = KakaoLocationService();
   try {

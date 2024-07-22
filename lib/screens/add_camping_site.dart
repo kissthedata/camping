@@ -30,7 +30,6 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
   NaverMapController? _mapController;
   NLatLng? _selectedLocation;
   NMarker? _selectedMarker;
-  NMarker? _currentLocationMarker;
 
   void _addCampingSite() {
     if (_formKey.currentState?.validate() ?? false) {
@@ -140,14 +139,6 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
     NLatLng currentPosition = NLatLng(position.latitude, position.longitude);
 
     setState(() {
-      _currentLocationMarker = NMarker(
-        id: 'current_location',
-        position: currentPosition,
-        caption: NOverlayCaption(text: '현재 위치'),
-        icon: NOverlayImage.fromAssetImage('assets/images/지도.png'),
-        size: Size(30.w, 30.h),
-      );
-      _mapController?.addOverlay(_currentLocationMarker!);
       _mapController?.updateCamera(
         NCameraUpdate.scrollAndZoomTo(target: currentPosition, zoom: 15),
       );
