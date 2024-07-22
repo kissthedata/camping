@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 
-/// 회원가입 화면을 위한 StatefulWidget 클래스
+/// 회원가입 화면을 제공하는 StatefulWidget
 class RegisterScreen extends StatefulWidget {
   @override
   _RegisterScreenState createState() => _RegisterScreenState();
 }
 
-/// 회원가입 화면의 상태를 관리하는 State 클래스
 class _RegisterScreenState extends State<RegisterScreen> {
   final _idController = TextEditingController();
   final _passwordController = TextEditingController();

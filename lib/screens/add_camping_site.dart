@@ -1,20 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:map_sample/screens/home_page.dart';
 
-/// 차박지 등록 화면을 위한 StatefulWidget 클래스
+/// 차박지 등록 화면을 제공하는 StatefulWidget
 class AddCampingSiteScreen extends StatefulWidget {
   @override
   _AddCampingSiteScreenState createState() => _AddCampingSiteScreenState();
 }
 
-/// 차박지 등록 화면의 상태를 관리하기 위한 State 클래스
 class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
   final _formKey = GlobalKey<FormState>();
   final _placeController = TextEditingController();
@@ -33,7 +32,7 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
   NLatLng? _selectedLocation;
   NMarker? _selectedMarker;
 
-  /// 차박지 정보를 데이터베이스에 저장하기 위한 메서드
+  /// 차박지를 데이터베이스에 추가하기 위한 함수
   void _addCampingSite() {
     if (_formKey.currentState?.validate() ?? false) {
       if (_selectedLocation == null) {
@@ -63,18 +62,7 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('차박지가 성공적으로 등록되었습니다.')),
         );
-        _placeController.clear();
-        _detailsController.clear();
-        _latitudeController.clear();
-        _longitudeController.clear();
-        setState(() {
-          _isRestRoom = false;
-          _isSink = false;
-          _isCook = false;
-          _isAnimal = false;
-          _isWater = false;
-          _isParkinglot = false;
-        });
+        _clearForm();
       }).catchError((error) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('차박지 등록에 실패했습니다: $error')),
@@ -83,7 +71,23 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
     }
   }
 
-  /// 지도를 클릭하여 선택한 위치에 마커를 업데이트하기 위한 메서드
+  /// 폼 데이터를 초기화하기 위한 함수
+  void _clearForm() {
+    _placeController.clear();
+    _detailsController.clear();
+    _latitudeController.clear();
+    _longitudeController.clear();
+    setState(() {
+      _isRestRoom = false;
+      _isSink = false;
+      _isCook = false;
+      _isAnimal = false;
+      _isWater = false;
+      _isParkinglot = false;
+    });
+  }
+
+  /// 지도에 마커를 업데이트하기 위한 함수
   void _updateMarker(NLatLng position) {
     if (_selectedMarker != null) {
       _mapController?.deleteOverlay(_selectedMarker!.info);
@@ -92,14 +96,13 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
       id: 'selectedMarker',
       position: position,
       caption: NOverlayCaption(text: '선택한 위치'),
-      icon: NOverlayImage.fromAssetImage(
-          'assets/images/verified_camping_site.png'),
+      icon: NOverlayImage.fromAssetImage('assets/images/verified_camping_site.png'),
       size: Size(30.w, 30.h),
     );
     _mapController?.addOverlay(_selectedMarker!);
   }
 
-  /// 지도를 탭하여 위치를 선택하는 메서드
+  /// 지도를 탭했을 때 호출되는 함수
   void _onMapTapped(NPoint point, NLatLng latLng) {
     setState(() {
       _selectedLocation = latLng;
@@ -109,7 +112,7 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
     });
   }
 
-  /// 현재 위치를 가져오는 메서드
+  /// 현재 위치를 가져오는 함수
   Future<void> _getCurrentLocation() async {
     bool serviceEnabled;
     LocationPermission permission;
@@ -140,8 +143,7 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
       return;
     }
 
-    Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
+    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
     NLatLng currentPosition = NLatLng(position.latitude, position.longitude);
 
     setState(() {
@@ -151,12 +153,11 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
     });
   }
 
-  /// 주소를 검색하여 위치를 업데이트하는 메서드
+  /// 주소를 검색하여 위치를 찾는 함수
   Future<void> _searchAddress() async {
     final apiKey = dotenv.env['NAVER_CLIENT_ID'];
     final query = _addressController.text;
-    final url =
-        'https://naveropenapi.apigw.ntruss.com/map-geocode/v2/geocode?query=$query';
+    final url = 'https://naveropenapi.apigw.ntruss.com/map-geocode/v2/geocode?query=$query';
 
     final response = await http.get(
       Uri.parse(url),
@@ -189,10 +190,9 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
     }
   }
 
-  /// 위도와 경도 값이 변경될 때 호출되는 메서드
+  /// 위도와 경도 값이 변경되었을 때 호출되는 함수
   void _onLatitudeLongitudeChanged() {
-    if (_latitudeController.text.isNotEmpty &&
-        _longitudeController.text.isNotEmpty) {
+    if (_latitudeController.text.isNotEmpty && _longitudeController.text.isNotEmpty) {
       final lat = double.tryParse(_latitudeController.text);
       final lng = double.tryParse(_longitudeController.text);
       if (lat != null && lng != null) {
@@ -308,8 +308,7 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
                               top: 16.h,
                               child: FloatingActionButton(
                                 onPressed: _getCurrentLocation,
-                                child:
-                                    Icon(Icons.gps_fixed, color: Colors.white),
+                                child: Icon(Icons.gps_fixed, color: Colors.white),
                                 backgroundColor: Color(0xFF162233),
                                 heroTag: 'regionPageHeroTag',
                               ),
@@ -318,321 +317,118 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
                         ),
                       ),
                       const SizedBox(height: 20),
-                      Container(
-                        width: 1.sw,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(16.r),
-                          border: Border.all(color: Colors.grey, width: 1.w),
+                      _buildFormInputField(
+                        label: '차박지명',
+                        controller: _placeController,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return '차박지명을 입력해주세요';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 20),
+                      _buildFormInputField(
+                        label: '주소를 입력하세요',
+                        controller: _addressController,
+                      ),
+                      const SizedBox(height: 10),
+                      Center(
+                        child: ElevatedButton(
+                          onPressed: _searchAddress,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Color(0xFF162233),
+                          ),
+                          child: Text(
+                            '주소 검색',
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
                         ),
-                        padding: EdgeInsets.all(16.w),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              '나의 차박지 등록하기',
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 30.sp,
-                                fontFamily: 'Pretendard',
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            const SizedBox(height: 20),
-                            Container(
-                              width: double.infinity,
-                              decoration: BoxDecoration(
-                                color: Color(0xFFF3F3F3),
-                                borderRadius: BorderRadius.circular(16.r),
-                                border: Border.all(
-                                    color: Color(0xFF474747), width: 1.w),
-                              ),
-                              padding: EdgeInsets.symmetric(horizontal: 16.w),
-                              child: TextFormField(
-                                controller: _placeController,
-                                maxLines: null,
-                                minLines: 1,
-                                keyboardType: TextInputType.multiline,
-                                decoration: InputDecoration(
-                                  border: InputBorder.none,
-                                  hintText: '차박지명',
-                                  hintStyle: TextStyle(
-                                    color: Color(0xFF868686),
-                                    fontSize: 16.sp,
-                                    fontFamily: 'Pretendard',
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                                ),
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return '차박지명을 입력해주세요';
-                                  }
-                                  return null;
-                                },
-                              ),
-                            ),
-                            const SizedBox(height: 20),
-                            Container(
-                              width: double.infinity,
-                              decoration: BoxDecoration(
-                                color: Color(0xFFF3F3F3),
-                                borderRadius: BorderRadius.circular(16.r),
-                                border: Border.all(
-                                    color: Color(0xFF474747), width: 1.w),
-                              ),
-                              padding: EdgeInsets.symmetric(horizontal: 16.w),
-                              child: TextFormField(
-                                controller: _addressController,
-                                maxLines: null,
-                                minLines: 1,
-                                keyboardType: TextInputType.multiline,
-                                decoration: InputDecoration(
-                                  border: InputBorder.none,
-                                  hintText: '주소를 입력하세요',
-                                  hintStyle: TextStyle(
-                                    color: Color(0xFF868686),
-                                    fontSize: 16.sp,
-                                    fontFamily: 'Pretendard',
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 10),
-                            Center(
-                              child: ElevatedButton(
-                                onPressed: _searchAddress,
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Color(0xFF162233),
-                                ),
-                                child: Text(
-                                  '주소 검색',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 20),
-                            Container(
-                              width: double.infinity,
-                              decoration: BoxDecoration(
-                                color: Color(0xFFF3F3F3),
-                                borderRadius: BorderRadius.circular(16.r),
-                                border: Border.all(
-                                    color: Color(0xFF474747), width: 1.w),
-                              ),
-                              padding: EdgeInsets.symmetric(horizontal: 16.w),
-                              child: TextFormField(
-                                controller: _latitudeController,
-                                maxLines: null,
-                                minLines: 1,
-                                keyboardType: TextInputType.number,
-                                decoration: InputDecoration(
-                                  border: InputBorder.none,
-                                  hintText: '위도',
-                                  hintStyle: TextStyle(
-                                    color: Color(0xFF868686),
-                                    fontSize: 16.sp,
-                                    fontFamily: 'Pretendard',
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                                ),
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return '위도를 입력해주세요';
-                                  }
-                                  return null;
-                                },
-                              ),
-                            ),
-                            const SizedBox(height: 20),
-                            Container(
-                              width: double.infinity,
-                              decoration: BoxDecoration(
-                                color: Color(0xFFF3F3F3),
-                                borderRadius: BorderRadius.circular(16.r),
-                                border: Border.all(
-                                    color: Color(0xFF474747), width: 1.w),
-                              ),
-                              padding: EdgeInsets.symmetric(horizontal: 16.w),
-                              child: TextFormField(
-                                controller: _longitudeController,
-                                maxLines: null,
-                                minLines: 1,
-                                keyboardType: TextInputType.number,
-                                decoration: InputDecoration(
-                                  border: InputBorder.none,
-                                  hintText: '경도',
-                                  hintStyle: TextStyle(
-                                    color: Color(0xFF868686),
-                                    fontSize: 16.sp,
-                                    fontFamily: 'Pretendard',
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                                ),
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return '경도를 입력해주세요';
-                                  }
-                                  return null;
-                                },
-                              ),
-                            ),
-                            const SizedBox(height: 20),
-                            Text(
-                              '카테고리',
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 20.sp,
-                                fontFamily: 'Pretendard',
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            const SizedBox(height: 20),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Checkbox(
-                                          value: _isRestRoom,
-                                          onChanged: (bool? value) {
-                                            setState(() {
-                                              _isRestRoom = value ?? false;
-                                            });
-                                          },
-                                          activeColor: Color(0xFF162233),
-                                        ),
-                                        const Text("화장실"),
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        Checkbox(
-                                          value: _isSink,
-                                          onChanged: (bool? value) {
-                                            setState(() {
-                                              _isSink = value ?? false;
-                                            });
-                                          },
-                                          activeColor: Color(0xFF162233),
-                                        ),
-                                        const Text("개수대"),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Checkbox(
-                                          value: _isAnimal,
-                                          onChanged: (bool? value) {
-                                            setState(() {
-                                              _isAnimal = value ?? false;
-                                            });
-                                          },
-                                          activeColor: Color(0xFF162233),
-                                        ),
-                                        const Text("반려동물"),
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        Checkbox(
-                                          value: _isWater,
-                                          onChanged: (bool? value) {
-                                            setState(() {
-                                              _isWater = value ?? false;
-                                            });
-                                          },
-                                          activeColor: Color(0xFF162233),
-                                        ),
-                                        const Text("샤워실"),
-                                      ],
-                                    ),
-                                  ],
-                                )
-                              ],
-                            ),
-                            const SizedBox(height: 20),
-                            Text(
-                              '추가사항',
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 20.sp,
-                                fontFamily: 'Pretendard',
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            const SizedBox(height: 20),
-                            Container(
-                              width: double.infinity,
-                              decoration: BoxDecoration(
-                                color: Color(0xFFF3F3F3),
-                                borderRadius: BorderRadius.circular(16.r),
-                                border: Border.all(
-                                    color: Color(0xFF474747), width: 1.w),
-                              ),
-                              padding: EdgeInsets.symmetric(horizontal: 16.w),
-                              child: TextFormField(
-                                controller: _detailsController,
-                                maxLines: null,
-                                minLines: 1,
-                                keyboardType: TextInputType.multiline,
-                                decoration: InputDecoration(
-                                  contentPadding: EdgeInsets.all(10.w),
-                                  border: InputBorder.none,
-                                  hintText: "구체적으로 적어주세요.",
-                                  hintStyle: TextStyle(
-                                    color: Color(0xFF868686),
-                                    fontSize: 16.sp,
-                                    fontFamily: 'Pretendard',
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 20),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.grey[300],
-                                    elevation: 3,
-                                    shadowColor: Colors.grey[400],
-                                  ),
-                                  onPressed: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                MyHomePage()));
-                                  },
-                                  child: const Text(
-                                    "취소하기",
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                ),
-                                const SizedBox(width: 60),
-                                ElevatedButton(
-                                  onPressed: _addCampingSite,
-                                  child: const Text(
-                                    "저장하기",
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
+                      ),
+                      const SizedBox(height: 20),
+                      _buildFormInputField(
+                        label: '위도',
+                        controller: _latitudeController,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return '위도를 입력해주세요';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 20),
+                      _buildFormInputField(
+                        label: '경도',
+                        controller: _longitudeController,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return '경도를 입력해주세요';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 20),
+                      Text(
+                        '카테고리',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 20.sp,
+                          fontFamily: 'Pretendard',
+                          fontWeight: FontWeight.w600,
                         ),
+                      ),
+                      const SizedBox(height: 20),
+                      _buildCategoryCheckboxes(),
+                      const SizedBox(height: 20),
+                      Text(
+                        '추가사항',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 20.sp,
+                          fontFamily: 'Pretendard',
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      _buildFormInputField(
+                        label: '구체적으로 적어주세요.',
+                        controller: _detailsController,
+                        maxLines: null,
+                        minLines: 1,
+                        keyboardType: TextInputType.multiline,
+                      ),
+                      const SizedBox(height: 20),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.grey[300],
+                              elevation: 3,
+                              shadowColor: Colors.grey[400],
+                            ),
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => MyHomePage()));
+                            },
+                            child: const Text(
+                              "취소하기",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                          const SizedBox(width: 60),
+                          ElevatedButton(
+                            onPressed: _addCampingSite,
+                            child: const Text(
+                              "저장하기",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
@@ -642,6 +438,96 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
           ),
         ],
       ),
+    );
+  }
+
+  /// 입력 필드 위젯을 생성하기 위한 함수
+  Widget _buildFormInputField({
+    required String label,
+    required TextEditingController controller,
+    String? Function(String?)? validator,
+    int? maxLines,
+    int? minLines,
+    TextInputType? keyboardType,
+  }) {
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: Color(0xFFF3F3F3),
+        borderRadius: BorderRadius.circular(16.r),
+        border: Border.all(color: Color(0xFF474747), width: 1.w),
+      ),
+      padding: EdgeInsets.symmetric(horizontal: 16.w),
+      child: TextFormField(
+        controller: controller,
+        maxLines: maxLines ?? 1,
+        minLines: minLines ?? 1,
+        keyboardType: keyboardType ?? TextInputType.text,
+        decoration: InputDecoration(
+          border: InputBorder.none,
+          hintText: label,
+          hintStyle: TextStyle(
+            color: Color(0xFF868686),
+            fontSize: 16.sp,
+            fontFamily: 'Pretendard',
+            fontWeight: FontWeight.w400,
+          ),
+        ),
+        validator: validator,
+      ),
+    );
+  }
+
+  /// 카테고리 체크박스를 생성하기 위한 함수
+  Widget _buildCategoryCheckboxes() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildCheckbox('화장실', _isRestRoom, (value) {
+              setState(() {
+                _isRestRoom = value ?? false;
+              });
+            }),
+            _buildCheckbox('개수대', _isSink, (value) {
+              setState(() {
+                _isSink = value ?? false;
+              });
+            }),
+          ],
+        ),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildCheckbox('반려동물', _isAnimal, (value) {
+              setState(() {
+                _isAnimal = value ?? false;
+              });
+            }),
+            _buildCheckbox('샤워실', _isWater, (value) {
+              setState(() {
+                _isWater = value ?? false;
+              });
+            }),
+          ],
+        ),
+      ],
+    );
+  }
+
+  /// 체크박스 위젯을 생성하기 위한 함수
+  Widget _buildCheckbox(String title, bool value, ValueChanged<bool?> onChanged) {
+    return Row(
+      children: [
+        Checkbox(
+          value: value,
+          onChanged: onChanged,
+          activeColor: Color(0xFF162233),
+        ),
+        Text(title),
+      ],
     );
   }
 }
