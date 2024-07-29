@@ -11,6 +11,7 @@ import 'package:kakao_flutter_sdk_template/kakao_flutter_sdk_template.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
+// 차박지 정보를 담는 모델 클래스
 class CarCampingSite {
   final String name;
   final double latitude;
@@ -23,7 +24,7 @@ class CarCampingSite {
   final bool water;
   final bool parkinglot;
   final String details;
-  final bool isVerified; // 추가: 검증 여부
+  final bool isVerified; // 검증 여부
 
   CarCampingSite({
     required this.name,
@@ -37,7 +38,7 @@ class CarCampingSite {
     this.water = false,
     this.parkinglot = false,
     this.details = '',
-    this.isVerified = false, // 추가: 검증 여부
+    this.isVerified = false, // 검증 여부 초기값
   });
 }
 
@@ -47,10 +48,10 @@ class RegionPage extends StatefulWidget {
 }
 
 class _RegionPageState extends State<RegionPage> {
-  final List<CarCampingSite> _campingSites = [];
-  final List<CarCampingSite> _filteredCampingSites = [];
+  final List<CarCampingSite> _campingSites = []; // 모든 차박지 목록
+  final List<CarCampingSite> _filteredCampingSites = []; // 필터링된 차박지 목록
   NaverMapController? _mapController;
-  final PanelController _panelController = PanelController();
+  final PanelController _panelController = PanelController(); // 슬라이딩 패널 컨트롤러
   bool showRestRoom = false;
   bool showSink = false;
   bool showCook = false;
@@ -58,15 +59,17 @@ class _RegionPageState extends State<RegionPage> {
   bool showWater = false;
   bool showParkinglot = false;
   bool isPanelOpen = false;
+  NMapType _currentMapType = NMapType.basic; // 현재 지도 유형 (기본 또는 위성)
 
   @override
   void initState() {
     super.initState();
-    _loadCampingSites();
-    _loadUserCampingSites(); // 추가: 사용자 차박지 로드
-    _getCurrentLocation(); // 현재 위치 로드 추가
+    _loadCampingSites(); // 초기 차박지 데이터 로드
+    _loadUserCampingSites(); // 사용자 차박지 데이터 로드
+    _getCurrentLocation(); // 현재 위치 가져오기
   }
 
+  // 데이터베이스에서 차박지 데이터를 로드하는 함수
   Future<void> _loadCampingSites() async {
     DatabaseReference databaseReference =
         FirebaseDatabase.instance.ref().child('car_camping_sites');
@@ -92,13 +95,14 @@ class _RegionPageState extends State<RegionPage> {
           isVerified: true, // 검증된 차박지
         );
         _campingSites.add(site);
-        _filteredCampingSites.add(site);
+        _filteredCampingSites.add(site); // 필터링된 리스트에도 추가
       });
       setState(() {});
-      _updateMarkers();
+      _updateMarkers(); // 마커 업데이트
     }
   }
 
+  // 사용자 차박지 데이터를 로드하는 함수
   Future<void> _loadUserCampingSites() async {
     DatabaseReference databaseReference =
         FirebaseDatabase.instance.ref().child('user_camping_sites');
@@ -121,16 +125,17 @@ class _RegionPageState extends State<RegionPage> {
           water: siteData['water'] ?? false,
           parkinglot: siteData['parkinglot'] ?? false,
           details: siteData['details'] ?? '',
-          isVerified: false, // 검증되지 않은 사용자 차박지
+          isVerified: false, // 검증되지 않은 차박지
         );
         _campingSites.add(site);
-        _filteredCampingSites.add(site);
+        _filteredCampingSites.add(site); // 필터링된 리스트에도 추가
       });
       setState(() {});
-      _updateMarkers();
+      _updateMarkers(); // 마커 업데이트
     }
   }
 
+  // 위도와 경도로 주소를 가져오는 함수
   Future<String> _getAddressFromLatLng(double lat, double lng) async {
     final String clientId = dotenv.env['NAVER_CLIENT_ID']!;
     final String clientSecret = dotenv.env['NAVER_CLIENT_SECRET']!;
@@ -159,12 +164,14 @@ class _RegionPageState extends State<RegionPage> {
     return '주소를 찾을 수 없습니다';
   }
 
+  // 지도 카메라 위치를 업데이트하는 함수
   void _updateCameraPosition(NLatLng position, {double zoom = 7.5}) {
     _mapController?.updateCamera(
       NCameraUpdate.scrollAndZoomTo(target: position, zoom: zoom),
     );
   }
 
+  // 필터링된 차박지 목록을 기반으로 지도에 마커를 업데이트하는 함수
   void _updateMarkers() {
     _mapController?.clearOverlays();
     for (var site in _filteredCampingSites) {
@@ -172,12 +179,14 @@ class _RegionPageState extends State<RegionPage> {
     }
   }
 
+  // 모든 차박지 목록을 기반으로 지도에 마커를 추가하는 함수
   void _addMarkers() {
     for (var site in _campingSites) {
       _addMarker(site);
     }
   }
 
+  // 차박지 정보를 마커로 추가하는 함수
   void _addMarker(CarCampingSite site) {
     final marker = NMarker(
       id: site.name,
@@ -185,16 +194,17 @@ class _RegionPageState extends State<RegionPage> {
       caption: NOverlayCaption(text: site.name),
       icon: NOverlayImage.fromAssetImage(site.isVerified
           ? 'assets/images/verified_camping_site.png'
-          : 'assets/images/user_camping_site.png'), // 아이콘 경로 수정
+          : 'assets/images/user_camping_site.png'), // 아이콘 경로
       size: Size(30, 30),
     );
     marker.setOnTapListener((NMarker marker) {
-      _showSiteInfoDialog(site);
+      _showSiteInfoDialog(site); // 마커 클릭 시 차박지 정보 표시
       return true;
     });
     _mapController?.addOverlay(marker);
   }
 
+  // 필터 버튼 토글 함수
   void _toggleFilter(String category) {
     setState(() {
       switch (category) {
@@ -221,6 +231,7 @@ class _RegionPageState extends State<RegionPage> {
     });
   }
 
+  // 필터링된 차박지 목록을 적용하는 함수
   void _applyFilter() {
     setState(() {
       _filteredCampingSites.clear();
@@ -247,17 +258,19 @@ class _RegionPageState extends State<RegionPage> {
         }
 
         if (matchesAllFilters) {
-          _filteredCampingSites.add(site);
+          _filteredCampingSites.add(site); // 필터 조건에 맞는 차박지 추가
         }
       }
-      _updateMarkers();
+      _updateMarkers(); // 마커 업데이트
     });
   }
 
+  // 현재 위치를 가져오는 함수
   Future<void> _getCurrentLocation() async {
     bool serviceEnabled;
     LocationPermission permission;
 
+    // 위치 서비스 활성화 확인
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -266,6 +279,7 @@ class _RegionPageState extends State<RegionPage> {
       return;
     }
 
+    // 위치 권한 확인 및 요청
     permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
@@ -284,18 +298,20 @@ class _RegionPageState extends State<RegionPage> {
       return;
     }
 
+    // 현재 위치 가져오기
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
     NLatLng currentPosition = NLatLng(position.latitude, position.longitude);
 
     setState(() {
-      _updateCameraPosition(currentPosition);
+      _updateCameraPosition(currentPosition); // 카메라 위치 업데이트
     });
 
     await _loadCampingSites();
     await _loadUserCampingSites();
   }
 
+  // 차박지 정보를 스크랩하는 함수
   void _scrapCampingSpot(CarCampingSite site) async {
     var user = FirebaseAuth.instance.currentUser;
     if (user != null) {
@@ -337,6 +353,7 @@ class _RegionPageState extends State<RegionPage> {
     }
   }
 
+  // 차박지 정보를 공유하는 함수
   void _shareCampingSpot(CarCampingSite site) async {
     showDialog(
       context: context,
@@ -410,6 +427,7 @@ class _RegionPageState extends State<RegionPage> {
     );
   }
 
+  // 지역 선택 다이얼로그를 표시하는 함수
   void _showRegionSelectionDialog() {
     showDialog(
       context: context,
@@ -516,6 +534,7 @@ class _RegionPageState extends State<RegionPage> {
     );
   }
 
+  // 선택된 지역에 따라 카메라 위치를 업데이트하는 함수
   void _onRegionSelected(String region) {
     Navigator.of(context).pop();
     setState(() {
@@ -542,6 +561,7 @@ class _RegionPageState extends State<RegionPage> {
     });
   }
 
+  // 차박지 정보를 다이얼로그로 표시하는 함수
   void _showSiteInfoDialog(CarCampingSite site) async {
     String address = await _getAddressFromLatLng(site.latitude, site.longitude);
 
@@ -722,6 +742,7 @@ class _RegionPageState extends State<RegionPage> {
     );
   }
 
+  // 카테고리 태그를 빌드하는 함수
   Widget _buildTag(String label) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 8),
@@ -752,26 +773,29 @@ class _RegionPageState extends State<RegionPage> {
     );
   }
 
+  // 화면 UI 빌드 함수
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
         children: [
+          // 네이버 지도 위젯
           NaverMap(
             options: NaverMapViewOptions(
               symbolScale: 1.2,
               pickTolerance: 2,
               initialCameraPosition:
                   NCameraPosition(target: NLatLng(36.34, 127.77), zoom: 6.3),
-              mapType: NMapType.basic,
+              mapType: _currentMapType, // 현재 지도 유형에 따라 지도 타입 설정
             ),
             onMapReady: (controller) {
               setState(() {
                 _mapController = controller;
               });
-              _addMarkers();
+              _addMarkers(); // 지도 준비 완료 시 마커 추가
             },
           ),
+          // 상단 바 UI
           Positioned(
             left: 0,
             top: 0,
@@ -817,6 +841,7 @@ class _RegionPageState extends State<RegionPage> {
               ),
             ),
           ),
+          // 필터 버튼 UI
           Positioned(
             top: 120,
             left: 20,
@@ -838,6 +863,7 @@ class _RegionPageState extends State<RegionPage> {
               ),
             ),
           ),
+          // 현재 위치 버튼
           Positioned(
             top: 180,
             left: 20,
@@ -848,6 +874,7 @@ class _RegionPageState extends State<RegionPage> {
               heroTag: 'regionPageHeroTag',
             ),
           ),
+          // 지역 선택 버튼
           Positioned(
             top: 180,
             right: 20,
@@ -857,6 +884,7 @@ class _RegionPageState extends State<RegionPage> {
               backgroundColor: Color(0xFF162233),
             ),
           ),
+          // 차박지 목록 패널
           SlidingUpPanel(
             controller: _panelController,
             panelSnapping: true,
@@ -995,6 +1023,7 @@ class _RegionPageState extends State<RegionPage> {
               },
             ),
           ),
+          // 차박지 목록 패널 열기/닫기 버튼
           Positioned(
             left: 66,
             bottom: 40,
@@ -1040,6 +1069,7 @@ class _RegionPageState extends State<RegionPage> {
     );
   }
 
+  // 필터 버튼을 빌드하는 함수
   Widget _buildFilterButtonWithIcon(
       String label, String category, bool isActive, String iconPath) {
     return Padding(
