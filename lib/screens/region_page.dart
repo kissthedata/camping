@@ -69,6 +69,15 @@ class _RegionPageState extends State<RegionPage> {
     _getCurrentLocation(); // 현재 위치 가져오기
   }
 
+  //토글
+  void _toggleMapType() {
+    setState(() {
+      _currentMapType = _currentMapType == NMapType.basic
+          ? NMapType.satellite
+          : NMapType.basic;
+    });
+  }
+
   // 데이터베이스에서 차박지 데이터를 로드하는 함수
   Future<void> _loadCampingSites() async {
     DatabaseReference databaseReference =
@@ -867,11 +876,22 @@ class _RegionPageState extends State<RegionPage> {
           Positioned(
             top: 180,
             left: 20,
-            child: FloatingActionButton(
-              onPressed: _getCurrentLocation,
-              child: Icon(Icons.gps_fixed, color: Colors.white),
-              backgroundColor: Color(0xFF162233),
-              heroTag: 'regionPageHeroTag',
+            child: Column(
+              children: [
+                FloatingActionButton(
+                  onPressed: _getCurrentLocation,
+                  child: Icon(Icons.gps_fixed, color: Colors.white),
+                  backgroundColor: Color(0xFF162233),
+                  heroTag: 'regionPageHeroTag',
+                ),
+                SizedBox(height: 10),
+                FloatingActionButton(
+                  onPressed: _toggleMapType,
+                  child: Icon(Icons.layers, color: Colors.white),
+                  backgroundColor: Color(0xFF162233),
+                  heroTag: 'LayerToggleHeroTag',
+                )
+              ],
             ),
           ),
           // 지역 선택 버튼
