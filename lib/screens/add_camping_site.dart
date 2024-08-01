@@ -339,6 +339,16 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
+                            SizedBox(height: 5), // 텍스트 사이의 간격 조정
+                            Text(
+                              '* 지도를 누르면 위경도가 입력됩니다',
+                              style: TextStyle(
+                                color: Colors.red,
+                                fontSize: 12.sp,
+                                fontFamily: 'Pretendard',
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
                             const SizedBox(height: 20),
                             Container(
                               width: double.infinity,

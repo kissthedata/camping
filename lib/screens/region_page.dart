@@ -160,7 +160,7 @@ class _RegionPageState extends State<RegionPage> {
     return '주소를 찾을 수 없습니다';
   }
 
-  void _updateCameraPosition(NLatLng position, {double zoom = 7.5}) {
+  void _updateCameraPosition(NLatLng position, {double zoom = 15}) {
     _mapController?.updateCamera(
       NCameraUpdate.scrollAndZoomTo(target: position, zoom: zoom),
     );
@@ -298,7 +298,7 @@ class _RegionPageState extends State<RegionPage> {
         size: Size(30, 30),
       );
       _mapController?.addOverlay(_currentLocationMarker!);
-      _updateCameraPosition(currentPosition, zoom: 10);
+      _updateCameraPosition(currentPosition, zoom: 15);
     });
   }
 

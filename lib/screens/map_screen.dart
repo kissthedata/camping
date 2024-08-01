@@ -56,7 +56,8 @@ class _MapScreenState extends State<MapScreen> {
       return;
     }
 
-    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
     NLatLng currentPosition = NLatLng(position.latitude, position.longitude);
 
     setState(() {
@@ -75,10 +76,12 @@ class _MapScreenState extends State<MapScreen> {
 
   Future<void> _loadLocationsFromDatabase() async {
     try {
-      final databaseReference = FirebaseDatabase.instance.ref().child('locations');
+      final databaseReference =
+          FirebaseDatabase.instance.ref().child('locations');
       final DataSnapshot snapshot = await databaseReference.get();
       if (snapshot.exists) {
-        final Map<String, dynamic> data = Map<String, dynamic>.from(snapshot.value as Map);
+        final Map<String, dynamic> data =
+            Map<String, dynamic>.from(snapshot.value as Map);
         final Map<String, MapLocation> uniqueLocations = {};
 
         data.forEach((key, value) {
@@ -113,7 +116,8 @@ class _MapScreenState extends State<MapScreen> {
   }
 
   Future<void> _addLocationIfNotExists(MapLocation location) async {
-    final databaseReference = FirebaseDatabase.instance.ref().child('locations');
+    final databaseReference =
+        FirebaseDatabase.instance.ref().child('locations');
 
     final query = databaseReference
         .orderByChild('latitude')
@@ -170,7 +174,8 @@ class _MapScreenState extends State<MapScreen> {
             options: NaverMapViewOptions(
               symbolScale: 1.2,
               pickTolerance: 2,
-              initialCameraPosition: NCameraPosition(target: NLatLng(36.34, 127.77), zoom: 6.3),
+              initialCameraPosition:
+                  NCameraPosition(target: NLatLng(36.34, 127.77), zoom: 6.3),
               mapType: NMapType.basic,
             ),
             onMapReady: (controller) {
@@ -242,9 +247,15 @@ class _MapScreenState extends State<MapScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                _buildFilterButtonWithIcon('마트', 'mart', showMarts, 'assets/images/mart.png'),
-                _buildFilterButtonWithIcon('편의점', 'convenience_store', showConvenienceStores, 'assets/images/convenience_store.png'),
-                _buildFilterButtonWithIcon('주유소', 'gas_station', showGasStations, 'assets/images/gas_station.png'),
+                _buildFilterButtonWithIcon(
+                    '마트', 'mart', showMarts, 'assets/images/mart.png'),
+                _buildFilterButtonWithIcon(
+                    '편의점',
+                    'convenience_store',
+                    showConvenienceStores,
+                    'assets/images/convenience_store.png'),
+                _buildFilterButtonWithIcon('주유소', 'gas_station',
+                    showGasStations, 'assets/images/gas_station.png'),
               ],
             ),
           ),
@@ -253,7 +264,8 @@ class _MapScreenState extends State<MapScreen> {
     );
   }
 
-  Widget _buildFilterButtonWithIcon(String label, String category, bool isActive, String iconPath) {
+  Widget _buildFilterButtonWithIcon(
+      String label, String category, bool isActive, String iconPath) {
     return ElevatedButton.icon(
       onPressed: () => _toggleFilter(category),
       style: ElevatedButton.styleFrom(
