@@ -10,6 +10,22 @@ import 'package:kakao_flutter_sdk_share/kakao_flutter_sdk_share.dart';
 import 'package:kakao_flutter_sdk_template/kakao_flutter_sdk_template.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'dart:io';
+
+void _openTmap(
+    double startLat, double startLng, double endLat, double endLng) async {
+  final url =
+      'tmap://route?goalname=${Uri.encodeComponent("차박지")}&goalx=$endLng&goaly=$endLat&startx=$startLng&starty=$startLat';
+
+  if (await canLaunch(url)) {
+    await launch(url);
+  } else {
+    // Tmap 앱이 설치되어 있지 않은 경우 안내 메시지를 표시하거나 대체 행동을 수행
+    print('Could not launch Tmap. The app may not be installed.');
+  }
+}
 
 // 차박지 정보를 담는 모델 클래스
 class CarCampingSite {
@@ -572,6 +588,18 @@ class _RegionPageState extends State<RegionPage> {
 
   // 차박지 정보를 다이얼로그로 표시하는 함수
   void _showSiteInfoDialog(CarCampingSite site) async {
+    // 현재 위치 가져오기
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+    double distanceInMeters = Geolocator.distanceBetween(
+      position.latitude,
+      position.longitude,
+      site.latitude,
+      site.longitude,
+    );
+
+    double distanceInKm = distanceInMeters / 1000;
+
     String address = await _getAddressFromLatLng(site.latitude, site.longitude);
 
     showDialog(
@@ -631,6 +659,40 @@ class _RegionPageState extends State<RegionPage> {
                       fontWeight: FontWeight.w600,
                     ),
                   ),
+                Container(
+                  child: Row(
+                    children: [
+                      Text(
+                        '나와의 거리 ${distanceInKm.toStringAsFixed(2)} km',
+                        style: TextStyle(
+                          color: Colors.black38,
+                          fontSize: 14,
+                          fontFamily: 'Pretendard',
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.assistant_navigation,
+                            color: Colors.black),
+                        onPressed: () async {
+                          var url = Platform.isIOS
+                              ? 'tmap://route?rGoName=${Uri.encodeComponent(name)}&rGoX=$lng&rGoY=$lat'
+                              : 'tmap://route?referrer=com.skt.Tmap&goalx=$lng&goaly=$lat&goalname=$name';
+
+                          if (await canLaunchUrl(Uri.parse(url))) {
+                            await launchUrl(Uri.parse(url));
+                          } else {
+                            var store = Platform.isIOS
+                                ? 'https://apps.apple.com/app/id431589174'
+                                : 'https://play.google.com/store/apps/details?id=com.skt.tmap.ku&hl=ko-KR';
+
+                            launchBrowserTab(Uri.parse(store));
+                          }
+                        },
+                      ),
+                    ],
+                  ),
+                ),
                 SizedBox(height: 10),
                 Text(
                   '$address',
@@ -641,40 +703,7 @@ class _RegionPageState extends State<RegionPage> {
                     fontWeight: FontWeight.w400,
                   ),
                 ),
-                SizedBox(height: 10),
-                Row(
-                  children: [
-                    Text(
-                      '위도: ${site.latitude.toStringAsFixed(6)}',
-                      style: TextStyle(
-                        color: Color(0xFF727272),
-                        fontSize: 12,
-                        fontFamily: 'Pretendard',
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    SizedBox(width: 10),
-                    Text(
-                      '경도: ${site.longitude.toStringAsFixed(6)}',
-                      style: TextStyle(
-                        color: Color(0xFF727272),
-                        fontSize: 12,
-                        fontFamily: 'Pretendard',
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 20),
-                Text(
-                  '카테고리',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 14,
-                    fontFamily: 'Pretendard',
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
+                // 기존 카테고리와 리뷰 표시 코드
                 SizedBox(height: 10),
                 Wrap(
                   spacing: 10,
