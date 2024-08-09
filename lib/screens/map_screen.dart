@@ -19,6 +19,7 @@ class _MapScreenState extends State<MapScreen> {
   bool showConvenienceStores = false;
   bool showGasStations = false;
   Position? _currentPosition;
+  NMapType _currentMapType = NMapType.basic;
 
   @override
   void initState() {
@@ -160,6 +161,14 @@ class _MapScreenState extends State<MapScreen> {
     });
   }
 
+  void _toggleMapType() {
+    setState(() {
+      _currentMapType = (_currentMapType == NMapType.basic)
+          ? NMapType.satellite
+          : NMapType.basic;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     if (_loading) {
@@ -176,7 +185,7 @@ class _MapScreenState extends State<MapScreen> {
               pickTolerance: 2,
               initialCameraPosition:
                   NCameraPosition(target: NLatLng(36.34, 127.77), zoom: 6.3),
-              mapType: NMapType.basic,
+              mapType: _currentMapType,
             ),
             onMapReady: (controller) {
               setState(() {
@@ -188,11 +197,22 @@ class _MapScreenState extends State<MapScreen> {
           Positioned(
             left: 35,
             top: 200,
-            child: FloatingActionButton(
-              onPressed: _getCurrentLocation,
-              child: Icon(Icons.gps_fixed, color: Colors.white),
-              backgroundColor: Color(0xFF162233),
-              heroTag: 'regionPageHeroTag',
+            child: Column(
+              children: [
+                FloatingActionButton(
+                  onPressed: _getCurrentLocation,
+                  child: Icon(Icons.gps_fixed, color: Colors.white),
+                  backgroundColor: Color(0xFF162233),
+                  heroTag: 'regionPageHeroTag',
+                ),
+                SizedBox(height: 10),
+                FloatingActionButton(
+                  onPressed: _toggleMapType,
+                  child: Icon(Icons.layers, color: Colors.white),
+                  backgroundColor: Color(0xFF162233),
+                  heroTag: 'layerToggleHeroTag',
+                ),
+              ],
             ),
           ),
           Positioned(
@@ -291,7 +311,7 @@ class _MapScreenState extends State<MapScreen> {
       return;
     }
 
-    final double radius = 5000; // 5km
+    final double radius = 5000;
     final nearbyLocations = _locations.where((location) {
       final double distance = Geolocator.distanceBetween(
         _currentPosition!.latitude,

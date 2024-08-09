@@ -309,8 +309,7 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
                               top: 16.h,
                               child: FloatingActionButton(
                                 onPressed: _getCurrentLocation,
-                                child:
-                                    Icon(Icons.gps_fixed, color: Colors.white),
+                                child: Icon(Icons.gps_fixed, color: Colors.white),
                                 backgroundColor: Color(0xFF162233),
                                 heroTag: 'regionPageHeroTag',
                               ),
@@ -339,7 +338,7 @@ class _AddCampingSiteScreenState extends State<AddCampingSiteScreen> {
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
-                            SizedBox(height: 5), // 텍스트 사이의 간격 조정
+                            SizedBox(height: 5),
                             Text(
                               '* 지도를 누르면 위경도가 입력됩니다',
                               style: TextStyle(
