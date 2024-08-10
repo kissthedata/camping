@@ -28,29 +28,28 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
-  flutter:
-    sdk: flutter
-  http: ^1.2.1
-  share_plus: ^9.0.0
-  flutter_naver_map: ^1.2.3+1
-  sliding_up_panel: ^2.0.0
-  kakao_flutter_sdk: ^1.9.2
-  url_launcher: ^6.3.0
-  flutter_dotenv: ^5.1.0
-  flutter_screenutil: ^5.9.3
-  flutter_geofire: ^2.0.3
-  flutter_svg: ^2.0.10+1
-  google_fonts: ^6.2.1
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.6
-  geolocator: ^11.0.0
+  firebase_auth: ^5.0.0
   firebase_core: ^3.1.1
   firebase_database: ^11.0.2
-  geocoding: ^3.0.0
-  firebase_auth: ^5.0.0
-  image_picker: ^1.1.2
   firebase_storage: ^12.1.0
+  flutter:
+    sdk: flutter
+  flutter_dotenv: ^5.1.0
+  flutter_geofire: ^2.0.3
+  flutter_lints: ^3.0.0
+  flutter_naver_map: ^1.2.3+1
+  flutter_screenutil: ^5.9.3
+  flutter_svg: ^2.0.10+1
+  geocoding: ^3.0.0
+  geolocator: ^11.0.0
+  google_fonts: ^6.2.1
+  http: ^1.2.1
+  image_picker: ^1.1.2
+  kakao_flutter_sdk: ^1.9.2
+  share_plus: ^9.0.0
+  sliding_up_panel: ^2.0.0
+  url_launcher: ^6.3.0
   vector_graphics: ^1.1.11+1
 
 dev_dependencies:
@@ -61,7 +60,6 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^3.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -76,27 +74,32 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
+    - assets/images/image.png
+    - assets/images/로고.png
+    - assets/images/x.png
+    - assets/images/x_1.png
+    - assets/images/x_2.png
+    - assets/images/x_3.png
+    - assets/vectors/vector_7_x2.svg
+    - assets/vectors/vector_6_x2.svg
+    - assets/vectors/vector_1_x2.svg
+    - assets/vectors/vector_x2.svg
+    - assets/vectors/vector_3_x2.svg
+    - assets/vectors/vector_2_x2.svg
+    - assets/vectors/vector_5_x2.svg
+    - assets/vectors/vector_4_x2.svg
+    - assets/vectors/vector_8_x2.svg
     - assets/images/verified_camping_site.png
-    - assets/images/지도.png
-    - assets/images/코스.jpg
+    - assets/images/user_camping_site.png
     - assets/images/gas_station.png
     - assets/images/convenience_store.png
-    - assets/images/추가.png
-    - assets/images/user_camping_site.png
-    - assets/images/tmap.jpeg
-    - assets/images/navermap.jpeg
     - assets/images/mart.png
     - assets/images/로고.png
-    - assets/images/피드백.png
-    - assets/images/차박지 보기.png
-    - assets/images/편안차박.png
     - assets/images/반려동물.png
     - assets/images/화장실.png
     - assets/images/샤워실.png
     - assets/images/개수대.png
-    - assets/images/test.png
     - .env
-
 
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
