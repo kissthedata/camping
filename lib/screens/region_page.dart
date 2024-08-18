@@ -10,24 +10,8 @@ import 'package:kakao_flutter_sdk_share/kakao_flutter_sdk_share.dart';
 import 'package:kakao_flutter_sdk_template/kakao_flutter_sdk_template.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'dart:io';
 
-void _openTmap(
-    double startLat, double startLng, double endLat, double endLng) async {
-  final url =
-      'tmap://route?goalname=${Uri.encodeComponent("차박지")}&goalx=$endLng&goaly=$endLat&startx=$startLng&starty=$startLat';
-
-  if (await canLaunch(url)) {
-    await launch(url);
-  } else {
-    // Tmap 앱이 설치되어 있지 않은 경우 안내 메시지를 표시하거나 대체 행동을 수행
-    print('Could not launch Tmap. The app may not be installed.');
-  }
-}
-
-// 차박지 정보를 담는 모델 클래스
 class CarCampingSite {
   final String name;
   final double latitude;
@@ -40,7 +24,7 @@ class CarCampingSite {
   final bool water;
   final bool parkinglot;
   final String details;
-  final bool isVerified; // 검증 여부
+  final bool isVerified;
 
   CarCampingSite({
     required this.name,
@@ -54,7 +38,7 @@ class CarCampingSite {
     this.water = false,
     this.parkinglot = false,
     this.details = '',
-    this.isVerified = false, // 검증 여부 초기값
+    this.isVerified = false,
   });
 }
 
@@ -64,10 +48,10 @@ class RegionPage extends StatefulWidget {
 }
 
 class _RegionPageState extends State<RegionPage> {
-  final List<CarCampingSite> _campingSites = []; // 모든 차박지 목록
-  final List<CarCampingSite> _filteredCampingSites = []; // 필터링된 차박지 목록
+  final List<CarCampingSite> _campingSites = [];
+  final List<CarCampingSite> _filteredCampingSites = [];
   NaverMapController? _mapController;
-  final PanelController _panelController = PanelController(); // 슬라이딩 패널 컨트롤러
+  final PanelController _panelController = PanelController();
   bool showRestRoom = false;
   bool showSink = false;
   bool showCook = false;
@@ -75,26 +59,64 @@ class _RegionPageState extends State<RegionPage> {
   bool showWater = false;
   bool showParkinglot = false;
   bool isPanelOpen = false;
-  NMapType _currentMapType = NMapType.basic; // 현재 지도 유형 (기본 또는 위성)
+  bool showMarts = false;
+  bool showConvenienceStores = false;
+  bool showGasStations = false;
+  bool isFilterVisible = false;
+  NMapType _currentMapType = NMapType.basic;
+  Position? _currentPosition;
 
   @override
   void initState() {
     super.initState();
-    _loadCampingSites(); // 초기 차박지 데이터 로드
-    _loadUserCampingSites(); // 사용자 차박지 데이터 로드
-    _getCurrentLocation(); // 현재 위치 가져오기
+    _loadCampingSites();
+    _loadUserCampingSites();
+    _getCurrentLocation();
   }
 
-  //토글
-  void _toggleMapType() {
+  Future<void> _getCurrentLocation() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('위치 서비스가 비활성화되어 있습니다.')),
+      );
+      return;
+    }
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('위치 권한이 거부되었습니다. 설정에서 권한을 허용해주세요.')),
+        );
+        return;
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('위치 권한이 영구적으로 거부되었습니다. 설정에서 권한을 허용해주세요.')),
+      );
+      return;
+    }
+
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+    NLatLng currentPosition = NLatLng(position.latitude, position.longitude);
+
     setState(() {
-      _currentMapType = _currentMapType == NMapType.basic
-          ? NMapType.satellite
-          : NMapType.basic;
+      _currentPosition = position;
+      _updateCameraPosition(currentPosition);
     });
+
+    await _loadCampingSites();
+    await _loadUserCampingSites();
   }
 
-  // 데이터베이스에서 차박지 데이터를 로드하는 함수
   Future<void> _loadCampingSites() async {
     DatabaseReference databaseReference =
         FirebaseDatabase.instance.ref().child('car_camping_sites');
@@ -117,17 +139,16 @@ class _RegionPageState extends State<RegionPage> {
           water: siteData['water'] ?? false,
           parkinglot: siteData['parkinglot'] ?? false,
           details: siteData['details'] ?? '',
-          isVerified: true, // 검증된 차박지
+          isVerified: true,
         );
         _campingSites.add(site);
-        _filteredCampingSites.add(site); // 필터링된 리스트에도 추가
+        _filteredCampingSites.add(site);
       });
       setState(() {});
-      _updateMarkers(); // 마커 업데이트
+      _updateMarkers();
     }
   }
 
-  // 사용자 차박지 데이터를 로드하는 함수
   Future<void> _loadUserCampingSites() async {
     DatabaseReference databaseReference =
         FirebaseDatabase.instance.ref().child('user_camping_sites');
@@ -150,86 +171,22 @@ class _RegionPageState extends State<RegionPage> {
           water: siteData['water'] ?? false,
           parkinglot: siteData['parkinglot'] ?? false,
           details: siteData['details'] ?? '',
-          isVerified: false, // 검증되지 않은 차박지
+          isVerified: false,
         );
         _campingSites.add(site);
-        _filteredCampingSites.add(site); // 필터링된 리스트에도 추가
+        _filteredCampingSites.add(site);
       });
       setState(() {});
-      _updateMarkers(); // 마커 업데이트
+      _updateMarkers();
     }
   }
 
-  // 위도와 경도로 주소를 가져오는 함수
-  Future<String> _getAddressFromLatLng(double lat, double lng) async {
-    final String clientId = dotenv.env['NAVER_CLIENT_ID']!;
-    final String clientSecret = dotenv.env['NAVER_CLIENT_SECRET']!;
-    final String apiUrl =
-        'https://naveropenapi.apigw.ntruss.com/map-reversegeocode/v2/gc';
-
-    final response = await http.get(
-      Uri.parse('$apiUrl?coords=$lng,$lat&orders=roadaddr,addr&output=json'),
-      headers: {
-        'X-NCP-APIGW-API-KEY-ID': clientId,
-        'X-NCP-APIGW-API-KEY': clientSecret,
-      },
-    );
-
-    if (response.statusCode == 200) {
-      final data = json.decode(response.body);
-      final results = data['results'] as List<dynamic>;
-      if (results.isNotEmpty) {
-        final region = results[0]['region'];
-        final land = results[0]['land'];
-        final address =
-            '${region['area1']['name']} ${region['area2']['name']} ${region['area3']['name']} ${region['area4']['name']} ${land['number1']}';
-        return address;
-      }
-    }
-    return '주소를 찾을 수 없습니다';
-  }
-
-  // 지도 카메라 위치를 업데이트하는 함수
-  void _updateCameraPosition(NLatLng position, {double zoom = 7.5}) {
-    _mapController?.updateCamera(
-      NCameraUpdate.scrollAndZoomTo(target: position, zoom: zoom),
-    );
-  }
-
-  // 필터링된 차박지 목록을 기반으로 지도에 마커를 업데이트하는 함수
-  void _updateMarkers() {
-    _mapController?.clearOverlays();
-    for (var site in _filteredCampingSites) {
-      _addMarker(site);
-    }
-  }
-
-  // 모든 차박지 목록을 기반으로 지도에 마커를 추가하는 함수
-  void _addMarkers() {
-    for (var site in _campingSites) {
-      _addMarker(site);
-    }
-  }
-
-  // 차박지 정보를 마커로 추가하는 함수
-  void _addMarker(CarCampingSite site) {
-    final marker = NMarker(
-      id: site.name,
-      position: NLatLng(site.latitude, site.longitude),
-      caption: NOverlayCaption(text: site.name),
-      icon: NOverlayImage.fromAssetImage(site.isVerified
-          ? 'assets/images/verified_camping_site.png'
-          : 'assets/images/user_camping_site.png'), // 아이콘 경로
-      size: Size(30, 30),
-    );
-    marker.setOnTapListener((NMarker marker) {
-      _showSiteInfoDialog(site); // 마커 클릭 시 차박지 정보 표시
-      return true;
+  void _toggleFilterVisibility() {
+    setState(() {
+      isFilterVisible = !isFilterVisible;
     });
-    _mapController?.addOverlay(marker);
   }
 
-  // 필터 버튼 토글 함수
   void _toggleFilter(String category) {
     setState(() {
       switch (category) {
@@ -251,12 +208,20 @@ class _RegionPageState extends State<RegionPage> {
         case 'parkinglot':
           showParkinglot = !showParkinglot;
           break;
+        case 'mart':
+          showMarts = !showMarts;
+          break;
+        case 'convenience_store':
+          showConvenienceStores = !showConvenienceStores;
+          break;
+        case 'gas_station':
+          showGasStations = !showGasStations;
+          break;
       }
       _applyFilter();
     });
   }
 
-  // 필터링된 차박지 목록을 적용하는 함수
   void _applyFilter() {
     setState(() {
       _filteredCampingSites.clear();
@@ -283,312 +248,44 @@ class _RegionPageState extends State<RegionPage> {
         }
 
         if (matchesAllFilters) {
-          _filteredCampingSites.add(site); // 필터 조건에 맞는 차박지 추가
+          _filteredCampingSites.add(site);
         }
       }
-      _updateMarkers(); // 마커 업데이트
+      _updateMarkers();
     });
   }
 
-  // 현재 위치를 가져오는 함수
-  Future<void> _getCurrentLocation() async {
-    bool serviceEnabled;
-    LocationPermission permission;
-
-    // 위치 서비스 활성화 확인
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('위치 서비스가 비활성화되어 있습니다.')),
-      );
-      return;
-    }
-
-    // 위치 권한 확인 및 요청
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('위치 권한이 거부되었습니다. 설정에서 권한을 허용해주세요.')),
-        );
-        return;
-      }
-    }
-
-    if (permission == LocationPermission.deniedForever) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('위치 권한이 영구적으로 거부되었습니다. 설정에서 권한을 허용해주세요.')),
-      );
-      return;
-    }
-
-    // 현재 위치 가져오기
-    Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
-    NLatLng currentPosition = NLatLng(position.latitude, position.longitude);
-
-    setState(() {
-      _updateCameraPosition(currentPosition); // 카메라 위치 업데이트
-    });
-
-    await _loadCampingSites();
-    await _loadUserCampingSites();
-  }
-
-  // 차박지 정보를 스크랩하는 함수
-  void _scrapCampingSpot(CarCampingSite site) async {
-    var user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      DatabaseReference userScrapsRef =
-          FirebaseDatabase.instance.ref().child('scraps').child(user.uid);
-      DataSnapshot snapshot = await userScrapsRef.get();
-
-      bool alreadyScrapped = false;
-      if (snapshot.exists) {
-        Map<dynamic, dynamic> data = snapshot.value as Map<dynamic, dynamic>;
-        data.forEach((key, value) {
-          if (value['name'] == site.name &&
-              value['latitude'] == site.latitude &&
-              value['longitude'] == site.longitude) {
-            alreadyScrapped = true;
-          }
-        });
-      }
-
-      if (alreadyScrapped) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('이미 스크랩한 차박지입니다.')),
-        );
-      } else {
-        String newScrapKey = userScrapsRef.push().key!;
-        await userScrapsRef.child(newScrapKey).set({
-          'name': site.name,
-          'latitude': site.latitude,
-          'longitude': site.longitude,
-        });
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('차박지를 스크랩했습니다.')),
-        );
-      }
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('로그인이 필요합니다.')),
-      );
-    }
-  }
-
-  // 차박지 정보를 공유하는 함수
-  void _shareCampingSpot(CarCampingSite site) async {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('공유하기'),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                ListTile(
-                  leading: Icon(Icons.share),
-                  title: Text('일반 공유'),
-                  onTap: () async {
-                    Navigator.of(context).pop();
-                    try {
-                      await Share.share(
-                        '차박지 정보\n이름: ${site.name}\n위치: ${site.latitude}, ${site.longitude}\n',
-                        subject: '차박지 정보 공유',
-                      );
-                    } catch (e) {
-                      print('공유 오류: $e');
-                    }
-                  },
-                ),
-                ListTile(
-                  leading: Icon(Icons.message),
-                  title: Text('카카오톡 공유'),
-                  onTap: () async {
-                    Navigator.of(context).pop();
-                    try {
-                      final FeedTemplate defaultFeed = FeedTemplate(
-                        content: Content(
-                          title: site.name,
-                          description:
-                              '차박지 위치: ${site.latitude}, ${site.longitude}',
-                          imageUrl: Uri.parse(site.imageUrl),
-                          link: Link(
-                            webUrl: Uri.parse('https://yourwebsite.com'),
-                            mobileWebUrl: Uri.parse('https://yourwebsite.com'),
-                          ),
-                        ),
-                        buttons: [
-                          Button(
-                            title: '자세히 보기',
-                            link: Link(
-                              webUrl: Uri.parse('https://yourwebsite.com'),
-                              mobileWebUrl:
-                                  Uri.parse('https://yourwebsite.com'),
-                            ),
-                          ),
-                        ],
-                      );
-
-                      if (await ShareClient.instance
-                          .isKakaoTalkSharingAvailable()) {
-                        await ShareClient.instance
-                            .shareDefault(template: defaultFeed);
-                      } else {
-                        print('카카오톡이 설치되지 않았습니다.');
-                      }
-                    } catch (e) {
-                      print('카카오톡 공유 오류: $e');
-                    }
-                  },
-                ),
-              ],
-            ),
-          ),
-        );
-      },
+  void _updateCameraPosition(NLatLng position, {double zoom = 7.5}) {
+    _mapController?.updateCamera(
+      NCameraUpdate.scrollAndZoomTo(target: position, zoom: zoom),
     );
   }
 
-  // 지역 선택 다이얼로그를 표시하는 함수
-  void _showRegionSelectionDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(
-            '지역 선택',
-            style: TextStyle(
-              fontFamily: 'Pretendard',
-              fontWeight: FontWeight.w600,
-              fontSize: 20,
-            ),
-          ),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                ListTile(
-                  title: Text(
-                    '강원도',
-                    style: TextStyle(
-                      fontFamily: 'Pretendard',
-                      fontWeight: FontWeight.w400,
-                      fontSize: 18,
-                    ),
-                  ),
-                  onTap: () => _onRegionSelected('강원도'),
-                ),
-                ListTile(
-                  title: Text(
-                    '경기도',
-                    style: TextStyle(
-                      fontFamily: 'Pretendard',
-                      fontWeight: FontWeight.w400,
-                      fontSize: 18,
-                    ),
-                  ),
-                  onTap: () => _onRegionSelected('경기도'),
-                ),
-                ListTile(
-                  title: Text(
-                    '경상도',
-                    style: TextStyle(
-                      fontFamily: 'Pretendard',
-                      fontWeight: FontWeight.w400,
-                      fontSize: 18,
-                    ),
-                  ),
-                  onTap: () => _onRegionSelected('경상도'),
-                ),
-                ListTile(
-                  title: Text(
-                    '전라도',
-                    style: TextStyle(
-                      fontFamily: 'Pretendard',
-                      fontWeight: FontWeight.w400,
-                      fontSize: 18,
-                    ),
-                  ),
-                  onTap: () => _onRegionSelected('전라도'),
-                ),
-                ListTile(
-                  title: Text(
-                    '충청도',
-                    style: TextStyle(
-                      fontFamily: 'Pretendard',
-                      fontWeight: FontWeight.w400,
-                      fontSize: 18,
-                    ),
-                  ),
-                  onTap: () => _onRegionSelected('충청도'),
-                ),
-                ListTile(
-                  title: Text(
-                    '제주도',
-                    style: TextStyle(
-                      fontFamily: 'Pretendard',
-                      fontWeight: FontWeight.w400,
-                      fontSize: 18,
-                    ),
-                  ),
-                  onTap: () => _onRegionSelected('제주도'),
-                ),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: Text(
-                '취소',
-                style: TextStyle(
-                  fontFamily: 'Pretendard',
-                  fontWeight: FontWeight.w600,
-                  fontSize: 18,
-                  color: Colors.black,
-                ),
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
+  void _updateMarkers() {
+    _mapController?.clearOverlays();
+    for (var site in _filteredCampingSites) {
+      _addMarker(site);
+    }
+  }
+
+  void _addMarker(CarCampingSite site) {
+    final marker = NMarker(
+      id: site.name,
+      position: NLatLng(site.latitude, site.longitude),
+      caption: NOverlayCaption(text: site.name),
+      icon: NOverlayImage.fromAssetImage(site.isVerified
+          ? 'assets/images/verified_camping_site.png'
+          : 'assets/images/user_camping_site.png'),
+      size: Size(30, 30),
     );
-  }
-
-  // 선택된 지역에 따라 카메라 위치를 업데이트하는 함수
-  void _onRegionSelected(String region) {
-    Navigator.of(context).pop();
-    setState(() {
-      switch (region) {
-        case '강원도':
-          _updateCameraPosition(NLatLng(37.8228, 128.1555));
-          break;
-        case '경기도':
-          _updateCameraPosition(NLatLng(37.4138, 127.5183));
-          break;
-        case '경상도':
-          _updateCameraPosition(NLatLng(35.5384, 128.3507));
-          break;
-        case '전라도':
-          _updateCameraPosition(NLatLng(35.7175, 127.1530));
-          break;
-        case '충청도':
-          _updateCameraPosition(NLatLng(36.5184, 127.8395));
-          break;
-        case '제주도':
-          _updateCameraPosition(NLatLng(33.4890, 126.4983));
-          break;
-      }
+    marker.setOnTapListener((NMarker marker) {
+      _showSiteInfoDialog(site);
+      return true;
     });
+    _mapController?.addOverlay(marker);
   }
 
-  // 차박지 정보를 다이얼로그로 표시하는 함수
   void _showSiteInfoDialog(CarCampingSite site) async {
-    // 현재 위치 가져오기
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
     double distanceInMeters = Geolocator.distanceBetween(
@@ -672,24 +369,15 @@ class _RegionPageState extends State<RegionPage> {
                         ),
                       ),
                       IconButton(
-                        icon: Icon(Icons.assistant_navigation,
-                            color: Colors.black),
-                        onPressed: () async {
-                          var url = Platform.isIOS
-                              ? 'tmap://route?rGoName=${Uri.encodeComponent(name)}&rGoX=$lng&rGoY=$lat'
-                              : 'tmap://route?referrer=com.skt.Tmap&goalx=$lng&goaly=$lat&goalname=$name';
-
-                          if (await canLaunchUrl(Uri.parse(url))) {
-                            await launchUrl(Uri.parse(url));
-                          } else {
-                            var store = Platform.isIOS
-                                ? 'https://apps.apple.com/app/id431589174'
-                                : 'https://play.google.com/store/apps/details?id=com.skt.tmap.ku&hl=ko-KR';
-
-                            launchBrowserTab(Uri.parse(store));
-                          }
-                        },
-                      ),
+                          icon: Icon(Icons.assistant_navigation,
+                              color: Colors.black),
+                          onPressed: () {
+                            _openTmap(
+                                _currentPosition!.latitude,
+                                _currentPosition!.longitude,
+                                site.latitude,
+                                site.longitude);
+                          }),
                     ],
                   ),
                 ),
@@ -703,7 +391,6 @@ class _RegionPageState extends State<RegionPage> {
                     fontWeight: FontWeight.w400,
                   ),
                 ),
-                // 기존 카테고리와 리뷰 표시 코드
                 SizedBox(height: 10),
                 Wrap(
                   spacing: 10,
@@ -780,7 +467,34 @@ class _RegionPageState extends State<RegionPage> {
     );
   }
 
-  // 카테고리 태그를 빌드하는 함수
+  Future<String> _getAddressFromLatLng(double lat, double lng) async {
+    final String clientId = dotenv.env['NAVER_CLIENT_ID']!;
+    final String clientSecret = dotenv.env['NAVER_CLIENT_SECRET']!;
+    final String apiUrl =
+        'https://naveropenapi.apigw.ntruss.com/map-reversegeocode/v2/gc';
+
+    final response = await http.get(
+      Uri.parse('$apiUrl?coords=$lng,$lat&orders=roadaddr,addr&output=json'),
+      headers: {
+        'X-NCP-APIGW-API-KEY-ID': clientId,
+        'X-NCP-APIGW-API-KEY': clientSecret,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      final results = data['results'] as List<dynamic>;
+      if (results.isNotEmpty) {
+        final region = results[0]['region'];
+        final land = results[0]['land'];
+        final address =
+            '${region['area1']['name']} ${region['area2']['name']} ${region['area3']['name']} ${region['area4']['name']} ${land['number1']}';
+        return address;
+      }
+    }
+    return '주소를 찾을 수 없습니다';
+  }
+
   Widget _buildTag(String label) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 8),
@@ -811,29 +525,26 @@ class _RegionPageState extends State<RegionPage> {
     );
   }
 
-  // 화면 UI 빌드 함수
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
         children: [
-          // 네이버 지도 위젯
           NaverMap(
             options: NaverMapViewOptions(
               symbolScale: 1.2,
               pickTolerance: 2,
               initialCameraPosition:
                   NCameraPosition(target: NLatLng(36.34, 127.77), zoom: 6.3),
-              mapType: _currentMapType, // 현재 지도 유형에 따라 지도 타입 설정
+              mapType: _currentMapType,
             ),
             onMapReady: (controller) {
               setState(() {
                 _mapController = controller;
               });
-              _addMarkers(); // 지도 준비 완료 시 마커 추가
+              _updateMarkers();
             },
           ),
-          // 상단 바 UI
           Positioned(
             left: 0,
             top: 0,
@@ -875,11 +586,47 @@ class _RegionPageState extends State<RegionPage> {
                       ),
                     ),
                   ),
+                  Positioned(
+                    right: 16,
+                    top: 40,
+                    child: IconButton(
+                      icon: Icon(Icons.filter_list, size: 45),
+                      color: Color(0xFF162233),
+                      onPressed: _toggleFilterVisibility,
+                    ),
+                  ),
                 ],
               ),
             ),
           ),
-          // 필터 버튼 UI
+          if (isFilterVisible)
+            Positioned(
+              top: 120,
+              right: 20,
+              child: Container(
+                padding: EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black12,
+                      blurRadius: 10,
+                      spreadRadius: 5,
+                    ),
+                  ],
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildFilterOption('반려동물', 'animal', showAnimal),
+                    _buildFilterOption('화장실', 'restRoom', showRestRoom),
+                    _buildFilterOption('개수대', 'sink', showSink),
+                    _buildFilterOption('샤워실', 'water', showWater),
+                  ],
+                ),
+              ),
+            ),
           Positioned(
             top: 120,
             left: 20,
@@ -890,50 +637,18 @@ class _RegionPageState extends State<RegionPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   _buildFilterButtonWithIcon(
-                      '반려동물', 'animal', showAnimal, 'assets/images/반려동물.png'),
+                      '마트', 'mart', showMarts, 'assets/images/mart.png'),
                   _buildFilterButtonWithIcon(
-                      '화장실', 'restRoom', showRestRoom, 'assets/images/화장실.png'),
-                  _buildFilterButtonWithIcon(
-                      '개수대', 'sink', showSink, 'assets/images/개수대.png'),
-                  _buildFilterButtonWithIcon(
-                      '샤워실', 'water', showWater, 'assets/images/샤워실.png'),
+                      '편의점',
+                      'convenience_store',
+                      showConvenienceStores,
+                      'assets/images/convenience_store.png'),
+                  _buildFilterButtonWithIcon('주유소', 'gas_station',
+                      showGasStations, 'assets/images/gas_station.png'),
                 ],
               ),
             ),
           ),
-          // 현재 위치 버튼
-          Positioned(
-            top: 180,
-            left: 20,
-            child: Column(
-              children: [
-                FloatingActionButton(
-                  onPressed: _getCurrentLocation,
-                  child: Icon(Icons.gps_fixed, color: Colors.white),
-                  backgroundColor: Color(0xFF162233),
-                  heroTag: 'regionPageHeroTag',
-                ),
-                SizedBox(height: 10),
-                FloatingActionButton(
-                  onPressed: _toggleMapType,
-                  child: Icon(Icons.layers, color: Colors.white),
-                  backgroundColor: Color(0xFF162233),
-                  heroTag: 'LayerToggleHeroTag',
-                )
-              ],
-            ),
-          ),
-          // 지역 선택 버튼
-          Positioned(
-            top: 180,
-            right: 20,
-            child: FloatingActionButton(
-              onPressed: () => _showRegionSelectionDialog(),
-              child: Icon(Icons.manage_search_sharp, color: Colors.white),
-              backgroundColor: Color(0xFF162233),
-            ),
-          ),
-          // 차박지 목록 패널
           SlidingUpPanel(
             controller: _panelController,
             panelSnapping: true,
@@ -1072,7 +787,6 @@ class _RegionPageState extends State<RegionPage> {
               },
             ),
           ),
-          // 차박지 목록 패널 열기/닫기 버튼
           Positioned(
             left: 66,
             bottom: 40,
@@ -1118,29 +832,174 @@ class _RegionPageState extends State<RegionPage> {
     );
   }
 
-  // 필터 버튼을 빌드하는 함수
   Widget _buildFilterButtonWithIcon(
       String label, String category, bool isActive, String iconPath) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 4.0),
-      child: ElevatedButton.icon(
-        onPressed: () => _toggleFilter(category),
-        style: ElevatedButton.styleFrom(
-          backgroundColor: isActive ? Colors.lightBlue : Colors.white,
-          side: BorderSide(color: isActive ? Colors.lightBlue : Colors.grey),
-        ),
-        icon: Image.asset(
-          iconPath,
-          width: 20,
-          height: 20,
-        ),
-        label: Text(
-          label,
-          style: TextStyle(
-            color: isActive ? Colors.white : Colors.black,
-          ),
+    return ElevatedButton.icon(
+      onPressed: () => _toggleFilter(category),
+      style: ElevatedButton.styleFrom(
+        backgroundColor:
+            isActive ? const Color.fromARGB(255, 17, 122, 171) : Colors.white,
+        side: BorderSide(color: isActive ? Colors.lightBlue : Colors.grey),
+      ),
+      icon: Image.asset(
+        iconPath,
+        width: 20,
+        height: 20,
+      ),
+      label: Text(
+        label,
+        style: TextStyle(
+          color: isActive ? Colors.white : Colors.black,
         ),
       ),
     );
+  }
+
+  Widget _buildFilterOption(String label, String category, bool isActive) {
+    return Row(
+      children: [
+        Checkbox(
+          value: isActive,
+          onChanged: (bool? value) {
+            _toggleFilter(category);
+          },
+        ),
+        Text(
+          label,
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 14,
+            fontFamily: 'Pretendard',
+            fontWeight: FontWeight.w400,
+          ),
+        ),
+      ],
+    );
+  }
+
+  void _scrapCampingSpot(CarCampingSite site) async {
+    var user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      DatabaseReference userScrapsRef =
+          FirebaseDatabase.instance.ref().child('scraps').child(user.uid);
+      DataSnapshot snapshot = await userScrapsRef.get();
+
+      bool alreadyScrapped = false;
+      if (snapshot.exists) {
+        Map<dynamic, dynamic> data = snapshot.value as Map<dynamic, dynamic>;
+        data.forEach((key, value) {
+          if (value['name'] == site.name &&
+              value['latitude'] == site.latitude &&
+              value['longitude'] == site.longitude) {
+            alreadyScrapped = true;
+          }
+        });
+      }
+
+      if (alreadyScrapped) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('이미 스크랩한 차박지입니다.')),
+        );
+      } else {
+        String newScrapKey = userScrapsRef.push().key!;
+        await userScrapsRef.child(newScrapKey).set({
+          'name': site.name,
+          'latitude': site.latitude,
+          'longitude': site.longitude,
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('차박지를 스크랩했습니다.')),
+        );
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('로그인이 필요합니다.')),
+      );
+    }
+  }
+
+  void _shareCampingSpot(CarCampingSite site) async {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('공유하기'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                ListTile(
+                  leading: Icon(Icons.share),
+                  title: Text('일반 공유'),
+                  onTap: () async {
+                    Navigator.of(context).pop();
+                    try {
+                      await Share.share(
+                        '차박지 정보\n이름: ${site.name}\n위치: ${site.latitude}, ${site.longitude}\n',
+                        subject: '차박지 정보 공유',
+                      );
+                    } catch (e) {
+                      print('공유 오류: $e');
+                    }
+                  },
+                ),
+                ListTile(
+                  leading: Icon(Icons.message),
+                  title: Text('카카오톡 공유'),
+                  onTap: () async {
+                    Navigator.of(context).pop();
+                    try {
+                      final FeedTemplate defaultFeed = FeedTemplate(
+                        content: Content(
+                          title: site.name,
+                          description:
+                              '차박지 위치: ${site.latitude}, ${site.longitude}',
+                          imageUrl: Uri.parse(site.imageUrl),
+                          link: Link(
+                            webUrl: Uri.parse('https://yourwebsite.com'),
+                            mobileWebUrl: Uri.parse('https://yourwebsite.com'),
+                          ),
+                        ),
+                        buttons: [
+                          Button(
+                            title: '자세히 보기',
+                            link: Link(
+                              webUrl: Uri.parse('https://yourwebsite.com'),
+                              mobileWebUrl:
+                                  Uri.parse('https://yourwebsite.com'),
+                            ),
+                          ),
+                        ],
+                      );
+
+                      if (await ShareClient.instance
+                          .isKakaoTalkSharingAvailable()) {
+                        await ShareClient.instance
+                            .shareDefault(template: defaultFeed);
+                      } else {
+                        print('카카오톡이 설치되지 않았습니다.');
+                      }
+                    } catch (e) {
+                      print('카카오톡 공유 오류: $e');
+                    }
+                  },
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _openTmap(
+      double startLat, double startLng, double endLat, double endLng) async {
+    final url =
+        'tmap://route?goalname=${Uri.encodeComponent("차박지")}&goalx=$endLng&goaly=$endLat&startx=$startLng&starty=$startLat';
+
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      print('Could not launch Tmap. The app may not be installed.');
+    }
   }
 }
