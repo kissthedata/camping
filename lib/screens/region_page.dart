@@ -48,10 +48,14 @@ class RegionPage extends StatefulWidget {
 }
 
 class _RegionPageState extends State<RegionPage> {
+  // 기존 필드들 그대로 유지
+  String _selectedRegion = "경상북도";
   final List<CarCampingSite> _campingSites = [];
   final List<CarCampingSite> _filteredCampingSites = [];
   NaverMapController? _mapController;
   final PanelController _panelController = PanelController();
+  List<CarCampingSite> _locations = [];
+  List<NMarker> _markers = [];
   bool showRestRoom = false;
   bool showSink = false;
   bool showCook = false;
@@ -65,6 +69,48 @@ class _RegionPageState extends State<RegionPage> {
   bool isFilterVisible = false;
   NMapType _currentMapType = NMapType.basic;
   Position? _currentPosition;
+
+  // 지도 유형 토글 함수 (기본/위성 지도 전환)
+  void _toggleMapType() {
+    setState(() {
+      _currentMapType = (_currentMapType == NMapType.basic)
+          ? NMapType.satellite
+          : NMapType.basic;
+    });
+  }
+
+  void _onRegionSelected(String region) {
+    setState(() {
+      switch (region) {
+        case '경상북도':
+          _updateCameraPosition(NLatLng(36.57, 128.73)); // 예시 좌표
+          break;
+        case '경상남도':
+          _updateCameraPosition(NLatLng(35.23, 128.67)); // 예시 좌표
+          break;
+        case '강원도':
+          _updateCameraPosition(NLatLng(37.82, 128.15)); // 예시 좌표
+          break;
+        case '전라북도':
+          _updateCameraPosition(NLatLng(35.82, 127.11)); // 예시 좌표
+          break;
+        case '전라남도':
+          _updateCameraPosition(NLatLng(34.82, 126.15)); // 예시 좌표
+          break;
+        case '충청북도':
+          _updateCameraPosition(NLatLng(36.64, 127.49)); // 예시 좌표
+          break;
+        case '충청남도':
+          _updateCameraPosition(NLatLng(36.66, 126.67)); // 예시 좌표
+          break;
+        case '제주도':
+          _updateCameraPosition(NLatLng(33.38, 126.55)); // 예시 좌표
+          break;
+        default:
+          print('Unknown region: $region');
+      }
+    });
+  }
 
   @override
   void initState() {
@@ -261,10 +307,99 @@ class _RegionPageState extends State<RegionPage> {
     );
   }
 
-  void _updateMarkers() {
-    _mapController?.clearOverlays();
-    for (var site in _filteredCampingSites) {
-      _addMarker(site);
+  // 마커를 지도에 추가하는 함수
+  Future<void> _addMarkers() async {
+    if (_mapController == null || _currentPosition == null) {
+      return;
+    }
+
+    final double radius = 5000; // 5km 반경 내 위치만 표시
+    final nearbyLocations = _filteredCampingSites.where((location) {
+      final double distance = Geolocator.distanceBetween(
+        _currentPosition!.latitude,
+        _currentPosition!.longitude,
+        location.latitude,
+        location.longitude,
+      );
+      return distance <= radius;
+    }).toList();
+
+    _markers.clear();
+
+    for (var site in nearbyLocations) {
+      bool shouldAddMarker = false;
+
+      // 카테고리 필터링 로직
+      if (showMarts && site.name.contains('마트')) {
+        shouldAddMarker = true;
+      } else if (showConvenienceStores && site.name.contains('편의점')) {
+        shouldAddMarker = true;
+      } else if (showGasStations && site.name.contains('주유소')) {
+        shouldAddMarker = true;
+      }
+
+      if (shouldAddMarker) {
+        final marker = NMarker(
+          id: site.name,
+          position: NLatLng(site.latitude, site.longitude),
+          caption: NOverlayCaption(text: site.name),
+          icon: NOverlayImage.fromAssetImage(site.isVerified
+              ? 'assets/images/verified_camping_site.png'
+              : 'assets/images/user_camping_site.png'),
+          size: Size(30, 30),
+        );
+
+        marker.setOnTapListener((NMarker marker) {
+          _showSiteInfoDialog(site);
+          return true;
+        });
+
+        try {
+          await _mapController!.addOverlay(marker);
+        } catch (e) {
+          print('Error adding marker: $e');
+        }
+
+        _markers.add(marker);
+      }
+    }
+
+    setState(() {});
+  }
+
+  // 마커 업데이트 함수 (필터 적용 후)
+  Future<void> _updateMarkers() async {
+    if (_mapController == null) {
+      return;
+    }
+
+    _markers.clear();
+    try {
+      await _mapController!.clearOverlays();
+    } catch (e) {
+      print('Error clearing overlays: $e');
+    }
+    await _addMarkers();
+
+    int markerCount = _markers.length;
+    String categoryName = '';
+
+    // 카테고리 이름 설정
+    if (showMarts) {
+      categoryName = '마트';
+    } else if (showConvenienceStores) {
+      categoryName = '편의점';
+    } else if (showGasStations) {
+      categoryName = '주유소';
+    }
+
+    if (categoryName.isNotEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('$markerCount개의 $categoryName가 있습니다.'),
+          duration: Duration(seconds: 2),
+        ),
+      );
     }
   }
 
@@ -573,16 +708,51 @@ class _RegionPageState extends State<RegionPage> {
                     ),
                   ),
                   Positioned(
+                    left: 10,
+                    top: 10,
+                    child: Container(
+                      child: Text("D"),
+                    ),
+                  ),
+                  Positioned(
                     left: MediaQuery.of(context).size.width / 2 - 63,
                     top: 50,
                     child: Container(
                       width: 126,
                       height: 48,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: AssetImage('assets/images/편안차박.png'),
-                          fit: BoxFit.contain,
+                      child: DropdownButton<String>(
+                        value: _selectedRegion, // 선택된 값
+                        icon: const Icon(Icons.arrow_downward), // 드롭다운 아이콘
+                        iconSize: 24, // 아이콘 크기
+                        elevation: 16, // 드롭다운의 그림자 깊이
+                        style: const TextStyle(
+                            color: Colors.black), // 드롭다운 텍스트 스타일
+                        underline: Container(
+                          height: 2, // 밑줄 높이
+                          color: Colors.grey, // 밑줄 색상
                         ),
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            _selectedRegion = newValue!; // 선택된 값 업데이트
+                            _onRegionSelected(
+                                _selectedRegion); // 선택된 지역에 따라 지도 위치를 업데이트하는 함수 호출
+                          });
+                        },
+                        items: <String>[
+                          '경상북도', // 드롭다운 목록에 표시될 항목
+                          '경상남도',
+                          '강원도',
+                          '충청북도',
+                          '충청남도',
+                          '전라북도',
+                          '전라남도',
+                          '제주도',
+                        ].map<DropdownMenuItem<String>>((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value, // 선택된 값
+                            child: Text(value), // 드롭다운 항목 텍스트
+                          );
+                        }).toList(), // 드롭다운 목록 생성
                       ),
                     ),
                   ),
@@ -647,6 +817,27 @@ class _RegionPageState extends State<RegionPage> {
                       showGasStations, 'assets/images/gas_station.png'),
                 ],
               ),
+            ),
+          ),
+          Positioned(
+            left: 35,
+            top: 200,
+            child: Column(
+              children: [
+                FloatingActionButton(
+                  onPressed: _getCurrentLocation,
+                  child: Icon(Icons.gps_fixed, color: Colors.white),
+                  backgroundColor: Color(0xFF162233),
+                  heroTag: 'regionPageHeroTag',
+                ),
+                SizedBox(height: 10),
+                FloatingActionButton(
+                  onPressed: _toggleMapType,
+                  child: Icon(Icons.layers, color: Colors.white),
+                  backgroundColor: Color(0xFF162233),
+                  heroTag: 'layerToggleHeroTag',
+                ),
+              ],
             ),
           ),
           SlidingUpPanel(
