@@ -60,6 +60,7 @@ class _MapScreenState extends State<MapScreen> {
       return;
     }
 
+
     // 현재 위치 가져오기
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
