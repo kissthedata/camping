@@ -12,6 +12,38 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+Future<List<CarCampingSite>> _fetchLocationsFromKakao(
+    double latitude, double longitude, String categoryGroupCode) async {
+  final String kakaoApiKey = dotenv.env['KAKAO_REST_API_KEY']!;
+  final String apiUrl = 'https://dapi.kakao.com/v2/local/search/category.json'
+      '?category_group_code=$categoryGroupCode'
+      '&x=$longitude&y=$latitude&radius=5000&sort=distance';
+
+  final response = await http.get(
+    Uri.parse(apiUrl),
+    headers: {
+      'Authorization': 'KakaoAK $kakaoApiKey',
+    },
+  );
+
+  if (response.statusCode == 200) {
+    final data = json.decode(response.body);
+    final List<dynamic> documents = data['documents'];
+
+    return documents.map((doc) {
+      return CarCampingSite(
+        name: doc['place_name'],
+        latitude: double.parse(doc['y']),
+        longitude: double.parse(doc['x']),
+        details: doc['address_name'],
+        isVerified: true,
+      );
+    }).toList();
+  } else {
+    throw Exception('Failed to load locations');
+  }
+}
+
 class CarCampingSite {
   final String name;
   final double latitude;
@@ -48,7 +80,6 @@ class RegionPage extends StatefulWidget {
 }
 
 class _RegionPageState extends State<RegionPage> {
-  // 기존 필드들 그대로 유지
   String _selectedRegion = "경상북도";
   final List<CarCampingSite> _campingSites = [];
   final List<CarCampingSite> _filteredCampingSites = [];
@@ -70,54 +101,10 @@ class _RegionPageState extends State<RegionPage> {
   NMapType _currentMapType = NMapType.basic;
   Position? _currentPosition;
 
-  // 지도 유형 토글 함수 (기본/위성 지도 전환)
-  void _toggleMapType() {
-    setState(() {
-      _currentMapType = (_currentMapType == NMapType.basic)
-          ? NMapType.satellite
-          : NMapType.basic;
-    });
-  }
-
-  void _onRegionSelected(String region) {
-    setState(() {
-      switch (region) {
-        case '경상북도':
-          _updateCameraPosition(NLatLng(36.57, 128.73)); // 예시 좌표
-          break;
-        case '경상남도':
-          _updateCameraPosition(NLatLng(35.23, 128.67)); // 예시 좌표
-          break;
-        case '강원도':
-          _updateCameraPosition(NLatLng(37.82, 128.15)); // 예시 좌표
-          break;
-        case '전라북도':
-          _updateCameraPosition(NLatLng(35.82, 127.11)); // 예시 좌표
-          break;
-        case '전라남도':
-          _updateCameraPosition(NLatLng(34.82, 126.15)); // 예시 좌표
-          break;
-        case '충청북도':
-          _updateCameraPosition(NLatLng(36.64, 127.49)); // 예시 좌표
-          break;
-        case '충청남도':
-          _updateCameraPosition(NLatLng(36.66, 126.67)); // 예시 좌표
-          break;
-        case '제주도':
-          _updateCameraPosition(NLatLng(33.38, 126.55)); // 예시 좌표
-          break;
-        default:
-          print('Unknown region: $region');
-      }
-    });
-  }
-
   @override
   void initState() {
     super.initState();
-    _loadCampingSites();
-    _loadUserCampingSites();
-    _getCurrentLocation();
+    _getCurrentLocation(); // 화면 초기화 시 현재 위치 가져오기
   }
 
   Future<void> _getCurrentLocation() async {
@@ -159,145 +146,69 @@ class _RegionPageState extends State<RegionPage> {
       _updateCameraPosition(currentPosition);
     });
 
-    await _loadCampingSites();
-    await _loadUserCampingSites();
+    await _loadNearbyLocations(); // 카카오 API로 주변 장소 불러오기
   }
 
-  Future<void> _loadCampingSites() async {
-    DatabaseReference databaseReference =
-        FirebaseDatabase.instance.ref().child('car_camping_sites');
-    DataSnapshot snapshot = await databaseReference.get();
+  Future<void> _loadNearbyLocations() async {
+    if (_currentPosition == null) return;
 
-    if (snapshot.exists) {
-      Map<String, dynamic> data =
-          Map<String, dynamic>.from(snapshot.value as Map);
-      data.forEach((key, value) {
-        Map<String, dynamic> siteData = Map<String, dynamic>.from(value);
-        CarCampingSite site = CarCampingSite(
-          name: siteData['place'],
-          latitude: siteData['latitude'],
-          longitude: siteData['longitude'],
-          imageUrl: siteData['imageUrl'] ?? '',
-          restRoom: siteData['restRoom'] ?? false,
-          sink: siteData['sink'] ?? false,
-          cook: siteData['cook'] ?? false,
-          animal: siteData['animal'] ?? false,
-          water: siteData['water'] ?? false,
-          parkinglot: siteData['parkinglot'] ?? false,
-          details: siteData['details'] ?? '',
-          isVerified: true,
-        );
-        _campingSites.add(site);
-        _filteredCampingSites.add(site);
+    try {
+      // 마트, 편의점, 주유소 각각의 카테고리를 호출
+      List<CarCampingSite> marts = await _fetchLocationsFromKakao(
+          _currentPosition!.latitude, _currentPosition!.longitude, 'MT1');
+      List<CarCampingSite> convenienceStores = await _fetchLocationsFromKakao(
+          _currentPosition!.latitude, _currentPosition!.longitude, 'CS2');
+      List<CarCampingSite> gasStations = await _fetchLocationsFromKakao(
+          _currentPosition!.latitude, _currentPosition!.longitude, 'OL7');
+
+      setState(() {
+        _locations = marts + convenienceStores + gasStations;
       });
-      setState(() {});
-      _updateMarkers();
+
+      _updateMarkers(); // 마커를 업데이트하여 지도에 표시
+    } catch (e) {
+      print('Error loading locations: $e');
     }
   }
 
-  Future<void> _loadUserCampingSites() async {
-    DatabaseReference databaseReference =
-        FirebaseDatabase.instance.ref().child('user_camping_sites');
-    DataSnapshot snapshot = await databaseReference.get();
-
-    if (snapshot.exists) {
-      Map<String, dynamic> data =
-          Map<String, dynamic>.from(snapshot.value as Map);
-      data.forEach((key, value) {
-        Map<String, dynamic> siteData = Map<String, dynamic>.from(value);
-        CarCampingSite site = CarCampingSite(
-          name: siteData['place'],
-          latitude: siteData['latitude'],
-          longitude: siteData['longitude'],
-          imageUrl: siteData['imageUrl'] ?? '',
-          restRoom: siteData['restRoom'] ?? false,
-          sink: siteData['sink'] ?? false,
-          cook: siteData['cook'] ?? false,
-          animal: siteData['animal'] ?? false,
-          water: siteData['water'] ?? false,
-          parkinglot: siteData['parkinglot'] ?? false,
-          details: siteData['details'] ?? '',
-          isVerified: false,
-        );
-        _campingSites.add(site);
-        _filteredCampingSites.add(site);
-      });
-      setState(() {});
-      _updateMarkers();
-    }
-  }
-
-  void _toggleFilterVisibility() {
+  void _toggleMapType() {
     setState(() {
-      isFilterVisible = !isFilterVisible;
+      _currentMapType = (_currentMapType == NMapType.basic)
+          ? NMapType.satellite
+          : NMapType.basic;
     });
   }
 
-  void _toggleFilter(String category) {
+  void _onRegionSelected(String region) {
     setState(() {
-      switch (category) {
-        case 'restRoom':
-          showRestRoom = !showRestRoom;
+      switch (region) {
+        case '경상북도':
+          _updateCameraPosition(NLatLng(36.57, 128.73)); // 예시 좌표
           break;
-        case 'sink':
-          showSink = !showSink;
+        case '경상남도':
+          _updateCameraPosition(NLatLng(35.23, 128.67)); // 예시 좌표
           break;
-        case 'cook':
-          showCook = !showCook;
+        case '강원도':
+          _updateCameraPosition(NLatLng(37.82, 128.15)); // 예시 좌표
           break;
-        case 'animal':
-          showAnimal = !showAnimal;
+        case '전라북도':
+          _updateCameraPosition(NLatLng(35.82, 127.11)); // 예시 좌표
           break;
-        case 'water':
-          showWater = !showWater;
+        case '전라남도':
+          _updateCameraPosition(NLatLng(34.82, 126.15)); // 예시 좌표
           break;
-        case 'parkinglot':
-          showParkinglot = !showParkinglot;
+        case '충청북도':
+          _updateCameraPosition(NLatLng(36.64, 127.49)); // 예시 좌표
           break;
-        case 'mart':
-          showMarts = !showMarts;
+        case '충청남도':
+          _updateCameraPosition(NLatLng(36.66, 126.67)); // 예시 좌표
           break;
-        case 'convenience_store':
-          showConvenienceStores = !showConvenienceStores;
+        case '제주도':
+          _updateCameraPosition(NLatLng(33.38, 126.55)); // 예시 좌표
           break;
-        case 'gas_station':
-          showGasStations = !showGasStations;
-          break;
+        default:
+          print('Unknown region: $region');
       }
-      _applyFilter();
-    });
-  }
-
-  void _applyFilter() {
-    setState(() {
-      _filteredCampingSites.clear();
-      for (var site in _campingSites) {
-        bool matchesAllFilters = true;
-
-        if (showRestRoom && !site.restRoom) {
-          matchesAllFilters = false;
-        }
-        if (showSink && !site.sink) {
-          matchesAllFilters = false;
-        }
-        if (showCook && !site.cook) {
-          matchesAllFilters = false;
-        }
-        if (showAnimal && !site.animal) {
-          matchesAllFilters = false;
-        }
-        if (showWater && !site.water) {
-          matchesAllFilters = false;
-        }
-        if (showParkinglot && !site.parkinglot) {
-          matchesAllFilters = false;
-        }
-
-        if (matchesAllFilters) {
-          _filteredCampingSites.add(site);
-        }
-      }
-      _updateMarkers();
     });
   }
 
@@ -307,14 +218,48 @@ class _RegionPageState extends State<RegionPage> {
     );
   }
 
-  // 마커를 지도에 추가하는 함수
+  Future<void> _updateMarkers() async {
+    if (_mapController == null) {
+      return;
+    }
+
+    _markers.clear();
+    try {
+      await _mapController!.clearOverlays();
+    } catch (e) {
+      print('Error clearing overlays: $e');
+    }
+    await _addMarkers();
+
+    int markerCount = _markers.length;
+    String categoryName = '';
+
+    // 카테고리 이름 설정
+    if (showMarts) {
+      categoryName = '마트';
+    } else if (showConvenienceStores) {
+      categoryName = '편의점';
+    } else if (showGasStations) {
+      categoryName = '주유소';
+    }
+
+    if (categoryName.isNotEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('$markerCount개의 $categoryName가 있습니다.'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+    }
+  }
+
   Future<void> _addMarkers() async {
     if (_mapController == null || _currentPosition == null) {
       return;
     }
 
     final double radius = 5000; // 5km 반경 내 위치만 표시
-    final nearbyLocations = _filteredCampingSites.where((location) {
+    final nearbyLocations = _locations.where((location) {
       final double distance = Geolocator.distanceBetween(
         _currentPosition!.latitude,
         _currentPosition!.longitude,
@@ -365,59 +310,6 @@ class _RegionPageState extends State<RegionPage> {
     }
 
     setState(() {});
-  }
-
-  // 마커 업데이트 함수 (필터 적용 후)
-  Future<void> _updateMarkers() async {
-    if (_mapController == null) {
-      return;
-    }
-
-    _markers.clear();
-    try {
-      await _mapController!.clearOverlays();
-    } catch (e) {
-      print('Error clearing overlays: $e');
-    }
-    await _addMarkers();
-
-    int markerCount = _markers.length;
-    String categoryName = '';
-
-    // 카테고리 이름 설정
-    if (showMarts) {
-      categoryName = '마트';
-    } else if (showConvenienceStores) {
-      categoryName = '편의점';
-    } else if (showGasStations) {
-      categoryName = '주유소';
-    }
-
-    if (categoryName.isNotEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('$markerCount개의 $categoryName가 있습니다.'),
-          duration: Duration(seconds: 2),
-        ),
-      );
-    }
-  }
-
-  void _addMarker(CarCampingSite site) {
-    final marker = NMarker(
-      id: site.name,
-      position: NLatLng(site.latitude, site.longitude),
-      caption: NOverlayCaption(text: site.name),
-      icon: NOverlayImage.fromAssetImage(site.isVerified
-          ? 'assets/images/verified_camping_site.png'
-          : 'assets/images/user_camping_site.png'),
-      size: Size(30, 30),
-    );
-    marker.setOnTapListener((NMarker marker) {
-      _showSiteInfoDialog(site);
-      return true;
-    });
-    _mapController?.addOverlay(marker);
   }
 
   void _showSiteInfoDialog(CarCampingSite site) async {
@@ -708,38 +600,29 @@ class _RegionPageState extends State<RegionPage> {
                     ),
                   ),
                   Positioned(
-                    left: 10,
-                    top: 10,
-                    child: Container(
-                      child: Text("D"),
-                    ),
-                  ),
-                  Positioned(
                     left: MediaQuery.of(context).size.width / 2 - 63,
                     top: 50,
                     child: Container(
                       width: 126,
                       height: 48,
                       child: DropdownButton<String>(
-                        value: _selectedRegion, // 선택된 값
-                        icon: const Icon(Icons.arrow_downward), // 드롭다운 아이콘
-                        iconSize: 24, // 아이콘 크기
-                        elevation: 16, // 드롭다운의 그림자 깊이
-                        style: const TextStyle(
-                            color: Colors.black), // 드롭다운 텍스트 스타일
+                        value: _selectedRegion,
+                        icon: const Icon(Icons.arrow_downward),
+                        iconSize: 24,
+                        elevation: 16,
+                        style: const TextStyle(color: Colors.black),
                         underline: Container(
-                          height: 2, // 밑줄 높이
-                          color: Colors.grey, // 밑줄 색상
+                          height: 2,
+                          color: Colors.grey,
                         ),
                         onChanged: (String? newValue) {
                           setState(() {
-                            _selectedRegion = newValue!; // 선택된 값 업데이트
-                            _onRegionSelected(
-                                _selectedRegion); // 선택된 지역에 따라 지도 위치를 업데이트하는 함수 호출
+                            _selectedRegion = newValue!;
+                            _onRegionSelected(_selectedRegion);
                           });
                         },
                         items: <String>[
-                          '경상북도', // 드롭다운 목록에 표시될 항목
+                          '경상북도',
                           '경상남도',
                           '강원도',
                           '충청북도',
@@ -749,10 +632,10 @@ class _RegionPageState extends State<RegionPage> {
                           '제주도',
                         ].map<DropdownMenuItem<String>>((String value) {
                           return DropdownMenuItem<String>(
-                            value: value, // 선택된 값
-                            child: Text(value), // 드롭다운 항목 텍스트
+                            value: value,
+                            child: Text(value),
                           );
-                        }).toList(), // 드롭다운 목록 생성
+                        }).toList(),
                       ),
                     ),
                   ),
@@ -762,7 +645,11 @@ class _RegionPageState extends State<RegionPage> {
                     child: IconButton(
                       icon: Icon(Icons.filter_list, size: 45),
                       color: Color(0xFF162233),
-                      onPressed: _toggleFilterVisibility,
+                      onPressed: () {
+                        setState(() {
+                          isFilterVisible = !isFilterVisible;
+                        });
+                      },
                     ),
                   ),
                 ],
@@ -804,15 +691,17 @@ class _RegionPageState extends State<RegionPage> {
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   _buildFilterButtonWithIcon(
                       '마트', 'mart', showMarts, 'assets/images/mart.png'),
+                  SizedBox(width: 20),
                   _buildFilterButtonWithIcon(
                       '편의점',
                       'convenience_store',
                       showConvenienceStores,
                       'assets/images/convenience_store.png'),
+                  SizedBox(width: 20),
                   _buildFilterButtonWithIcon('주유소', 'gas_station',
                       showGasStations, 'assets/images/gas_station.png'),
                 ],
@@ -834,7 +723,7 @@ class _RegionPageState extends State<RegionPage> {
                 FloatingActionButton(
                   onPressed: _toggleMapType,
                   child: Icon(Icons.layers, color: Colors.white),
-                  backgroundColor: Color(0xFF162233),
+                  backgroundColor: Color.fromARGB(255, 11, 11, 12),
                   heroTag: 'layerToggleHeroTag',
                 ),
               ],
@@ -1192,5 +1081,73 @@ class _RegionPageState extends State<RegionPage> {
     } else {
       print('Could not launch Tmap. The app may not be installed.');
     }
+  }
+
+  void _toggleFilter(String category) {
+    setState(() {
+      switch (category) {
+        case 'restRoom':
+          showRestRoom = !showRestRoom;
+          break;
+        case 'sink':
+          showSink = !showSink;
+          break;
+        case 'cook':
+          showCook = !showCook;
+          break;
+        case 'animal':
+          showAnimal = !showAnimal;
+          break;
+        case 'water':
+          showWater = !showWater;
+          break;
+        case 'parkinglot':
+          showParkinglot = !showParkinglot;
+          break;
+        case 'mart':
+          showMarts = !showMarts;
+          break;
+        case 'convenience_store':
+          showConvenienceStores = !showConvenienceStores;
+          break;
+        case 'gas_station':
+          showGasStations = !showGasStations;
+          break;
+      }
+      _applyFilter();
+    });
+  }
+
+  void _applyFilter() {
+    setState(() {
+      _filteredCampingSites.clear();
+      for (var site in _campingSites) {
+        bool matchesAllFilters = true;
+
+        if (showRestRoom && !site.restRoom) {
+          matchesAllFilters = false;
+        }
+        if (showSink && !site.sink) {
+          matchesAllFilters = false;
+        }
+        if (showCook && !site.cook) {
+          matchesAllFilters = false;
+        }
+        if (showAnimal && !site.animal) {
+          matchesAllFilters = false;
+        }
+        if (showWater && !site.water) {
+          matchesAllFilters = false;
+        }
+        if (showParkinglot && !site.parkinglot) {
+          matchesAllFilters = false;
+        }
+
+        if (matchesAllFilters) {
+          _filteredCampingSites.add(site);
+        }
+      }
+      _updateMarkers();
+    });
   }
 }
