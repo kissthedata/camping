@@ -66,6 +66,28 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
+  fonts:
+    - family: Pretendard
+      fonts:
+        - asset: assets/fonts/Pretendard-Thin.ttf
+          weight: 100
+        - asset: assets/fonts/Pretendard-ExtraLight.ttf
+          weight: 200
+        - asset: assets/fonts/Pretendard-Light.ttf
+          weight: 300
+        - asset: assets/fonts/Pretendard-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Pretendard-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Pretendard-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/Pretendard-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Pretendard-ExtraBold.ttf
+          weight: 800
+        - asset: assets/fonts/Pretendard-Black.ttf
+          weight: 900
+
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
@@ -89,6 +111,8 @@ flutter:
     - assets/vectors/vector_5_x2.svg
     - assets/vectors/vector_4_x2.svg
     - assets/vectors/vector_8_x2.svg
+    - assets/vectors/group_1_x2.svg
+    - assets/vectors/union_x2.svg
     - assets/images/verified_camping_site.png
     - assets/images/user_camping_site.png
     - assets/images/gas_station.png
@@ -99,6 +123,8 @@ flutter:
     - assets/images/화장실.png
     - assets/images/샤워실.png
     - assets/images/개수대.png
+    - assets/images/편안차박.png
+    - assets/images/편안.png
     - .env
 
   #   - images/a_dot_burr.jpeg

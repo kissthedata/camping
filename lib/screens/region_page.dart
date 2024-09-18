@@ -1012,7 +1012,7 @@ class _RegionPageState extends State<RegionPage> {
               },
             ),
           ),
-          Positioned(
+          Positioned( 
             left: 66,
             bottom: 40,
             child: GestureDetector(

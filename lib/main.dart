@@ -14,51 +14,60 @@ Future<void> main() async {
 
   // 환경 변수 로드
   try {
-    print('Loading .env file...');
     await dotenv.load(fileName: ".env");
-    print('Environment variables loaded successfully: ${dotenv.env}');
   } catch (e) {
     print('Failed to load .env file: $e');
     return;
   }
 
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  // Firebase 초기화
+  try {
+    await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  } catch (e) {
+    print('Firebase initialization failed: $e');
+    return;
+  }
+
+  // Kakao 및 Naver 지도 SDK 초기화
   NaverMapSdk.instance.initialize(clientId: dotenv.env['NAVER_CLIENT_ID']!);
   KakaoSdk.init(nativeAppKey: dotenv.env['KAKAO_API_KEY']!);
 
   runApp(MyApp());
 
   // 위치 권한 요청 및 현재 위치 가져오기
+  await _requestLocationPermission();
+}
+
+Future<void> _requestLocationPermission() async {
   bool serviceEnabled;
   LocationPermission permission;
 
   serviceEnabled = await Geolocator.isLocationServiceEnabled();
   if (!serviceEnabled) {
-    return Future.error('Location services are disabled.');
+    print('Location services are disabled.');
+    return;
   }
 
   permission = await Geolocator.checkPermission();
   if (permission == LocationPermission.denied) {
     permission = await Geolocator.requestPermission();
     if (permission == LocationPermission.denied) {
-      return Future.error('Location permissions are denied');
+      print('Location permissions are denied.');
+      return;
     }
   }
 
   if (permission == LocationPermission.deniedForever) {
-    return Future.error(
-        'Location permissions are permanently denied, we cannot request permissions.');
+    print('Location permissions are permanently denied.');
+    return;
   }
 
-  Position position = await Geolocator.getCurrentPosition(
-      desiredAccuracy: LocationAccuracy.high);
-
+  Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
   final kakaoLocationService = KakaoLocationService();
   try {
-    await kakaoLocationService.fetchAndUploadLocations(
-        position.latitude, position.longitude);
+    await kakaoLocationService.fetchAndUploadLocations(position.latitude, position.longitude);
   } catch (e) {
-    print('Error in main: $e');
+    print('Error fetching and uploading location: $e');
   }
 }
 
@@ -66,7 +75,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
-      designSize: Size(375, 812),
+      designSize: Size(375, 1180),
       builder: (context, child) {
         return MaterialApp(
           theme: ThemeData(

@@ -8,6 +8,13 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'map_screen.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'info_camping_site_screen.dart';
+import 'package:map_sample/models/car_camping_site.dart';
+import 'camping_list.dart';
+import 'my_page.dart'; 
+import 'add_camping_site.dart'; 
+import 'feedback_screen.dart'; 
+import 'search_camping_site_page.dart'; // 차박지 검색 페이지 추가
 
 class MyHomePage extends StatefulWidget {
   @override
@@ -163,40 +170,48 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Widget _buildSearchBox() {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8.r),
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Color(0x12000000),
-            offset: Offset(0, 0),
-            blurRadius: 1.8.r,
-          ),
-        ],
-      ),
-      padding: EdgeInsets.fromLTRB(13.w, 14.h, 0, 12.h),
-      child: Row(
-        children: [
-          SizedBox(
-            width: 14.w,
-            height: 14.h,
-            child: SvgPicture.asset(
-              'assets/vectors/vector_6_x2.svg',
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => SearchCampingSitePage()), // 차박지 검색 페이지로 이동
+        );
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8.r),
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Color(0x12000000),
+              offset: Offset(0, 0),
+              blurRadius: 1.8.r,
             ),
-          ),
-          SizedBox(width: 10.w),
-          Expanded(
-            child: Text(
-              '원하시는 차박지를 검색해보세요!',
-              style: GoogleFonts.robotoCondensed(
-                fontWeight: FontWeight.w400,
-                fontSize: 12.sp,
-                color: Color(0xFF9D9D9D),
+          ],
+        ),
+        padding: EdgeInsets.fromLTRB(13.w, 14.h, 0, 12.h),
+        child: Row(
+          children: [
+            SizedBox(
+              width: 14.w,
+              height: 14.h,
+              child: SvgPicture.asset(
+                'assets/vectors/vector_6_x2.svg',
               ),
             ),
-          ),
-        ],
+            SizedBox(width: 10.w),
+            Expanded(
+              child: Text(
+                '원하시는 차박지를 검색해보세요!',
+                style: GoogleFonts.robotoCondensed(
+                  fontWeight: FontWeight.w400,
+                  fontSize: 12.sp,
+                  color: Color(0xFF9D9D9D),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -325,7 +340,7 @@ class _MyHomePageState extends State<MyHomePage> {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => MapScreen()),
+          MaterialPageRoute(builder: (context) => MapScreen()), // 지도 페이지로 이동
         );
       },
       child: Container(
@@ -389,27 +404,38 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
           ),
-          Row(
-            children: [
-              Text(
-                title == '이런 차박지는 어때요?' ? '추천 더보기' : '목록 더보기',
-                style: GoogleFonts.robotoCondensed(
-                  fontWeight: FontWeight.w500,
-                  fontSize: 12.sp,
-                  color: Color(0xFF5D5D5D),
+          GestureDetector(
+            onTap: () {
+              if (title == '등록된 차박지 보기') {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => AllCampingSitesPage()), // 등록된 차박지 보기로 이동
+                );
+              }
+            },
+            child: Row(
+              children: [
+                Text(
+                  title == '이런 차박지는 어때요?' ? '추천 더보기' : '목록 더보기',
+                  style: GoogleFonts.robotoCondensed(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 12.sp,
+                    color: Color(0xFF5D5D5D),
+                  ),
                 ),
-              ),
-              SizedBox(width: 3.w),
-              SizedBox(
-                width: 5.1.w,
-                height: 9.3.h,
-                child: SvgPicture.asset(
-                  title == '이런 차박지는 어때요?'
-                      ? 'assets/vectors/vector_2_x2.svg'
-                      : 'assets/vectors/vector_5_x2.svg',
+                SizedBox(width: 3.w),
+                SizedBox(
+                  width: 5.1.w,
+                  height: 9.3.h,
+                  child: SvgPicture.asset(
+                    title == '이런 차박지는 어때요?'
+                        ? 'assets/vectors/vector_2_x2.svg'
+                        : 'assets/vectors/vector_5_x2.svg',
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ],
       ),
@@ -461,25 +487,35 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                 ],
               ),
-              Container(
-                decoration: BoxDecoration(
-                  color: Color(0xFF398EF3),
-                  borderRadius: BorderRadius.circular(30.r),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Color(0x12000000),
-                      blurRadius: 1.8.r,
-                      offset: Offset(0, 0),
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => InfoCampingSiteScreen(site: site),
                     ),
-                  ],
-                ),
-                padding: EdgeInsets.fromLTRB(14.5.w, 6.h, 12.2.w, 6.h),
-                child: Text(
-                  '자세히 보기',
-                  style: GoogleFonts.robotoCondensed(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 10.sp,
-                    color: Colors.white,
+                  );
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Color(0xFF398EF3),
+                    borderRadius: BorderRadius.circular(30.r),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Color(0x12000000),
+                        blurRadius: 1.8.r,
+                        offset: Offset(0, 0),
+                      ),
+                    ],
+                  ),
+                  padding: EdgeInsets.fromLTRB(14.5.w, 6.h, 12.2.w, 6.h),
+                  child: Text(
+                    '자세히 보기',
+                    style: GoogleFonts.robotoCondensed(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 10.sp,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               ),
@@ -491,9 +527,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Widget _buildSlidingCampingSiteList() {
-    int itemCount = _campingSites.length > 4
-        ? 4
-        : _campingSites.length; // 최대 4개의 박스만 보여줍니다.
+    int itemCount = _campingSites.length > 4 ? 4 : _campingSites.length;
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
       padding: EdgeInsets.all(8.w),
@@ -512,10 +546,10 @@ class _MyHomePageState extends State<MyHomePage> {
         shrinkWrap: true,
         physics: NeverScrollableScrollPhysics(),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2, // 2x2 그리드
-          mainAxisSpacing: 18.h, // 위아래 간격
-          crossAxisSpacing: 18.w, // 좌우 간격
-          childAspectRatio: 1, // 정사각형 박스
+          crossAxisCount: 2,
+          mainAxisSpacing: 18.h,
+          crossAxisSpacing: 18.w,
+          childAspectRatio: 1,
         ),
         itemCount: itemCount,
         itemBuilder: (context, index) {
@@ -593,12 +627,20 @@ class _MyHomePageState extends State<MyHomePage> {
         ],
       ),
       child: Center(
-        child: Text(
-          '차박지 등록하기',
-          style: GoogleFonts.robotoCondensed(
-            fontWeight: FontWeight.w500,
-            fontSize: 14.sp,
-            color: Colors.white,
+        child: GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => AddCampingSiteScreen()),
+            );
+          },
+          child: Text(
+            '차박지 등록하기',
+            style: GoogleFonts.robotoCondensed(
+              fontWeight: FontWeight.w500,
+              fontSize: 14.sp,
+              color: Colors.white,
+            ),
           ),
         ),
       ),
@@ -624,25 +666,65 @@ class _MyHomePageState extends State<MyHomePage> {
       child: Padding(
         padding: EdgeInsets.only(top: 10.h, bottom: 10.h),
         child: Column(
-          mainAxisSize: MainAxisSize.min, // 이 속성으로 위젯이 필요한 최소 높이만 차지하도록 설정
+          mainAxisSize: MainAxisSize.min,
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                _buildBottomNavBarItem('assets/images/x_2.png'),
-                _buildBottomNavBarItem('assets/images/x_1.png'),
-                _buildBottomNavBarItem('assets/images/x.png'),
-                _buildBottomNavBarItem('assets/images/x_3.png'),
+                _buildBottomNavBarItem('assets/images/x_2.png', () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => MyHomePage()),
+                  );
+                }),
+                _buildBottomNavBarItem('assets/images/x_1.png', () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => AllCampingSitesPage()),
+                  );
+                }),
+                _buildBottomNavBarItem('assets/images/x.png', () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => MapScreen()),
+                  );
+                }),
+                _buildBottomNavBarItem('assets/images/x_3.png', () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => MyPage()),
+                  );
+                }),
               ],
             ),
             SizedBox(height: 9.h),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                _buildBottomNavBarText('홈'),
-                _buildBottomNavBarText('차박지 목록'),
-                _buildBottomNavBarText('지도'),
-                _buildBottomNavBarText('마이페이지'),
+                _buildBottomNavBarText('홈', () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => MyHomePage()),
+                  );
+                }),
+                _buildBottomNavBarText('차박지 목록', () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => AllCampingSitesPage()),
+                  );
+                }),
+                _buildBottomNavBarText('지도', () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => MapScreen()),
+                  );
+                }),
+                _buildBottomNavBarText('마이페이지', () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => MyPage()),
+                  );
+                }),
               ],
             ),
           ],
@@ -651,60 +733,34 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  Widget _buildBottomNavBarItem(String assetPath) {
-    return Container(
-      width: 28.w,
-      height: 28.h,
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          fit: BoxFit.cover,
-          image: AssetImage(assetPath),
+  Widget _buildBottomNavBarItem(String assetPath, VoidCallback onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 28.w,
+        height: 28.h,
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            fit: BoxFit.cover,
+            image: AssetImage(assetPath),
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildBottomNavBarText(String label) {
-    return Text(
-      label,
-      style: GoogleFonts.robotoCondensed(
-        fontWeight: FontWeight.w500,
-        fontSize: 12.sp,
-        letterSpacing: -0.6.sp,
-        color: Color(0xFF398EF3),
+  Widget _buildBottomNavBarText(String label, VoidCallback onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Text(
+        label,
+        style: GoogleFonts.robotoCondensed(
+          fontWeight: FontWeight.w500,
+          fontSize: 12.sp,
+          letterSpacing: -0.6.sp,
+          color: Color(0xFF398EF3),
+        ),
       ),
     );
   }
-}
-
-class CarCampingSite {
-  final String name;
-  final double latitude;
-  final double longitude;
-  final String address;
-  final String imageUrl;
-  final bool restRoom;
-  final bool sink;
-  final bool cook;
-  final bool animal;
-  final bool water;
-  final bool parkinglot;
-  final String details;
-  final bool isVerified;
-
-  CarCampingSite({
-    required this.name,
-    required this.latitude,
-    required this.longitude,
-    required this.address,
-    this.imageUrl = '',
-    this.restRoom = false,
-    this.sink = false,
-    this.cook = false,
-    this.animal = false,
-    this.water = false,
-    this.parkinglot = false,
-    this.details = '',
-    this.isVerified = false,
-  });
 }

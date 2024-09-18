@@ -4,6 +4,8 @@ import 'package:firebase_database/firebase_database.dart';
 import 'login_screen.dart';
 import 'info_edit_screen.dart';
 import 'scrap_list_screen.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 /// 마이페이지를 위한 StatefulWidget 정의
 class MyPage extends StatefulWidget {
@@ -53,107 +55,275 @@ class _MyPageState extends State<MyPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          Positioned(
-            left: 16,
-            top: 50,
-            child: IconButton(
-              icon: Icon(Icons.arrow_back, size: 35),
-              color: Color(0xFF162233),
-              onPressed: () {
-                Navigator.pop(context);
-              },
+      body: Container(
+        decoration: BoxDecoration(
+          color: Color(0xFFF3F5F7),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              margin: EdgeInsets.fromLTRB(0, 0, 0, 8),
+              decoration: BoxDecoration(
+                color: Color(0xFFFFFFFF),
+              ),
+              child: Container(
+                padding: EdgeInsets.fromLTRB(16, 38, 0, 16),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      margin: EdgeInsets.fromLTRB(0, 0, 0, 29),
+                      child: Align(
+                        alignment: Alignment.topLeft,
+                        child: SizedBox(
+                          width: 202.6,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                margin: EdgeInsets.fromLTRB(0, 1.9, 0, 1.4),
+                                child: SizedBox(
+                                  width: 18,
+                                  height: 15.7,
+                                  child: SvgPicture.asset(
+                                    'assets/vectors/union_1_x2.svg',
+                                  ),
+                                ),
+                              ),
+                              Text(
+                                '마이페이지',
+                                style: GoogleFonts.getFont(
+                                  'Pretendard',
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 16,
+                                  color: Color(0xFF000000),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            margin: EdgeInsets.fromLTRB(0, 0, 16, 0),
+                            decoration: BoxDecoration(
+                              color: Color(0xFFECECEC),
+                              borderRadius: BorderRadius.circular(39),
+                            ),
+                            child: Container(
+                              width: 78,
+                              height: 78,
+                              padding: EdgeInsets.fromLTRB(1, 31, 0, 30),
+                              child: SizedBox(
+                                width: 19,
+                                height: 17,
+                                child: SvgPicture.asset(
+                                  'assets/vectors/vector_3_x2.svg',
+                                ),
+                              ),
+                            ),
+                          ),
+                          Container(
+                            margin: EdgeInsets.fromLTRB(0, 17, 0, 17),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  margin: EdgeInsets.fromLTRB(0, 0, 0, 7),
+                                  child: Align(
+                                    alignment: Alignment.topLeft,
+                                    child: Text(
+                                      _nameController.text,
+                                      style: GoogleFonts.getFont(
+                                        'Pretendard',
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 20,
+                                        letterSpacing: -0.4,
+                                        color: Color(0xFF000000),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Text(
+                                  '힐링을 원하는 차박러',
+                                  style: GoogleFonts.getFont(
+                                    'Pretendard',
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 12,
+                                    letterSpacing: -0.2,
+                                    color: Color(0xFF398EF3),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
+            Container(
+              margin: EdgeInsets.fromLTRB(0, 0, 0, 8),
+              decoration: BoxDecoration(
+                color: Color(0xFFFFFFFF),
+              ),
+              child: Container(
+                padding: EdgeInsets.fromLTRB(20, 17, 18.8, 17.4),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildMenuItem(
+                      '정보 수정',
+                      'assets/vectors/group_1_x2.svg',
+                      () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => InfoEditScreen(),
+                          ),
+                        );
+                      },
+                    ),
+                    _buildMenuItem(
+                      '좋아요한 차박지',
+                      'assets/vectors/vector_9_x2.svg',
+                      () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ScrapListScreen(),
+                          ),
+                        );
+                      },
+                    ),
+                    _buildMenuItem(
+                      '저장한 차박지',
+                      'assets/vectors/vector_18_x2.svg',
+                      () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ScrapListScreen(), // Update as necessary
+                          ),
+                        );
+                      },
+                    ),
+                    _buildMenuItem(
+                      '공유받은 차박지',
+                      'assets/vectors/vector_13_x2.svg',
+                      () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ScrapListScreen(), // Update as necessary
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Container(
+              decoration: BoxDecoration(
+                color: Color(0xFFFFFFFF),
+              ),
+              child: Container(
+                padding: EdgeInsets.fromLTRB(20, 16, 18.8, 332),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildMenuItem(
+                      '문의하기',
+                      'assets/vectors/vector_18_x2.svg',
+                      _logout,
+                    ),
+                    _buildMenuItem(
+                      '피드백하기',
+                      'assets/vectors/vector_1_x2.svg',
+                      () {
+                        // Handle feedback action
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMenuItem(String title, String assetPath, VoidCallback onTap) {
+    return Container(
+      margin: EdgeInsets.fromLTRB(2, 0, 0, 34.8),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                margin: EdgeInsets.fromLTRB(0, 0.8, 12, 0),
+                child: SizedBox(
+                  width: 14.2,
+                  height: 15.5,
+                  child: SvgPicture.asset(assetPath),
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.fromLTRB(0, 0, 0, 0.3),
+                child: Text(
+                  title,
+                  style: GoogleFonts.getFont(
+                    'Pretendard',
+                    fontWeight: FontWeight.w500,
+                    fontSize: 14,
+                    letterSpacing: -0.3,
+                    color: Color(0xFF000000),
+                  ),
+                ),
+              ),
+            ],
           ),
-          Positioned(
-            left: 0,
-            top: 50,
-            right: 0,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  '마이페이지',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 30,
-                    fontFamily: 'Pretendard',
-                    fontWeight: FontWeight.w600,
+          Container(
+            margin: EdgeInsets.fromLTRB(0, 4, 0, 1.3),
+            child: SizedBox(
+              width: 5.5,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                    width: 5.5,
+                    height: 5.5,
+                    child: SvgPicture.asset('assets/vectors/vector_110_x2.svg'),
                   ),
-                ),
-                SizedBox(height: 50),
-                Container(
-                  width: double.infinity,
-                  height: 65.25,
-                  margin: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                  decoration: ShapeDecoration(
-                    color: Color(0xFFEFEFEF),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
+                  Container(
+                    width: 5.5,
+                    height: 5.5,
+                    child: SvgPicture.asset('assets/vectors/vector_14_x2.svg'),
                   ),
-                  child: TextButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => InfoEditScreen()),
-                      );
-                    },
-                    style: TextButton.styleFrom(
-                      padding: EdgeInsets.symmetric(horizontal: 16.0),
-                    ),
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        '정보 수정',
-                        style: TextStyle(
-                          color: Color(0xFF162243),
-                          fontSize: 16,
-                          fontFamily: 'Pretendard',
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                Container(
-                  width: double.infinity,
-                  height: 65.25,
-                  margin: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                  decoration: ShapeDecoration(
-                    color: Color(0xFFEFEFEF),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                  ),
-                  child: TextButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => ScrapListScreen()),
-                      );
-                    },
-                    style: TextButton.styleFrom(
-                      padding: EdgeInsets.symmetric(horizontal: 16.0),
-                    ),
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        '스크랩한 차박지',
-                        style: TextStyle(
-                          color: Color(0xFF162243),
-                          fontSize: 16,
-                          fontFamily: 'Pretendard',
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ],

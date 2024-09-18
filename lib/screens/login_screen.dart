@@ -1,194 +1,201 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'register_screen.dart';
 import 'home_page.dart';
 
-/// 로그인 화면을 위한 StatefulWidget 클래스
 class LoginScreen extends StatefulWidget {
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
 
-/// 로그인 화면의 상태를 관리하기 위한 State 클래스
 class _LoginScreenState extends State<LoginScreen> {
-  final _idController = TextEditingController();
+  final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
-  /// 로그인 메서드
   void _login() async {
     if (_formKey.currentState!.validate()) {
-      DatabaseReference ref =
-          FirebaseDatabase.instance.ref('users/${_idController.text}');
-      DatabaseEvent event = await ref.once();
-      if (event.snapshot.value != null) {
-        var userData = event.snapshot.value as Map;
-        if (userData['password'] == _passwordController.text) {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => MyHomePage()),
-          );
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('로그인 실패: 비밀번호가 잘못되었습니다.')),
-          );
-        }
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('로그인 실패: 아이디가 존재하지 않습니다.')),
+      try {
+        UserCredential userCredential =
+            await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: _emailController.text,
+          password: _passwordController.text,
         );
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => MyHomePage()),
+        );
+      } on FirebaseAuthException catch (e) {
+        String message;
+        if (e.code == 'user-not-found') {
+          message = '로그인 실패: 아이디가 존재하지 않습니다.';
+        } else if (e.code == 'wrong-password') {
+          message = '로그인 실패: 비밀번호가 잘못되었습니다.';
+        } else {
+          message = '로그인 실패: ${e.message}';
+        }
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(message)));
       }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final double screenWidth = MediaQuery.of(context).size.width;
-    final double screenHeight = MediaQuery.of(context).size.height;
+    ScreenUtil.init(context, designSize: const Size(360, 800));
 
     return Scaffold(
-      body: Form(
-        key: _formKey,
-        child: SingleChildScrollView(
-          child: Container(
-            width: screenWidth,
-            height: screenHeight,
-            decoration: BoxDecoration(color: Colors.white),
-            child: Stack(
+      body: SingleChildScrollView(
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 100.h),
+          child: Form(
+            key: _formKey,
+            child: Column(
               children: [
-                Positioned(
-                  left: screenWidth * 0.25,
-                  top: screenHeight * 0.15,
-                  child: Container(
-                    width: screenWidth * 0.5,
-                    height: screenHeight * 0.23,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage("assets/images/로고.png"),
-                        fit: BoxFit.fill,
-                      ),
+                // 이미지 섹션
+                SizedBox(
+                  width: 217.w,
+                  height: 61.h,
+                  child: Image.asset('assets/images/편안.png'),
+                ),
+                SizedBox(height: 20.h),
+                
+                // 로그인 텍스트
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    '로그인',
+                    style: TextStyle(
+                      fontSize: 18.sp,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.black,
                     ),
                   ),
                 ),
-                Positioned(
-                  left: screenWidth * 0.13,
-                  top: screenHeight * 0.38,
-                  child: Container(
-                    width: screenWidth * 0.74,
-                    height: screenHeight * 0.06,
-                    decoration: ShapeDecoration(
-                      color: Color(0xFFEFEFEF),
-                      shape: RoundedRectangleBorder(
-                        side: BorderSide(width: 1, color: Color(0xFFDDDDDD)),
-                        borderRadius: BorderRadius.circular(18),
-                      ),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                      child: TextFormField(
-                        controller: _idController,
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          hintText: '아이디 (4자리)',
-                        ),
-                        validator: (value) {
-                          if (value == null ||
-                              value.isEmpty ||
-                              value.length != 4) {
-                            return '아이디는 4자리여야 합니다.';
-                          }
-                          return null;
-                        },
-                      ),
-                    ),
-                  ),
+                SizedBox(height: 20.h),
+
+                // 이메일 입력 필드
+                _buildTextField(
+                  controller: _emailController,
+                  hintText: '아이디 혹은 이메일',
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return '아이디를 입력하세요.';
+                    }
+                    return null;
+                  },
                 ),
-                Positioned(
-                  left: screenWidth * 0.13,
-                  top: screenHeight * 0.45,
-                  child: Container(
-                    width: screenWidth * 0.74,
-                    height: screenHeight * 0.06,
-                    decoration: ShapeDecoration(
-                      color: Color(0xFFEFEFEF),
-                      shape: RoundedRectangleBorder(
-                        side: BorderSide(width: 1, color: Color(0xFFDDDDDD)),
-                        borderRadius: BorderRadius.circular(18),
-                      ),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                      child: TextFormField(
-                        controller: _passwordController,
-                        obscureText: true,
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          hintText: '비밀번호 (4자리)',
-                        ),
-                        validator: (value) {
-                          if (value == null ||
-                              value.isEmpty ||
-                              value.length != 4) {
-                            return '비밀번호는 4자리여야 합니다.';
-                          }
-                          return null;
-                        },
-                      ),
-                    ),
-                  ),
+
+                // 비밀번호 입력 필드
+                _buildTextField(
+                  controller: _passwordController,
+                  hintText: '비밀번호',
+                  obscureText: true,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return '비밀번호를 입력하세요.';
+                    }
+                    return null;
+                  },
                 ),
-                Positioned(
-                  left: screenWidth * 0.13,
-                  top: screenHeight * 0.53,
-                  child: InkWell(
-                    onTap: _login,
-                    child: Container(
-                      width: screenWidth * 0.74,
-                      height: screenHeight * 0.06,
-                      decoration: ShapeDecoration(
-                        color: Color(0xFF162243),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(18),
-                        ),
-                      ),
-                      child: Center(
-                        child: Text(
-                          '로그인',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontFamily: 'Pretendard',
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
+                SizedBox(height: 16.h),
+
+                // 자동 로그인 옵션
+                Row(
+                  children: [
+                    Checkbox(
+                      value: false, // 자동 로그인 상태를 설정
+                      onChanged: (bool? newValue) {
+                        // 자동 로그인 체크박스 기능 추가
+                      },
                     ),
-                  ),
-                ),
-                Positioned(
-                  left: screenWidth * 0.43,
-                  top: screenHeight * 0.61,
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => RegisterScreen()),
-                      );
-                    },
-                    child: Text(
-                      '회원가입',
+                    SizedBox(width: 8.w),
+                    Text(
+                      '자동 로그인',
                       style: TextStyle(
-                        color: Color(0xFF1E1E1E),
-                        fontSize: 16,
-                        fontFamily: 'Pretendard',
-                        fontWeight: FontWeight.w400,
-                        decoration: TextDecoration.underline,
+                        fontSize: 10.sp,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.black,
                       ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 20.h),
+
+                // 로그인 버튼
+                _buildLoginButton(),
+                SizedBox(height: 16.h),
+
+                // 회원가입 버튼
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => RegisterScreen()),
+                    );
+                  },
+                  child: Text(
+                    '회원가입',
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w400,
+                      color: Color(0xFF398EF3),
                     ),
                   ),
                 ),
               ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTextField({
+    required TextEditingController controller,
+    required String hintText,
+    required String? Function(String?) validator,
+    bool obscureText = false,
+  }) {
+    return Container(
+      width: 328.w,
+      height: 50.h,
+      margin: EdgeInsets.only(bottom: 16.h),
+      decoration: BoxDecoration(
+        border: Border.all(color: Color(0xFF398EF3)),
+        borderRadius: BorderRadius.circular(12.r),
+      ),
+      child: TextFormField(
+        controller: controller,
+        obscureText: obscureText,
+        decoration: InputDecoration(
+          border: InputBorder.none,
+          hintText: hintText,
+          hintStyle: TextStyle(fontSize: 12.sp, color: Color(0xFFBABABA)),
+        ),
+        validator: validator,
+      ),
+    );
+  }
+
+  Widget _buildLoginButton() {
+    return GestureDetector(
+      onTap: _login,
+      child: Container(
+        width: 328.w,
+        padding: EdgeInsets.symmetric(vertical: 18.h),
+        decoration: BoxDecoration(
+          color: Color(0xFF398EF3),
+          borderRadius: BorderRadius.circular(12.r),
+        ),
+        child: Center(
+          child: Text(
+            '로그인',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 18.sp,
+              fontWeight: FontWeight.w500,
             ),
           ),
         ),
