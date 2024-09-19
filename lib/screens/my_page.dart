@@ -5,7 +5,6 @@ import 'login_screen.dart';
 import 'info_edit_screen.dart';
 import 'scrap_list_screen.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 /// 마이페이지를 위한 StatefulWidget 정의
 class MyPage extends StatefulWidget {
@@ -96,8 +95,7 @@ class _MyPageState extends State<MyPage> {
                               ),
                               Text(
                                 '마이페이지',
-                                style: GoogleFonts.getFont(
-                                  'Pretendard',
+                                style: TextStyle(
                                   fontWeight: FontWeight.w600,
                                   fontSize: 16,
                                   color: Color(0xFF000000),
@@ -145,8 +143,7 @@ class _MyPageState extends State<MyPage> {
                                     alignment: Alignment.topLeft,
                                     child: Text(
                                       _nameController.text,
-                                      style: GoogleFonts.getFont(
-                                        'Pretendard',
+                                      style: TextStyle(
                                         fontWeight: FontWeight.w600,
                                         fontSize: 20,
                                         letterSpacing: -0.4,
@@ -157,8 +154,7 @@ class _MyPageState extends State<MyPage> {
                                 ),
                                 Text(
                                   '힐링을 원하는 차박러',
-                                  style: GoogleFonts.getFont(
-                                    'Pretendard',
+                                  style: TextStyle(
                                     fontWeight: FontWeight.w600,
                                     fontSize: 12,
                                     letterSpacing: -0.2,
@@ -293,8 +289,7 @@ class _MyPageState extends State<MyPage> {
                 margin: EdgeInsets.fromLTRB(0, 0, 0, 0.3),
                 child: Text(
                   title,
-                  style: GoogleFonts.getFont(
-                    'Pretendard',
+                  style: TextStyle(
                     fontWeight: FontWeight.w500,
                     fontSize: 14,
                     letterSpacing: -0.3,

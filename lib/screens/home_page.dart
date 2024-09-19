@@ -11,10 +11,11 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'info_camping_site_screen.dart';
 import 'package:map_sample/models/car_camping_site.dart';
 import 'camping_list.dart';
-import 'my_page.dart'; 
-import 'add_camping_site.dart'; 
-import 'feedback_screen.dart'; 
+import 'my_page.dart';
+import 'add_camping_site.dart';
+import 'feedback_screen.dart';
 import 'search_camping_site_page.dart'; // 차박지 검색 페이지 추가
+import 'community_page.dart';
 
 class MyHomePage extends StatefulWidget {
   @override
@@ -174,7 +175,8 @@ class _MyHomePageState extends State<MyHomePage> {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => SearchCampingSitePage()), // 차박지 검색 페이지로 이동
+          MaterialPageRoute(
+              builder: (context) => SearchCampingSitePage()), // 차박지 검색 페이지로 이동
         );
       },
       child: Container(
@@ -410,7 +412,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => AllCampingSitesPage()), // 등록된 차박지 보기로 이동
+                      builder: (context) =>
+                          AllCampingSitesPage()), // 등록된 차박지 보기로 이동
                 );
               }
             },
@@ -649,86 +652,156 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Widget _buildBottomNavBar() {
     return Container(
+      width: 360, // 바텀 앱바의 너비
+      height: 75, // 바텀 앱바의 높이
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(20.r),
-          topRight: Radius.circular(20.r),
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Color(0x14000000),
-            offset: Offset(0, -3.h),
-            blurRadius: 10.r,
+        borderRadius: BorderRadius.circular(20), // 예시로 20으로 설정
+        color: Colors.white, // 바텀 앱바 배경색
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround, // 아이템을 균등하게 배치
+        children: [
+          // 홈 아이콘과 텍스트
+          InkWell(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => MyHomePage()), // 홈 페이지로 이동
+              );
+            },
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset(
+                  'assets/images/home_icon.png', // 홈 아이콘 경로
+                  width: 21.86,
+                  height: 23.125,
+                ),
+                SizedBox(height: 6),
+                Text(
+                  "홈",
+                  style: TextStyle(
+                    fontSize: 10,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          // 지도 아이콘과 텍스트
+          InkWell(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => MapScreen()), // 지도 페이지로 이동
+              );
+            },
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset(
+                  'assets/images/map_icon.png', // 지도 아이콘 경로
+                  width: 20.95,
+                  height: 14.84,
+                ),
+                SizedBox(height: 6),
+                Text(
+                  "지도",
+                  style: TextStyle(
+                    fontSize: 10,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          // 차박지 아이콘과 텍스트
+          InkWell(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        AllCampingSitesPage()), // 차박지 목록 페이지로 이동
+              );
+            },
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset(
+                  'assets/images/camping_icon.png', // 차박지 아이콘 경로
+                  width: 21.64,
+                  height: 15.64,
+                ),
+                SizedBox(height: 6),
+                Text(
+                  "차박지",
+                  style: TextStyle(
+                    fontSize: 10,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          // 커뮤니티 아이콘과 텍스트
+          InkWell(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>  CommunityPage()), // 커뮤니티 페이지로 이동
+              );
+            },
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset(
+                  'assets/images/community_icon.png', // 커뮤니티 아이콘 경로
+                  width: 15.0,
+                  height: 16.94,
+                ),
+                SizedBox(height: 6),
+                Text(
+                  "커뮤니티",
+                  style: TextStyle(
+                    fontSize: 10,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          // 마이페이지 아이콘과 텍스트
+          InkWell(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => MyPage()), // 마이페이지로 이동
+              );
+            },
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset(
+                  'assets/images/mypage_icon.png', // 마이페이지 아이콘 경로
+                  width: 17.46,
+                  height: 10.68,
+                ),
+                SizedBox(height: 6),
+                Text(
+                  "마이페이지",
+                  style: TextStyle(
+                    fontSize: 10,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
-      ),
-      child: Padding(
-        padding: EdgeInsets.only(top: 10.h, bottom: 10.h),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                _buildBottomNavBarItem('assets/images/x_2.png', () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => MyHomePage()),
-                  );
-                }),
-                _buildBottomNavBarItem('assets/images/x_1.png', () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => AllCampingSitesPage()),
-                  );
-                }),
-                _buildBottomNavBarItem('assets/images/x.png', () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => MapScreen()),
-                  );
-                }),
-                _buildBottomNavBarItem('assets/images/x_3.png', () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => MyPage()),
-                  );
-                }),
-              ],
-            ),
-            SizedBox(height: 9.h),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                _buildBottomNavBarText('홈', () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => MyHomePage()),
-                  );
-                }),
-                _buildBottomNavBarText('차박지 목록', () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => AllCampingSitesPage()),
-                  );
-                }),
-                _buildBottomNavBarText('지도', () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => MapScreen()),
-                  );
-                }),
-                _buildBottomNavBarText('마이페이지', () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => MyPage()),
-                  );
-                }),
-              ],
-            ),
-          ],
-        ),
       ),
     );
   }
