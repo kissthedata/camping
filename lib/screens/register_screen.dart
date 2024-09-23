@@ -1,27 +1,61 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 
-class RegisterScreen extends StatefulWidget {
+class SignupForm extends StatefulWidget {
   @override
-  _RegisterScreenState createState() => _RegisterScreenState();
+  _SignupFormState createState() => _SignupFormState();
 }
 
-class _RegisterScreenState extends State<RegisterScreen> {
+class _SignupFormState extends State<SignupForm> {
+  final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
-  final _formKey = GlobalKey<FormState>();
+
+  // Form data variables
+  String? _gender;
+  String _age = '';
+  String _nickname = '';
+  bool _hasCar = false; // 자차 보유 여부
+  String _campingExperience = '시작 전';
+
+  // List of options
+  List<String> campingOptions = [
+    '시작 전',
+    '3개월 미만',
+    '6개월 미만',
+    '1년 미만',
+    '3년 미만',
+  ];
 
   // Firebase 회원가입 메서드
   void _register() async {
     if (_formKey.currentState!.validate()) {
       try {
-        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        UserCredential userCredential =
+            await FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: _emailController.text,
           password: _passwordController.text,
         );
+
+        // Firebase Realtime Database에 사용자 정보 저장
+        DatabaseReference userRef = FirebaseDatabase.instance
+            .ref('users')
+            .child(userCredential.user!.uid);
+
+        await userRef.set({
+          'email': _emailController.text,
+          'gender': _gender,
+          'age': _age,
+          'nickname': _nickname,
+          'hasCar': _hasCar,
+          'campingExperience': _campingExperience,
+        });
+
         Navigator.pop(context);
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('회원가입 성공!')));
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('회원가입 성공!')));
       } on FirebaseAuthException catch (e) {
         String message;
         if (e.code == 'email-already-in-use') {
@@ -29,7 +63,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
         } else {
           message = '회원가입 실패: ${e.message}';
         }
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(message)));
       }
     }
   }
@@ -37,66 +72,190 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  '회원가입',
-                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 20),
-                ),
-                SizedBox(height: 20),
-                _buildTextField(
-                  controller: _emailController,
-                  hintText: '이메일 주소',
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return '이메일을 입력하세요.';
-                    }
-                    return null;
-                  },
-                ),
-                _buildTextField(
-                  controller: _passwordController,
-                  hintText: '비밀번호',
-                  obscureText: true,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return '비밀번호를 입력하세요.';
-                    }
-                    return null;
-                  },
-                ),
-                _buildTextField(
-                  controller: _confirmPasswordController,
-                  hintText: '비밀번호 확인',
-                  obscureText: true,
-                  validator: (value) {
-                    if (value != _passwordController.text) {
-                      return '비밀번호가 일치하지 않습니다.';
-                    }
-                    return null;
-                  },
-                ),
-                SizedBox(height: 20),
-                _buildRegisterButton(),
-                SizedBox(height: 16),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                  child: Center(
-                    child: Text(
-                      '뒤로가기',
-                      style: TextStyle(color: Color(0xFF398EF3)),
+      // Theme를 설정하여 보라색을 제거하고 커스텀 색상 적용
+      body: SafeArea(
+        child: Theme(
+          data: ThemeData(
+            primaryColor: Color(0xFF398EF3), // 메인 색상
+            colorScheme: ColorScheme.light(
+              primary: Color(0xFF398EF3), // 활성화 색상(라디오 버튼 등)
+            ),
+            inputDecorationTheme: InputDecorationTheme(
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Color(0xFF398EF3), width: 2),
+              ),
+              border: OutlineInputBorder(
+                borderSide: BorderSide(color: Color(0xFF398EF3), width: 1),
+              ),
+            ),
+            unselectedWidgetColor: Color(0xFF9E9E9E), // 비활성화된 라디오 색상
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Form(
+              key: _formKey,
+              child: ListView(
+                children: [
+                  // 상단 회원가입과 뒤로가기 버튼
+                  Row(
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        child: Icon(Icons.arrow_back, size: 24),
+                      ),
+                      SizedBox(width: 16),
+                    ],
+                  ),
+                  SizedBox(height: 24),
+
+                  // 회원가입 텍스트
+                  Text(
+                    '회원가입',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                ),
-              ],
+                  SizedBox(height: 16),
+
+                  // 이메일
+                  _buildTextField(
+                    controller: _emailController,
+                    hintText: '이메일 주소',
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return '이메일을 입력하세요.';
+                      }
+                      return null;
+                    },
+                    cursorColor: Color(0xFF398EF3), // 커서 색상 설정
+                  ),
+
+                  // 비밀번호
+                  _buildTextField(
+                    controller: _passwordController,
+                    hintText: '비밀번호',
+                    obscureText: true,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return '비밀번호를 입력하세요.';
+                      }
+                      return null;
+                    },
+                    cursorColor: Color(0xFF398EF3), // 커서 색상 설정
+                  ),
+
+                  // 비밀번호 확인
+                  _buildTextField(
+                    controller: _confirmPasswordController,
+                    hintText: '비밀번호 확인',
+                    obscureText: true,
+                    validator: (value) {
+                      if (value != _passwordController.text) {
+                        return '비밀번호가 일치하지 않습니다.';
+                      }
+                      return null;
+                    },
+                    cursorColor: Color(0xFF398EF3), // 커서 색상 설정
+                  ),
+                  SizedBox(height: 16),
+
+                  // 성별
+                  _buildGenderField(),
+                  SizedBox(height: 16),
+
+                  // 나이
+                  _buildTextField(
+                    hintText: '나이',
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return '나이를 입력해주세요';
+                      }
+                      return null;
+                    },
+                    keyboardType: TextInputType.number,
+                    onChanged: (value) => _age = value,
+                    cursorColor: Color(0xFF398EF3), // 커서 색상 설정
+                  ),
+                  SizedBox(height: 16),
+
+                  // 별명
+                  _buildTextField(
+                    hintText: '별명',
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return '별명을 입력해주세요';
+                      }
+                      return null;
+                    },
+                    onChanged: (value) => _nickname = value,
+                    cursorColor: Color(0xFF398EF3), // 커서 색상 설정
+                  ),
+                  SizedBox(height: 16),
+
+                  // 자차 보유 여부
+                  Text('자차 보유', style: TextStyle(fontSize: 16)),
+                  SizedBox(height: 8),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      _buildCarOwnershipButton('예', true),
+                      _buildCarOwnershipButton('아니오', false),
+                    ],
+                  ),
+                  SizedBox(height: 16),
+
+                  // 자차 보유 선택이 '예'일 때만 차박 활동 기간 보여줌
+                  if (_hasCar) ...[
+                    Text('차박 활동 기간', style: TextStyle(fontSize: 16)),
+                    SizedBox(height: 8),
+                    Container(
+                      padding: EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Color(0xFF398EF3)),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Column(
+                        children: campingOptions.map((option) {
+                          return GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                _campingExperience = option;
+                              });
+                            },
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 24, vertical: 12),
+                              margin: EdgeInsets.only(bottom: 8),
+                              decoration: BoxDecoration(
+                                color: _campingExperience == option
+                                    ? Color(0xFF398EF3)
+                                    : Colors.grey[200],
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Text(
+                                option,
+                                style: TextStyle(
+                                  color: _campingExperience == option
+                                      ? Colors.white
+                                      : Colors.black,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                    SizedBox(height: 16),
+                  ],
+
+                  // 회원가입 버튼
+                  _buildRegisterButton(),
+                ],
+              ),
             ),
           ),
         ),
@@ -104,15 +263,82 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
+  // 자차 보유 여부 버튼
+  Widget _buildCarOwnershipButton(String label, bool value) {
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          _hasCar = value;
+        });
+      },
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+        decoration: BoxDecoration(
+          color: _hasCar == value ? Color(0xFF398EF3) : Colors.grey[200],
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Text(
+          label,
+          style: TextStyle(
+            color: _hasCar == value ? Colors.white : Colors.black,
+            fontSize: 16,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildGenderField() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('성별', style: TextStyle(fontSize: 16)),
+        Row(
+          children: [
+            Expanded(
+              child: RadioListTile<String>(
+                title: const Text('남'),
+                value: '남',
+                groupValue: _gender,
+                onChanged: (value) {
+                  setState(() {
+                    _gender = value;
+                  });
+                },
+                activeColor: Color(0xFF398EF3), // 보라색 대신 파란색
+              ),
+            ),
+            Expanded(
+              child: RadioListTile<String>(
+                title: const Text('여'),
+                value: '여',
+                groupValue: _gender,
+                onChanged: (value) {
+                  setState(() {
+                    _gender = value;
+                  });
+                },
+                activeColor: Color(0xFF398EF3), // 보라색 대신 파란색
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
   Widget _buildTextField({
-    required TextEditingController controller,
+    TextEditingController? controller,
     required String hintText,
     required String? Function(String?) validator,
     bool obscureText = false,
+    TextInputType keyboardType = TextInputType.text,
+    Function(String)? onChanged,
+    Color cursorColor = Colors.black,
   }) {
     return Container(
       margin: EdgeInsets.only(bottom: 16),
-      padding: EdgeInsets.symmetric(horizontal: 15, vertical: 16),
+      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 16),
       decoration: BoxDecoration(
         border: Border.all(color: Color(0xFF398EF3)),
         borderRadius: BorderRadius.circular(12),
@@ -120,6 +346,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
       child: TextFormField(
         controller: controller,
         obscureText: obscureText,
+        keyboardType: keyboardType,
+        onChanged: onChanged,
+        cursorColor: cursorColor, // 커서 색상 설정
         decoration: InputDecoration(
           border: InputBorder.none,
           hintText: hintText,

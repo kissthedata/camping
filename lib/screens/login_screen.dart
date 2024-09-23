@@ -14,6 +14,9 @@ class _LoginScreenState extends State<LoginScreen> {
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
+  bool _isAutoLogin = false; // 자동 로그인 체크박스 상태 변수
+  bool _obscurePassword = true; // 비밀번호 보기/숨기기 상태 변수
+
   void _login() async {
     if (_formKey.currentState!.validate()) {
       try {
@@ -48,19 +51,18 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 100.h),
+          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 50.h),
           child: Form(
             key: _formKey,
             child: Column(
               children: [
                 // 이미지 섹션
                 SizedBox(
-                  width: 217.w,
-                  height: 61.h,
+                  width: 300.w,
+                  height: 200.h,
                   child: Image.asset('assets/images/편안.png'),
                 ),
-                SizedBox(height: 20.h),
-                
+
                 // 로그인 텍스트
                 Align(
                   alignment: Alignment.centerLeft,
@@ -73,48 +75,63 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                 ),
-                SizedBox(height: 20.h),
+                SizedBox(height: 10.h),
 
                 // 이메일 입력 필드
                 _buildTextField(
                   controller: _emailController,
-                  hintText: '아이디 혹은 이메일',
+                  hintText: '이메일',
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return '아이디를 입력하세요.';
                     }
                     return null;
                   },
+                  paddingLeft: 15.w, // 입력 필드 오른쪽으로 이동
                 ),
 
                 // 비밀번호 입력 필드
                 _buildTextField(
                   controller: _passwordController,
                   hintText: '비밀번호',
-                  obscureText: true,
+                  obscureText: _obscurePassword,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return '비밀번호를 입력하세요.';
                     }
                     return null;
                   },
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      _obscurePassword
+                          ? Icons.visibility
+                          : Icons.visibility_off,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _obscurePassword = !_obscurePassword;
+                      });
+                    },
+                  ),
+                  paddingLeft: 15.w, // 입력 필드 오른쪽으로 이동
                 ),
-                SizedBox(height: 16.h),
 
-                // 자동 로그인 옵션
+                // 자동 로그인 옵션을 위로 배치
                 Row(
                   children: [
                     Checkbox(
-                      value: false, // 자동 로그인 상태를 설정
+                      value: _isAutoLogin,
+                      activeColor: Color(0xFF398EF3), // 로그인 박스 색상과 동일하게 설정
                       onChanged: (bool? newValue) {
-                        // 자동 로그인 체크박스 기능 추가
+                        setState(() {
+                          _isAutoLogin = newValue ?? false;
+                        });
                       },
                     ),
-                    SizedBox(width: 8.w),
                     Text(
                       '자동 로그인',
                       style: TextStyle(
-                        fontSize: 10.sp,
+                        fontSize: 14.sp,
                         fontWeight: FontWeight.w500,
                         color: Colors.black,
                       ),
@@ -132,13 +149,13 @@ class _LoginScreenState extends State<LoginScreen> {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => RegisterScreen()),
+                      MaterialPageRoute(builder: (context) => SignupForm()),
                     );
                   },
                   child: Text(
                     '회원가입',
                     style: TextStyle(
-                      fontSize: 14.sp,
+                      fontSize: 16.sp,
                       fontWeight: FontWeight.w400,
                       color: Color(0xFF398EF3),
                     ),
@@ -157,22 +174,28 @@ class _LoginScreenState extends State<LoginScreen> {
     required String hintText,
     required String? Function(String?) validator,
     bool obscureText = false,
+    Widget? suffixIcon,
+    double paddingLeft = 0, // 왼쪽 패딩 조정
   }) {
     return Container(
       width: 328.w,
-      height: 50.h,
-      margin: EdgeInsets.only(bottom: 16.h),
+      height: 60.h,
+      margin: EdgeInsets.only(bottom: 16.h), // 위쪽 마진을 추가해서 위치 조정
+      padding: EdgeInsets.only(left: paddingLeft), // 입력 필드 오른쪽으로 이동을 위해 패딩 조정 가능
       decoration: BoxDecoration(
-        border: Border.all(color: Color(0xFF398EF3)),
+        border: Border.all(color: Color(0xFF398EF3)), // 테두리 유지
         borderRadius: BorderRadius.circular(12.r),
       ),
       child: TextFormField(
         controller: controller,
         obscureText: obscureText,
+        cursorColor: Color(0xFF398EF3), // 커서 색상 설정
         decoration: InputDecoration(
-          border: InputBorder.none,
+          border: InputBorder.none, // 내부 테두리 없앰
           hintText: hintText,
           hintStyle: TextStyle(fontSize: 12.sp, color: Color(0xFFBABABA)),
+          contentPadding: EdgeInsets.symmetric(vertical: 15.h), // 글자를 상자 중앙으로 맞춤
+          suffixIcon: suffixIcon,
         ),
         validator: validator,
       ),
@@ -194,7 +217,7 @@ class _LoginScreenState extends State<LoginScreen> {
             '로그인',
             style: TextStyle(
               color: Colors.white,
-              fontSize: 18.sp,
+              fontSize: 16.sp,
               fontWeight: FontWeight.w500,
             ),
           ),
