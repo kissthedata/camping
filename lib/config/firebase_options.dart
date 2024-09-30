@@ -67,7 +67,7 @@ class DefaultFirebaseOptions {
     projectId: 'datatrip-863f8',
     databaseURL: 'https://datatrip-863f8-default-rtdb.firebaseio.com',
     storageBucket: 'datatrip-863f8.appspot.com',
-    iosBundleId: 'com.example.mapSample',
+    iosBundleId: 'com.example.mapsample',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
@@ -77,7 +77,7 @@ class DefaultFirebaseOptions {
     projectId: 'datatrip-863f8',
     databaseURL: 'https://datatrip-863f8-default-rtdb.firebaseio.com',
     storageBucket: 'datatrip-863f8.appspot.com',
-    iosBundleId: 'com.example.mapSample',
+    iosBundleId: 'com.example.mapsample',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
