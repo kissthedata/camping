@@ -13,9 +13,9 @@ import 'package:map_sample/models/car_camping_site.dart';
 import 'camping_list.dart';
 import 'my_page.dart';
 import 'add_camping_site.dart';
-import 'feedback_screen.dart';
-import 'search_camping_site_page.dart'; // 차박지 검색 페이지 추가
+import 'search_camping_site_page.dart';
 import 'community_page.dart';
+import 'recommend_screen.dart'; // 추천 더보기 화면
 
 class MyHomePage extends StatefulWidget {
   @override
@@ -408,7 +408,14 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           GestureDetector(
             onTap: () {
-              if (title == '등록된 차박지 보기') {
+              if (title == '이런 차박지는 어때요?') {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => RecommendScreen(), // 추천 더보기 페이지로 이동
+                  ),
+                );
+              } else if (title == '등록된 차박지 보기') {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -452,7 +459,7 @@ class _MyHomePageState extends State<MyHomePage> {
         String imageUrl = snapshot.data ?? '';
         return Container(
           margin: EdgeInsets.fromLTRB(16.w, 0, 16.w, 16.h),
-          padding: EdgeInsets.fromLTRB(15.w, 139.h, 16.w, 15.h),
+          padding: EdgeInsets.fromLTRB(15.w, 16.h, 16.w, 16.h),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(16.r),
@@ -465,30 +472,48 @@ class _MyHomePageState extends State<MyHomePage> {
             ],
           ),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    site.name,
-                    style: GoogleFonts.robotoCondensed(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 16.sp,
-                      color: Color(0xFF000000),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(12.r),
+                child: Image.network(
+                  imageUrl,
+                  width: 80.w,
+                  height: 80.h,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Container(
+                      width: 80.w,
+                      height: 80.h,
+                      color: Colors.grey,
+                      child: Icon(Icons.image, size: 30),
+                    );
+                  },
+                ),
+              ),
+              SizedBox(width: 16.w),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      site.name,
+                      style: GoogleFonts.robotoCondensed(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 16.sp,
+                        color: Color(0xFF000000),
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 2.h),
-                  Text(
-                    site.address,
-                    style: GoogleFonts.robotoCondensed(
-                      fontWeight: FontWeight.w400,
-                      fontSize: 10.sp,
-                      color: Color(0xFF000000),
+                    SizedBox(height: 2.h),
+                    Text(
+                      site.address,
+                      style: GoogleFonts.robotoCondensed(
+                        fontWeight: FontWeight.w400,
+                        fontSize: 10.sp,
+                        color: Color(0xFF000000),
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
               GestureDetector(
                 onTap: () {
@@ -597,7 +622,9 @@ class _MyHomePageState extends State<MyHomePage> {
               SizedBox(height: 2.h),
               Expanded(
                 child: Text(
-                  site.details.isNotEmpty ? site.details : '설명: 두식이랑 갔던 곳',
+                  site.details.isNotEmpty
+                      ? site.details
+                      : '설명: 차박지 정보가 없습니다.',
                   style: GoogleFonts.robotoCondensed(
                     fontWeight: FontWeight.w300,
                     fontSize: 10.sp,
@@ -661,20 +688,18 @@ class _MyHomePageState extends State<MyHomePage> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround, // 아이템을 균등하게 배치
         children: [
-          // 홈 아이콘과 텍스트
           InkWell(
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                    builder: (context) => MyHomePage()), // 홈 페이지로 이동
+                MaterialPageRoute(builder: (context) => MyHomePage()),
               );
             },
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Image.asset(
-                  'assets/images/home_icon.png', // 홈 아이콘 경로
+                  'assets/images/home_icon.png',
                   width: 21.86,
                   height: 23.125,
                 ),
@@ -689,20 +714,18 @@ class _MyHomePageState extends State<MyHomePage> {
               ],
             ),
           ),
-          // 지도 아이콘과 텍스트
           InkWell(
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                    builder: (context) => MapScreen()), // 지도 페이지로 이동
+                MaterialPageRoute(builder: (context) => MapScreen()),
               );
             },
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Image.asset(
-                  'assets/images/map_icon.png', // 지도 아이콘 경로
+                  'assets/images/map_icon.png',
                   width: 20.95,
                   height: 14.84,
                 ),
@@ -717,21 +740,19 @@ class _MyHomePageState extends State<MyHomePage> {
               ],
             ),
           ),
-          // 차박지 아이콘과 텍스트
           InkWell(
             onTap: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) =>
-                        AllCampingSitesPage()), // 차박지 목록 페이지로 이동
+                    builder: (context) => AllCampingSitesPage()),
               );
             },
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Image.asset(
-                  'assets/images/camping_icon.png', // 차박지 아이콘 경로
+                  'assets/images/camping_icon.png',
                   width: 21.64,
                   height: 15.64,
                 ),
@@ -746,20 +767,18 @@ class _MyHomePageState extends State<MyHomePage> {
               ],
             ),
           ),
-          // 커뮤니티 아이콘과 텍스트
           InkWell(
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                    builder: (context) =>  CommunityPage()), // 커뮤니티 페이지로 이동
+                MaterialPageRoute(builder: (context) => CommunityPage()),
               );
             },
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Image.asset(
-                  'assets/images/community_icon.png', // 커뮤니티 아이콘 경로
+                  'assets/images/community_icon.png',
                   width: 15.0,
                   height: 16.94,
                 ),
@@ -774,19 +793,18 @@ class _MyHomePageState extends State<MyHomePage> {
               ],
             ),
           ),
-          // 마이페이지 아이콘과 텍스트
           InkWell(
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => MyPage()), // 마이페이지로 이동
+                MaterialPageRoute(builder: (context) => MyPage()),
               );
             },
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Image.asset(
-                  'assets/images/mypage_icon.png', // 마이페이지 아이콘 경로
+                  'assets/images/mypage_icon.png',
                   width: 17.46,
                   height: 10.68,
                 ),
@@ -802,37 +820,6 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildBottomNavBarItem(String assetPath, VoidCallback onTap) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        width: 28.w,
-        height: 28.h,
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            fit: BoxFit.cover,
-            image: AssetImage(assetPath),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildBottomNavBarText(String label, VoidCallback onTap) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Text(
-        label,
-        style: GoogleFonts.robotoCondensed(
-          fontWeight: FontWeight.w500,
-          fontSize: 12.sp,
-          letterSpacing: -0.6.sp,
-          color: Color(0xFF398EF3),
-        ),
       ),
     );
   }

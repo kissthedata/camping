@@ -1,5 +1,3 @@
-// lib/models/car_camping_site.dart
-
 class CarCampingSite {
   final String name;
   final double latitude;
@@ -14,8 +12,9 @@ class CarCampingSite {
   final bool parkinglot;
   final String details;
   final bool isVerified;
+  final List<String> categories; // 차박지 관련 카테고리 (ex: 낚시, 등산, 수영)
 
-  CarCampingSite({
+  CarCampingSite({  
     required this.name,
     required this.latitude,
     required this.longitude,
@@ -29,5 +28,6 @@ class CarCampingSite {
     this.parkinglot = false,
     this.details = '',
     this.isVerified = false,
+    this.categories = const [], // 기본 빈 카테고리 리스트
   });
 }

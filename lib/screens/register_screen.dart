@@ -19,6 +19,8 @@ class _SignupFormState extends State<SignupForm> {
   String _nickname = '';
   bool _hasCar = false; // 자차 보유 여부
   String _campingExperience = '시작 전';
+  List<String> _selectedHobbies = []; // 취미 선택
+  List<String> hobbyOptions = ['낚시', '등산', '수영']; // 취미 옵션 리스트
 
   // List of options
   List<String> campingOptions = [
@@ -51,6 +53,7 @@ class _SignupFormState extends State<SignupForm> {
           'nickname': _nickname,
           'hasCar': _hasCar,
           'campingExperience': _campingExperience,
+          'hobbies': _selectedHobbies, // 취미 데이터 저장
         });
 
         Navigator.pop(context);
@@ -72,14 +75,11 @@ class _SignupFormState extends State<SignupForm> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // Theme를 설정하여 보라색을 제거하고 커스텀 색상 적용
       body: SafeArea(
         child: Theme(
           data: ThemeData(
-            primaryColor: Color(0xFF398EF3), // 메인 색상
-            colorScheme: ColorScheme.light(
-              primary: Color(0xFF398EF3), // 활성화 색상(라디오 버튼 등)
-            ),
+            primaryColor: Color(0xFF398EF3),
+            colorScheme: ColorScheme.light(primary: Color(0xFF398EF3)),
             inputDecorationTheme: InputDecorationTheme(
               focusedBorder: OutlineInputBorder(
                 borderSide: BorderSide(color: Color(0xFF398EF3), width: 2),
@@ -88,7 +88,7 @@ class _SignupFormState extends State<SignupForm> {
                 borderSide: BorderSide(color: Color(0xFF398EF3), width: 1),
               ),
             ),
-            unselectedWidgetColor: Color(0xFF9E9E9E), // 비활성화된 라디오 색상
+            unselectedWidgetColor: Color(0xFF9E9E9E),
           ),
           child: Padding(
             padding: const EdgeInsets.all(16.0),
@@ -96,7 +96,6 @@ class _SignupFormState extends State<SignupForm> {
               key: _formKey,
               child: ListView(
                 children: [
-                  // 상단 회원가입과 뒤로가기 버튼
                   Row(
                     children: [
                       GestureDetector(
@@ -110,7 +109,6 @@ class _SignupFormState extends State<SignupForm> {
                   ),
                   SizedBox(height: 24),
 
-                  // 회원가입 텍스트
                   Text(
                     '회원가입',
                     style: TextStyle(
@@ -130,7 +128,7 @@ class _SignupFormState extends State<SignupForm> {
                       }
                       return null;
                     },
-                    cursorColor: Color(0xFF398EF3), // 커서 색상 설정
+                    cursorColor: Color(0xFF398EF3),
                   ),
 
                   // 비밀번호
@@ -144,7 +142,7 @@ class _SignupFormState extends State<SignupForm> {
                       }
                       return null;
                     },
-                    cursorColor: Color(0xFF398EF3), // 커서 색상 설정
+                    cursorColor: Color(0xFF398EF3),
                   ),
 
                   // 비밀번호 확인
@@ -158,7 +156,7 @@ class _SignupFormState extends State<SignupForm> {
                       }
                       return null;
                     },
-                    cursorColor: Color(0xFF398EF3), // 커서 색상 설정
+                    cursorColor: Color(0xFF398EF3),
                   ),
                   SizedBox(height: 16),
 
@@ -177,7 +175,7 @@ class _SignupFormState extends State<SignupForm> {
                     },
                     keyboardType: TextInputType.number,
                     onChanged: (value) => _age = value,
-                    cursorColor: Color(0xFF398EF3), // 커서 색상 설정
+                    cursorColor: Color(0xFF398EF3),
                   ),
                   SizedBox(height: 16),
 
@@ -191,7 +189,7 @@ class _SignupFormState extends State<SignupForm> {
                       return null;
                     },
                     onChanged: (value) => _nickname = value,
-                    cursorColor: Color(0xFF398EF3), // 커서 색상 설정
+                    cursorColor: Color(0xFF398EF3),
                   ),
                   SizedBox(height: 16),
 
@@ -252,6 +250,12 @@ class _SignupFormState extends State<SignupForm> {
                     SizedBox(height: 16),
                   ],
 
+                  // 취미 필드 추가 (중앙 정렬)
+                  _buildHobbiesField(),
+
+                  // 간격을 늘림
+                  SizedBox(height: 32),
+
                   // 회원가입 버튼
                   _buildRegisterButton(),
                 ],
@@ -288,6 +292,7 @@ class _SignupFormState extends State<SignupForm> {
     );
   }
 
+  // 성별 선택 필드
   Widget _buildGenderField() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -305,7 +310,7 @@ class _SignupFormState extends State<SignupForm> {
                     _gender = value;
                   });
                 },
-                activeColor: Color(0xFF398EF3), // 보라색 대신 파란색
+                activeColor: Color(0xFF398EF3),
               ),
             ),
             Expanded(
@@ -318,8 +323,46 @@ class _SignupFormState extends State<SignupForm> {
                     _gender = value;
                   });
                 },
-                activeColor: Color(0xFF398EF3), // 보라색 대신 파란색
+                activeColor: Color(0xFF398EF3),
               ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  // 취미 선택 필드 (중앙 정렬)
+  Widget _buildHobbiesField() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('취미', style: TextStyle(fontSize: 16)),
+        SizedBox(height: 8),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center, // 중앙 정렬
+          children: [
+            Wrap(
+              spacing: 8.0,
+              children: hobbyOptions.map((hobby) {
+                return ChoiceChip(
+                  label: Text(hobby),
+                  selected: _selectedHobbies.contains(hobby),
+                  onSelected: (isSelected) {
+                    setState(() {
+                      isSelected
+                          ? _selectedHobbies.add(hobby)
+                          : _selectedHobbies.remove(hobby);
+                    });
+                  },
+                  selectedColor: Color(0xFF398EF3), // 선택된 취미의 색상을 메인 색상으로 변경
+                  labelStyle: TextStyle(
+                    color: _selectedHobbies.contains(hobby)
+                        ? Colors.white
+                        : Colors.black, // 선택 시 텍스트 색상 변경
+                  ),
+                );
+              }).toList(),
             ),
           ],
         ),
@@ -348,7 +391,7 @@ class _SignupFormState extends State<SignupForm> {
         obscureText: obscureText,
         keyboardType: keyboardType,
         onChanged: onChanged,
-        cursorColor: cursorColor, // 커서 색상 설정
+        cursorColor: cursorColor,
         decoration: InputDecoration(
           border: InputBorder.none,
           hintText: hintText,
