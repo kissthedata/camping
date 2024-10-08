@@ -14,7 +14,7 @@ Future<void> main() async {
 
   // 환경 변수 로드
   try {
-    print('Loading .env file...');
+    ('Loading .env file...');
     await dotenv.load(fileName: ".env");
     print('Environment variables loaded successfully: ${dotenv.env}');
   } catch (e) {

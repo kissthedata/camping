@@ -866,47 +866,7 @@ class _RegionPageState extends State<RegionPage> {
                 );
               },
             ),
-          ),
-          Positioned(
-            left: 66,
-            bottom: 40,
-            child: GestureDetector(
-              onTap: () {
-                if (_panelController.isPanelOpen) {
-                  _panelController.close();
-                  setState(() {
-                    isPanelOpen = false;
-                  });
-                } else {
-                  _panelController.open();
-                  setState(() {
-                    isPanelOpen = true;
-                  });
-                }
-              },
-              child: Container(
-                width: 280,
-                height: 60,
-                decoration: ShapeDecoration(
-                  color: Color(0xFF172243),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(36.50),
-                  ),
-                ),
-                child: Center(
-                  child: Text(
-                    isPanelOpen ? '차박지 목록 닫기' : '차박지 목록 열기',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontFamily: 'Pretendard',
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
+          )
         ],
       ),
     );
