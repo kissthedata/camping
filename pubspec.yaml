@@ -118,6 +118,11 @@ flutter:
     - assets/vectors/vector_8_x2.svg
     - assets/vectors/group_1_x2.svg
     - assets/vectors/union_x2.svg
+    - assets/vectors/home_icon.svg
+    - assets/vectors/map_icon.svg
+    - assets/vectors/camping_icon.svg
+    - assets/vectors/community_icon.svg
+    - assets/vectors/mypage_icon.svg
     - assets/images/verified_camping_site.png
     - assets/images/user_camping_site.png
     - assets/images/gas_station.png

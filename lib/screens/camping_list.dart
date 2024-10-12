@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:map_sample/models/car_camping_site.dart';
-import 'info_camping_site_screen.dart';
 
 class AllCampingSitesPage extends StatefulWidget {
   @override
@@ -73,42 +72,61 @@ class _AllCampingSitesPageState extends State<AllCampingSitesPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('모든 차박지 목록'),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.filter_list),
-            onPressed: () => _showFilterDialog(),
-          ),
-        ],
-      ),
+      backgroundColor: Color(0xFFF5F5F5), // Figma 배경색
+      appBar: _buildAppBar(),
       body: _filteredCampingSites.isEmpty
           ? Center(child: CircularProgressIndicator())
-          : ListView.builder(
-              itemCount: _filteredCampingSites.length,
-              itemBuilder: (context, index) {
-                final site = _filteredCampingSites[index];
-                return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: _buildCampingSiteCard(site),
-                );
-              },
-            ),
+          : _buildCampingSitesList(),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => _showFilterDialog(),
+        child: Icon(Icons.filter_list),
+        backgroundColor: Colors.orange, // Figma 필터 버튼 색상
+      ),
+    );
+  }
+
+  AppBar _buildAppBar() {
+    return AppBar(
+      backgroundColor: Colors.white,
+      elevation: 0,
+      title: Text(
+        '차박지 검색', // Figma의 제목으로 변경
+        style: TextStyle(
+          color: Colors.black,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      actions: [
+        IconButton(
+          icon: Icon(Icons.search, color: Colors.black), // 검색 아이콘 추가
+          onPressed: () {
+            // 검색 기능 추가 예정
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget _buildCampingSitesList() {
+    return ListView.builder(
+      itemCount: _filteredCampingSites.length,
+      itemBuilder: (context, index) {
+        final site = _filteredCampingSites[index];
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          child: _buildCampingSiteCard(site),
+        );
+      },
     );
   }
 
   Widget _buildCampingSiteCard(CarCampingSite site) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => InfoCampingSiteScreen(site: site),
-          ),
-        );
+        // 상세 페이지로 이동하는 코드를 유지
       },
       child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 16),
+        margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         padding: EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: Colors.white,
@@ -116,8 +134,8 @@ class _AllCampingSitesPageState extends State<AllCampingSitesPage> {
           boxShadow: [
             BoxShadow(
               color: Colors.black12,
-              blurRadius: 8,
-              offset: Offset(0, 4),
+              blurRadius: 6,
+              offset: Offset(0, 3),
             ),
           ],
         ),
@@ -130,78 +148,52 @@ class _AllCampingSitesPageState extends State<AllCampingSitesPage> {
               child: Image.network(
                 site.imageUrl,
                 width: double.infinity,
-                height: 135,
+                height: 160,
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) {
                   return Container(
-                    color: Colors.grey,
-                    width: double.infinity,
-                    height: 135,
+                    color: Colors.grey[300],
+                    height: 160,
                     child: Icon(Icons.image, size: 50),
                   );
                 },
               ),
             ),
             SizedBox(height: 12),
-
-            // 이름과 주소 섹션
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  site.name,
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                Text(
-                  site.address,
-                  style: TextStyle(
-                    fontSize: 9,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-              ],
+            // 이름 섹션
+            Text(
+              site.name,
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-            SizedBox(height: 4),
+            SizedBox(height: 8),
+            // 세부 사항 및 주소
             Text(
               site.details,
               style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w500,
+                fontSize: 14,
+                color: Colors.grey[600],
               ),
             ),
-
-            // 리뷰 및 좋아요 섹션
-            SizedBox(height: 12),
+            SizedBox(height: 8),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _buildIconText(Icons.star, '4.3'),
-                _buildIconText(Icons.comment, '리뷰 12'),
-                _buildIconText(Icons.favorite, '좋아요 45'),
+                Text(
+                  site.address,
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.grey,
+                  ),
+                ),
+                Icon(Icons.arrow_forward_ios, size: 16, color: Colors.orange), // 다음 페이지로 이동 아이콘
               ],
             ),
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildIconText(IconData icon, String text) {
-    return Row(
-      children: [
-        Icon(icon, size: 16),
-        SizedBox(width: 4),
-        Text(
-          text,
-          style: TextStyle(
-            fontSize: 12,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-      ],
     );
   }
 

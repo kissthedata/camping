@@ -17,6 +17,7 @@ class RecommendationSystem {
         if (count >= 4) break;  // Limit to 4 recommendations for now
         Map<String, dynamic> siteData = Map<String, dynamic>.from(entry.value);
         CarCampingSite site = CarCampingSite(
+          key: entry.key,
           name: siteData['place'],
           latitude: siteData['latitude'],
           longitude: siteData['longitude'],

@@ -18,38 +18,40 @@ class _RecommendScreenState extends State<RecommendScreen> {
   }
 
   Future<void> _loadRecommendedSites() async {
-    DatabaseReference databaseReference =
-        FirebaseDatabase.instance.ref().child('recommended_sites');
-    DataSnapshot snapshot = await databaseReference.get();
+  DatabaseReference databaseReference =
+      FirebaseDatabase.instance.ref().child('recommended_sites');
+  DataSnapshot snapshot = await databaseReference.get();
 
-    if (snapshot.exists) {
-      List<CarCampingSite> sites = [];
-      Map<String, dynamic> data =
-          Map<String, dynamic>.from(snapshot.value as Map);
-      for (var entry in data.entries) {
-        Map<String, dynamic> siteData = Map<String, dynamic>.from(entry.value);
-        CarCampingSite site = CarCampingSite(
-          name: siteData['place'],
-          latitude: siteData['latitude'],
-          longitude: siteData['longitude'],
-          address: siteData['address'] ?? '주소 정보 없음',
-          imageUrl: siteData['imageUrl'] ?? '',
-          restRoom: siteData['restRoom'] ?? false,
-          sink: siteData['sink'] ?? false,
-          cook: siteData['cook'] ?? false,
-          animal: siteData['animal'] ?? false,
-          water: siteData['water'] ?? false,
-          parkinglot: siteData['parkinglot'] ?? false,
-          details: siteData['details'] ?? '',
-          isVerified: true,
-        );
-        sites.add(site);
-      }
-      setState(() {
-        _recommendedSites = sites;
-      });
-    }
+  if (snapshot.exists) {
+    List<CarCampingSite> sites = [];
+    Map<String, dynamic> data = Map<String, dynamic>.from(snapshot.value as Map);
+
+    data.forEach((key, value) {
+      Map<String, dynamic> siteData = Map<String, dynamic>.from(value);
+      CarCampingSite site = CarCampingSite(
+        key: key,
+        name: siteData['place'],
+        latitude: siteData['latitude'],
+        longitude: siteData['longitude'],
+        address: siteData['address'] ?? '주소 정보 없음',
+        imageUrl: siteData['imageUrl'] ?? '',
+        restRoom: siteData['restRoom'] ?? false,
+        sink: siteData['sink'] ?? false,
+        cook: siteData['cook'] ?? false,
+        animal: siteData['animal'] ?? false,
+        water: siteData['water'] ?? false,
+        parkinglot: siteData['parkinglot'] ?? false,
+        details: siteData['details'] ?? '',
+      );
+      sites.add(site);
+    });
+
+    setState(() {
+      _recommendedSites = sites;
+    });
   }
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -63,10 +65,7 @@ class _RecommendScreenState extends State<RecommendScreen> {
               itemCount: _recommendedSites.length,
               itemBuilder: (context, index) {
                 final site = _recommendedSites[index];
-                return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: _buildCampingSiteCard(site),
-                );
+                return _buildCampingSiteCard(site);
               },
             ),
     );
@@ -83,7 +82,7 @@ class _RecommendScreenState extends State<RecommendScreen> {
         );
       },
       child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 16),
+        margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         padding: EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: Colors.white,
@@ -99,7 +98,6 @@ class _RecommendScreenState extends State<RecommendScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // 이미지 섹션
             ClipRRect(
               borderRadius: BorderRadius.circular(12),
               child: Image.network(
@@ -118,7 +116,6 @@ class _RecommendScreenState extends State<RecommendScreen> {
               ),
             ),
             SizedBox(height: 12),
-            // 이름과 주소
             Text(
               site.name,
               style: TextStyle(
@@ -134,7 +131,6 @@ class _RecommendScreenState extends State<RecommendScreen> {
                 fontWeight: FontWeight.w400,
               ),
             ),
-            // 설명
             SizedBox(height: 8),
             Text(
               site.details.isNotEmpty ? site.details : '차박지에 대한 설명이 없습니다.',

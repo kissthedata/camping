@@ -1,4 +1,5 @@
 class CarCampingSite {
+  final String? key; // Make this nullable to avoid requiring it every time.
   final String name;
   final double latitude;
   final double longitude;
@@ -12,13 +13,13 @@ class CarCampingSite {
   final bool parkinglot;
   final String details;
   final bool isVerified;
-  final List<String> categories; // 차박지 관련 카테고리 (ex: 낚시, 등산, 수영)
 
-  CarCampingSite({  
+  CarCampingSite({
+    this.key, // Make key optional
     required this.name,
     required this.latitude,
     required this.longitude,
-    required this.address,
+    this.address = '',
     this.imageUrl = '',
     this.restRoom = false,
     this.sink = false,
@@ -28,6 +29,5 @@ class CarCampingSite {
     this.parkinglot = false,
     this.details = '',
     this.isVerified = false,
-    this.categories = const [], // 기본 빈 카테고리 리스트
   });
 }

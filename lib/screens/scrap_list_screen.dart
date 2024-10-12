@@ -4,8 +4,8 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:kakao_flutter_sdk_share/kakao_flutter_sdk_share.dart';
 import 'package:kakao_flutter_sdk_template/kakao_flutter_sdk_template.dart';
+import 'package:map_sample/models/car_camping_site.dart';
 
-/// 스크랩한 차박지 목록을 보여주는 StatefulWidget
 class ScrapListScreen extends StatefulWidget {
   @override
   _ScrapListScreenState createState() => _ScrapListScreenState();
@@ -20,7 +20,6 @@ class _ScrapListScreenState extends State<ScrapListScreen> {
     _loadScraps();
   }
 
-  /// 스크랩한 차박지를 불러오는 함수
   void _loadScraps() async {
     User? user = FirebaseAuth.instance.currentUser;
     if (user != null) {
@@ -32,10 +31,21 @@ class _ScrapListScreenState extends State<ScrapListScreen> {
         Map<dynamic, dynamic> data = snapshot.value as Map<dynamic, dynamic>;
         data.forEach((key, value) {
           scraps.add(CarCampingSite(
-            key: key,
-            name: value['name'] ?? '이름 없음',
-            latitude: value['latitude'] ?? 0.0,
-            longitude: value['longitude'] ?? 0.0,
+            key: key ?? 'defaultKey', // Using a default value if key is null
+            name: value['name'] ?? 'Unknown Name', // Providing default for name
+            latitude:
+                value['latitude'] ?? 0.0, // Providing default for latitude
+            longitude:
+                value['longitude'] ?? 0.0, // Providing default for longitude
+            address: value['address'] ??
+                'Unknown Address', // Providing default for address
+            imageUrl: value['imageUrl'] ?? '', // Providing default for imageUrl
+            restRoom: value['restRoom'] ?? false,
+            sink: value['sink'] ?? false,
+            cook: value['cook'] ?? false,
+            animal: value['animal'] ?? false,
+            water: value['water'] ?? false,
+            parkinglot: value['parkinglot'] ?? false,
           ));
         });
         setState(() {
@@ -45,13 +55,12 @@ class _ScrapListScreenState extends State<ScrapListScreen> {
     }
   }
 
-  /// 스크랩을 취소하는 함수
   void _removeScrap(CarCampingSite site) async {
     User? user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       DatabaseReference userScrapsRef =
           FirebaseDatabase.instance.ref().child('scraps').child(user.uid);
-      await userScrapsRef.child(site.key).remove();
+      await userScrapsRef.child(site.key!).remove();
       setState(() {
         _scraps.remove(site);
       });
@@ -61,7 +70,6 @@ class _ScrapListScreenState extends State<ScrapListScreen> {
     }
   }
 
-  /// 차박지 정보를 공유하는 함수
   void _shareCampingSpot(CarCampingSite site) async {
     showDialog(
       context: context,
@@ -249,33 +257,4 @@ class _ScrapListScreenState extends State<ScrapListScreen> {
       ),
     );
   }
-}
-
-/// 차박지 정보를 담은 클래스
-class CarCampingSite {
-  final String key;
-  final String name;
-  final double latitude;
-  final double longitude;
-  final String imageUrl;
-  final bool restRoom;
-  final bool sink;
-  final bool cook;
-  final bool animal;
-  final bool water;
-  final bool parkinglot;
-
-  CarCampingSite({
-    required this.key,
-    required this.name,
-    required this.latitude,
-    required this.longitude,
-    this.imageUrl = '',
-    this.restRoom = false,
-    this.sink = false,
-    this.cook = false,
-    this.animal = false,
-    this.water = false,
-    this.parkinglot = false,
-  });
 }

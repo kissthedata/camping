@@ -28,7 +28,7 @@ class _SearchCampingSitePageState extends State<SearchCampingSitePage> {
 
   Future<void> _loadCampingSites() async {
     DatabaseReference databaseReference =
-        FirebaseDatabase.instance.ref().child('car_camping_sites');
+        FirebaseDatabase.instance.ref().child('camping_sites/user');
     DataSnapshot snapshot = await databaseReference.get();
 
     if (snapshot.exists) {
@@ -38,6 +38,7 @@ class _SearchCampingSitePageState extends State<SearchCampingSitePage> {
       for (var entry in data.entries) {
         Map<String, dynamic> siteData = Map<String, dynamic>.from(entry.value);
         CarCampingSite site = CarCampingSite(
+          key: entry.key,
           name: siteData['place'],
           latitude: siteData['latitude'],
           longitude: siteData['longitude'],
@@ -50,7 +51,6 @@ class _SearchCampingSitePageState extends State<SearchCampingSitePage> {
           water: siteData['water'] ?? false,
           parkinglot: siteData['parkinglot'] ?? false,
           details: siteData['details'] ?? '',
-          isVerified: true,
         );
         sites.add(site);
       }

@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
@@ -9,17 +10,21 @@ class KakaoLocationService {
 
   /// 주어진 위도와 경도를 바탕으로 위치 데이터를 가져와 업로드하기 위한 메서드
   Future<void> fetchAndUploadLocations(double latitude, double longitude) async {
-    List<String> categories = ['MT1', 'CS2', 'OL7'];
-    List<String> categoryNames = ['마트', '편의점', '주유소'];
+    String userId = FirebaseAuth.instance.currentUser!.uid;  // 사용자 ID 가져오기
+    List<String> categories = ['MT1', 'CS2', 'PM9', 'FD6', 'CE7'];
+    List<String> categoryNames = ['마트', '편의점', '약국', '음식점', '카페'];
+
+    // 기존 데이터를 삭제
+    await _dbRef.child(userId).remove();
 
     for (int i = 0; i < categories.length; i++) {
-      await _fetchAndUploadCategory(categories[i], categoryNames[i], latitude, longitude);
+      await _fetchAndUploadCategory(userId, categories[i], categoryNames[i], latitude, longitude);
     }
   }
 
   /// 특정 카테고리의 위치 데이터를 가져와 업로드하기 위한 메서드
   Future<void> _fetchAndUploadCategory(
-      String categoryCode, String categoryName, double latitude, double longitude) async {
+      String userId, String categoryCode, String categoryName, double latitude, double longitude) async {
     try {
       Response response = await Dio().get(
         'https://dapi.kakao.com/v2/local/search/category.json',
@@ -37,7 +42,7 @@ class KakaoLocationService {
       if (response.statusCode == 200) {
         List<dynamic> documents = response.data['documents'];
         for (var doc in documents) {
-          _dbRef.push().set({
+          _dbRef.child(userId).push().set({
             'id': doc['id'],
             'place': doc['place_name'],
             'latitude': double.parse(doc['y']),

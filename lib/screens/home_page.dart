@@ -15,7 +15,8 @@ import 'my_page.dart';
 import 'add_camping_site.dart';
 import 'search_camping_site_page.dart';
 import 'community_page.dart';
-import 'recommend_screen.dart'; // 추천 더보기 화면
+import 'recommend_screen.dart';
+import 'package:map_sample/custom_bottom_app_bar.dart';
 
 class MyHomePage extends StatefulWidget {
   @override
@@ -24,6 +25,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   List<CarCampingSite> _campingSites = [];
+  int _selectedIndex = 0;
 
   @override
   void initState() {
@@ -45,6 +47,7 @@ class _MyHomePageState extends State<MyHomePage> {
         String address = await _getAddressFromLatLng(
             siteData['latitude'], siteData['longitude']);
         CarCampingSite site = CarCampingSite(
+          key: entry.key,
           name: siteData['place'],
           latitude: siteData['latitude'],
           longitude: siteData['longitude'],
@@ -104,6 +107,42 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+
+    switch (index) {
+      case 0:
+        // Stay on Home Page
+        break;
+      case 1:
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => MapScreen()),
+        );
+        break;
+      case 2:
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => AllCampingSitesPage()),
+        );
+        break;
+      case 3:
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => CommunityPage()),
+        );
+        break;
+      case 4:
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => MyPage()),
+        );
+        break;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
@@ -131,7 +170,10 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
           ),
-          bottomNavigationBar: _buildBottomNavBar(),
+          bottomNavigationBar: CustomBottomAppBar(
+            selectedIndex: _selectedIndex,
+            onItemTapped: _onItemTapped,
+          ),
         );
       },
     );
@@ -158,9 +200,7 @@ class _MyHomePageState extends State<MyHomePage> {
             decoration: BoxDecoration(
               image: DecorationImage(
                 fit: BoxFit.cover,
-                image: AssetImage(
-                  'assets/images/image.png',
-                ),
+                image: AssetImage('assets/images/image.png'),
               ),
             ),
           ),
@@ -175,8 +215,7 @@ class _MyHomePageState extends State<MyHomePage> {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(
-              builder: (context) => SearchCampingSitePage()), // 차박지 검색 페이지로 이동
+          MaterialPageRoute(builder: (context) => SearchCampingSitePage()),
         );
       },
       child: Container(
@@ -197,9 +236,7 @@ class _MyHomePageState extends State<MyHomePage> {
             SizedBox(
               width: 14.w,
               height: 14.h,
-              child: SvgPicture.asset(
-                'assets/vectors/vector_6_x2.svg',
-              ),
+              child: SvgPicture.asset('assets/vectors/vector_6_x2.svg'),
             ),
             SizedBox(width: 10.w),
             Expanded(
@@ -245,9 +282,7 @@ class _MyHomePageState extends State<MyHomePage> {
               SizedBox(
                 width: 17.w,
                 height: 17.h,
-                child: SvgPicture.asset(
-                  'assets/vectors/vector_1_x2.svg',
-                ),
+                child: SvgPicture.asset('assets/vectors/vector_1_x2.svg'),
               ),
               SizedBox(width: 5.w),
               Text(
@@ -342,7 +377,7 @@ class _MyHomePageState extends State<MyHomePage> {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => MapScreen()), // 지도 페이지로 이동
+          MaterialPageRoute(builder: (context) => MapScreen()),
         );
       },
       child: Container(
@@ -412,15 +447,14 @@ class _MyHomePageState extends State<MyHomePage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => RecommendScreen(), // 추천 더보기 페이지로 이동
+                    builder: (context) => RecommendScreen(),
                   ),
                 );
               } else if (title == '등록된 차박지 보기') {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) =>
-                          AllCampingSitesPage()), // 등록된 차박지 보기로 이동
+                      builder: (context) => AllCampingSitesPage()),
                 );
               }
             },
@@ -622,9 +656,7 @@ class _MyHomePageState extends State<MyHomePage> {
               SizedBox(height: 2.h),
               Expanded(
                 child: Text(
-                  site.details.isNotEmpty
-                      ? site.details
-                      : '설명: 차박지 정보가 없습니다.',
+                  site.details.isNotEmpty ? site.details : '설명: 차박지 정보가 없습니다.',
                   style: GoogleFonts.robotoCondensed(
                     fontWeight: FontWeight.w300,
                     fontSize: 10.sp,
@@ -673,153 +705,6 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildBottomNavBar() {
-    return Container(
-      width: 360, // 바텀 앱바의 너비
-      height: 75, // 바텀 앱바의 높이
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20), // 예시로 20으로 설정
-        color: Colors.white, // 바텀 앱바 배경색
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround, // 아이템을 균등하게 배치
-        children: [
-          InkWell(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => MyHomePage()),
-              );
-            },
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image.asset(
-                  'assets/images/home_icon.png',
-                  width: 21.86,
-                  height: 23.125,
-                ),
-                SizedBox(height: 6),
-                Text(
-                  "홈",
-                  style: TextStyle(
-                    fontSize: 10,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          InkWell(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => MapScreen()),
-              );
-            },
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image.asset(
-                  'assets/images/map_icon.png',
-                  width: 20.95,
-                  height: 14.84,
-                ),
-                SizedBox(height: 6),
-                Text(
-                  "지도",
-                  style: TextStyle(
-                    fontSize: 10,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          InkWell(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => AllCampingSitesPage()),
-              );
-            },
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image.asset(
-                  'assets/images/camping_icon.png',
-                  width: 21.64,
-                  height: 15.64,
-                ),
-                SizedBox(height: 6),
-                Text(
-                  "차박지",
-                  style: TextStyle(
-                    fontSize: 10,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          InkWell(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => CommunityPage()),
-              );
-            },
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image.asset(
-                  'assets/images/community_icon.png',
-                  width: 15.0,
-                  height: 16.94,
-                ),
-                SizedBox(height: 6),
-                Text(
-                  "커뮤니티",
-                  style: TextStyle(
-                    fontSize: 10,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          InkWell(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => MyPage()),
-              );
-            },
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image.asset(
-                  'assets/images/mypage_icon.png',
-                  width: 17.46,
-                  height: 10.68,
-                ),
-                SizedBox(height: 6),
-                Text(
-                  "마이페이지",
-                  style: TextStyle(
-                    fontSize: 10,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
       ),
     );
   }
