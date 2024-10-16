@@ -17,8 +17,10 @@ def flutterVersionCode = localProperties.getProperty('flutter.versionCode', '2')
 def flutterVersionName = localProperties.getProperty('flutter.versionName', '1.0.1')
 
 def keystoreProperties = new Properties()
-def keystorePropertiesFile = rootProject.file('key.properties')
-if (keystorePropertiesFile.exists()) {
+def keystorePropertiesFile = rootProject.file('key.properties') // 수정된 경로 확인
+boolean hasKeystore = keystorePropertiesFile.exists()
+
+if (hasKeystore) {
     keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 }
 
@@ -49,18 +51,31 @@ android {
     }
 
     signingConfigs {
-       release {
-          keyAlias keystoreProperties['keyAlias']
-          keyPassword keystoreProperties['keyPassword']
-          storeFile file(keystoreProperties['storeFile'])
-          storePassword keystoreProperties['storePassword']
+        release {
+            if (hasKeystore) {
+                keyAlias keystoreProperties['keyAlias']
+                keyPassword keystoreProperties['keyPassword']
+                storeFile file(keystoreProperties['storeFile'])
+                storePassword keystoreProperties['storePassword']
+            } else {
+                println("Warning: No keystore found. Skipping release signing.")
+            }
         }
     }
 
     buildTypes {
-       release {
-           signingConfig signingConfigs.release
-       }
+        release {
+            // Keystore가 있는 경우에만 서명 설정 사용
+            if (hasKeystore) {
+                signingConfig signingConfigs.release
+            }
+            minifyEnabled false
+            shrinkResources false
+        }
+        debug {
+            // 디버그 모드에서는 signing 설정 사용하지 않음
+            signingConfig signingConfigs.debug
+        }
     }
 }
 
@@ -69,5 +84,4 @@ flutter {
 }
 
 dependencies {
-    // Your dependencies here
 }
