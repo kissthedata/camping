@@ -11,12 +11,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'info_camping_site_screen.dart';
 import 'package:map_sample/models/car_camping_site.dart';
 import 'camping_list.dart';
-import 'my_page.dart';
 import 'add_camping_site.dart';
 import 'search_camping_site_page.dart';
-import 'community_page.dart';
 import 'recommend_screen.dart';
-import 'package:map_sample/custom_bottom_app_bar.dart';
 
 class MyHomePage extends StatefulWidget {
   @override
@@ -25,7 +22,6 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   List<CarCampingSite> _campingSites = [];
-  int _selectedIndex = 0;
 
   @override
   void initState() {
@@ -107,50 +103,14 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-
-    switch (index) {
-      case 0:
-        // Stay on Home Page
-        break;
-      case 1:
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => MapScreen()),
-        );
-        break;
-      case 2:
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => AllCampingSitesPage()),
-        );
-        break;
-      case 3:
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => CommunityPage()),
-        );
-        break;
-      case 4:
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => MyPage()),
-        );
-        break;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
-      designSize: Size(360, 1140),
+      designSize: const Size(360, 1140),
       minTextAdapt: true,
       builder: (context, child) {
         return Scaffold(
-          backgroundColor: Color(0xFFF3F5F7),
+          backgroundColor: const Color(0xFFF3F5F7),
           body: SingleChildScrollView(
             child: Padding(
               padding: EdgeInsets.only(bottom: 108.h),
@@ -170,10 +130,6 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
           ),
-          bottomNavigationBar: CustomBottomAppBar(
-            selectedIndex: _selectedIndex,
-            onItemTapped: _onItemTapped,
-          ),
         );
       },
     );
@@ -183,7 +139,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return Container(
       margin: EdgeInsets.only(bottom: 16.h),
       decoration: BoxDecoration(
-        color: Color(0xFF398EF3),
+        color: const Color(0xFF398EF3),
         borderRadius: BorderRadius.only(
           bottomRight: Radius.circular(16.r),
           bottomLeft: Radius.circular(16.r),
@@ -197,7 +153,7 @@ class _MyHomePageState extends State<MyHomePage> {
             margin: EdgeInsets.only(bottom: 21.h),
             width: 139.w,
             height: 48.h,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               image: DecorationImage(
                 fit: BoxFit.cover,
                 image: AssetImage('assets/images/image.png'),
@@ -224,7 +180,7 @@ class _MyHomePageState extends State<MyHomePage> {
           color: Colors.white,
           boxShadow: [
             BoxShadow(
-              color: Color(0x12000000),
+              color: const Color(0x12000000),
               offset: Offset(0, 0),
               blurRadius: 1.8.r,
             ),
@@ -233,10 +189,10 @@ class _MyHomePageState extends State<MyHomePage> {
         padding: EdgeInsets.fromLTRB(13.w, 14.h, 0, 12.h),
         child: Row(
           children: [
-            SizedBox(
+            SvgPicture.asset(
+              'assets/vectors/vector_6_x2.svg',
               width: 14.w,
               height: 14.h,
-              child: SvgPicture.asset('assets/vectors/vector_6_x2.svg'),
             ),
             SizedBox(width: 10.w),
             Expanded(
@@ -245,7 +201,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 style: GoogleFonts.robotoCondensed(
                   fontWeight: FontWeight.w400,
                   fontSize: 12.sp,
-                  color: Color(0xFF9D9D9D),
+                  color: const Color(0xFF9D9D9D),
                 ),
               ),
             ),

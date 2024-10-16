@@ -3,24 +3,32 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 class CustomBottomAppBar extends StatelessWidget {
   final int selectedIndex;
-  final ValueChanged<int> onItemTapped;
+  final ValueChanged<int> onItemSelected;
 
   const CustomBottomAppBar({
     required this.selectedIndex,
-    required this.onItemTapped,
-  });
+    required this.onItemSelected,
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: double.infinity,
-      height: 75,
+      width: double.infinity, // 너비를 화면 전체로 설정
+      height: 75, // 고정된 높이
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
         color: Colors.white,
+        borderRadius: BorderRadius.circular(20), // 둥근 모서리
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 10,
+            offset: const Offset(0, -3),
+          ),
+        ],
       ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        mainAxisAlignment: MainAxisAlignment.spaceAround, // 간격 균등 분배
         children: [
           _buildNavItem(
             context,
@@ -57,10 +65,14 @@ class CustomBottomAppBar extends StatelessWidget {
     );
   }
 
-  Widget _buildNavItem(BuildContext context,
-      {required String iconPath, required String label, required int index}) {
+  Widget _buildNavItem(
+    BuildContext context, {
+    required String iconPath,
+    required String label,
+    required int index,
+  }) {
     return InkWell(
-      onTap: () => onItemTapped(index),
+      onTap: () => onItemSelected(index),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -70,7 +82,7 @@ class CustomBottomAppBar extends StatelessWidget {
             height: 24,
             color: selectedIndex == index ? Colors.blue : Colors.black,
           ),
-          SizedBox(height: 6),
+          const SizedBox(height: 6),
           Text(
             label,
             style: TextStyle(
