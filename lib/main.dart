@@ -87,31 +87,9 @@ class MyApp extends StatelessWidget {
       designSize: const Size(360, 800),
       builder: (context, child) {
         return MaterialApp(
-          theme: _buildAppTheme(),
           home: MainScaffold(), // 모든 페이지에서 BottomAppBar를 포함한 구조 적용
         );
       },
     );
-  }
-
-  ThemeData _buildAppTheme() {
-    return ThemeData(
-      primaryColor: const Color(0xFF162233),
-      scaffoldBackgroundColor: Colors.white,
-      appBarTheme: const AppBarTheme(
-        backgroundColor: Color(0xFF162233),
-        titleTextStyle: TextStyle(color: Colors.white, fontSize: 20),
-        iconTheme: IconThemeData(color: Colors.white),
-      ),
-      elevatedButtonTheme: ElevatedButtonThemeData(
-        style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all(const Color(0xFF162233)),
-        ),
-      ),
-      textTheme: const TextTheme(
-        bodyLarge: TextStyle(color: Colors.black),
-        bodyMedium: TextStyle(color: Colors.black),
-      ),
-    );
-  }
+ }
 }

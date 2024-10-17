@@ -119,7 +119,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 children: [
                   _buildHeader(),
                   _buildWeatherInfo(),
-                  _buildMapSection(),
+                  _buildActionSections(),
                   _buildSectionTitle('이런 차박지는 어때요?'),
                   if (_campingSites.isNotEmpty)
                     _buildFeaturedCampingSite(_campingSites.first),
@@ -328,52 +328,88 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  Widget _buildMapSection() {
-    return InkWell(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => MapScreen()),
-        );
-      },
-      child: Container(
-        width: double.infinity,
-        margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
-        padding: EdgeInsets.fromLTRB(14.w, 130.h, 13.w, 13.h),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16.r),
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Color(0x14000000),
-              offset: Offset(0, 0),
-              blurRadius: 4.r,
-            ),
-          ],
+ Widget _buildActionSections() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        _buildInfoCard(
+          iconPath: 'assets/vectors/map_icon.svg',
+          title: "지도보기",
+          subtitle: "차박지와 주변을\n한눈에 검색",
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => MapScreen()),
+            );
+          },
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              '지도보기',
-              style: GoogleFonts.robotoCondensed(
-                fontWeight: FontWeight.w600,
-                fontSize: 24.sp,
-                letterSpacing: -0.7.sp,
-                color: Color(0xFF398EF3),
+        SizedBox(width: 8.w),
+        _buildInfoCard(
+          iconPath: 'assets/vectors/camping_icon.svg',
+          title: "차박지 목록",
+          subtitle: "등록된 차박지를\n한눈에 보기",
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => AllCampingSitesPage()),
+            );
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget _buildInfoCard({
+    required String iconPath,
+    required String title,
+    required String subtitle,
+    required VoidCallback onTap,
+  }) {
+    return Expanded(
+      child: InkWell(
+        onTap: onTap,
+        child: Container(
+          margin: EdgeInsets.symmetric(vertical: 16.h),
+          padding: EdgeInsets.all(12.w),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(16.r),
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                color: const Color(0x14000000),
+                offset: Offset(0, 0),
+                blurRadius: 4.r,
               ),
-            ),
-            SizedBox(height: 8.h),
-            Text(
-              '마트, 편의점, 화장실 등을 확인 할 수 있습니다.',
-              style: GoogleFonts.robotoCondensed(
-                fontWeight: FontWeight.w500,
-                fontSize: 12.sp,
-                letterSpacing: -0.6.sp,
-                color: Color(0xFF398EF3),
+            ],
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SvgPicture.asset(
+                iconPath,
+                width: 28.w,
+                height: 36.h,
               ),
-            ),
-          ],
+              SizedBox(height: 16.h),
+              Text(
+                title,
+                style: TextStyle(
+                  fontSize: 18.sp,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              SizedBox(height: 8.h),
+              Text(
+                subtitle,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 12.sp,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.grey[600],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
