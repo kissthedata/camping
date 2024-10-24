@@ -122,6 +122,7 @@ flutter:
     - assets/vectors/map_icon.svg
     - assets/vectors/camping_icon.svg
     - assets/vectors/community_icon.svg
+    - assets/vectors/more.svg
     - assets/vectors/mypage_icon.svg
     - assets/images/verified_camping_site.png
     - assets/images/user_camping_site.png

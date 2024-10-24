@@ -11,7 +11,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'info_camping_site_screen.dart';
 import 'package:map_sample/models/car_camping_site.dart';
 import 'camping_list.dart';
-import 'add_camping_site.dart';
 import 'search_camping_site_page.dart';
 import 'recommend_screen.dart';
 
@@ -111,23 +110,38 @@ class _MyHomePageState extends State<MyHomePage> {
       builder: (context, child) {
         return Scaffold(
           backgroundColor: const Color(0xFFF3F5F7),
-          body: SingleChildScrollView(
-            child: Padding(
-              padding: EdgeInsets.only(bottom: 108.h),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildHeader(),
-                  _buildWeatherInfo(),
-                  _buildActionSections(),
-                  _buildSectionTitle('이런 차박지는 어때요?'),
-                  if (_campingSites.isNotEmpty)
-                    _buildFeaturedCampingSite(_campingSites.first),
-                  _buildSectionTitle('등록된 차박지 보기'),
-                  if (_campingSites.isNotEmpty) _buildSlidingCampingSiteList(),
-                  _buildRegisterButton(),
-                ],
-              ),
+          resizeToAvoidBottomInset: false,
+          body: SafeArea(
+            child: Column(
+              children: [
+                Expanded(
+                  child: SingleChildScrollView(
+                    padding: EdgeInsets.symmetric(vertical: 16.h),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildHeader(),
+                        _buildWeatherInfo(),
+                        _buildActionSections(),
+
+                        // '이런 차박지는 어때요?' 섹션
+                        _buildSectionTitle('이런 차박지는 어때요?'),
+                        if (_campingSites.isNotEmpty)
+                          _buildFeaturedCampingSites(
+                              _campingSites, '이런 차박지는 어때요?'),
+
+                        // '사용자님 추천 차박지를 찾아봤어요!' 섹션
+                        _buildSectionTitle('사용자님 추천 차박지를 찾아봤어요!'),
+                        if (_campingSites.isNotEmpty)
+                          _buildFeaturedCampingSites(
+                              _campingSites, '사용자님 추천 차박지를 찾아봤어요!'),
+                      ],
+                    ),
+                  ),
+                ),
+                // 충분한 하단 여백 확보
+                SizedBox(height: 32.h),
+              ],
             ),
           ),
         );
@@ -421,61 +435,115 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Widget _buildSectionTitle(String title) {
-    return Container(
-      margin: EdgeInsets.fromLTRB(25.w, 0, 21.9.w, 6.h),
+    return Padding(
+      padding: EdgeInsets.only(left: 15.w, right: 21.9.w, bottom: 6.h),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start, // Row의 정렬을 위쪽으로
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          SizedBox(
-            width: title == '이런 차박지는 어때요?' ? 152.w : 95.w,
-            child: Text(
-              title,
-              style: GoogleFonts.robotoCondensed(
-                fontWeight: FontWeight.w500,
-                fontSize: 18.sp,
-                letterSpacing: -0.5.sp,
-                color: Color(0xFF000000),
-              ),
-            ),
-          ),
-          GestureDetector(
-            onTap: () {
-              if (title == '이런 차박지는 어때요?') {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => RecommendScreen(),
+          // 왼쪽 텍스트 영역 (편안차박 PICK!, 사용자님 추천 차박지 등)
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // '편안차박 PICK!' (이런 차박지는 어때요? 섹션에서만 표시)
+              if (title == '이런 차박지는 어때요?')
+                RichText(
+                  text: TextSpan(
+                    children: [
+                      TextSpan(
+                        text: '편안차박 ',
+                        style: GoogleFonts.robotoCondensed(
+                          fontSize: 20.sp,
+                          fontWeight: FontWeight.w500,
+                          color: Color(0xFF000000),
+                        ),
+                      ),
+                      TextSpan(
+                        text: 'PICK!',
+                        style: GoogleFonts.robotoCondensed(
+                          fontSize: 20.sp,
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xFF398EF3),
+                        ),
+                      ),
+                    ],
                   ),
-                );
-              } else if (title == '등록된 차박지 보기') {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => AllCampingSitesPage()),
-                );
-              }
-            },
-            child: Row(
-              children: [
+                ),
+
+              // '이런 차박지는 어때요?' 텍스트 추가
+              if (title == '이런 차박지는 어때요?') SizedBox(height: 4.h),
+              if (title == '이런 차박지는 어때요?')
                 Text(
-                  title == '이런 차박지는 어때요?' ? '추천 더보기' : '목록 더보기',
+                  '이런 차박지는 어때요?',
                   style: GoogleFonts.robotoCondensed(
                     fontWeight: FontWeight.w500,
-                    fontSize: 12.sp,
-                    color: Color(0xFF5D5D5D),
+                    fontSize: 14.sp,
+                    color: Color(0xFF777777),
                   ),
                 ),
-                SizedBox(width: 3.w),
-                SizedBox(
-                  width: 5.1.w,
-                  height: 9.3.h,
-                  child: SvgPicture.asset(
-                    title == '이런 차박지는 어때요?'
-                        ? 'assets/vectors/vector_2_x2.svg'
-                        : 'assets/vectors/vector_5_x2.svg',
+
+              // '사용자님 추천 차박지' (등록된 차박지 보기 섹션에만 표시)
+              if (title == '사용자님 추천 차박지를 찾아봤어요!')
+                Text(
+                  '사용자님 추천 차박지',
+                  style: GoogleFonts.robotoCondensed(
+                    fontSize: 18.sp,
+                    fontWeight: FontWeight.w500,
+                    color: Color(0xFF000000),
                   ),
                 ),
-              ],
+
+              // '사용자님 추천 차박지를 찾아봤어요!' 텍스트 추가
+              if (title == '사용자님 추천 차박지를 찾아봤어요!') SizedBox(height: 4.h),
+              if (title == '사용자님 추천 차박지를 찾아봤어요!')
+                Text(
+                  '사용자님 추천 차박지를 찾아봤어요!',
+                  style: GoogleFonts.robotoCondensed(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 14.sp,
+                    color: Color(0xFF777777),
+                  ),
+                ),
+            ],
+          ),
+
+          // 오른쪽: 더보기 버튼 (항상 상단에 정렬)
+          Align(
+            alignment: Alignment.topRight, // 상단 정렬
+            child: GestureDetector(
+              onTap: () {
+                if (title == '이런 차박지는 어때요?') {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => RecommendScreen()),
+                  );
+                } else if (title == '사용자님 추천 차박지를 찾아봤어요!') {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => AllCampingSitesPage()),
+                  );
+                }
+              },
+              child: Row(
+                mainAxisSize: MainAxisSize.min, // 내용에 맞게 크기 조절
+                children: [
+                  Text(
+                    '더보기',
+                    style: GoogleFonts.robotoCondensed(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 12.sp,
+                      color: Color(0xFF5D5D5D),
+                    ),
+                  ),
+                  SizedBox(width: 3.w),
+                  SvgPicture.asset(
+                    'assets/vectors/more.svg',
+                    width: 5.1.w,
+                    height: 9.3.h,
+                  ),
+                ],
+              ),
             ),
           ),
         ],
@@ -483,105 +551,94 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  Widget _buildFeaturedCampingSite(CarCampingSite site) {
-    return FutureBuilder<String>(
-      future: _getImageUrl(site.imageUrl),
-      builder: (context, snapshot) {
-        String imageUrl = snapshot.data ?? '';
-        return Container(
-          margin: EdgeInsets.fromLTRB(16.w, 0, 16.w, 16.h),
-          padding: EdgeInsets.fromLTRB(15.w, 16.h, 16.w, 16.h),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(16.r),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black12,
-                blurRadius: 8.r,
-                offset: Offset(0, 4),
-              ),
-            ],
-          ),
-          child: Row(
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(12.r),
-                child: Image.network(
-                  imageUrl,
-                  width: 80.w,
-                  height: 80.h,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Container(
-                      width: 80.w,
-                      height: 80.h,
-                      color: Colors.grey,
-                      child: Icon(Icons.image, size: 30),
-                    );
-                  },
-                ),
-              ),
-              SizedBox(width: 16.w),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      site.name,
-                      style: GoogleFonts.robotoCondensed(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 16.sp,
-                        color: Color(0xFF000000),
-                      ),
-                    ),
-                    SizedBox(height: 2.h),
-                    Text(
-                      site.address,
-                      style: GoogleFonts.robotoCondensed(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 10.sp,
-                        color: Color(0xFF000000),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => InfoCampingSiteScreen(site: site),
-                    ),
-                  );
-                },
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Color(0xFF398EF3),
-                    borderRadius: BorderRadius.circular(30.r),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Color(0x12000000),
-                        blurRadius: 1.8.r,
-                        offset: Offset(0, 0),
-                      ),
-                    ],
+  Widget _buildFeaturedCampingSites(
+      List<CarCampingSite> sites, String section) {
+    // 각 섹션별 이미지 크기 설정
+    double imageWidth = section == '이런 차박지는 어때요?' ? 220.w : 180.w;
+    double imageHeight = section == '이런 차박지는 어때요?' ? 200.h : 250.h;
+
+    // 슬라이드 간 여백 (섹션에 따라 조정)
+    double slideSpacing = 8.w;
+
+    return Padding(
+      padding: EdgeInsets.only(left: 15.w, bottom: 16.h),
+      child: SizedBox(
+        height: imageHeight + 60.h, // 이미지 + 텍스트 높이 고려
+        child: ListView.separated(
+          scrollDirection: Axis.horizontal, // 가로 스크롤
+          physics: const BouncingScrollPhysics(),
+          itemCount: sites.length,
+          itemBuilder: (context, index) {
+            CarCampingSite site = sites[index];
+            return GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => InfoCampingSiteScreen(site: site),
                   ),
-                  padding: EdgeInsets.fromLTRB(14.5.w, 6.h, 12.2.w, 6.h),
-                  child: Text(
-                    '자세히 보기',
-                    style: GoogleFonts.robotoCondensed(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 10.sp,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-              ),
-            ],
+                );
+              },
+              child: _buildCampingSiteCard(site, imageWidth, imageHeight),
+            );
+          },
+          separatorBuilder: (context, index) =>
+              SizedBox(width: slideSpacing), // 슬라이드 간 여백 조정
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCampingSiteCard(
+      CarCampingSite site, double imageWidth, double imageHeight) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // 이미지 (가로/세로 크기 조정 가능)
+        ClipRRect(
+          borderRadius: BorderRadius.circular(12.r),
+          child: Image.network(
+            site.imageUrl,
+            width: imageWidth,
+            height: imageHeight,
+            fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) {
+              return Container(
+                width: imageWidth,
+                height: imageHeight,
+                color: Colors.grey,
+                child: Icon(Icons.image, size: 30),
+              );
+            },
           ),
-        );
-      },
+        ),
+        SizedBox(height: 8.h), // 이미지와 텍스트 사이 여백
+
+        // 차박지명
+        Text(
+          site.name,
+          style: GoogleFonts.robotoCondensed(
+            fontWeight: FontWeight.w500,
+            fontSize: 14.sp,
+            color: Color(0xFF000000),
+          ),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
+        SizedBox(height: 4.h), // 이름과 주소 사이 여백
+
+        // 차박지 주소
+        Text(
+          site.address,
+          style: GoogleFonts.robotoCondensed(
+            fontWeight: FontWeight.w400,
+            fontSize: 10.sp,
+            color: Color(0xFF777777),
+          ),
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+        ),
+      ],
     );
   }
 
@@ -600,20 +657,6 @@ class _MyHomePageState extends State<MyHomePage> {
             blurRadius: 1.8.r,
           ),
         ],
-      ),
-      child: GridView.builder(
-        shrinkWrap: true,
-        physics: NeverScrollableScrollPhysics(),
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          mainAxisSpacing: 18.h,
-          crossAxisSpacing: 18.w,
-          childAspectRatio: 1,
-        ),
-        itemCount: itemCount,
-        itemBuilder: (context, index) {
-          return _buildCampingSiteItem(_campingSites[index]);
-        },
       ),
     );
   }
@@ -667,42 +710,6 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         );
       },
-    );
-  }
-
-  Widget _buildRegisterButton() {
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 16.w),
-      padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 16.w),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8.r),
-        color: Color(0xFF398EF3),
-        boxShadow: [
-          BoxShadow(
-            color: Color(0x33000000),
-            offset: Offset(0, 0),
-            blurRadius: 2.r,
-          ),
-        ],
-      ),
-      child: Center(
-        child: GestureDetector(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => AddCampingSiteScreen()),
-            );
-          },
-          child: Text(
-            '차박지 등록하기',
-            style: GoogleFonts.robotoCondensed(
-              fontWeight: FontWeight.w500,
-              fontSize: 14.sp,
-              color: Colors.white,
-            ),
-          ),
-        ),
-      ),
     );
   }
 }

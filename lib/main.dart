@@ -125,8 +125,8 @@ class _SplashScreenState extends State<SplashScreen> {
       body: Center(
         child: Image.asset(
           'assets/images/image.png', // 로고 이미지
-          width: 150,
-          height: 150,
+          width: 200,
+          height: 200,
         ),
       ),
     );

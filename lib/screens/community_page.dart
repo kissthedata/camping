@@ -6,7 +6,7 @@ class CommunityPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('커뮤니티'),
-        backgroundColor: Color(0xFF398EF3),
+        backgroundColor: Color.fromARGB(255, 255, 255, 255),
       ),
       body: Center(
         child: Text(
