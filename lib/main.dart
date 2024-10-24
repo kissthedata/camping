@@ -6,7 +6,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'config/firebase_options.dart';
-import 'main_scaffold.dart'; // MainScaffold 구조 적용
+import 'main_scaffold.dart'; // MainScaffold 구조
 import 'services/kakao_location_service.dart';
 
 Future<void> main() async {
@@ -87,9 +87,48 @@ class MyApp extends StatelessWidget {
       designSize: const Size(360, 800),
       builder: (context, child) {
         return MaterialApp(
-          home: MainScaffold(), // 모든 페이지에서 BottomAppBar를 포함한 구조 적용
+          theme: ThemeData(
+            primaryColor: const Color(0xFF398EF3),
+            scaffoldBackgroundColor: Colors.white,
+          ),
+          home: SplashScreen(), // 앱 시작 시 스플래시 화면 표시
         );
       },
     );
- }
+  }
+}
+
+class SplashScreen extends StatefulWidget {
+  @override
+  _SplashScreenState createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> {
+  @override
+  void initState() {
+    super.initState();
+    _navigateToMain(); // 초기화 후 메인 페이지로 이동
+  }
+
+  void _navigateToMain() async {
+    await Future.delayed(Duration(seconds: 3)); // 3초 대기
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => MainScaffold()),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: const Color(0xFF398EF3),
+      body: Center(
+        child: Image.asset(
+          'assets/images/image.png', // 로고 이미지
+          width: 150,
+          height: 150,
+        ),
+      ),
+    );
+  }
 }

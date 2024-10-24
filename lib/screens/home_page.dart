@@ -328,34 +328,37 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
- Widget _buildActionSections() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        _buildInfoCard(
-          iconPath: 'assets/vectors/map_icon.svg',
-          title: "지도보기",
-          subtitle: "차박지와 주변을\n한눈에 검색",
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => MapScreen()),
-            );
-          },
-        ),
-        SizedBox(width: 8.w),
-        _buildInfoCard(
-          iconPath: 'assets/vectors/camping_icon.svg',
-          title: "차박지 목록",
-          subtitle: "등록된 차박지를\n한눈에 보기",
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => AllCampingSitesPage()),
-            );
-          },
-        ),
-      ],
+  Widget _buildActionSections() {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 16.w), // 날씨 UI와 동일한 마진
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          _buildInfoCard(
+            iconPath: 'assets/vectors/map_icon.svg',
+            title: "지도보기",
+            subtitle: "차박지와 주변을\n한눈에 검색",
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => MapScreen()),
+              );
+            },
+          ),
+          SizedBox(width: 8.w), // 카드 사이 간격
+          _buildInfoCard(
+            iconPath: 'assets/vectors/camping_icon.svg',
+            title: "차박지 목록",
+            subtitle: "등록된 차박지를\n한눈에 보기",
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => AllCampingSitesPage()),
+              );
+            },
+          ),
+        ],
+      ),
     );
   }
 
@@ -366,9 +369,11 @@ class _MyHomePageState extends State<MyHomePage> {
     required VoidCallback onTap,
   }) {
     return Expanded(
+      // 두 박스의 너비를 균등하게 분배
       child: InkWell(
         onTap: onTap,
         child: Container(
+          height: 180.h, // 카드의 높이 (필요 시 조정 가능)
           margin: EdgeInsets.symmetric(vertical: 16.h),
           padding: EdgeInsets.all(12.w),
           decoration: BoxDecoration(
