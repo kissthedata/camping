@@ -591,54 +591,45 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Widget _buildCampingSiteCard(
       CarCampingSite site, double imageWidth, double imageHeight) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // 이미지 (가로/세로 크기 조정 가능)
-        ClipRRect(
+    return FutureBuilder<String>(
+      future: _getImageUrl(site.imageUrl), // Firebase에서 이미지 URL 불러오기
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Container(
+            width: imageWidth,
+            height: imageHeight,
+            alignment: Alignment.center,
+            child: CircularProgressIndicator(), // 로딩 인디케이터
+          );
+        } else if (snapshot.hasError ||
+            !snapshot.hasData ||
+            snapshot.data!.isEmpty) {
+          return _buildErrorImage(imageWidth, imageHeight); // 오류 처리
+        }
+
+        String imageUrl = snapshot.data!;
+        return ClipRRect(
           borderRadius: BorderRadius.circular(12.r),
           child: Image.network(
-            site.imageUrl,
+            imageUrl,
             width: imageWidth,
             height: imageHeight,
             fit: BoxFit.cover,
             errorBuilder: (context, error, stackTrace) {
-              return Container(
-                width: imageWidth,
-                height: imageHeight,
-                color: Colors.grey,
-                child: Icon(Icons.image, size: 30),
-              );
+              return _buildErrorImage(imageWidth, imageHeight);
             },
           ),
-        ),
-        SizedBox(height: 8.h), // 이미지와 텍스트 사이 여백
+        );
+      },
+    );
+  }
 
-        // 차박지명
-        Text(
-          site.name,
-          style: GoogleFonts.robotoCondensed(
-            fontWeight: FontWeight.w500,
-            fontSize: 14.sp,
-            color: Color(0xFF000000),
-          ),
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-        ),
-        SizedBox(height: 4.h), // 이름과 주소 사이 여백
-
-        // 차박지 주소
-        Text(
-          site.address,
-          style: GoogleFonts.robotoCondensed(
-            fontWeight: FontWeight.w400,
-            fontSize: 10.sp,
-            color: Color(0xFF777777),
-          ),
-          maxLines: 2,
-          overflow: TextOverflow.ellipsis,
-        ),
-      ],
+  Widget _buildErrorImage(double width, double height) {
+    return Container(
+      width: width,
+      height: height,
+      color: Colors.grey,
+      child: Icon(Icons.broken_image, size: 30, color: Colors.white),
     );
   }
 

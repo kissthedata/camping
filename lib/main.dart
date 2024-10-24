@@ -27,20 +27,22 @@ Future<void> main() async {
 Future<void> _initializeApp() async {
   try {
     await dotenv.load(fileName: ".env");
+    print('ENV loaded: ${dotenv.env}'); // 환경변수 확인 로그
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
+    print('Firebase initialized successfully');
   } catch (e) {
-    print('Initialization error: $e');
+    print('Initialization error: $e'); // 초기화 실패 시 로그 출력
   }
 }
 
 void _initializeThirdPartyServices() {
   NaverMapSdk.instance.initialize(
-    clientId: dotenv.env['NAVER_CLIENT_ID']!,
+    clientId: dotenv.env['NAVER_CLIENT_ID'] ?? '',
   );
   KakaoSdk.init(
-    nativeAppKey: dotenv.env['KAKAO_API_KEY']!,
+    nativeAppKey: dotenv.env['KAKAO_API_KEY'] ?? '',
   );
 }
 
@@ -65,7 +67,6 @@ Future<void> _requestLocationPermission() async {
     return;
   }
 
-  // 위치 정보 가져오기 및 업로드
   try {
     Position position = await Geolocator.getCurrentPosition(
       desiredAccuracy: LocationAccuracy.high,
@@ -90,8 +91,16 @@ class MyApp extends StatelessWidget {
           theme: ThemeData(
             primaryColor: const Color(0xFF398EF3),
             scaffoldBackgroundColor: Colors.white,
+            appBarTheme: AppBarTheme(
+              backgroundColor: const Color(0xFF398EF3),
+              titleTextStyle: TextStyle(
+                color: Colors.white,
+                fontSize: 20.sp,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           ),
-          home: SplashScreen(), // 앱 시작 시 스플래시 화면 표시
+          home: SplashScreen(),
         );
       },
     );
@@ -107,15 +116,19 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    _navigateToMain(); // 초기화 후 메인 페이지로 이동
+    _navigateToMain();
   }
 
-  void _navigateToMain() async {
-    await Future.delayed(Duration(seconds: 3)); // 3초 대기
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => MainScaffold()),
-    );
+  Future<void> _navigateToMain() async {
+    try {
+      await Future.delayed(Duration(seconds: 3));
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => MainScaffold()),
+      );
+    } catch (e) {
+      print('Navigation error: $e'); // 예외 발생 시 로그
+    }
   }
 
   @override
@@ -124,9 +137,16 @@ class _SplashScreenState extends State<SplashScreen> {
       backgroundColor: const Color(0xFF398EF3),
       body: Center(
         child: Image.asset(
-          'assets/images/image.png', // 로고 이미지
+          'assets/images/image.png',
           width: 200,
           height: 200,
+          errorBuilder: (context, error, stackTrace) {
+            return Icon(
+              Icons.error,
+              size: 50,
+              color: Colors.white,
+            );
+          },
         ),
       ),
     );
