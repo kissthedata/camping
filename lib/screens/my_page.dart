@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'login_screen.dart';
@@ -14,6 +13,7 @@ class MyPage extends StatefulWidget {
 class _MyPageState extends State<MyPage> {
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
+  bool isLoading = true;
 
   @override
   void initState() {
@@ -21,20 +21,29 @@ class _MyPageState extends State<MyPage> {
     _loadUserInfo();
   }
 
-  void _loadUserInfo() async {
-    User? user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      DatabaseReference userRef =
-          FirebaseDatabase.instance.ref().child('users').child(user.uid);
-      DataSnapshot snapshot = await userRef.get();
-      if (snapshot.exists) {
-        Map<String, dynamic> userData =
-            Map<String, dynamic>.from(snapshot.value as Map);
-        setState(() {
-          _emailController.text = userData['email'];
-          _nameController.text = userData['name'];
-        });
+  Future<void> _loadUserInfo() async {
+    try {
+      User? user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        DatabaseReference userRef =
+            FirebaseDatabase.instance.ref().child('users').child(user.uid);
+        DataSnapshot snapshot = await userRef.get();
+
+        if (snapshot.exists) {
+          Map<String, dynamic> userData =
+              Map<String, dynamic>.from(snapshot.value as Map);
+          setState(() {
+            _emailController.text = userData['email'] ?? '이메일 없음';
+            _nameController.text = userData['name'] ?? '사용자 이름';
+          });
+        }
       }
+    } catch (e) {
+      print('Error loading user info: $e');
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 
@@ -49,103 +58,94 @@ class _MyPageState extends State<MyPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        color: Color(0xFFF3F5F7),
-        child: ListView(
-          padding: EdgeInsets.all(16),
-          children: [
-            Container(
-              padding: EdgeInsets.fromLTRB(16, 40, 16, 16),
-              decoration: BoxDecoration(
-                color: Colors.white,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+      body: SafeArea(
+        child: isLoading
+            ? Center(child: CircularProgressIndicator())
+            : Column(
                 children: [
-                  Row(
+                  // 헤더 섹션: 뒤로가기와 중앙 정렬된 타이틀
+                  Stack(
                     children: [
-                      SvgPicture.asset(
-                        'assets/vectors/union_1_x2.svg',
-                        width: 108,
-                        height: 45.7,
+                      Align(
+                        alignment: Alignment.center,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 16.0),
+                          child: Text(
+                            '마이페이지',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
                       ),
-                      SizedBox(width: 16),
-                      Text(
-                        '마이페이지',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
+                      Positioned(
+                        left: 8.0,
+                        child: IconButton(
+                          icon: Icon(Icons.arrow_back),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
                         ),
                       ),
                     ],
                   ),
                   SizedBox(height: 30),
-                  Row(
-                    children: [
-                      Container(
-                        width: 78,
-                        height: 78,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(39),
-                          color: Color(0xFFECECEC),
+
+                  // 사용자 정보 표시
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 32.0),
+                    child: Row(
+                      children: [
+                        CircleAvatar(
+                          radius: 40,
+                          backgroundColor: Colors.grey[300],
+                          child: Icon(Icons.person, size: 40, color: Colors.white),
                         ),
-                        child: Center(
-                          child: SvgPicture.asset(
-                            'assets/vectors/vector_3_x2.svg',
-                            width: 20,
-                            height: 18,
-                          ),
+                        SizedBox(width: 16),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              _nameController.text,
+                              style: TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            SizedBox(height: 8),
+                            Text(
+                              '힐링을 원하는 차박러',
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w400,
+                                color: Colors.blue,
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-                      SizedBox(width: 16),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            _nameController.text.isNotEmpty
-                                ? _nameController.text
-                                : '사용자 이름',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          SizedBox(height: 7),
-                          Text(
-                            '힐링을 원하는 차박러',
-                            style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w600,
-                              color: Color(0xFF398EF3),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
+                  SizedBox(height: 40),
+
+                  // 메뉴 리스트
+                  _buildMenuList(),
                 ],
               ),
-            ),
-            SizedBox(height: 16),
-            _buildMenuList(),
-          ],
-        ),
       ),
     );
   }
 
   Widget _buildMenuList() {
-    return Container(
-      padding: EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-      ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildMenuItem(
             '정보 수정',
-            'assets/vectors/group_1_x2.svg',
+            Icons.edit,
             () {
               Navigator.push(
                 context,
@@ -155,7 +155,7 @@ class _MyPageState extends State<MyPage> {
           ),
           _buildMenuItem(
             '좋아요한 차박지',
-            'assets/vectors/vector_9_x2.svg',
+            Icons.favorite,
             () {
               Navigator.push(
                 context,
@@ -164,31 +164,38 @@ class _MyPageState extends State<MyPage> {
             },
           ),
           _buildMenuItem(
-            '저장한 차박지',
-            'assets/vectors/vector_18_x2.svg',
+            '문의하기',
+            Icons.mail,
             () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => ScrapListScreen()),
+              // 문의하기 액션
+              showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: Text('문의하기'),
+                  content: Text('이메일: support@example.com\n전화: 123-456-7890'),
+                  actions: [
+                    TextButton(
+                      child: Text('닫기'),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ],
+                ),
               );
             },
           ),
           _buildMenuItem(
-            '공유받은 차박지',
-            'assets/vectors/vector_13_x2.svg',
-            () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => ScrapListScreen()),
-              );
-            },
+            '로그아웃',
+            Icons.logout,
+            _logout,
           ),
         ],
       ),
     );
   }
 
-  Widget _buildMenuItem(String title, String assetPath, VoidCallback onTap) {
+  Widget _buildMenuItem(String title, IconData icon, VoidCallback onTap) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -198,16 +205,12 @@ class _MyPageState extends State<MyPage> {
           children: [
             Row(
               children: [
-                SvgPicture.asset(
-                  assetPath,
-                  width: 24,
-                  height: 24,
-                ),
+                Icon(icon, size: 24, color: Colors.grey[700]),
                 SizedBox(width: 16),
                 Text(
                   title,
                   style: TextStyle(
-                    fontSize: 14,
+                    fontSize: 16,
                     fontWeight: FontWeight.w500,
                   ),
                 ),

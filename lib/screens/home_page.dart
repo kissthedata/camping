@@ -10,6 +10,7 @@ import 'map_screen.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'info_camping_site_screen.dart';
 import 'package:map_sample/models/car_camping_site.dart';
+import 'package:map_sample/models/recommendation_system.dart'; // 추천 시스템 모델
 import 'camping_list.dart';
 import 'search_camping_site_page.dart';
 import 'recommend_screen.dart';
@@ -20,12 +21,14 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  List<CarCampingSite> _campingSites = [];
+  List<CarCampingSite> _campingSites = []; // 일반 차박지 목록
+  List<CarCampingSite> _recommendedSites = []; // 추천 차박지 목록
 
   @override
   void initState() {
     super.initState();
-    _loadCampingSites();
+    _loadCampingSites(); // 일반 차박지 로드
+    _loadRecommendedSites(); // 추천 차박지 로드
   }
 
   Future<void> _loadCampingSites() async {
@@ -63,6 +66,16 @@ class _MyHomePageState extends State<MyHomePage> {
         _campingSites = sites;
       });
     }
+  }
+
+  Future<void> _loadRecommendedSites() async {
+    RecommendationSystem recommendationSystem = RecommendationSystem();
+    List<CarCampingSite> recommended =
+        await recommendationSystem.recommendCampingSites('user_id'); // 유저 ID 사용
+
+    setState(() {
+      _recommendedSites = recommended;
+    });
   }
 
   Future<String> _getAddressFromLatLng(double lat, double lng) async {
@@ -110,7 +123,6 @@ class _MyHomePageState extends State<MyHomePage> {
       builder: (context, child) {
         return Scaffold(
           backgroundColor: const Color(0xFFF3F5F7),
-          resizeToAvoidBottomInset: false,
           body: SafeArea(
             child: Column(
               children: [
@@ -124,22 +136,19 @@ class _MyHomePageState extends State<MyHomePage> {
                         _buildWeatherInfo(),
                         _buildActionSections(),
 
-                        // '이런 차박지는 어때요?' 섹션
+                        // 일반 차박지 섹션
                         _buildSectionTitle('이런 차박지는 어때요?'),
-                        if (_campingSites.isNotEmpty)
-                          _buildFeaturedCampingSites(
-                              _campingSites, '이런 차박지는 어때요?'),
+                        _buildFeaturedCampingSites(
+                            _campingSites, '이런 차박지는 어때요?'),
 
-                        // '사용자님 추천 차박지를 찾아봤어요!' 섹션
+                        // 추천 차박지 섹션
                         _buildSectionTitle('사용자님 추천 차박지를 찾아봤어요!'),
-                        if (_campingSites.isNotEmpty)
-                          _buildFeaturedCampingSites(
-                              _campingSites, '사용자님 추천 차박지를 찾아봤어요!'),
+                        _buildFeaturedCampingSites(
+                            _recommendedSites, '사용자님 추천 차박지를 찾아봤어요!'),
                       ],
                     ),
                   ),
                 ),
-                // 충분한 하단 여백 확보
                 SizedBox(height: 32.h),
               ],
             ),
@@ -159,7 +168,7 @@ class _MyHomePageState extends State<MyHomePage> {
           bottomLeft: Radius.circular(16.r),
         ),
       ),
-      padding: EdgeInsets.fromLTRB(16.w, 120.h, 16.w, 16.h),
+      padding: EdgeInsets.fromLTRB(16.w, 60.h, 16.w, 16.h),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -515,13 +524,13 @@ class _MyHomePageState extends State<MyHomePage> {
                 if (title == '이런 차박지는 어때요?') {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => RecommendScreen()),
+                    MaterialPageRoute(builder: (context) => AllCampingSitesPage()),
                   );
                 } else if (title == '사용자님 추천 차박지를 찾아봤어요!') {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => AllCampingSitesPage()),
+                        builder: (context) => RecommendScreen()),
                   );
                 }
               },
@@ -554,8 +563,8 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget _buildFeaturedCampingSites(
       List<CarCampingSite> sites, String section) {
     // 각 섹션별 이미지 크기 설정
-    double imageWidth = section == '이런 차박지는 어때요?' ? 220.w : 180.w;
-    double imageHeight = section == '이런 차박지는 어때요?' ? 200.h : 250.h;
+    double imageWidth = section == '이런 차박지는 어때요?' ? 220.w : 190.w;
+    double imageHeight = section == '이런 차박지는 어때요?' ? 180.h : 230.h;
 
     // 슬라이드 간 여백 (섹션에 따라 조정)
     double slideSpacing = 8.w;
