@@ -100,7 +100,7 @@ class MyApp extends StatelessWidget {
               ),
             ),
           ),
-          home: SplashScreen(),
+          home: SplashScreen(), // 앱 시작 시 스플래시 화면 표시
         );
       },
     );
