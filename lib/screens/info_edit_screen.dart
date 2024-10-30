@@ -2,56 +2,74 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 
-/// 사용자 정보를 수정할 수 있는 화면을 위한 StatefulWidget 정의
 class InfoEditScreen extends StatefulWidget {
   @override
   _InfoEditScreenState createState() => _InfoEditScreenState();
 }
 
-/// 사용자 정보 수정 화면의 상태를 관리하기 위한 State 클래스
 class _InfoEditScreenState extends State<InfoEditScreen> {
-  final _nameController = TextEditingController();
-  final _emailController = TextEditingController();
+  final _nicknameController = TextEditingController();
+  final _descriptionController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
     super.initState();
-    _loadUserInfo(); // 사용자 정보 불러오기
+    _loadUserInfo();
   }
 
-  /// 사용자 정보를 불러오는 함수
   void _loadUserInfo() async {
     User? user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       DatabaseReference userRef =
-          FirebaseDatabase.instance.ref().child('users').child(user.uid);
+          FirebaseDatabase.instance.ref('users').child(user.uid);
       DataSnapshot snapshot = await userRef.get();
+
       if (snapshot.exists) {
         Map<String, dynamic> userData =
             Map<String, dynamic>.from(snapshot.value as Map);
         setState(() {
-          _emailController.text = userData['email'];
-          _nameController.text = userData['name'];
+          _nicknameController.text = userData['nickname'] ?? '';
+          _descriptionController.text = userData['description'] ?? '';
         });
       }
     }
   }
 
-  /// 사용자 정보를 업데이트하는 함수
-  void _updateUserInfo() async {
+  void _saveInfo() async {
     if (_formKey.currentState!.validate()) {
       User? user = FirebaseAuth.instance.currentUser;
       if (user != null) {
-        DatabaseReference userRef =
-            FirebaseDatabase.instance.ref().child('users').child(user.uid);
-        await userRef.update({
-          'name': _nameController.text,
-        });
+        Map<String, String> updates = {};
+        if (_nicknameController.text.isNotEmpty) {
+          updates['nickname'] = _nicknameController.text;
+        }
+        if (_descriptionController.text.isNotEmpty) {
+          updates['description'] = _descriptionController.text;
+        }
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('정보가 업데이트되었습니다.')),
-        );
+        await FirebaseDatabase.instance
+            .ref('users')
+            .child(user.uid)
+            .update(updates);
+
+        if (_passwordController.text.isNotEmpty) {
+          try {
+            await user.updatePassword(_passwordController.text);
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('비밀번호가 변경되었습니다.')),
+            );
+          } on FirebaseAuthException catch (e) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('비밀번호 변경 실패: ${e.message}')),
+            );
+            return;
+          }
+        }
+
+        Navigator.pop(context, updates);
       }
     }
   }
@@ -59,156 +77,98 @@ class _InfoEditScreenState extends State<InfoEditScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          Positioned(
-            top: 70,
-            left: 0,
-            right: 0,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Form(
+            key: _formKey,
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  '정보 수정',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 30,
-                    fontFamily: 'Pretendard',
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
+                _buildHeader(context),
+                SizedBox(height: 24),
+                _buildTextLabel("닉네임"),
+                _buildInputContainer(_nicknameController, "닉네임을 입력하세요"),
+                SizedBox(height: 12),
+                _buildTextLabel("설명 문구"),
+                _buildInputContainer(_descriptionController, "설명 문구를 입력하세요"),
+                SizedBox(height: 12),
+                _buildTextLabel("새 비밀번호"),
+                _buildInputContainer(_passwordController, "새 비밀번호 입력", true),
+                SizedBox(height: 12),
+                _buildTextLabel("비밀번호 확인"),
+                _buildInputContainer(_confirmPasswordController, "비밀번호 확인", true),
                 SizedBox(height: 30),
-                Container(
-                  width: double.infinity,
-                  height: 382,
-                  margin: EdgeInsets.symmetric(horizontal: 16.0),
-                  decoration: ShapeDecoration(
-                    color: Color(0xFFEFEFEF),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Form(
-                      key: _formKey,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            width: double.infinity,
-                            height: 65.25,
-                            margin: EdgeInsets.symmetric(vertical: 8.0),
-                            decoration: ShapeDecoration(
-                              color: Color(0xFFF3F3F3),
-                              shape: RoundedRectangleBorder(
-                                side: BorderSide(
-                                    width: 1, color: Color(0xFF474747)),
-                                borderRadius: BorderRadius.circular(16),
-                              ),
-                            ),
-                            child: TextFormField(
-                              controller: _emailController,
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
-                                hintText: '이메일',
-                                hintStyle: TextStyle(
-                                  color: Color(0xFF868686),
-                                  fontSize: 16,
-                                  fontFamily: 'Pretendard',
-                                  fontWeight: FontWeight.w400,
-                                ),
-                                contentPadding: EdgeInsets.symmetric(
-                                    horizontal: 16.0, vertical: 20.0),
-                              ),
-                              readOnly: true,
-                            ),
-                          ),
-                          Container(
-                            width: double.infinity,
-                            height: 65.25,
-                            margin: EdgeInsets.symmetric(vertical: 8.0),
-                            decoration: ShapeDecoration(
-                              color: Color(0xFFF3F3F3),
-                              shape: RoundedRectangleBorder(
-                                side: BorderSide(
-                                    width: 1, color: Color(0xFF474747)),
-                                borderRadius: BorderRadius.circular(16),
-                              ),
-                            ),
-                            child: TextFormField(
-                              controller: _nameController,
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
-                                hintText: '닉네임',
-                                hintStyle: TextStyle(
-                                  color: Color(0xFF868686),
-                                  fontSize: 16,
-                                  fontFamily: 'Pretendard',
-                                  fontWeight: FontWeight.w400,
-                                ),
-                                contentPadding: EdgeInsets.symmetric(
-                                    horizontal: 16.0, vertical: 20.0),
-                              ),
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return '이름을 입력하세요';
-                                }
-                                return null;
-                              },
-                            ),
-                          ),
-                          Spacer(),
-                          Container(
-                            width: double.infinity,
-                            height: 65.25,
-                            margin: EdgeInsets.symmetric(vertical: 8.0),
-                            decoration: ShapeDecoration(
-                              color: Color(0xFF162243),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(16),
-                              ),
-                            ),
-                            child: TextButton(
-                              onPressed: _updateUserInfo,
-                              child: Center(
-                                child: Text(
-                                  '저장하기',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 16,
-                                    fontFamily: 'Pretendard',
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          Center(
-                            child: TextButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              child: Text(
-                                '취소',
-                                style: TextStyle(
-                                  color: Color(0xFF162243),
-                                  fontSize: 16,
-                                  fontFamily: 'Pretendard',
-                                  fontWeight: FontWeight.w400,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
+                _buildActionButton(),
               ],
             ),
           ),
-        ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildHeader(BuildContext context) {
+    return Row(
+      children: [
+        IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () => Navigator.pop(context),
+        ),
+        Expanded(
+          child: Text(
+            "정보 수정",
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+          ),
+        ),
+        SizedBox(width: 48),
+      ],
+    );
+  }
+
+  Widget _buildTextLabel(String text) {
+    return Text(
+      text,
+      style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
+    );
+  }
+
+  Widget _buildInputContainer(
+      TextEditingController controller, String hintText,
+      [bool obscureText = false]) {
+    return Container(
+      margin: EdgeInsets.only(top: 8),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+        color: Color(0xfff8f8f8),
+      ),
+      child: TextFormField(
+        controller: controller,
+        obscureText: obscureText,
+        decoration: InputDecoration(
+          hintText: hintText,
+          border: InputBorder.none,
+          contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildActionButton() {
+    return Container(
+      width: double.infinity,
+      height: 56,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+        color: Color(0xff398ef3),
+      ),
+      child: TextButton(
+        onPressed: _saveInfo,
+        child: Text(
+          "수정하기",
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.white),
+        ),
       ),
     );
   }

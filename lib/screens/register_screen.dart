@@ -9,6 +9,8 @@ class SignupForm extends StatefulWidget {
 
 class _SignupFormState extends State<SignupForm> {
   final _formKey = GlobalKey<FormState>();
+  final _nicknameController = TextEditingController(); // 닉네임 컨트롤러
+  final _descriptionController = TextEditingController(); // 설명 문구 컨트롤러
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
@@ -16,7 +18,6 @@ class _SignupFormState extends State<SignupForm> {
   // Form data variables
   String? _gender;
   String _age = '';
-  String _nickname = '';
   bool _hasCar = false; // 자차 보유 여부
   String _campingExperience = '시작 전';
   List<String> _selectedHobbies = []; // 취미 선택
@@ -47,10 +48,11 @@ class _SignupFormState extends State<SignupForm> {
             .child(userCredential.user!.uid);
 
         await userRef.set({
+          'nickname': _nicknameController.text,
+          'description': _descriptionController.text, // 설명 문구 저장
           'email': _emailController.text,
           'gender': _gender,
           'age': _age,
-          'nickname': _nickname,
           'hasCar': _hasCar,
           'campingExperience': _campingExperience,
           'hobbies': _selectedHobbies, // 취미 데이터 저장
@@ -117,6 +119,26 @@ class _SignupFormState extends State<SignupForm> {
                     ),
                   ),
                   SizedBox(height: 16),
+                  // 별명
+                  _buildTextField(
+                    controller: _nicknameController, // 컨트롤러 연결
+                    hintText: '닉네임', // 별명 → 닉네임으로 통일
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return '닉네임을 입력해주세요';
+                      }
+                      return null;
+                    },
+                    cursorColor: Color(0xFF398EF3),
+                  ),
+                  SizedBox(height: 16),
+
+                  _buildTextField(
+                    controller: _descriptionController,
+                    hintText: '설명 문구 (예: 힐링을 원하는 차박러)',
+                    validator: (value) =>
+                        value == null || value.isEmpty ? '설명 문구를 입력해주세요' : null,
+                  ),
 
                   // 이메일
                   _buildTextField(
@@ -175,20 +197,6 @@ class _SignupFormState extends State<SignupForm> {
                     },
                     keyboardType: TextInputType.number,
                     onChanged: (value) => _age = value,
-                    cursorColor: Color(0xFF398EF3),
-                  ),
-                  SizedBox(height: 16),
-
-                  // 별명
-                  _buildTextField(
-                    hintText: '별명',
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return '별명을 입력해주세요';
-                      }
-                      return null;
-                    },
-                    onChanged: (value) => _nickname = value,
                     cursorColor: Color(0xFF398EF3),
                   ),
                   SizedBox(height: 16),

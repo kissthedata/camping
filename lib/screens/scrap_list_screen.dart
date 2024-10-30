@@ -31,15 +31,12 @@ class _ScrapListScreenState extends State<ScrapListScreen> {
         Map<dynamic, dynamic> data = snapshot.value as Map<dynamic, dynamic>;
         data.forEach((key, value) {
           scraps.add(CarCampingSite(
-            key: key ?? 'defaultKey', // Using a default value if key is null
-            name: value['name'] ?? 'Unknown Name', // Providing default for name
-            latitude:
-                value['latitude'] ?? 0.0, // Providing default for latitude
-            longitude:
-                value['longitude'] ?? 0.0, // Providing default for longitude
-            address: value['address'] ??
-                'Unknown Address', // Providing default for address
-            imageUrl: value['imageUrl'] ?? '', // Providing default for imageUrl
+            key: key,
+            name: value['name'] ?? 'Unknown Name',
+            latitude: value['latitude'] ?? 0.0,
+            longitude: value['longitude'] ?? 0.0,
+            address: value['address'] ?? 'Unknown Address',
+            imageUrl: value['imageUrl'] ?? '',
             restRoom: value['restRoom'] ?? false,
             sink: value['sink'] ?? false,
             cook: value['cook'] ?? false,
@@ -71,189 +68,122 @@ class _ScrapListScreenState extends State<ScrapListScreen> {
   }
 
   void _shareCampingSpot(CarCampingSite site) async {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('공유하기'),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                ListTile(
-                  leading: Icon(Icons.share),
-                  title: Text('일반 공유'),
-                  onTap: () async {
-                    Navigator.of(context).pop();
-                    try {
-                      await Share.share(
-                        '차박지 정보\n이름: ${site.name}\n위치: ${site.latitude}, ${site.longitude}\n',
-                        subject: '차박지 정보 공유',
-                      );
-                    } catch (e) {
-                      print('공유 오류: $e');
-                    }
-                  },
-                ),
-                ListTile(
-                  leading: Icon(Icons.message),
-                  title: Text('카카오톡 공유'),
-                  onTap: () async {
-                    Navigator.of(context).pop();
-                    try {
-                      final FeedTemplate defaultFeed = FeedTemplate(
-                        content: Content(
-                          title: site.name,
-                          description:
-                              '차박지 위치: ${site.latitude}, ${site.longitude}',
-                          imageUrl: Uri.parse(site.imageUrl),
-                          link: Link(
-                            webUrl: Uri.parse('https://yourwebsite.com'),
-                            mobileWebUrl: Uri.parse('https://yourwebsite.com'),
-                          ),
-                        ),
-                        buttons: [
-                          Button(
-                            title: '자세히 보기',
-                            link: Link(
-                              webUrl: Uri.parse('https://yourwebsite.com'),
-                              mobileWebUrl:
-                                  Uri.parse('https://yourwebsite.com'),
-                            ),
-                          ),
-                        ],
-                      );
-
-                      if (await ShareClient.instance
-                          .isKakaoTalkSharingAvailable()) {
-                        await ShareClient.instance
-                            .shareDefault(template: defaultFeed);
-                      } else {
-                        print('카카오톡이 설치되지 않았습니다.');
-                      }
-                    } catch (e) {
-                      print('카카오톡 공유 오류: $e');
-                    }
-                  },
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
+    try {
+      await Share.share(
+        '차박지 정보\n이름: ${site.name}\n위치: ${site.latitude}, ${site.longitude}\n',
+        subject: '차박지 정보 공유',
+      );
+    } catch (e) {
+      print('공유 오류: $e');
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          Positioned(
-            top: 70,
-            left: 0,
-            right: 0,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  '스크랩한 차박지',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 30,
-                    fontFamily: 'Pretendard',
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                SizedBox(height: 20),
-                Container(
-                  width: double.infinity,
-                  height: MediaQuery.of(context).size.height - 250,
-                  margin: EdgeInsets.symmetric(horizontal: 16.0),
-                  decoration: ShapeDecoration(
-                    color: Color(0xFFEFEFEF),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: ListView.builder(
-                      itemCount: _scraps.length,
-                      itemBuilder: (context, index) {
-                        final scrap = _scraps[index];
-                        return GestureDetector(
-                          onTap: () => _removeScrap(scrap),
-                          child: Container(
-                            margin: EdgeInsets.only(bottom: 16.0),
-                            decoration: ShapeDecoration(
-                              color: Colors.white,
-                              shape: RoundedRectangleBorder(
-                                side: BorderSide(
-                                    width: 1.64, color: Color(0xFFBCBCBC)),
-                                borderRadius: BorderRadius.circular(13.12),
-                              ),
-                            ),
-                            child: ListTile(
-                              title: Text(
-                                scrap.name,
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 18.05,
-                                  fontFamily: 'Pretendard',
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                              trailing: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  IconButton(
-                                    icon: Icon(Icons.star, color: Colors.black),
-                                    onPressed: () => _removeScrap(scrap),
-                                  ),
-                                  IconButton(
-                                    icon: Icon(Icons.share),
-                                    onPressed: () => _shareCampingSpot(scrap),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                ),
-                SizedBox(height: 16),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                  child: Container(
-                    width: 280,
-                    height: 60,
-                    decoration: ShapeDecoration(
-                      color: Color(0xFF172243),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(36.50),
-                      ),
-                    ),
-                    child: Center(
-                      child: Text(
-                        '닫기',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                          fontFamily: 'Pretendard',
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              _buildHeader(),
+              SizedBox(height: 16),
+              _buildScrapList(),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// **Header with Back Button and Title**
+  Widget _buildHeader() {
+    return Row(
+      children: [
+        IconButton(
+          icon: Icon(Icons.arrow_back, size: 24),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+        Expanded(
+          child: Center(
+            child: Text(
+              '좋아요한 차박지',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.w600,
+                color: Color(0xFF172243),
+              ),
             ),
           ),
+        ),
+        SizedBox(width: 48), // To balance alignment
+      ],
+    );
+  }
+
+  /// **Scrap List Display**
+  Widget _buildScrapList() {
+    return Expanded(
+      child: _scraps.isEmpty
+          ? Center(child: Text('저장된 차박지가 없습니다.'))
+          : ListView.builder(
+              itemCount: _scraps.length,
+              itemBuilder: (context, index) {
+                final scrap = _scraps[index];
+                return _buildScrapItem(scrap);
+              },
+            ),
+    );
+  }
+
+  /// **Individual Scrap Item Design**
+  Widget _buildScrapItem(CarCampingSite site) {
+    return Container(
+      margin: EdgeInsets.only(bottom: 16.0),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Color(0xFFBCBCBC), width: 1.5),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 6.0,
+            offset: Offset(0, 3),
+          ),
         ],
+      ),
+      child: ListTile(
+        contentPadding: EdgeInsets.all(16.0),
+        title: Text(
+          site.name,
+          style: TextStyle(
+            fontSize: 18.0,
+            fontWeight: FontWeight.w500,
+            color: Color(0xFF172243),
+          ),
+        ),
+        subtitle: Text(
+          site.address,
+          style: TextStyle(
+            fontSize: 14.0,
+            color: Colors.grey[600],
+          ),
+        ),
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            IconButton(
+              icon: Icon(Icons.star, color: Colors.amber),
+              onPressed: () => _removeScrap(site),
+            ),
+            IconButton(
+              icon: Icon(Icons.share, color: Color(0xFF398EF3)),
+              onPressed: () => _shareCampingSpot(site),
+            ),
+          ],
+        ),
       ),
     );
   }
