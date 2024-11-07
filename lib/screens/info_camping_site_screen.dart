@@ -1,374 +1,292 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'dart:ui';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:map_sample/models/car_camping_site.dart';
 
-class InfoCampingSiteScreen extends StatelessWidget {
+class InfoCampingSiteScreen extends StatefulWidget {
   final CarCampingSite site;
 
   InfoCampingSiteScreen({required this.site});
 
   @override
+  _InfoCampingSiteScreenState createState() => _InfoCampingSiteScreenState();
+}
+
+class _InfoCampingSiteScreenState extends State<InfoCampingSiteScreen> {
+  String? imageUrl;
+  bool isLiked = false;
+  late DatabaseReference userLikesRef;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadImage();
+    _checkLikeStatus();
+  }
+
+  Future<void> _loadImage() async {
+    try {
+      final url = await FirebaseStorage.instance
+          .ref(widget.site.imageUrl)
+          .getDownloadURL();
+      setState(() {
+        imageUrl = url;
+      });
+    } catch (e) {
+      print("Error loading image: $e");
+    }
+  }
+
+  Future<void> _checkLikeStatus() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      userLikesRef = FirebaseDatabase.instance
+          .ref('user_likes/${user.uid}/${widget.site.name}');
+      final snapshot = await userLikesRef.get();
+
+      setState(() {
+        isLiked = snapshot.exists;
+      });
+    }
+  }
+
+  Future<void> _toggleLike() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+
+    setState(() {
+      isLiked = !isLiked;
+    });
+
+    if (isLiked) {
+      await userLikesRef.set({
+        'name': widget.site.name,
+        'latitude': widget.site.latitude,
+        'longitude': widget.site.longitude,
+      });
+    } else {
+      await userLikesRef.remove();
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-        ),
-        child: Stack(
+      body: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ClipRect(
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 14.85, sigmaY: 14.85),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Color(0xFFF0F0F0),
-                  ),
-                  child: SizedBox(
-                    width: double.infinity,
-                    child: Container(
-                      padding: EdgeInsets.fromLTRB(0, 0, 0, 34),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Container(
-                            margin: EdgeInsets.fromLTRB(0, 0, 0, 88),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                            ),
-                            child: Container(
-                              padding: EdgeInsets.fromLTRB(16, 32.4, 0, 19),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    margin: EdgeInsets.only(bottom: 7.4),
-                                    child: SvgPicture.asset(
-                                      'assets/vectors/union_x2.svg',
-                                      width: 23,
-                                      height: 17.2,
-                                    ),
-                                  ),
-                                  Container(
-                                    margin: EdgeInsets.only(top: 5.6),
-                                    child: Text(
-                                      '차박지 상세 정보',
-                                      style: GoogleFonts.robotoCondensed( // Changed to a more common font
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 16,
-                                        color: Color(0xFF000000),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          Container(
-                            margin:
-                                EdgeInsets.only(right: 2.3, bottom: 73),
-                            child: Align(
-                              alignment: Alignment.topCenter,
-                              child: SvgPicture.asset(
-                                'assets/vectors/group_x2.svg',
-                                width: 53.7,
-                                height: 47,
-                              ),
-                            ),
-                          ),
-                          Container(
-                            margin: EdgeInsets.symmetric(horizontal: 13.5),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  children: List.generate(4, (index) {
-                                    return Container(
-                                      margin: EdgeInsets.only(right: 10),
-                                      decoration: BoxDecoration(
-                                        color: index == 0
-                                            ? Color(0xFF398EF3)
-                                            : Color(0xA1AEAEAE),
-                                        borderRadius: BorderRadius.circular(2),
-                                      ),
-                                      width: 4,
-                                      height: 4,
-                                    );
-                                  }),
-                                ),
-                                Row(
-                                  children: [
-                                    Container(
-                                      margin: EdgeInsets.only(right: 8),
-                                      child: SvgPicture.asset(
-                                        'assets/vectors/vector_2_x2.svg',
-                                        width: 15,
-                                        height: 13,
-                                      ),
-                                    ),
-                                    Container(
-                                      margin: EdgeInsets.symmetric(vertical: 0.5),
-                                      child: Text(
-                                        '사진 추가하기',
-                                        style: GoogleFonts.robotoCondensed( // Changed to a more common font
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 10,
-                                          decoration: TextDecoration.underline,
-                                          color: Color(0xFF8F8F8F),
-                                          decorationColor: Color(0xFF8F8F8F),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            Positioned(
-              left: 0,
-              right: 0,
-              bottom: -151,
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(16),
-                    topRight: Radius.circular(16),
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Color(0x0F000000),
-                      offset: Offset(0, -2),
-                      blurRadius: 7.75,
-                    ),
-                  ],
-                ),
-                child: SizedBox(
-                  width: 360,
-                  height: 690,
-                  child: Container(
-                    padding: EdgeInsets.fromLTRB(12, 16, 16, 0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          margin: EdgeInsets.fromLTRB(8, 0, 4.4, 6),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                margin: EdgeInsets.only(right: 14),
-                                child: Text(
-                                  site.name, // Update with site name
-                                  style: GoogleFonts.robotoCondensed( // Changed to a more common font
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 24,
-                                    letterSpacing: -0.5,
-                                    color: Color(0xFF000000),
-                                  ),
-                                ),
-                              ),
-                              Row(
-                                children: [
-                                  SvgPicture.asset(
-                                    'assets/vectors/vector_11_x2.svg',
-                                    width: 20,
-                                    height: 18,
-                                  ),
-                                  SizedBox(width: 14),
-                                  SvgPicture.asset(
-                                    'assets/vectors/vector_13_x2.svg',
-                                    width: 14,
-                                    height: 18,
-                                  ),
-                                  Container(
-                                    margin: EdgeInsets.only(bottom: 0.4),
-                                    child: Row(
-                                      children: [
-                                        SvgPicture.asset(
-                                          'assets/vectors/vector_17_x2.svg',
-                                          width: 4.9,
-                                          height: 4.9,
-                                        ),
-                                        SvgPicture.asset(
-                                          'assets/vectors/vector_12_x2.svg',
-                                          width: 4.9,
-                                          height: 10.7,
-                                        ),
-                                        SvgPicture.asset(
-                                          'assets/vectors/vector_x2.svg',
-                                          width: 4.9,
-                                          height: 17.6,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                        Container(
-                          margin: EdgeInsets.symmetric(horizontal: 9, vertical: 18),
-                          child: Text(
-                            site.address, // Update with site address
-                            style: GoogleFonts.robotoCondensed( // Changed to a more common font
-                              fontWeight: FontWeight.w400,
-                              fontSize: 12,
-                              color: Color(0xFF000000),
-                            ),
-                          ),
-                        ),
-                        Container(
-                          margin: EdgeInsets.fromLTRB(4, 0, 0, 30),
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Color(0xFF398EF3)),
-                            borderRadius: BorderRadius.circular(16),
-                            color: Colors.white,
-                          ),
-                          padding: EdgeInsets.fromLTRB(19, 15, 19, 66),
-                          child: Text(
-                            site.details.isNotEmpty
-                                ? site.details
-                                : '차박지에 대한 나만의 설명을 적어주세요! (최대 200자)',
-                            style: GoogleFonts.robotoCondensed( // Changed to a more common font
-                              fontWeight: FontWeight.w400,
-                              fontSize: 12,
-                              color: Color(0xFF8E8E8E),
-                            ),
-                          ),
-                        ),
-                        Container(
-                          margin: EdgeInsets.symmetric(horizontal: 9, vertical: 4),
-                          child: Text(
-                            '차박지 편의시설',
-                            style: GoogleFonts.robotoCondensed( // Changed to a more common font
-                              fontWeight: FontWeight.w500,
-                              fontSize: 16,
-                              letterSpacing: -0.3,
-                              color: Color(0xFF000000),
-                            ),
-                          ),
-                        ),
-                        Divider(
-                          thickness: 1,
-                          indent: 9,
-                          endIndent: 9,
-                          color: Colors.black,
-                        ),
-                        Container(
-                          margin: EdgeInsets.fromLTRB(9, 0, 9, 32),
-                          child: Wrap(
-                            spacing: 14.9,
-                            runSpacing: 8,
-                            children: List.generate(6, (index) {
-                              return Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                        fit: BoxFit.cover,
-                                        image: AssetImage(
-                                          'assets/images/x_1.png',
-                                        ),
-                                      ),
-                                    ),
-                                    width: 23,
-                                    height: 23,
-                                    margin: EdgeInsets.only(right: 5),
-                                  ),
-                                  Text(
-                                    _getAmenityText(index),
-                                    style: GoogleFonts.robotoCondensed( // Changed to a more common font
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 12,
-                                      color: Color(0xFF000000),
-                                    ),
-                                  ),
-                                ],
-                              );
-                            }),
-                          ),
-                        ),
-                        Container(
-                          margin: EdgeInsets.only(bottom: 15),
-                          child: ElevatedButton(
-                            onPressed: () {},
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Color(0xFF398EF3),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 16.0),
-                              child: Text(
-                                '지도로 보기',
-                                style: GoogleFonts.robotoCondensed( // Changed to a more common font
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 16,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        TextButton(
-                          onPressed: () {},
-                          child: Text(
-                            '차박지 신고하기',
-                            style: GoogleFonts.robotoCondensed( // Changed to a more common font
-                              fontWeight: FontWeight.w500,
-                              fontSize: 10,
-                              decoration: TextDecoration.underline,
-                              color: Color(0xFF7B7B7B),
-                              decorationColor: Color(0xFF7B7B7B),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
+            _buildHeader(context),
+            _buildImageSection(),
+            _buildInfoSection(),
+            _buildAmenitiesSection(),
+            _buildMapButton(context),
           ],
         ),
       ),
     );
   }
 
-  String _getAmenityText(int index) {
-    switch (index) {
-      case 0:
-        return '화장실';
-      case 1:
-        return '반려동물';
-      case 2:
-        return '샤워실';
-      case 3:
-        return '개수대';
-      case 4:
-        return '전기';
-      case 5:
-        return '야경';
-      default:
-        return '';
-    }
+  Widget _buildHeader(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 8.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          // 뒤로 가기 아이콘
+          IconButton(
+            icon: Icon(Icons.arrow_back, size: 24, color: Color(0xFF172243)),
+            onPressed: () => Navigator.pop(context),
+          ),
+
+          // 중앙에 위치한 "차박지 상세 정보" 텍스트
+          Expanded(
+            child: Align(
+              alignment: Alignment.center,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 53.0), // 중앙에서 오른쪽으로 이동
+                child: Text(
+                  '차박지 상세 정보',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF172243),
+                  ),
+                ),
+              ),
+            ),
+          ),
+
+          // 좋아요와 공유 아이콘
+          Row(
+            mainAxisSize: MainAxisSize.min, // 아이콘의 간격을 줄이기 위해 최소 크기로 설정
+            children: [
+              Transform.translate(
+                offset: Offset(19, 0), // 좋아요 아이콘을 오른쪽으로 약간 이동
+                child: IconButton(
+                  icon: Icon(
+                    isLiked ? Icons.favorite : Icons.favorite_border,
+                    color: Color(0xFF172243),
+                    size: 20,
+                  ),
+                  onPressed: _toggleLike,
+                ),
+              ),
+              SizedBox(width: 6), // 좋아요와 공유 아이콘 사이 간격
+              Transform.translate(
+                offset: Offset(3, 0), // 공유 아이콘을 왼쪽으로 약간 이동
+                child: IconButton(
+                  icon: Icon(Icons.share, color: Color(0xFF172243), size: 20),
+                  onPressed: () {
+                    // 공유 기능 추가
+                  },
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildImageSection() {
+    return ClipRRect(
+      borderRadius: BorderRadius.vertical(
+        bottom: Radius.circular(24),
+      ),
+      child: Container(
+        height: 200,
+        width: double.infinity,
+        decoration: BoxDecoration(
+          color: Colors.grey[200],
+          image: imageUrl != null
+              ? DecorationImage(
+                  image: NetworkImage(imageUrl!),
+                  fit: BoxFit.cover,
+                )
+              : null,
+        ),
+        child: imageUrl == null
+            ? Center(child: Text('이미지 없음'))
+            : SizedBox.shrink(),
+      ),
+    );
+  }
+
+  Widget _buildInfoSection() {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            widget.site.name,
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF172243),
+            ),
+          ),
+          SizedBox(height: 8),
+          Text(
+            widget.site.address,
+            style: TextStyle(
+              fontSize: 14,
+              color: Colors.grey[600],
+            ),
+          ),
+          if (widget.site.details.isNotEmpty) ...[
+            SizedBox(height: 8),
+            Container(
+              padding: EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Colors.grey[100],
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Text(
+                widget.site.details,
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Color(0xFF398EF3),
+                ),
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAmenitiesSection() {
+    final List<String> amenities = _getAvailableAmenities();
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            '차박지 편의시설',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF172243),
+            ),
+          ),
+          Divider(color: Colors.black, thickness: 1),
+          Wrap(
+            spacing: 12.0,
+            runSpacing: 8.0,
+            children:
+                amenities.map((amenity) => _buildAmenityChip(amenity)).toList(),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMapButton(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Color(0xFF398EF3),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+          minimumSize: Size(double.infinity, 56),
+        ),
+        onPressed: () {
+          // 지도로 보기 기능 추가
+        },
+        child: Text(
+          '지도로 보기',
+          style: TextStyle(fontSize: 16, color: Colors.white),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAmenityChip(String amenity) {
+    return Chip(
+      backgroundColor: Colors.blue[100],
+      label: Text(
+        amenity,
+        style: TextStyle(color: Colors.black87),
+      ),
+    );
+  }
+
+  List<String> _getAvailableAmenities() {
+    List<String> amenities = [];
+    if (widget.site.restRoom) amenities.add('화장실');
+    if (widget.site.sink) amenities.add('개수대');
+    if (widget.site.cook) amenities.add('취사장');
+    if (widget.site.animal) amenities.add('반려동물');
+    if (widget.site.water) amenities.add('샤워실');
+    if (widget.site.parkinglot) amenities.add('주차장');
+    return amenities;
   }
 }
