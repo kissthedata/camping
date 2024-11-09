@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:map_sample/models/car_camping_site.dart';
 
 class InfoCampingSiteScreen extends StatefulWidget {
@@ -16,13 +18,15 @@ class InfoCampingSiteScreen extends StatefulWidget {
 class _InfoCampingSiteScreenState extends State<InfoCampingSiteScreen> {
   String? imageUrl;
   bool isLiked = false;
-  late DatabaseReference userLikesRef;
+  int likeCount = 0;
+  late DatabaseReference siteLikesRef;
 
   @override
   void initState() {
     super.initState();
     _loadImage();
     _checkLikeStatus();
+    _getLikeCount();
   }
 
   Future<void> _loadImage() async {
@@ -38,12 +42,13 @@ class _InfoCampingSiteScreenState extends State<InfoCampingSiteScreen> {
     }
   }
 
+  // 좋아요 상태 확인
   Future<void> _checkLikeStatus() async {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      userLikesRef = FirebaseDatabase.instance
-          .ref('user_likes/${user.uid}/${widget.site.name}');
-      final snapshot = await userLikesRef.get();
+      siteLikesRef = FirebaseDatabase.instance
+          .ref('likes/${widget.site.name}/users/${user.uid}');
+      final snapshot = await siteLikesRef.get();
 
       setState(() {
         isLiked = snapshot.exists;
@@ -51,23 +56,59 @@ class _InfoCampingSiteScreenState extends State<InfoCampingSiteScreen> {
     }
   }
 
-  Future<void> _toggleLike() async {
-    final user = FirebaseAuth.instance.currentUser;
-    if (user == null) return;
-
-    setState(() {
-      isLiked = !isLiked;
-    });
-
-    if (isLiked) {
-      await userLikesRef.set({
-        'name': widget.site.name,
-        'latitude': widget.site.latitude,
-        'longitude': widget.site.longitude,
+  // 좋아요 수 가져오기
+  Future<void> _getLikeCount() async {
+    final likeCountRef =
+        FirebaseDatabase.instance.ref('likes/${widget.site.name}/count');
+    final snapshot = await likeCountRef.get();
+    if (snapshot.exists) {
+      setState(() {
+        likeCount = snapshot.value as int;
       });
-    } else {
-      await userLikesRef.remove();
     }
+  }
+
+  // 좋아요 기능
+Future<void> _toggleLike() async {
+  final user = FirebaseAuth.instance.currentUser;
+  if (user == null) return;
+
+  setState(() {
+    isLiked = !isLiked;
+  });
+
+  final likeData = {
+    'name': widget.site.name,
+    'latitude': widget.site.latitude,
+    'longitude': widget.site.longitude,
+    'address': widget.site.address,
+    'imageUrl': widget.site.imageUrl,
+    'restRoom': widget.site.restRoom,
+    'sink': widget.site.sink,
+    'cook': widget.site.cook,
+    'animal': widget.site.animal,
+    'water': widget.site.water,
+    'parkinglot': widget.site.parkinglot,
+  };
+
+  if (isLiked) {
+    // 좋아요 추가
+    await FirebaseDatabase.instance
+        .ref('user_likes/${user.uid}/${widget.site.name}')
+        .set(likeData);
+  } else {
+    // 좋아요 취소
+    await FirebaseDatabase.instance
+        .ref('user_likes/${user.uid}/${widget.site.name}')
+        .remove();
+  }
+}
+
+  // 공유 기능
+  void _shareCampingSite() {
+    final String shareText =
+        '${widget.site.name}\n위치: ${widget.site.address}\n자세한 정보는 앱에서 확인하세요!';
+    Share.share(shareText);
   }
 
   @override
@@ -79,9 +120,35 @@ class _InfoCampingSiteScreenState extends State<InfoCampingSiteScreen> {
           children: [
             _buildHeader(context),
             _buildImageSection(),
-            _buildInfoSection(),
-            _buildAmenitiesSection(),
-            _buildMapButton(context),
+            Expanded(
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.vertical(
+                    top: Radius.circular(20),
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      spreadRadius: 2,
+                      blurRadius: 6,
+                      offset: Offset(0, -3),
+                    ),
+                  ],
+                ),
+                child: Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildInfoSection(),
+                      _buildAmenitiesSection(),
+                      _buildMapButton(context),
+                    ],
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ),
@@ -95,18 +162,15 @@ class _InfoCampingSiteScreenState extends State<InfoCampingSiteScreen> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          // 뒤로 가기 아이콘
           IconButton(
             icon: Icon(Icons.arrow_back, size: 24, color: Color(0xFF172243)),
             onPressed: () => Navigator.pop(context),
           ),
-
-          // 중앙에 위치한 "차박지 상세 정보" 텍스트
           Expanded(
             child: Align(
               alignment: Alignment.center,
               child: Padding(
-                padding: const EdgeInsets.only(left: 53.0), // 중앙에서 오른쪽으로 이동
+                padding: const EdgeInsets.only(left: 53.0),
                 child: Text(
                   '차박지 상세 정보',
                   style: TextStyle(
@@ -118,13 +182,11 @@ class _InfoCampingSiteScreenState extends State<InfoCampingSiteScreen> {
               ),
             ),
           ),
-
-          // 좋아요와 공유 아이콘
           Row(
-            mainAxisSize: MainAxisSize.min, // 아이콘의 간격을 줄이기 위해 최소 크기로 설정
+            mainAxisSize: MainAxisSize.min,
             children: [
               Transform.translate(
-                offset: Offset(19, 0), // 좋아요 아이콘을 오른쪽으로 약간 이동
+                offset: Offset(19, 0),
                 child: IconButton(
                   icon: Icon(
                     isLiked ? Icons.favorite : Icons.favorite_border,
@@ -134,14 +196,12 @@ class _InfoCampingSiteScreenState extends State<InfoCampingSiteScreen> {
                   onPressed: _toggleLike,
                 ),
               ),
-              SizedBox(width: 6), // 좋아요와 공유 아이콘 사이 간격
+              SizedBox(width: 6),
               Transform.translate(
-                offset: Offset(3, 0), // 공유 아이콘을 왼쪽으로 약간 이동
+                offset: Offset(3, 0),
                 child: IconButton(
                   icon: Icon(Icons.share, color: Color(0xFF172243), size: 20),
-                  onPressed: () {
-                    // 공유 기능 추가
-                  },
+                  onPressed: _shareCampingSite,
                 ),
               ),
             ],
@@ -184,12 +244,12 @@ class _InfoCampingSiteScreenState extends State<InfoCampingSiteScreen> {
           Text(
             widget.site.name,
             style: TextStyle(
-              fontSize: 24,
+              fontSize: 22,
               fontWeight: FontWeight.bold,
               color: Color(0xFF172243),
             ),
           ),
-          SizedBox(height: 8),
+          SizedBox(height: 4),
           Text(
             widget.site.address,
             style: TextStyle(
@@ -198,20 +258,26 @@ class _InfoCampingSiteScreenState extends State<InfoCampingSiteScreen> {
             ),
           ),
           if (widget.site.details.isNotEmpty) ...[
-            SizedBox(height: 8),
-            Container(
-              padding: EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: Colors.grey[100],
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Text(
-                widget.site.details,
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Color(0xFF398EF3),
-                ),
-              ),
+            SizedBox(height: 10),
+            Wrap(
+              spacing: 8.0,
+              runSpacing: 4.0,
+              children: widget.site.details.split(',').map((detail) {
+                return Container(
+                  padding: EdgeInsets.symmetric(vertical: 6, horizontal: 8),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[100],
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Text(
+                    detail.trim(),
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Color(0xFF398EF3),
+                    ),
+                  ),
+                );
+              }).toList(),
             ),
           ],
         ],
@@ -237,10 +303,10 @@ class _InfoCampingSiteScreenState extends State<InfoCampingSiteScreen> {
           ),
           Divider(color: Colors.black, thickness: 1),
           Wrap(
-            spacing: 12.0,
-            runSpacing: 8.0,
+            spacing: 8.0, // 아이템 사이의 가로 간격을 줄임
+            runSpacing: 6.0, // 아이템 사이의 세로 간격을 줄임
             children:
-                amenities.map((amenity) => _buildAmenityChip(amenity)).toList(),
+                amenities.map((amenity) => _buildAmenityItem(amenity)).toList(),
           ),
         ],
       ),
@@ -269,13 +335,20 @@ class _InfoCampingSiteScreenState extends State<InfoCampingSiteScreen> {
     );
   }
 
-  Widget _buildAmenityChip(String amenity) {
-    return Chip(
-      backgroundColor: Colors.blue[100],
-      label: Text(
-        amenity,
-        style: TextStyle(color: Colors.black87),
-      ),
+  Widget _buildAmenityItem(String amenity) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        SvgPicture.asset(
+          'assets/vectors/camping_icon.svg',
+          height: 25,
+          color: Color(0xFF398EF3),
+        ),
+        SizedBox(width: 4),
+        Text(
+          amenity,
+        ),
+      ],
     );
   }
 

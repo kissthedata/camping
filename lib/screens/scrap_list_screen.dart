@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:share_plus/share_plus.dart';
-import 'package:kakao_flutter_sdk_share/kakao_flutter_sdk_share.dart';
-import 'package:kakao_flutter_sdk_template/kakao_flutter_sdk_template.dart';
 import 'package:map_sample/models/car_camping_site.dart';
+import 'package:map_sample/screens/info_camping_site_screen.dart';
 
 class ScrapListScreen extends StatefulWidget {
   @override
@@ -20,61 +18,33 @@ class _ScrapListScreenState extends State<ScrapListScreen> {
     _loadScraps();
   }
 
+  /// 좋아요 누른 차박지 목록 불러오기
   void _loadScraps() async {
     User? user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      DatabaseReference userScrapsRef =
-          FirebaseDatabase.instance.ref().child('scraps').child(user.uid);
-      DataSnapshot snapshot = await userScrapsRef.get();
-      if (snapshot.exists) {
-        List<CarCampingSite> scraps = [];
-        Map<dynamic, dynamic> data = snapshot.value as Map<dynamic, dynamic>;
-        data.forEach((key, value) {
+    if (user == null) return;
+
+    DatabaseReference likesRef = FirebaseDatabase.instance.ref('likes');
+    DataSnapshot snapshot = await likesRef.get();
+
+    if (snapshot.exists) {
+      List<CarCampingSite> scraps = [];
+
+      Map<dynamic, dynamic> data = snapshot.value as Map<dynamic, dynamic>;
+      data.forEach((campingSiteName, details) {
+        if (details['users'] != null && details['users'][user.uid] != null) {
           scraps.add(CarCampingSite(
-            key: key,
-            name: value['name'] ?? 'Unknown Name',
-            latitude: value['latitude'] ?? 0.0,
-            longitude: value['longitude'] ?? 0.0,
-            address: value['address'] ?? 'Unknown Address',
-            imageUrl: value['imageUrl'] ?? '',
-            restRoom: value['restRoom'] ?? false,
-            sink: value['sink'] ?? false,
-            cook: value['cook'] ?? false,
-            animal: value['animal'] ?? false,
-            water: value['water'] ?? false,
-            parkinglot: value['parkinglot'] ?? false,
+            name: campingSiteName,
+            latitude: 0.0, // Placeholder value for latitude
+            longitude: 0.0, // Placeholder value for longitude
           ));
-        });
-        setState(() {
-          _scraps = scraps;
-        });
-      }
-    }
-  }
-
-  void _removeScrap(CarCampingSite site) async {
-    User? user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      DatabaseReference userScrapsRef =
-          FirebaseDatabase.instance.ref().child('scraps').child(user.uid);
-      await userScrapsRef.child(site.key!).remove();
-      setState(() {
-        _scraps.remove(site);
+        }
       });
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('스크랩이 취소되었습니다.')),
-      );
-    }
-  }
 
-  void _shareCampingSpot(CarCampingSite site) async {
-    try {
-      await Share.share(
-        '차박지 정보\n이름: ${site.name}\n위치: ${site.latitude}, ${site.longitude}\n',
-        subject: '차박지 정보 공유',
-      );
-    } catch (e) {
-      print('공유 오류: $e');
+      setState(() {
+        _scraps = scraps;
+      });
+    } else {
+      print("좋아요한 차박지가 없습니다.");
     }
   }
 
@@ -96,7 +66,7 @@ class _ScrapListScreenState extends State<ScrapListScreen> {
     );
   }
 
-  /// **Header with Back Button and Title**
+  /// 헤더 섹션
   Widget _buildHeader() {
     return Row(
       children: [
@@ -118,16 +88,16 @@ class _ScrapListScreenState extends State<ScrapListScreen> {
             ),
           ),
         ),
-        SizedBox(width: 48), // To balance alignment
+        SizedBox(width: 48),
       ],
     );
   }
 
-  /// **Scrap List Display**
+  /// 스크랩 목록 표시
   Widget _buildScrapList() {
     return Expanded(
       child: _scraps.isEmpty
-          ? Center(child: Text('저장된 차박지가 없습니다.'))
+          ? Center(child: Text('좋아요한 차박지가 없습니다.'))
           : ListView.builder(
               itemCount: _scraps.length,
               itemBuilder: (context, index) {
@@ -138,51 +108,42 @@ class _ScrapListScreenState extends State<ScrapListScreen> {
     );
   }
 
-  /// **Individual Scrap Item Design**
+  /// 스크랩된 차박지 아이템
   Widget _buildScrapItem(CarCampingSite site) {
-    return Container(
-      margin: EdgeInsets.only(bottom: 16.0),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Color(0xFFBCBCBC), width: 1.5),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 6.0,
-            offset: Offset(0, 3),
+    return GestureDetector(
+      onTap: () {
+        // 차박지 상세 화면으로 이동
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => InfoCampingSiteScreen(site: site),
           ),
-        ],
-      ),
-      child: ListTile(
-        contentPadding: EdgeInsets.all(16.0),
-        title: Text(
-          site.name,
-          style: TextStyle(
-            fontSize: 18.0,
-            fontWeight: FontWeight.w500,
-            color: Color(0xFF172243),
-          ),
-        ),
-        subtitle: Text(
-          site.address,
-          style: TextStyle(
-            fontSize: 14.0,
-            color: Colors.grey[600],
-          ),
-        ),
-        trailing: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            IconButton(
-              icon: Icon(Icons.star, color: Colors.amber),
-              onPressed: () => _removeScrap(site),
-            ),
-            IconButton(
-              icon: Icon(Icons.share, color: Color(0xFF398EF3)),
-              onPressed: () => _shareCampingSpot(site),
+        );
+      },
+      child: Container(
+        margin: EdgeInsets.only(bottom: 16.0),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: Color(0xFFBCBCBC), width: 1.5),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 6.0,
+              offset: Offset(0, 3),
             ),
           ],
+        ),
+        child: ListTile(
+          contentPadding: EdgeInsets.all(16.0),
+          title: Text(
+            site.name,
+            style: TextStyle(
+              fontSize: 18.0,
+              fontWeight: FontWeight.w500,
+              color: Color(0xFF172243),
+            ),
+          ),
         ),
       ),
     );
