@@ -89,6 +89,7 @@ class MyApp extends StatelessWidget {
       builder: (context, child) {
         return MaterialApp(
           theme: ThemeData(
+            fontFamily: 'Pretendard',
             primaryColor: const Color(0xFF398EF3),
             scaffoldBackgroundColor: Colors.white,
             appBarTheme: AppBarTheme(
