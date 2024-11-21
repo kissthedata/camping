@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'login_screen.dart';
+import 'package:flutter/scheduler.dart';
 import 'info_edit_screen.dart';
 import 'scrap_list_screen.dart';
 import 'package:map_sample/main_scaffold.dart'; // MainScaffold import
