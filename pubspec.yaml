@@ -96,47 +96,8 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - assets/images/home_icon.png
-    - assets/images/community_icon.png
-    - assets/images/map_icon.png
-    - assets/images/camping_icon.png
-    - assets/images/mypage_icon.png
-    - assets/images/image.png
-    - assets/images/로고.png
-    - assets/images/x.png
-    - assets/images/x_1.png
-    - assets/images/x_2.png
-    - assets/images/x_3.png
-    - assets/vectors/vector_7_x2.svg
-    - assets/vectors/vector_6_x2.svg
-    - assets/vectors/vector_1_x2.svg
-    - assets/vectors/vector_x2.svg
-    - assets/vectors/vector_3_x2.svg
-    - assets/vectors/vector_2_x2.svg
-    - assets/vectors/vector_5_x2.svg
-    - assets/vectors/vector_4_x2.svg
-    - assets/vectors/vector_8_x2.svg
-    - assets/vectors/group_1_x2.svg
-    - assets/vectors/union_x2.svg
-    - assets/vectors/home_icon.svg
-    - assets/vectors/map_icon.svg
-    - assets/vectors/camping_icon.svg
-    - assets/vectors/community_icon.svg
-    - assets/vectors/more.svg
-    - assets/vectors/mypage_icon.svg
-    - assets/vectors/info_icon.svg
-    - assets/images/verified_camping_site.png
-    - assets/images/user_camping_site.png
-    - assets/images/gas_station.png
-    - assets/images/convenience_store.png
-    - assets/images/mart.png
-    - assets/images/로고.png
-    - assets/images/반려동물.png
-    - assets/images/화장실.png
-    - assets/images/샤워실.png
-    - assets/images/개수대.png
-    - assets/images/편안차박.png
-    - assets/images/편안.png
+    - assets/images/
+    - assets/vectors/
     - .env
 
   #   - images/a_dot_burr.jpeg
