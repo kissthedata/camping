@@ -33,6 +33,7 @@ class _MainScaffoldState extends State<MainScaffold> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBody: true,
       body: _pages[_selectedIndex], // 선택된 페이지 렌더링
       bottomNavigationBar: CustomBottomAppBar(
         selectedIndex: _selectedIndex,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class CustomBottomAppBar extends StatelessWidget {
@@ -6,10 +7,10 @@ class CustomBottomAppBar extends StatelessWidget {
   final ValueChanged<int> onItemSelected;
 
   const CustomBottomAppBar({
+    super.key,
     required this.selectedIndex,
     required this.onItemSelected,
-    Key? key,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +19,9 @@ class CustomBottomAppBar extends StatelessWidget {
       height: 75, // 고정된 높이
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(20), // 둥근 모서리
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(20.w),
+        ),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.1),
