@@ -20,7 +20,9 @@ class _MyPageState extends State<MyPage> {
   @override
   void initState() {
     super.initState();
-    _checkLoginStatus();
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      _checkLoginStatus();
+    });
   }
 
   Future<void> _checkLoginStatus() async {
