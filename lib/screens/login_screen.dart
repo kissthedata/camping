@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:map_sample/screens/register_screen.dart';
+import 'package:map_sample/share_data.dart';
 
 import 'home_page.dart';
 
@@ -21,6 +22,11 @@ class _LoginScreenState extends State<LoginScreen> {
   final bool _obscurePassword = true; // 비밀번호 보기/숨기기 상태 변수
 
   void _login() async {
+    //버튼 클릭시 로그인 되도록만 수정
+    ShareData().isLogin.value = true;
+    return;
+
+    //기존코드
     if (_formKey.currentState!.validate()) {
       try {
         UserCredential userCredential =
