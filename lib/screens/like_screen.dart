@@ -9,10 +9,6 @@ class LikeScreen extends StatefulWidget {
 }
 
 class _LikeScreenState extends State<LikeScreen> {
-  bool isLogin = false;
-  String name = "김성식";
-  String nickName = "힐링을 원하는 차박러";
-
   final textblack = const Color(0xFF111111);
 
   void showSnackbar(String content) {
