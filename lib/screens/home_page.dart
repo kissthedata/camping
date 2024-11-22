@@ -128,7 +128,7 @@ class MyHomePageState extends State<MyHomePage> {
             children: [
               Expanded(
                 child: SingleChildScrollView(
-                  padding: const EdgeInsets.only(bottom: 75 + 32),
+                  padding: EdgeInsets.only(bottom: (75 + 32).w),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -699,8 +699,8 @@ class MyHomePageState extends State<MyHomePage> {
                             fontSize: 12.sp,
                             fontWeight: FontWeight.w400,
                           ),
-                          strutStyle: const StrutStyle(
-                            height: 2,
+                          strutStyle: StrutStyle(
+                            height: 1.4.w,
                             forceStrutHeight: true,
                           ),
                         ),
@@ -712,8 +712,8 @@ class MyHomePageState extends State<MyHomePage> {
                             fontSize: 16.sp,
                             fontWeight: FontWeight.w600,
                           ),
-                          strutStyle: const StrutStyle(
-                            height: 1.5,
+                          strutStyle: StrutStyle(
+                            height: 1.4.w,
                             forceStrutHeight: true,
                           ),
                         ),
@@ -740,18 +740,18 @@ class MyHomePageState extends State<MyHomePage> {
                                 fontSize: 12.sp,
                                 fontWeight: FontWeight.w500,
                               ),
-                              strutStyle: const StrutStyle(
-                                forceStrutHeight: true,
-                              ),
                             ),
                             SizedBox(width: 1.w),
                             // 갯수
-                            Text(
-                              '(15)',
-                              style: TextStyle(
-                                color: const Color(0xFFB1B1B1),
-                                fontSize: 10.sp,
-                                fontWeight: FontWeight.w500,
+                            Container(
+                              margin: EdgeInsets.only(top: 1.w),
+                              child: Text(
+                                '(15)',
+                                style: TextStyle(
+                                  color: const Color(0xFFB1B1B1),
+                                  fontSize: 10.sp,
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
                             ),
                           ],
