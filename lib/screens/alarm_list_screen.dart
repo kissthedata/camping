@@ -144,7 +144,7 @@ class _AlarmListScreenState extends State<AlarmListScreen> {
                   height: 23.w,
                   margin: EdgeInsets.only(left: 16.w),
                   child: Image.asset(
-                    'assets/images/back.png',
+                    'assets/images/ic_back.png',
                     gaplessPlayback: true,
                   ),
                 ),
