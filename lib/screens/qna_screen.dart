@@ -14,44 +14,48 @@ class _QnAScreenState extends State<QnAScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: SafeArea(
-        child: Column(
-          children: [
-            //헤더 타이틀
-            _buildHeader("문의하기"),
-            Container(
-              height: 8.h,
-              color: const Color(0xfff3f5f7),
-            ),
-            _buildButtonRow(
-              title: '문의하기',
-              fontWeight: FontWeight.w400,
-              height: 52.h,
-              clickRow: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const InquiryScreen(),
+    return ScreenUtilInit(
+        designSize: const Size(360, 800),
+        builder: (context, child) {
+          return Scaffold(
+            backgroundColor: Colors.white,
+            body: SafeArea(
+              child: Column(
+                children: [
+                  //헤더 타이틀
+                  _buildHeader("문의하기"),
+                  Container(
+                    height: 8.h,
+                    color: const Color(0xfff3f5f7),
                   ),
-                );
-              },
+                  _buildButtonRow(
+                    title: '문의하기',
+                    fontWeight: FontWeight.w400,
+                    height: 52.h,
+                    clickRow: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const InquiryScreen(),
+                        ),
+                      );
+                    },
+                  ),
+                  Container(
+                    height: 8.h,
+                    color: const Color(0xfff3f5f7),
+                  ),
+                  _buildButtonRow(
+                    title: '문의내역',
+                    fontWeight: FontWeight.w400,
+                    height: 52.h,
+                    clickRow: () {},
+                  ),
+                ],
+              ),
             ),
-            Container(
-              height: 8.h,
-              color: const Color(0xfff3f5f7),
-            ),
-            _buildButtonRow(
-              title: '문의내역',
-              fontWeight: FontWeight.w400,
-              height: 52.h,
-              clickRow: () {},
-            ),
-          ],
-        ),
-      ),
-    );
+          );
+        });
   }
 
   Widget _buildHeader(String title) {

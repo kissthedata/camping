@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:map_sample/share_data.dart';
 
 class InquiryScreen extends StatefulWidget {
   const InquiryScreen({super.key});
@@ -111,13 +112,12 @@ class _InquiryScreenState extends State<InquiryScreen> {
                     ),
                   ),
                   child: TextField(
-                    // textInputAction: TextInputAction.newline,
                     keyboardType: TextInputType.multiline,
                     maxLines: null,
                     decoration: InputDecoration(
                       border: InputBorder.none,
                       hintText:
-                          '안녕하세요! 편안차박입니다. 여러분의 피드백이 저희에겐 큰 도움이 됩니다. 의견을 적극 반영할 수 있게 의견을 내주세요!',
+                          '안녕하세요! 편안차박입니다. 여러분의 피드백이 저희에겐 큰\n도움이 됩니다. 의견을 적극 반영할 수 있게 의견을 내주세요!',
                       hintStyle: TextStyle(
                         fontSize: 12.sp,
                         color: const Color(0xFFa0a0a0),
@@ -134,6 +134,10 @@ class _InquiryScreenState extends State<InquiryScreen> {
                 GestureDetector(
                   onTap: () {
                     Navigator.of(context).pop();
+                    var data = ShareData();
+                    data.overlayTitle = '문의가 접수되었습니다.';
+                    data.overlaySubTitle = '여러분의 소중한 의견 감사드립니다.';
+                    data.overlayController.show();
                   },
                   child: Container(
                     width: 328.w,

@@ -11,4 +11,8 @@ class ShareData {
 
   final isLogin = ValueNotifier<bool>(false);
   final selectedPage = ValueNotifier<int>(0);
+
+  final overlayController = OverlayPortalController();
+  var overlayTitle = '';
+  var overlaySubTitle = '';
 }

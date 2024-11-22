@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:map_sample/share_data.dart';
 
 class EditInfoScreen extends StatefulWidget {
   const EditInfoScreen({super.key});
@@ -297,7 +298,10 @@ class _EditInfoScreenState extends State<EditInfoScreen> {
               GestureDetector(
                 onTap: () {
                   Navigator.of(context).pop();
-                  showSnackBar();
+                  var data = ShareData();
+                  data.overlayTitle = '정보수정이 완료되었습니다.';
+                  data.overlaySubTitle = '';
+                  data.overlayController.show();
                 },
                 child: Container(
                   width: 328.w,
@@ -523,6 +527,4 @@ class _EditInfoScreenState extends State<EditInfoScreen> {
       ),
     );
   }
-
-  void showSnackBar() {}
 }

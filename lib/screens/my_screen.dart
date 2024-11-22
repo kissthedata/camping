@@ -20,146 +20,151 @@ class _MyScreenState extends State<MyScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: SafeArea(
-        child: Column(
-          children: [
-            //헤더 타이틀
-            _buildHeader("마이페이지"),
-            SizedBox(
-              height: 11.h,
-            ),
-            //프로필 영역
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.w),
-              child: Row(
+    return ScreenUtilInit(
+        designSize: const Size(360, 800),
+        builder: (context, child) {
+          return Scaffold(
+            backgroundColor: Colors.white,
+            body: SafeArea(
+              child: Column(
                 children: [
-                  //프로필이미지
-                  Image.asset(
-                    'assets/images/ic_no_profile.png',
-                    width: 78.w,
-                    height: 78.h,
-                  ),
+                  //헤더 타이틀
+                  _buildHeader("마이페이지"),
                   SizedBox(
-                    width: 16.w,
+                    height: 11.h,
                   ),
-                  //닉네임 영역
-                  ValueListenableBuilder(
-                    valueListenable: ShareData().isLogin,
-                    builder: (context, value, child) {
-                      if (value) {
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                Text(
-                                  name,
-                                  style: TextStyle(
-                                    fontSize: 20.sp,
-                                    fontWeight: FontWeight.w600,
-                                    color: textblack,
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: 4.w,
-                                ),
-                                Text(
-                                  '님',
-                                  style: TextStyle(
-                                    fontSize: 20.sp,
-                                    fontWeight: FontWeight.w600,
-                                    color: const Color(0xff9a9a9a),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(
-                              height: 6.h,
-                            ),
-                            Text(
-                              nickName,
-                              style: TextStyle(
-                                fontSize: 12.sp,
-                                fontWeight: FontWeight.w600,
-                                color: const Color(0xff398ef3),
-                              ),
-                            ),
-                          ],
-                        );
-                      } else {
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => const LoginScreen(),
-                                  ),
-                                );
-                              },
-                              child: Row(
+                  //프로필 영역
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16.w),
+                    child: Row(
+                      children: [
+                        //프로필이미지
+                        Image.asset(
+                          'assets/images/ic_no_profile.png',
+                          width: 78.w,
+                          height: 78.h,
+                        ),
+                        SizedBox(
+                          width: 16.w,
+                        ),
+                        //닉네임 영역
+                        ValueListenableBuilder(
+                          valueListenable: ShareData().isLogin,
+                          builder: (context, value, child) {
+                            if (value) {
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
+                                  Row(
+                                    children: [
+                                      Text(
+                                        name,
+                                        style: TextStyle(
+                                          fontSize: 20.sp,
+                                          fontWeight: FontWeight.w600,
+                                          color: textblack,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 4.w,
+                                      ),
+                                      Text(
+                                        '님',
+                                        style: TextStyle(
+                                          fontSize: 20.sp,
+                                          fontWeight: FontWeight.w600,
+                                          color: const Color(0xff9a9a9a),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 6.h,
+                                  ),
                                   Text(
-                                    '로그인 후 이용해주세요. >',
+                                    nickName,
                                     style: TextStyle(
-                                      fontSize: 15.sp,
+                                      fontSize: 12.sp,
                                       fontWeight: FontWeight.w600,
-                                      color: textblack,
+                                      color: const Color(0xff398ef3),
                                     ),
                                   ),
                                 ],
-                              ),
-                            ),
-                          ],
-                        );
-                      }
+                              );
+                            } else {
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              const LoginScreen(),
+                                        ),
+                                      );
+                                    },
+                                    child: Row(
+                                      children: [
+                                        Text(
+                                          '로그인 후 이용해주세요. >',
+                                          style: TextStyle(
+                                            fontSize: 15.sp,
+                                            fontWeight: FontWeight.w600,
+                                            color: textblack,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              );
+                            }
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: 40.h,
+                  ),
+                  _buildButtonRow(
+                    icon: 'ic_my_heart.png',
+                    title: '좋아요한 차박지',
+                    clickRow: () {
+                      ShareData().selectedPage.value = 6;
                     },
                   ),
+                  _buildButtonRow(
+                    icon: 'ic_my_info.png',
+                    title: '정보 수정',
+                    clickRow: () {
+                      moveToScreen(const EditInfoScreen());
+                    },
+                  ),
+                  Container(
+                    height: 8.h,
+                    color: const Color(0xfff3f5f7),
+                  ),
+                  _buildButtonRow(
+                    title: '문의하기',
+                    fontWeight: FontWeight.w400,
+                    height: 52.h,
+                    clickRow: () {
+                      ShareData().selectedPage.value = 5;
+                    },
+                  ),
+                  Expanded(
+                    child: Container(
+                      color: const Color(0xfff3f5f7),
+                    ),
+                  )
                 ],
               ),
             ),
-            SizedBox(
-              height: 40.h,
-            ),
-            _buildButtonRow(
-              icon: 'ic_my_heart.png',
-              title: '좋아요한 차박지',
-              clickRow: () {
-                ShareData().selectedPage.value = 6;
-              },
-            ),
-            _buildButtonRow(
-              icon: 'ic_my_info.png',
-              title: '정보 수정',
-              clickRow: () {
-                moveToScreen(const EditInfoScreen());
-              },
-            ),
-            Container(
-              height: 8.h,
-              color: const Color(0xfff3f5f7),
-            ),
-            _buildButtonRow(
-              title: '문의하기',
-              fontWeight: FontWeight.w400,
-              height: 52.h,
-              clickRow: () {
-                ShareData().selectedPage.value = 5;
-              },
-            ),
-            Expanded(
-              child: Container(
-                color: const Color(0xfff3f5f7),
-              ),
-            )
-          ],
-        ),
-      ),
-    );
+          );
+        });
   }
 
   Widget _buildHeader(String title) {

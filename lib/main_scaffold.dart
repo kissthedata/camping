@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:map_sample/screens/inquiry_screen.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:map_sample/screens/like_screen.dart';
 import 'package:map_sample/screens/my_screen.dart';
+import 'package:map_sample/screens/qna_screen.dart';
 import 'package:map_sample/share_data.dart';
 
 import 'custom_bottom_app_bar.dart'; // CustomBottomAppBar 임포트
@@ -18,7 +20,6 @@ class MainScaffold extends StatefulWidget {
 }
 
 class _MainScaffoldState extends State<MainScaffold> {
-  final int _selectedIndex = 0;
   var shareData = ShareData();
 
   // 각 탭에 대응되는 페이지 리스트
@@ -28,7 +29,7 @@ class _MainScaffoldState extends State<MainScaffold> {
     AllCampingSitesPage(),
     CommunityPage(),
     const MyScreen(),
-    const InquiryScreen(),
+    const QnAScreen(),
     const LikeScreen(),
   ];
 
@@ -45,17 +46,129 @@ class _MainScaffoldState extends State<MainScaffold> {
     return ValueListenableBuilder(
       valueListenable: shareData.selectedPage,
       builder: (context, value, child) {
-        return Scaffold(
-          extendBody: true,
-          body: _pages[shareData.selectedPage.value], // 선택된 페이지 렌더링
-          bottomNavigationBar: CustomBottomAppBar(
-            selectedIndex: (shareData.selectedPage.value > 4)
-                ? 4
-                : shareData.selectedPage.value,
-            onItemSelected: _onItemTapped, // 탭 클릭 시 호출
+        return OverlayPortal(
+          controller: shareData.overlayController,
+          overlayChildBuilder: (context) {
+            return Stack(
+              children: [
+                Container(
+                  width: 360.w,
+                  color: const Color(0x69000000),
+                ),
+                const AnimSnackbar(),
+              ],
+            );
+          },
+          child: Scaffold(
+            extendBody: true,
+            body: _pages[shareData.selectedPage.value], // 선택된 페이지 렌더링
+            bottomNavigationBar: CustomBottomAppBar(
+              selectedIndex: (shareData.selectedPage.value > 4)
+                  ? 4
+                  : shareData.selectedPage.value,
+              onItemSelected: _onItemTapped, // 탭 클릭 시 호출
+            ),
           ),
         );
       },
+    );
+  }
+}
+
+class AnimSnackbar extends StatefulWidget {
+  const AnimSnackbar({super.key});
+
+  @override
+  _AnimSnackbarState createState() => _AnimSnackbarState();
+}
+
+class _AnimSnackbarState extends State<AnimSnackbar> {
+  var top = -62.h;
+  @override
+  void initState() {
+    super.initState();
+    SchedulerBinding.instance.addPostFrameCallback(
+      (timeStamp) {
+        setState(() {
+          top = 26.h;
+        });
+      },
+    );
+
+    Future.delayed(const Duration(milliseconds: 800), () {
+      ShareData().overlayController.hide();
+      ShareData().overlayTitle = '';
+      ShareData().overlaySubTitle = '';
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedPositioned(
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeOut,
+      top: top,
+      left: 16.w,
+      child: Material(
+        color: Colors.transparent,
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10.r),
+            color: const Color(0xC44D5865),
+            boxShadow: const [
+              BoxShadow(
+                color: Color(0x4D000000),
+                blurRadius: 6,
+                offset: Offset(0, 0),
+              ),
+            ],
+          ),
+          width: 328.w,
+          height: 62.h,
+          child: Row(
+            children: [
+              SizedBox(
+                width: 17.w,
+              ),
+              Image.asset(
+                'assets/images/ic_check_box.png',
+                width: 22.w,
+                height: 22.h,
+              ),
+              SizedBox(
+                width: 12.w,
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    ShareData().overlayTitle,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 14.sp,
+                      color: Colors.white,
+                    ),
+                  ),
+                  if (ShareData().overlaySubTitle.isNotEmpty) ...[
+                    SizedBox(
+                      height: 1.h,
+                    ),
+                    Text(
+                      ShareData().overlaySubTitle,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w400,
+                        fontSize: 12.sp,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ]
+                ],
+              )
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
