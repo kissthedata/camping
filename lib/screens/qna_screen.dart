@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:map_sample/screens/inquiry_screen.dart';
+import 'package:map_sample/share_data.dart';
 
 class QnAScreen extends StatefulWidget {
   const QnAScreen({super.key});
@@ -69,7 +70,7 @@ class _QnAScreenState extends State<QnAScreen> {
             top: (13.5).h,
             child: GestureDetector(
               onTap: () {
-                Navigator.of(context).pop();
+                ShareData().selectedPage.value = 4;
               },
               child: Image.asset(
                 'assets/images/ic_back.png',

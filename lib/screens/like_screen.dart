@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:map_sample/share_data.dart';
 
 class LikeScreen extends StatefulWidget {
   const LikeScreen({super.key});
@@ -347,7 +348,9 @@ class _LikeScreenState extends State<LikeScreen> {
             Align(
               alignment: Alignment.centerLeft,
               child: GestureDetector(
-                onTap: () => Navigator.of(context).pop(),
+                onTap: () {
+                  ShareData().selectedPage.value = 4;
+                },
                 child: Container(
                   width: 23.w,
                   height: 23.w,
