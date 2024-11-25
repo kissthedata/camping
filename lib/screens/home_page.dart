@@ -9,7 +9,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:http/http.dart' as http;
 import 'package:map_sample/models/car_camping_site.dart';
 import 'package:map_sample/models/recommendation_system.dart';
-import 'package:map_sample/screens/alarm_list_screen.dart'; // 추천 시스템 모델
+import 'package:map_sample/screens/alarm_list_screen.dart';
+import 'package:map_sample/share_data.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
@@ -159,17 +160,21 @@ class MyHomePageState extends State<MyHomePage> {
                       ),
                       SizedBox(height: 51.w),
                       // xx님 근처 차박지
-                      _buildSection(
-                        totalHeight: 235.w,
-                        width: 148.w,
-                        height: 172.w,
-                        title1: '김성식님 ',
-                        title2: '근처 차박지',
-                        subTitle: '대구광역시 주변 인기많은 차박지를 찾아봤어요!',
-                        onTapItem: (int index) => showSnackbar('$index'),
-                        onTapMore: () => showSnackbar('more'),
+                      ValueListenableBuilder(
+                        valueListenable: ShareData().isLogin,
+                        builder: (context, value, child) {
+                          return _buildSection(
+                            totalHeight: 235.w,
+                            width: 148.w,
+                            height: 172.w,
+                            title1: value ? '[김성식]' : '회원',
+                            title2: '근처 차박지',
+                            subTitle: '대구광역시 주변 인기많은 차박지를 찾아봤어요!',
+                            onTapItem: (int index) => showSnackbar('$index'),
+                            onTapMore: () => showSnackbar('more'),
+                          );
+                        },
                       ),
-
                       // _buildSection
                       // _buildSectionTitle('이런 차박지는 어때요?'),
                       // _buildHeader(),
@@ -570,7 +575,7 @@ class MyHomePageState extends State<MyHomePage> {
                 text: TextSpan(
                   children: [
                     TextSpan(
-                      text: title1,
+                      text: '$title1님 ',
                       style: TextStyle(
                         color: title1Color ?? Colors.black,
                         fontSize: 20.sp,
