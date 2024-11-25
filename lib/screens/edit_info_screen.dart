@@ -179,63 +179,69 @@ class _EditInfoScreenState extends State<EditInfoScreen> {
                                 width: 8.w,
                               ),
                               //이메일 도메인 선택
-                              OverlayPortal(
-                                controller: _dropDownController,
-                                overlayChildBuilder: (context) {
-                                  RenderBox renderBox = _dropDownKey
-                                      .currentContext!
-                                      .findRenderObject() as RenderBox;
-                                  Offset offset =
-                                      renderBox.localToGlobal(Offset.zero);
+                              Expanded(
+                                child: SizedBox(
+                                  height: 45.h,
+                                  child: OverlayPortal(
+                                    controller: _dropDownController,
+                                    overlayChildBuilder: (context) {
+                                      RenderBox renderBox = _dropDownKey
+                                          .currentContext!
+                                          .findRenderObject() as RenderBox;
+                                      Offset offset =
+                                          renderBox.localToGlobal(Offset.zero);
 
-                                  return Positioned(
-                                    left: offset.dx, // child의 X 위치
-                                    top: offset.dy, // child의 Y 위치에서 위로 100 픽셀
-                                    child: _buildDropDown(),
-                                  );
-                                },
-                                child: GestureDetector(
-                                  key: _dropDownKey,
-                                  onTap: () {
-                                    _dropDownController.show();
-                                  },
-                                  child: Container(
-                                    width: 118.w,
-                                    height: 45.h,
-                                    padding: EdgeInsets.only(
-                                        left: 15
-                                            .w), // 입력 필드 오른쪽으로 이동을 위해 패딩 조정 가능
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                        color: const Color(0xFFd3d3d3),
-                                        width: (0.8).w,
-                                      ), // 테두리 유지
-                                      color: const Color(0xFFf8f8f8),
-                                      borderRadius: BorderRadius.circular(12.r),
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        Align(
-                                          alignment: Alignment.centerLeft,
-                                          child: Text(
-                                            '선택',
-                                            style: TextStyle(
-                                              fontSize: 12.sp,
-                                              color: const Color(0xFFa0a0a0),
-                                              fontWeight: FontWeight.w400,
+                                      return Positioned(
+                                        left: offset.dx, // child의 X 위치
+                                        top: offset
+                                            .dy, // child의 Y 위치에서 위로 100 픽셀
+                                        child: _buildDropDown(),
+                                      );
+                                    },
+                                    child: GestureDetector(
+                                      key: _dropDownKey,
+                                      onTap: () {
+                                        _dropDownController.show();
+                                      },
+                                      child: Container(
+                                        padding: EdgeInsets.only(
+                                            left: 15
+                                                .w), // 입력 필드 오른쪽으로 이동을 위해 패딩 조정 가능
+                                        decoration: BoxDecoration(
+                                          border: Border.all(
+                                            color: const Color(0xFFd3d3d3),
+                                            width: (0.8).w,
+                                          ), // 테두리 유지
+                                          color: const Color(0xFFf8f8f8),
+                                          borderRadius:
+                                              BorderRadius.circular(12.r),
+                                        ),
+                                        child: Row(
+                                          children: [
+                                            Align(
+                                              alignment: Alignment.centerLeft,
+                                              child: Text(
+                                                '선택',
+                                                style: TextStyle(
+                                                  fontSize: 12.sp,
+                                                  color:
+                                                      const Color(0xFFa0a0a0),
+                                                  fontWeight: FontWeight.w400,
+                                                ),
+                                              ),
                                             ),
-                                          ),
+                                            const Spacer(),
+                                            Image.asset(
+                                              'assets/images/ic_down.png',
+                                              width: 5.w,
+                                              height: 10.h,
+                                            ),
+                                            SizedBox(
+                                              width: 13.w,
+                                            ),
+                                          ],
                                         ),
-                                        const Spacer(),
-                                        Image.asset(
-                                          'assets/images/ic_down.png',
-                                          width: 5.w,
-                                          height: 10.h,
-                                        ),
-                                        SizedBox(
-                                          width: 13.w,
-                                        ),
-                                      ],
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -273,23 +279,24 @@ class _EditInfoScreenState extends State<EditInfoScreen> {
                               SizedBox(
                                 width: 8.w,
                               ),
-                              Container(
-                                width: 107.w,
-                                height: 45.h,
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: const Color(0xFFa0a0a0),
-                                    width: (0.8).w,
-                                  ), // 테두리 유지
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(12.r),
-                                ),
-                                child: Text(
-                                  '본인인증 완료',
-                                  style: TextStyle(
-                                    color: const Color(0xFF5c5c5c),
-                                    fontSize: 12.sp,
+                              Expanded(
+                                child: Container(
+                                  height: 45.h,
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: const Color(0xFFa0a0a0),
+                                      width: (0.8).w,
+                                    ), // 테두리 유지
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(12.r),
+                                  ),
+                                  child: Text(
+                                    '본인인증 완료',
+                                    style: TextStyle(
+                                      color: const Color(0xFF5c5c5c),
+                                      fontSize: 12.sp,
+                                    ),
                                   ),
                                 ),
                               ),

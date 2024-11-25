@@ -629,8 +629,7 @@ class MyHomePageState extends State<MyHomePage> {
                             // 이미지
                             ClipRRect(
                               borderRadius: BorderRadius.circular(16.w),
-                              child: Container(
-                                color: Colors.red,
+                              child: SizedBox(
                                 width: width,
                                 height: height,
                                 child: Image.network(
