@@ -57,5 +57,7 @@
     </array>
     <key>KAKAO_APP_KEY</key>
     <string>15680e17c8b4ddbcef701a292ab5e26e</string>
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>차박지의 위치 정보를 얻기 위해 위치서비스를 이용합니다.</string>
 </dict>
 </plist>
