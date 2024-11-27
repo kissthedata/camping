@@ -455,7 +455,7 @@ class _CateDialogState extends State<CateDialog>
                 Expanded(
                   child: GestureDetector(
                     onTap: () {
-                      Navigator.of(context).pop();
+                      Navigator.of(context).pop(_getSelectedItem());
                     },
                     child: Container(
                       height: 50.h,

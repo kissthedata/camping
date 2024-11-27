@@ -210,11 +210,19 @@ class SearchCampingSitePageState extends State<SearchCampingSitePage> {
             ),
           ],
         ),
+        side: const BorderSide(
+          color: Color(0xFFB3B3B3),
+        ),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20.w),
         ),
+        padding: EdgeInsets.zero,
         elevation: 0,
-        labelPadding: EdgeInsets.symmetric(horizontal: 10.w),
+        labelPadding: EdgeInsets.symmetric(
+          vertical: 2.w,
+          horizontal: 14.w,
+        ),
+        visualDensity: VisualDensity.compact,
         backgroundColor: Colors.white,
       ),
     );
@@ -245,7 +253,7 @@ class SearchCampingSitePageState extends State<SearchCampingSitePage> {
                   ),
                 ),
               ),
-              SizedBox(height: 16.w),
+              SizedBox(height: 14.w),
               // 추천 칩
               SingleChildScrollView(
                 padding: EdgeInsets.symmetric(horizontal: 16.w),
@@ -348,6 +356,7 @@ class SearchCampingSitePageState extends State<SearchCampingSitePage> {
                             fit: BoxFit.cover,
                             width: 16.w,
                             height: 16.w,
+                            gaplessPlayback: true,
                           ),
                         ],
                       ),

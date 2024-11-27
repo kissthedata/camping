@@ -16,6 +16,9 @@ class ShareData {
   var overlayTitle = '';
   var overlaySubTitle = '';
 
+  // 홈 - 차박지 탭
+  final categoryHeight = ValueNotifier<int>(45); // 앱바 높이
+
   void showSnackbar(BuildContext context, {required String content}) {
     ScaffoldMessenger.of(context).clearSnackBars();
     ScaffoldMessenger.of(context).showSnackBar(
