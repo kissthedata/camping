@@ -133,8 +133,8 @@ class SearchCampingSitePageState extends State<SearchCampingSitePage> {
                       margin: EdgeInsets.only(left: 16.w, right: 8.w),
                       alignment: Alignment.center,
                       child: Image.asset(
-                        'assets/images/home_search.png',
-                        color: Colors.black,
+                        'assets/images/ic_search.png',
+                        color: const Color(0xFF5D646C),
                         width: 16.w,
                         height: 16.w,
                         fit: BoxFit.cover,
@@ -222,171 +222,178 @@ class SearchCampingSitePageState extends State<SearchCampingSitePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: _buildAppBar(),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(height: 24.w),
-          // 추천 검색
-          Container(
-            margin: EdgeInsets.only(left: 16.w),
-            child: Text(
-              '추천 검색',
-              style: TextStyle(
-                color: const Color(0xFF111111),
-                fontSize: 12.sp,
-                fontWeight: FontWeight.w600,
-                letterSpacing: -1.0.w,
-              ),
-            ),
-          ),
-          SizedBox(height: 16.w),
-          // 추천 칩
-          SingleChildScrollView(
-            padding: EdgeInsets.symmetric(horizontal: 16.w),
-            scrollDirection: Axis.horizontal,
-            child: Wrap(
-              spacing: 6.w,
-              children: List.generate(10, (index) {
-                return recommendChip(
-                  title: '편의점',
-                  assets: 'assets/images/ic_mart.png',
-                  onTap: () {
-                    ShareData().showSnackbar(context, content: '편의점[$index]');
-                  },
-                );
-              }),
-            ),
-          ),
-          SizedBox(height: 24.w),
-          // 추천 검색
-          Container(
-            height: 38.w,
-            margin: EdgeInsets.symmetric(horizontal: 16.w),
-            alignment: Alignment.centerLeft,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return ScreenUtilInit(
+        designSize: const Size(360, 800),
+        minTextAdapt: true,
+        builder: (context, child) {
+          return Scaffold(
+            appBar: _buildAppBar(),
+            body: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  '추천 검색',
-                  style: TextStyle(
-                    color: const Color(0xFF111111),
-                    fontSize: 12.sp,
-                    fontWeight: FontWeight.w600,
-                    letterSpacing: -1.0.w,
-                  ),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    ShareData().showSnackbar(context, content: '전체 삭제');
-                  },
+                SizedBox(height: 24.w),
+                // 추천 검색
+                Container(
+                  margin: EdgeInsets.only(left: 16.w),
                   child: Text(
-                    '전체 삭제',
+                    '추천 검색',
                     style: TextStyle(
-                      color: const Color(0xFF777777),
+                      color: const Color(0xFF111111),
                       fontSize: 12.sp,
-                      fontWeight: FontWeight.w500,
+                      fontWeight: FontWeight.w600,
                       letterSpacing: -1.0.w,
                     ),
                   ),
                 ),
-              ],
-            ),
-          ),
-          // 리스트
-          Expanded(
-            child: ListView.builder(
-              padding: EdgeInsets.zero,
-              itemCount: 4,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  onTap: () {
-                    ShareData().showSnackbar(
-                      context,
-                      content: '동천 유원지[$index]',
-                    );
-                  },
-                  minTileHeight: 50.w,
-                  contentPadding: EdgeInsets.symmetric(horizontal: 16.w),
-                  leading: Image.asset(
-                    'assets/images/home_search.png',
-                    fit: BoxFit.cover,
-                    width: 18.w,
-                    height: 18.w,
+                SizedBox(height: 16.w),
+                // 추천 칩
+                SingleChildScrollView(
+                  padding: EdgeInsets.symmetric(horizontal: 16.w),
+                  scrollDirection: Axis.horizontal,
+                  child: Wrap(
+                    spacing: 6.w,
+                    children: List.generate(10, (index) {
+                      return recommendChip(
+                        title: '편의점',
+                        assets: 'assets/images/ic_mart.png',
+                        onTap: () {
+                          ShareData()
+                              .showSnackbar(context, content: '편의점[$index]');
+                        },
+                      );
+                    }),
                   ),
-                  title: Text(
-                    '동천 유원지',
-                    style: TextStyle(
-                      color: const Color(0xFF111111),
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w500,
-                      letterSpacing: -1.0,
-                    ),
-                  ),
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
+                ),
+                SizedBox(height: 24.w),
+                // 추천 검색
+                Container(
+                  height: 38.w,
+                  margin: EdgeInsets.symmetric(horizontal: 16.w),
+                  alignment: Alignment.centerLeft,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        '08.30.',
+                        '추천 검색',
                         style: TextStyle(
-                          color: const Color(0xFF777777),
+                          color: const Color(0xFF111111),
                           fontSize: 12.sp,
-                          fontWeight: FontWeight.w500,
-                          letterSpacing: -1.0,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: -1.0.w,
                         ),
                       ),
-                      SizedBox(width: 12.w),
-                      Image.asset(
-                        'assets/images/ic_delete.png',
-                        fit: BoxFit.cover,
-                        width: 16.w,
-                        height: 16.w,
+                      GestureDetector(
+                        onTap: () {
+                          ShareData().showSnackbar(context, content: '전체 삭제');
+                        },
+                        child: Text(
+                          '전체 삭제',
+                          style: TextStyle(
+                            color: const Color(0xFF777777),
+                            fontSize: 12.sp,
+                            fontWeight: FontWeight.w500,
+                            letterSpacing: -1.0.w,
+                          ),
+                        ),
                       ),
                     ],
                   ),
-                );
-              },
+                ),
+                // 리스트
+                Expanded(
+                  child: ListView.builder(
+                    padding: EdgeInsets.zero,
+                    itemCount: 4,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        onTap: () {
+                          ShareData().showSnackbar(
+                            context,
+                            content: '동천 유원지[$index]',
+                          );
+                        },
+                        minTileHeight: 50.w,
+                        contentPadding: EdgeInsets.symmetric(horizontal: 16.w),
+                        leading: Image.asset(
+                          'assets/images/ic_search.png',
+                          fit: BoxFit.cover,
+                          color: const Color(0xFF777777),
+                          width: 18.w,
+                          height: 18.w,
+                        ),
+                        title: Text(
+                          '동천 유원지',
+                          style: TextStyle(
+                            color: const Color(0xFF111111),
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w500,
+                            letterSpacing: -1.0,
+                          ),
+                        ),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              '08.30.',
+                              style: TextStyle(
+                                color: const Color(0xFF777777),
+                                fontSize: 12.sp,
+                                fontWeight: FontWeight.w500,
+                                letterSpacing: -1.0,
+                              ),
+                            ),
+                            SizedBox(width: 12.w),
+                            Image.asset(
+                              'assets/images/ic_delete.png',
+                              fit: BoxFit.cover,
+                              width: 16.w,
+                              height: 16.w,
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                // Padding(
+                //   padding: const EdgeInsets.all(16.0),
+                //   child: TextField(
+                //     controller: _searchController,
+                //     decoration: InputDecoration(
+                //       hintText: '차박지 이름 또는 지역을 검색하세요',
+                //       border: OutlineInputBorder(
+                //         borderRadius: BorderRadius.circular(12),
+                //       ),
+                //       prefixIcon: const Icon(Icons.search),
+                //     ),
+                //   ),
+                // ),
+                // Expanded(
+                //   child: _filteredCampingSites.isEmpty
+                //       ? const Center(child: Text('검색 결과가 없습니다.'))
+                //       : ListView.builder(
+                //           itemCount: _filteredCampingSites.length,
+                //           itemBuilder: (context, index) {
+                //             final site = _filteredCampingSites[index];
+                //             return ListTile(
+                //               title: Text(site.name),
+                //               subtitle: Text(site.address),
+                //               onTap: () {
+                //                 Navigator.push(
+                //                   context,
+                //                   MaterialPageRoute(
+                //                     builder: (context) =>
+                //                         InfoCampingSiteScreen(site: site),
+                //                   ),
+                //                 );
+                //               },
+                //             );
+                //           },
+                //         ),
+                // ),
+              ],
             ),
-          ),
-          // Padding(
-          //   padding: const EdgeInsets.all(16.0),
-          //   child: TextField(
-          //     controller: _searchController,
-          //     decoration: InputDecoration(
-          //       hintText: '차박지 이름 또는 지역을 검색하세요',
-          //       border: OutlineInputBorder(
-          //         borderRadius: BorderRadius.circular(12),
-          //       ),
-          //       prefixIcon: const Icon(Icons.search),
-          //     ),
-          //   ),
-          // ),
-          // Expanded(
-          //   child: _filteredCampingSites.isEmpty
-          //       ? const Center(child: Text('검색 결과가 없습니다.'))
-          //       : ListView.builder(
-          //           itemCount: _filteredCampingSites.length,
-          //           itemBuilder: (context, index) {
-          //             final site = _filteredCampingSites[index];
-          //             return ListTile(
-          //               title: Text(site.name),
-          //               subtitle: Text(site.address),
-          //               onTap: () {
-          //                 Navigator.push(
-          //                   context,
-          //                   MaterialPageRoute(
-          //                     builder: (context) =>
-          //                         InfoCampingSiteScreen(site: site),
-          //                   ),
-          //                 );
-          //               },
-          //             );
-          //           },
-          //         ),
-          // ),
-        ],
-      ),
-    );
+          );
+        });
   }
 }

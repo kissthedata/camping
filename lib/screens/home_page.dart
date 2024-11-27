@@ -389,7 +389,8 @@ class MyHomePageState extends State<MyHomePage> {
         child: Row(
           children: [
             Image.asset(
-              'assets/images/home_search.png',
+              'assets/images/ic_search.png',
+              color: const Color(0xFF5D646C),
               width: 16.w,
               height: 16.w,
               gaplessPlayback: true,
