@@ -246,7 +246,6 @@ class _AllCampingSitesPageState extends State<AllCampingSitesPage> {
                       }).toList(),
                     ),
                   ),
-                  // SizedBox(height: 4.w),
                 ],
               ],
             ),
@@ -376,20 +375,53 @@ class _AllCampingSitesPageState extends State<AllCampingSitesPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             if (index == 0) ...[
-              Container(
-                height: 39.w,
-                padding: EdgeInsets.only(top: 5.w),
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  '추천 차박지',
-                  style: TextStyle(
-                    color: const Color(0xFF777777),
-                    fontSize: 12.sp,
-                    fontWeight: FontWeight.w500,
-                    letterSpacing: -1.0,
+              if (_selectedItem.isEmpty) ...[
+                Container(
+                  height: 39.w,
+                  padding: EdgeInsets.only(top: 5.w),
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    '추천 차박지',
+                    style: TextStyle(
+                      color: const Color(0xFF777777),
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.w500,
+                      letterSpacing: -1.0,
+                    ),
                   ),
                 ),
-              ),
+              ] else ...[
+                Container(
+                  height: 49.w,
+                  alignment: Alignment.bottomLeft,
+                  margin: EdgeInsets.only(left: 8.w),
+                  padding: EdgeInsets.only(bottom: 8.w),
+                  child: RichText(
+                    text: TextSpan(
+                      children: [
+                        TextSpan(
+                          text: '1103 ',
+                          style: TextStyle(
+                            color: const Color(0xFF398ef3),
+                            fontSize: 12.sp,
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: -1.0,
+                          ),
+                        ),
+                        TextSpan(
+                          text: '개의 차박지',
+                          style: TextStyle(
+                            color: const Color(0xFF777777),
+                            fontSize: 12.sp,
+                            fontWeight: FontWeight.w500,
+                            letterSpacing: -1.0,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ],
             // 콘텐츠 영역
             GestureDetector(
