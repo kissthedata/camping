@@ -15,4 +15,11 @@ class ShareData {
   final overlayController = OverlayPortalController();
   var overlayTitle = '';
   var overlaySubTitle = '';
+
+  void showSnackbar(BuildContext context, {required String content}) {
+    ScaffoldMessenger.of(context).clearSnackBars();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(content)),
+    );
+  }
 }

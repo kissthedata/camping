@@ -10,6 +10,7 @@ import 'package:http/http.dart' as http;
 import 'package:map_sample/models/car_camping_site.dart';
 import 'package:map_sample/models/recommendation_system.dart';
 import 'package:map_sample/screens/alarm_list_screen.dart';
+import 'package:map_sample/screens/search_camping_site_page.dart';
 import 'package:map_sample/share_data.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -114,13 +115,6 @@ class MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  void showSnackbar(String content) {
-    ScaffoldMessenger.of(context).clearSnackBars();
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(content)),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
@@ -155,8 +149,12 @@ class MyHomePageState extends State<MyHomePage> {
                         title2: 'PICK!',
                         title2Color: const Color(0xFF398EF3),
                         subTitle: '이런 차박지는 어때요?',
-                        onTapItem: (int index) => showSnackbar('$index'),
-                        onTapMore: () => showSnackbar('more'),
+                        onTapItem: (int index) {
+                          ShareData().showSnackbar(context, content: '$index');
+                        },
+                        onTapMore: () {
+                          ShareData().showSnackbar(context, content: 'more');
+                        },
                       ),
                       SizedBox(height: 51.w),
                       // xx님 근처 차박지
@@ -170,8 +168,18 @@ class MyHomePageState extends State<MyHomePage> {
                             title1: value ? '[김성식]' : '회원',
                             title2: '근처 차박지',
                             subTitle: '대구광역시 주변 인기많은 차박지를 찾아봤어요!',
-                            onTapItem: (int index) => showSnackbar('$index'),
-                            onTapMore: () => showSnackbar('more'),
+                            onTapItem: (int index) {
+                              ShareData().showSnackbar(
+                                context,
+                                content: '$index',
+                              );
+                            },
+                            onTapMore: () {
+                              ShareData().showSnackbar(
+                                context,
+                                content: 'more',
+                              );
+                            },
                           );
                         },
                       ),
@@ -364,10 +372,12 @@ class MyHomePageState extends State<MyHomePage> {
   Widget _buildSearchBox() {
     return GestureDetector(
       onTap: () {
-        // Navigator.push(
-        //   context,
-        //   MaterialPageRoute(builder: (context) => SearchCampingSitePage()),
-        // );
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const SearchCampingSitePage(),
+          ),
+        );
       },
       child: Container(
         height: 40.w,
@@ -434,7 +444,9 @@ class MyHomePageState extends State<MyHomePage> {
           right: 16.w,
           bottom: 20.w,
           child: GestureDetector(
-            onTap: () => showSnackbar('캠핑 매거진 보러가기'),
+            onTap: () {
+              ShareData().showSnackbar(context, content: '캠핑 매거진 보러가기');
+            },
             child: Row(
               children: [
                 Text(
@@ -533,7 +545,9 @@ class MyHomePageState extends State<MyHomePage> {
               assets: 'assets/images/home_map.png',
               title: '지도보기',
               desc: '차박지와 주변을\n한눈에 검색',
-              onTap: () => showSnackbar('지도보기'),
+              onTap: () {
+                ShareData().showSnackbar(context, content: '지도보기');
+              },
             ),
           ),
           SizedBox(width: 12.w),
@@ -542,7 +556,9 @@ class MyHomePageState extends State<MyHomePage> {
               assets: 'assets/images/home_list.png',
               title: '차박지 목록',
               desc: '카테고리로 원하는\n차박지 검색',
-              onTap: () => showSnackbar('차박지 목록'),
+              onTap: () {
+                ShareData().showSnackbar(context, content: '차박지 목록');
+              },
             ),
           ),
         ],
