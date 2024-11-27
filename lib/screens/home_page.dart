@@ -209,7 +209,7 @@ class MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  PreferredSizeWidget _buildHeader() {
+  AppBar _buildHeader() {
     return AppBar(
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(
