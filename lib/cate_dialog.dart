@@ -73,10 +73,13 @@ class _CateDialogState extends State<CateDialog>
                           fontWeight: FontWeight.w700),
                     ),
                   ),
-                  Image.asset(
-                    'assets/images/ic_close_small.png',
-                    width: 16.w,
-                    height: 16.h,
+                  GestureDetector(
+                    onTap: () => Navigator.pop(context),
+                    child: Image.asset(
+                      'assets/images/ic_close_small.png',
+                      width: 16.w,
+                      height: 16.h,
+                    ),
                   )
                 ],
               ),
@@ -454,9 +457,7 @@ class _CateDialogState extends State<CateDialog>
                 ),
                 Expanded(
                   child: GestureDetector(
-                    onTap: () {
-                      Navigator.of(context).pop(_getSelectedItem());
-                    },
+                    onTap: () => Navigator.pop(context, _getSelectedItem()),
                     child: Container(
                       height: 50.h,
                       decoration: BoxDecoration(

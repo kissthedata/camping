@@ -96,7 +96,7 @@ class SearchCampingSitePageState extends State<SearchCampingSitePage> {
             Align(
               alignment: Alignment.centerLeft,
               child: GestureDetector(
-                onTap: () => Navigator.of(context).pop(),
+                onTap: () => Navigator.pop(context),
                 child: Container(
                   width: 23.w,
                   height: 23.w,
