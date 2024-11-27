@@ -26,7 +26,7 @@ class _MainScaffoldState extends State<MainScaffold> {
   final List<Widget> _pages = [
     const MyHomePage(),
     MapScreen(),
-    AllCampingSitesPage(),
+    const AllCampingSitesPage(),
     CommunityPage(),
     const MyScreen(),
     const QnAScreen(),
