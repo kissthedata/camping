@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:map_sample/screens/camping_review_screen.dart';
 
 class CampingDetailScreen extends StatefulWidget {
   const CampingDetailScreen({super.key});
@@ -996,155 +997,164 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
                 height: 16.h,
               ),
               //리뷰 평점
-              Container(
-                height: 99.h,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(16.r),
-                  color: const Color(0xFFF3F4F8),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          avg.toString(),
-                          style: TextStyle(
-                            fontSize: 32.sp,
-                            color: textblack,
-                            fontWeight: FontWeight.w600,
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (c) => const CampingReviewScreen()),
+                  );
+                },
+                child: Container(
+                  height: 99.h,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(16.r),
+                    color: const Color(0xFFF3F4F8),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            avg.toString(),
+                            style: TextStyle(
+                              fontSize: 32.sp,
+                              color: textblack,
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
-                        ),
-                        Row(
-                          children: [
-                            Image.asset(
-                              'assets/images/ic_detail_star.png',
-                              width: 12.w,
-                              height: 11.h,
-                            ),
-                            SizedBox(
-                              width: 2.w,
-                            ),
-                            Image.asset(
-                              'assets/images/ic_detail_star.png',
-                              width: 12.w,
-                              height: 11.h,
-                            ),
-                            SizedBox(
-                              width: 2.w,
-                            ),
-                            Image.asset(
-                              'assets/images/ic_detail_star.png',
-                              width: 12.w,
-                              height: 11.h,
-                            ),
-                            SizedBox(
-                              width: 2.w,
-                            ),
-                            Image.asset(
-                              'assets/images/ic_detail_star.png',
-                              width: 12.w,
-                              height: 11.h,
-                            ),
-                            SizedBox(
-                              width: 2.w,
-                            ),
-                            Image.asset(
-                              'assets/images/ic_detail_star_half.png',
-                              width: 12.w,
-                              height: 11.h,
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 5.h,
-                        ),
-                        Text(
-                          '$reviewCnt명의 리뷰',
-                          style: TextStyle(
-                            fontSize: 8.sp,
-                            color: const Color(0xFF787878),
-                            fontWeight: FontWeight.w500,
+                          Row(
+                            children: [
+                              Image.asset(
+                                'assets/images/ic_detail_star.png',
+                                width: 12.w,
+                                height: 11.h,
+                              ),
+                              SizedBox(
+                                width: 2.w,
+                              ),
+                              Image.asset(
+                                'assets/images/ic_detail_star.png',
+                                width: 12.w,
+                                height: 11.h,
+                              ),
+                              SizedBox(
+                                width: 2.w,
+                              ),
+                              Image.asset(
+                                'assets/images/ic_detail_star.png',
+                                width: 12.w,
+                                height: 11.h,
+                              ),
+                              SizedBox(
+                                width: 2.w,
+                              ),
+                              Image.asset(
+                                'assets/images/ic_detail_star.png',
+                                width: 12.w,
+                                height: 11.h,
+                              ),
+                              SizedBox(
+                                width: 2.w,
+                              ),
+                              Image.asset(
+                                'assets/images/ic_detail_star_half.png',
+                                width: 12.w,
+                                height: 11.h,
+                              ),
+                            ],
                           ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      width: 25.w,
-                    ),
-                    Container(
-                      width: 1.w,
-                      height: 69.h,
-                      color: const Color(0xFFdedede),
-                    ),
-                    SizedBox(
-                      width: 21.w,
-                    ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        _reviewPoint(
-                          167.w,
-                          4.h,
-                          'ic_detail_star',
-                          '5',
-                          80,
-                          '23',
-                          const Color(0xFF398ef3),
-                        ),
-                        SizedBox(
-                          height: 2.h,
-                        ),
-                        _reviewPoint(
-                          167.w,
-                          4.h,
-                          'ic_detail_star_empty',
-                          '4',
-                          60,
-                          '8',
-                          const Color(0xFFcfcfcf),
-                        ),
-                        SizedBox(
-                          height: 2.h,
-                        ),
-                        _reviewPoint(
-                          167.w,
-                          4.h,
-                          'ic_detail_star_empty',
-                          '3',
-                          30,
-                          '3',
-                          const Color(0xFFcfcfcf),
-                        ),
-                        SizedBox(
-                          height: 2.h,
-                        ),
-                        _reviewPoint(
-                          167.w,
-                          4.h,
-                          'ic_detail_star_empty',
-                          '2',
-                          10,
-                          '2',
-                          const Color(0xFFcfcfcf),
-                        ),
-                        SizedBox(
-                          height: 2.h,
-                        ),
-                        _reviewPoint(
-                          167.w,
-                          4.h,
-                          'ic_detail_star_empty',
-                          '1',
-                          5,
-                          '0',
-                          const Color(0xFFcfcfcf),
-                        ),
-                      ],
-                    )
-                  ],
+                          SizedBox(
+                            height: 5.h,
+                          ),
+                          Text(
+                            '$reviewCnt명의 리뷰',
+                            style: TextStyle(
+                              fontSize: 8.sp,
+                              color: const Color(0xFF787878),
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        width: 25.w,
+                      ),
+                      Container(
+                        width: 1.w,
+                        height: 69.h,
+                        color: const Color(0xFFdedede),
+                      ),
+                      SizedBox(
+                        width: 21.w,
+                      ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          _reviewPoint(
+                            167.w,
+                            4.h,
+                            'ic_detail_star',
+                            '5',
+                            80,
+                            '23',
+                            const Color(0xFF398ef3),
+                          ),
+                          SizedBox(
+                            height: 2.h,
+                          ),
+                          _reviewPoint(
+                            167.w,
+                            4.h,
+                            'ic_detail_star_empty',
+                            '4',
+                            60,
+                            '8',
+                            const Color(0xFFcfcfcf),
+                          ),
+                          SizedBox(
+                            height: 2.h,
+                          ),
+                          _reviewPoint(
+                            167.w,
+                            4.h,
+                            'ic_detail_star_empty',
+                            '3',
+                            30,
+                            '3',
+                            const Color(0xFFcfcfcf),
+                          ),
+                          SizedBox(
+                            height: 2.h,
+                          ),
+                          _reviewPoint(
+                            167.w,
+                            4.h,
+                            'ic_detail_star_empty',
+                            '2',
+                            10,
+                            '2',
+                            const Color(0xFFcfcfcf),
+                          ),
+                          SizedBox(
+                            height: 2.h,
+                          ),
+                          _reviewPoint(
+                            167.w,
+                            4.h,
+                            'ic_detail_star_empty',
+                            '1',
+                            5,
+                            '0',
+                            const Color(0xFFcfcfcf),
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
                 ),
               ),
               SizedBox(
@@ -1232,7 +1242,7 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
                         SizedBox(
                           width: 55.w,
                           child: Text(
-                            '청결도',
+                            '주변소음',
                             style: TextStyle(
                               fontSize: 12.sp,
                               color: const Color(0xFF777777),
@@ -1243,7 +1253,7 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
                         SizedBox(
                           width: 47.w,
                           child: Text(
-                            '높음',
+                            '조용함',
                             style: TextStyle(
                               fontSize: 12.sp,
                               color: textblack,
@@ -1263,7 +1273,7 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
                               ),
                             ),
                             Container(
-                              width: (141 * (40 / 100)).w,
+                              width: (141 * (80 / 100)).w,
                               height: 6.h,
                               decoration: BoxDecoration(
                                 color: const Color(0xFF398ef3),
@@ -1286,7 +1296,7 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
                         ),
                         SizedBox(
                           child: Text(
-                            '14%',
+                            '26%',
                             style: TextStyle(
                               fontSize: 10.sp,
                               color: const Color(0xFF777777),
@@ -1304,7 +1314,7 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
                         SizedBox(
                           width: 55.w,
                           child: Text(
-                            '청결도',
+                            '정확도',
                             style: TextStyle(
                               fontSize: 12.sp,
                               color: const Color(0xFF777777),
@@ -1335,7 +1345,7 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
                               ),
                             ),
                             Container(
-                              width: (141 * (40 / 100)).w,
+                              width: (141 * (60 / 100)).w,
                               height: 6.h,
                               decoration: BoxDecoration(
                                 color: const Color(0xFF398ef3),
@@ -1358,7 +1368,7 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
                         ),
                         SizedBox(
                           child: Text(
-                            '14%',
+                            '25%',
                             style: TextStyle(
                               fontSize: 10.sp,
                               color: const Color(0xFF777777),
@@ -1637,13 +1647,22 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
                 ),
               ),
               const Spacer(),
-              Text(
-                '전체보기 >',
-                style: TextStyle(
-                  fontSize: 12.sp,
-                  height: 1.1,
-                  color: const Color(0xFF777777),
-                  fontWeight: FontWeight.w500,
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (c) => const CampingReviewScreen()),
+                  );
+                },
+                child: Text(
+                  '전체보기 >',
+                  style: TextStyle(
+                    fontSize: 12.sp,
+                    height: 1.1,
+                    color: const Color(0xFF777777),
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ),
               SizedBox(
@@ -1748,20 +1767,23 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
                               ),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
-                                children: List.generate(5, (index) {
-                                  if (index == 4) {
+                                children: List.generate(
+                                  5,
+                                  (index) {
+                                    if (index == 4) {
+                                      return Image.asset(
+                                        'assets/images/ic_detail_star_empty.png',
+                                        width: 12.w,
+                                        height: 11.h,
+                                      );
+                                    }
                                     return Image.asset(
-                                      'assets/images/ic_detail_star_empty.png',
+                                      'assets/images/ic_detail_star.png',
                                       width: 12.w,
                                       height: 11.h,
                                     );
-                                  }
-                                  return Image.asset(
-                                    'assets/images/ic_detail_star.png',
-                                    width: 12.w,
-                                    height: 11.h,
-                                  );
-                                }),
+                                  },
+                                ),
                               ),
                               SizedBox(
                                 height: 8.h,
