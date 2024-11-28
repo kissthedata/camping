@@ -901,6 +901,7 @@ class _CampingReviewScreenState extends State<CampingReviewScreen>
                 GestureDetector(
                   onTap: () {
                     setState(() {
+                      //TODO! 리뷰 유무 전환 기능 . 테스트용으로 추가. 추후 삭제 필요
                       reviewEmpty = !reviewEmpty;
                     });
                   },
