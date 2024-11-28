@@ -402,7 +402,7 @@ class _AllCampingSitesPageState extends State<AllCampingSitesPage> {
                         TextSpan(
                           text: '1103 ',
                           style: TextStyle(
-                            color: const Color(0xFF398ef3),
+                            color: const Color(0xFF398EF3),
                             fontSize: 12.sp,
                             fontWeight: FontWeight.w600,
                             letterSpacing: -1.0,
@@ -455,6 +455,45 @@ class _AllCampingSitesPageState extends State<AllCampingSitesPage> {
                             width: 23.w,
                             height: 23.w,
                             gaplessPlayback: true,
+                          ),
+                        ),
+                        // 이미지 갯수
+                        Align(
+                          alignment: Alignment.bottomRight,
+                          child: Container(
+                            width: 26.w,
+                            height: 13.w,
+                            margin: EdgeInsets.only(
+                              right: 13.w,
+                              bottom: 16.w,
+                            ),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF111111).withOpacity(0.4),
+                              borderRadius: BorderRadius.circular(14.w),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  '1',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 8.sp,
+                                    fontWeight: FontWeight.w400,
+                                    letterSpacing: -1.0,
+                                  ),
+                                ),
+                                Text(
+                                  '/3',
+                                  style: TextStyle(
+                                    color: Colors.white.withOpacity(0.5),
+                                    fontSize: 8.sp,
+                                    fontWeight: FontWeight.w400,
+                                    letterSpacing: -1.0,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ],

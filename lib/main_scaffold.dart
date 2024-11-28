@@ -25,7 +25,7 @@ class _MainScaffoldState extends State<MainScaffold> {
   // 각 탭에 대응되는 페이지 리스트
   final List<Widget> _pages = [
     const MyHomePage(),
-    MapScreen(),
+    const MapScreen(),
     const AllCampingSitesPage(),
     CommunityPage(),
     const MyScreen(),
