@@ -87,21 +87,25 @@ class MyApp extends StatelessWidget {
     return ScreenUtilInit(
       designSize: const Size(360, 800),
       builder: (context, child) {
-        return MaterialApp(
-          theme: ThemeData(
-            fontFamily: 'Pretendard',
-            primaryColor: const Color(0xFF398EF3),
-            scaffoldBackgroundColor: Colors.white,
-            appBarTheme: AppBarTheme(
-              backgroundColor: const Color(0xFF398EF3),
-              titleTextStyle: TextStyle(
-                color: Colors.white,
-                fontSize: 20.sp,
-                fontWeight: FontWeight.bold,
+        return MediaQuery(
+          data: MediaQuery.of(context)
+              .copyWith(textScaler: const TextScaler.linear(1.0)), // 텍스트 크기 고정
+          child: MaterialApp(
+            theme: ThemeData(
+              fontFamily: 'Pretendard',
+              primaryColor: const Color(0xFF398EF3),
+              scaffoldBackgroundColor: Colors.white,
+              appBarTheme: AppBarTheme(
+                backgroundColor: const Color(0xFF398EF3),
+                titleTextStyle: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20.sp,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
+            home: const SplashScreen(), // 앱 시작 시 스플래시 화면 표시
           ),
-          home: SplashScreen(), // 앱 시작 시 스플래시 화면 표시
         );
       },
     );

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:map_sample/cate_dialog.dart';
 import 'package:map_sample/models/car_camping_site.dart';
+import 'package:map_sample/screens/camping_detail_screen.dart';
 import 'package:map_sample/share_data.dart';
 
 class AllCampingSitesPage extends StatefulWidget {
@@ -426,7 +427,12 @@ class _AllCampingSitesPageState extends State<AllCampingSitesPage> {
             // 콘텐츠 영역
             GestureDetector(
               onTap: () {
-                ShareData().showSnackbar(context, content: '$index');
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const CampingDetailScreen(),
+                  ),
+                );
               },
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
