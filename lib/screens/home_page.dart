@@ -547,7 +547,7 @@ class MyHomePageState extends State<MyHomePage> {
               title: '지도보기',
               desc: '차박지와 주변을\n한눈에 검색',
               onTap: () {
-                ShareData().showSnackbar(context, content: '지도보기');
+                ShareData().selectedPage.value = 1;
               },
             ),
           ),
@@ -558,7 +558,7 @@ class MyHomePageState extends State<MyHomePage> {
               title: '차박지 목록',
               desc: '카테고리로 원하는\n차박지 검색',
               onTap: () {
-                ShareData().showSnackbar(context, content: '차박지 목록');
+                ShareData().selectedPage.value = 2;
               },
             ),
           ),

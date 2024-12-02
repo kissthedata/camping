@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:map_sample/screens/review_screen.dart';
 
 class CampingReviewScreen extends StatefulWidget {
   const CampingReviewScreen({super.key});
@@ -70,13 +71,55 @@ class _CampingReviewScreenState extends State<CampingReviewScreen>
       designSize: const Size(360, 800),
       builder: (context, child) {
         return Scaffold(
+          appBar: AppBar(
+            elevation: 0,
+            toolbarHeight: 50.w,
+            leading: const SizedBox.shrink(),
+            backgroundColor: Colors.white,
+            flexibleSpace: Container(
+              color: Colors.white,
+              height: 50.w + MediaQuery.of(context).viewPadding.top.w,
+              padding: EdgeInsets.only(top: 30.w),
+              child: Stack(
+                children: [
+                  // 뒤로가기
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: GestureDetector(
+                      onTap: () => Navigator.pop(context),
+                      child: Container(
+                        width: 23.w,
+                        height: 23.w,
+                        margin: EdgeInsets.only(left: 16.w),
+                        child: Image.asset(
+                          'assets/images/ic_back.png',
+                          gaplessPlayback: true,
+                        ),
+                      ),
+                    ),
+                  ),
+                  // 타이틀
+                  Center(
+                    child: Text(
+                      '차박지 리뷰 전체보기',
+                      style: TextStyle(
+                        color: const Color(0xFF111111),
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
           body: SafeArea(
+            top: true,
             child: Stack(
               children: [
                 SingleChildScrollView(
                   child: Column(
                     children: [
-                      _buildHeader('차박지 리뷰 전체보기', Colors.white),
                       //본문 영역
                       _buildContent(),
                       SizedBox(
@@ -88,38 +131,46 @@ class _CampingReviewScreenState extends State<CampingReviewScreen>
                 Positioned(
                   bottom: 110.h,
                   left: (24.5).w,
-                  child: Container(
-                    width: 311.w,
-                    height: 50.h,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12.r),
-                      color: Colors.transparent,
-                      border: Border.all(
-                        color: const Color(0xFF398fe3),
-                        width: 1.w,
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (c) => const ReviewScreen()));
+                    },
+                    child: Container(
+                      width: 311.w,
+                      height: 50.h,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12.r),
+                        color: Colors.transparent,
+                        border: Border.all(
+                          color: const Color(0xFF398fe3),
+                          width: 1.w,
+                        ),
                       ),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.asset(
-                          'assets/images/ic_detail_write.png',
-                          width: 10.w,
-                          height: 10.h,
-                        ),
-                        SizedBox(
-                          width: 5.w,
-                        ),
-                        Text(
-                          '리뷰 작성하기',
-                          style: TextStyle(
-                            fontSize: 14.sp,
-                            height: 1.1,
-                            color: const Color(0xFF398fe3),
-                            fontWeight: FontWeight.w500,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            'assets/images/ic_detail_write.png',
+                            width: 10.w,
+                            height: 10.h,
                           ),
-                        ),
-                      ],
+                          SizedBox(
+                            width: 5.w,
+                          ),
+                          Text(
+                            '리뷰 작성하기',
+                            style: TextStyle(
+                              fontSize: 14.sp,
+                              height: 1.1,
+                              color: const Color(0xFF398fe3),
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -817,7 +868,6 @@ class _CampingReviewScreenState extends State<CampingReviewScreen>
   ) {
     return SizedBox(
       width: width,
-      height: height,
       child: Row(
         children: [
           Image.asset(

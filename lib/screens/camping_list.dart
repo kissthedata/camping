@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:map_sample/cate_dialog.dart';
 import 'package:map_sample/models/car_camping_site.dart';
 import 'package:map_sample/screens/camping_detail_screen.dart';
+import 'package:map_sample/screens/search_camping_site_page.dart';
 import 'package:map_sample/share_data.dart';
 
 class AllCampingSitesPage extends StatefulWidget {
@@ -106,7 +107,9 @@ class _AllCampingSitesPageState extends State<AllCampingSitesPage> {
                 Align(
                   alignment: Alignment.centerLeft,
                   child: GestureDetector(
-                    onTap: () => Navigator.pop(context),
+                    onTap: () {
+                      ShareData().selectedPage.value = 0;
+                    },
                     child: Container(
                       width: 23.w,
                       height: 23.w,
@@ -121,47 +124,43 @@ class _AllCampingSitesPageState extends State<AllCampingSitesPage> {
                 SizedBox(width: 16.w),
                 // 검색
                 Expanded(
-                  child: Container(
-                    height: 40.w,
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFF3F5F7),
-                      borderRadius: BorderRadius.circular(20.w),
-                    ),
-                    child: TextFormField(
-                      controller: _searchController,
-                      onChanged: (value) {
-                        //
-                      },
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 12.sp,
-                        fontWeight: FontWeight.w500,
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const SearchCampingSitePage(),
+                        ),
+                      );
+                    },
+                    child: Container(
+                      height: 40.w,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFF3F5F7),
+                        borderRadius: BorderRadius.circular(40.w),
                       ),
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        prefixIcon: Container(
-                          margin: EdgeInsets.only(left: 16.w, right: 8.w),
-                          alignment: Alignment.center,
-                          child: Image.asset(
+                      padding: EdgeInsets.symmetric(horizontal: 13.w),
+                      child: Row(
+                        children: [
+                          Image.asset(
                             'assets/images/ic_search.png',
                             color: const Color(0xFF5D646C),
                             width: 16.w,
                             height: 16.w,
-                            fit: BoxFit.cover,
                             gaplessPlayback: true,
                           ),
-                        ),
-                        prefixIconConstraints: BoxConstraints(
-                          maxWidth: 40.w,
-                          maxHeight: 40.w,
-                        ),
-                        hintText: '원하시는 차박지를 검색해보세요!',
-                        hintStyle: TextStyle(
-                          color: const Color(0xFFA7A7A7),
-                          fontSize: 12.sp,
-                          fontWeight: FontWeight.w500,
-                        ),
-                        contentPadding: EdgeInsets.only(top: 8.w),
+                          SizedBox(width: 8.w),
+                          Expanded(
+                            child: Text(
+                              '원하시는 차박지를 검색해보세요!',
+                              style: TextStyle(
+                                color: const Color(0xFFA7A7A7),
+                                fontSize: 12.sp,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
@@ -314,7 +313,7 @@ class _AllCampingSitesPageState extends State<AllCampingSitesPage> {
           builder: (context, value, child) {
             return Scaffold(
               appBar: _buildAppBar(value.toDouble()),
-              backgroundColor: const Color(0xFFF5F5F5), // Figma 배경색
+              backgroundColor: Colors.white,
               // body: _filteredCampingSites.isEmpty
               //     ? const Center(child: CircularProgressIndicator())
               //     : _buildCampingSitesList(),
@@ -508,7 +507,7 @@ class _AllCampingSitesPageState extends State<AllCampingSitesPage> {
                   SizedBox(height: 8.w),
                   // 하단
                   Container(
-                    color: const Color(0xFFF5F5F5),
+                    color: Colors.white,
                     margin: EdgeInsets.symmetric(horizontal: 8.w),
                     child: Stack(
                       children: [

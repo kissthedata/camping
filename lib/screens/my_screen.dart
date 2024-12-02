@@ -178,7 +178,7 @@ class _MyScreenState extends State<MyScreen> {
             top: (13.5).h,
             child: GestureDetector(
               onTap: () {
-                Navigator.of(context).pop();
+                ShareData().selectedPage.value = 0;
               },
               child: Image.asset(
                 'assets/images/ic_back.png',

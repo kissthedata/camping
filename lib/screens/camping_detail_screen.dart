@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:map_sample/screens/camping_review_screen.dart';
+import 'package:map_sample/screens/map_detail_new_screen.dart';
+import 'package:map_sample/screens/review_screen.dart';
 
 class CampingDetailScreen extends StatefulWidget {
   const CampingDetailScreen({super.key});
@@ -89,6 +91,8 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
         id: '닉네임'),
   ];
 
+  bool showAlert = false;
+
   @override
   void initState() {
     super.initState();
@@ -112,6 +116,17 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
         _isSticky = position.dy <= 70.h;
       });
     }
+  }
+
+  void showAlertMsg() {
+    setState(() {
+      showAlert = true;
+    });
+    Future.delayed(const Duration(seconds: 1), () {
+      setState(() {
+        showAlert = false;
+      });
+    });
   }
 
   @override
@@ -162,6 +177,86 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
                             _buildTab(null),
                           ],
                         ))
+                  ],
+
+                  if (showAlert) ...[
+                    Positioned(
+                      top: 0,
+                      left: 0,
+                      child: Material(
+                        color: Colors.transparent,
+                        child: Container(
+                          width: 360.w,
+                          height: 800.h,
+                          color: const Color(0x69000000),
+                          alignment: Alignment.center,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10.r),
+                              color: const Color(0xC44D5865),
+                              boxShadow: const [
+                                BoxShadow(
+                                  color: Color(0x4D000000),
+                                  blurRadius: 6,
+                                  offset: Offset(0, 0),
+                                ),
+                              ],
+                            ),
+                            width: 328.w,
+                            height: 62.h,
+                            child: Row(
+                              children: [
+                                SizedBox(
+                                  width: 17.w,
+                                ),
+                                Container(
+                                  decoration: const BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Color(0xFF31e44d),
+                                  ),
+                                  alignment: Alignment.center,
+                                  width: 22.w,
+                                  height: 22.h,
+                                  child: Image.asset(
+                                    'assets/images/ic_check_alert.png',
+                                    width: 10.w,
+                                    height: 6.h,
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 12.w,
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      '클립보드에 복사완료!',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 14.sp,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 1.h,
+                                    ),
+                                    Text(
+                                      '차박지 주소가 클립보드에 복사되었습니다.',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 12.sp,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
                   ],
                 ],
               ),
@@ -308,6 +403,7 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
                   style: TextStyle(
                     color: textblack,
                     fontSize: 14.sp,
+                    height: 1.2,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -1526,29 +1622,34 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
           SizedBox(
             height: 16.h,
           ),
-          Container(
-            height: 19.h,
-            padding: EdgeInsets.symmetric(horizontal: 4.w),
-            child: Row(
-              children: [
-                Text(
-                  '경상북도 경산시 대구대로 1길 12',
-                  style: TextStyle(
-                    fontSize: 16.sp,
-                    height: 1.1,
-                    color: textblack,
-                    fontWeight: FontWeight.w600,
+          GestureDetector(
+            onTap: () {
+              showAlertMsg();
+            },
+            child: Container(
+              height: 19.h,
+              padding: EdgeInsets.symmetric(horizontal: 4.w),
+              child: Row(
+                children: [
+                  Text(
+                    '경상북도 경산시 대구대로 1길 12',
+                    style: TextStyle(
+                      fontSize: 16.sp,
+                      height: 1.1,
+                      color: textblack,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
-                ),
-                SizedBox(
-                  width: 8.w,
-                ),
-                Image.asset(
-                  'assets/images/ic_detail_copy.png',
-                  width: 9.w,
-                  height: 11.h,
-                )
-              ],
+                  SizedBox(
+                    width: 8.w,
+                  ),
+                  Image.asset(
+                    'assets/images/ic_detail_copy.png',
+                    width: 9.w,
+                    height: 11.h,
+                  )
+                ],
+              ),
             ),
           ),
           SizedBox(
@@ -1589,19 +1690,28 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
           SizedBox(
             height: 14.h,
           ),
-          Container(
-            width: 327.w,
-            height: 148.h,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16.r),
-              border: Border.all(
-                color: const Color(0xFFdedede),
-                width: 1.w,
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const MapDetailNewScreen(),
+                  ));
+            },
+            child: Container(
+              width: 327.w,
+              height: 148.h,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16.r),
+                border: Border.all(
+                  color: const Color(0xFFdedede),
+                  width: 1.w,
+                ),
               ),
-            ),
-            child: Image.asset(
-              'assets/images/ic_detail_map.png',
-              fit: BoxFit.fill,
+              child: Image.asset(
+                'assets/images/ic_detail_map.png',
+                fit: BoxFit.fill,
+              ),
             ),
           ),
           SizedBox(
@@ -1706,7 +1816,6 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
           padding: EdgeInsets.only(
             left: 14.w,
           ),
-          // color: Colors.red,
           child: ListView.builder(
             itemCount: reviewItems.length,
             shrinkWrap: true,
@@ -1715,193 +1824,202 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
               ReviewItem item = reviewItems[index];
               return Align(
                 alignment: Alignment.topCenter,
-                child: Container(
-                  width: 237.w,
-                  height: 277.h,
-                  margin: EdgeInsets.fromLTRB(
-                    2.w,
-                    16.h,
-                    8.w,
-                    16.h,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(24.r),
-                    boxShadow: [
-                      BoxShadow(
-                        color: const Color(0x1A000000),
-                        blurRadius: 20.r,
-                        offset: const Offset(0, 1),
-                      ),
-                    ],
-                  ),
-                  child: Stack(
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(24.r),
-                        child: Image.asset(
-                          item.img,
-                          fit: BoxFit.fill,
-                          width: 237.w,
-                          height: 277.h,
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (c) => const CampingReviewScreen()),
+                    );
+                  },
+                  child: Container(
+                    width: 237.w,
+                    height: 277.h,
+                    margin: EdgeInsets.fromLTRB(
+                      2.w,
+                      16.h,
+                      8.w,
+                      16.h,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(24.r),
+                      boxShadow: [
+                        BoxShadow(
+                          color: const Color(0x1A000000),
+                          blurRadius: 20.r,
+                          offset: const Offset(0, 1),
                         ),
-                      ),
-                      Positioned(
-                        top: 150.h,
-                        left: 0,
-                        right: 0,
-                        child: Container(
-                          height: 127.h,
-                          width: 237.w,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.vertical(
-                              bottom: Radius.circular(24.r),
-                            ),
-                            color: Colors.white,
+                      ],
+                    ),
+                    child: Stack(
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(24.r),
+                          child: Image.asset(
+                            item.img,
+                            fit: BoxFit.fill,
+                            width: 237.w,
+                            height: 277.h,
                           ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              SizedBox(
-                                height: 12.h,
+                        ),
+                        Positioned(
+                          top: 150.h,
+                          left: 0,
+                          right: 0,
+                          child: Container(
+                            height: 127.h,
+                            width: 237.w,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.vertical(
+                                bottom: Radius.circular(24.r),
                               ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: List.generate(
-                                  5,
-                                  (index) {
-                                    if (index == 4) {
+                              color: Colors.white,
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                SizedBox(
+                                  height: 12.h,
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: List.generate(
+                                    5,
+                                    (index) {
+                                      if (index == 4) {
+                                        return Image.asset(
+                                          'assets/images/ic_detail_star_empty.png',
+                                          width: 12.w,
+                                          height: 11.h,
+                                        );
+                                      }
                                       return Image.asset(
-                                        'assets/images/ic_detail_star_empty.png',
+                                        'assets/images/ic_detail_star.png',
                                         width: 12.w,
                                         height: 11.h,
                                       );
-                                    }
-                                    return Image.asset(
-                                      'assets/images/ic_detail_star.png',
-                                      width: 12.w,
-                                      height: 11.h,
-                                    );
-                                  },
+                                    },
+                                  ),
                                 ),
-                              ),
-                              SizedBox(
-                                height: 8.h,
-                              ),
-                              SizedBox(
-                                height: 12.h,
-                                child: Row(
+                                SizedBox(
+                                  height: 8.h,
+                                ),
+                                SizedBox(
+                                  height: 12.h,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        '‘청결도 ',
+                                        style: TextStyle(
+                                          fontSize: 10.sp,
+                                          height: 1.2,
+                                          color: const Color(0xFFb5b5b5),
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                      Text(
+                                        '보통’',
+                                        style: TextStyle(
+                                          fontSize: 10.sp,
+                                          height: 1.2,
+                                          color: const Color(0xFF8b8b8b),
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 12.w,
+                                      ),
+                                      Text(
+                                        '‘주변소음 ',
+                                        style: TextStyle(
+                                          fontSize: 10.sp,
+                                          height: 1.2,
+                                          color: const Color(0xFFb5b5b5),
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                      Text(
+                                        '조용함’',
+                                        style: TextStyle(
+                                          height: 1.2,
+                                          fontSize: 10.sp,
+                                          color: const Color(0xFF8b8b8b),
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 12.w,
+                                      ),
+                                      Text(
+                                        '‘정확도 ',
+                                        style: TextStyle(
+                                          fontSize: 10.sp,
+                                          height: 1.2,
+                                          color: const Color(0xFFb5b5b5),
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                      Text(
+                                        '높음’',
+                                        style: TextStyle(
+                                          fontSize: 10.sp,
+                                          color: const Color(0xFF8b8b8b),
+                                          height: 1.2,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 8.h,
+                                ),
+                                Text(
+                                  item.content,
+                                  style: TextStyle(
+                                    fontSize: 12.sp,
+                                    height: 1.2,
+                                    color: textblack,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                                SizedBox(
+                                  height: 9.h,
+                                ),
+                                Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Text(
-                                      '‘청결도 ',
-                                      style: TextStyle(
-                                        fontSize: 10.sp,
-                                        height: 1.2,
-                                        color: const Color(0xFFb5b5b5),
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                    Text(
-                                      '보통’',
-                                      style: TextStyle(
-                                        fontSize: 10.sp,
-                                        height: 1.2,
-                                        color: const Color(0xFF8b8b8b),
-                                        fontWeight: FontWeight.w500,
+                                    Container(
+                                      width: 20.w,
+                                      height: 20.h,
+                                      decoration: const BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: Color(0xFFcbcbcb),
                                       ),
                                     ),
                                     SizedBox(
-                                      width: 12.w,
+                                      width: 4.w,
                                     ),
                                     Text(
-                                      '‘주변소음 ',
+                                      item.id,
                                       style: TextStyle(
-                                        fontSize: 10.sp,
-                                        height: 1.2,
-                                        color: const Color(0xFFb5b5b5),
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                    Text(
-                                      '조용함’',
-                                      style: TextStyle(
-                                        height: 1.2,
-                                        fontSize: 10.sp,
-                                        color: const Color(0xFF8b8b8b),
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      width: 12.w,
-                                    ),
-                                    Text(
-                                      '‘정확도 ',
-                                      style: TextStyle(
-                                        fontSize: 10.sp,
-                                        height: 1.2,
-                                        color: const Color(0xFFb5b5b5),
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                    Text(
-                                      '높음’',
-                                      style: TextStyle(
-                                        fontSize: 10.sp,
-                                        color: const Color(0xFF8b8b8b),
-                                        height: 1.2,
+                                        fontSize: 12.sp,
+                                        height: 1.1,
+                                        color: const Color(0xFF777777),
                                         fontWeight: FontWeight.w500,
                                       ),
                                     ),
                                   ],
-                                ),
-                              ),
-                              SizedBox(
-                                height: 8.h,
-                              ),
-                              Text(
-                                item.content,
-                                style: TextStyle(
-                                  fontSize: 12.sp,
-                                  height: 1.2,
-                                  color: textblack,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                              SizedBox(
-                                height: 9.h,
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Container(
-                                    width: 20.w,
-                                    height: 20.h,
-                                    decoration: const BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: Color(0xFFcbcbcb),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: 4.w,
-                                  ),
-                                  Text(
-                                    item.id,
-                                    style: TextStyle(
-                                      fontSize: 12.sp,
-                                      height: 1.1,
-                                      color: const Color(0xFF777777),
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ],
-                              )
-                            ],
+                                )
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               );
@@ -1911,37 +2029,43 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
         SizedBox(
           height: 20.h,
         ),
-        Container(
-          height: 50,
-          width: 311.w,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12.r),
-            border: Border.all(
-              color: const Color(0xFF398fe3),
-              width: 1.w,
+        GestureDetector(
+          onTap: () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (c) => const ReviewScreen()));
+          },
+          child: Container(
+            height: 50,
+            width: 311.w,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12.r),
+              border: Border.all(
+                color: const Color(0xFF398fe3),
+                width: 1.w,
+              ),
             ),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.asset(
-                'assets/images/ic_detail_write.png',
-                width: 10.w,
-                height: 10.h,
-              ),
-              SizedBox(
-                width: 5.w,
-              ),
-              Text(
-                '리뷰 작성하기',
-                style: TextStyle(
-                  fontSize: 14.sp,
-                  height: 1.1,
-                  color: const Color(0xFF398fe3),
-                  fontWeight: FontWeight.w500,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset(
+                  'assets/images/ic_detail_write.png',
+                  width: 10.w,
+                  height: 10.h,
                 ),
-              ),
-            ],
+                SizedBox(
+                  width: 5.w,
+                ),
+                Text(
+                  '리뷰 작성하기',
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    height: 1.1,
+                    color: const Color(0xFF398fe3),
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
         SizedBox(
@@ -1962,7 +2086,6 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
   ) {
     return SizedBox(
       width: width,
-      height: height,
       child: Row(
         children: [
           Image.asset(

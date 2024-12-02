@@ -12,14 +12,14 @@ import 'package:map_sample/share_data.dart';
 import 'package:map_sample/utils/marker_utils.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart'; // SlidingUpPanel 패키지 추가
 
-class MapScreen extends StatefulWidget {
-  const MapScreen({super.key});
+class MapDetailNewScreen extends StatefulWidget {
+  const MapDetailNewScreen({super.key});
 
   @override
-  MapScreenState createState() => MapScreenState();
+  MapDetailNewScreenState createState() => MapDetailNewScreenState();
 }
 
-class MapScreenState extends State<MapScreen> {
+class MapDetailNewScreenState extends State<MapDetailNewScreen> {
   List<MapLocation> _locations = [];
   bool _loading = true;
   NaverMapController? _mapController;
@@ -42,7 +42,11 @@ class MapScreenState extends State<MapScreen> {
     if (_selectedItem.isEmpty) {
       tapMarkerId = '';
       isPanelOpen = false;
-      ShareData().categoryHeight.value = 0;
+      WidgetsBinding.instance.addPostFrameCallback(
+        (timeStamp) {
+          ShareData().categoryHeight.value = 0;
+        },
+      );
     }
     _getCurrentLocation();
   }
@@ -80,7 +84,6 @@ class MapScreenState extends State<MapScreen> {
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
     NLatLng currentPosition = NLatLng(position.latitude, position.longitude);
-
     setState(() {
       _currentPosition = position;
       _updateCameraPosition(currentPosition);
@@ -115,7 +118,6 @@ class MapScreenState extends State<MapScreen> {
           );
           uniqueLocations[location.place] = location;
         });
-
         setState(() {
           _locations = uniqueLocations.values.toList();
           _loading = false;
@@ -185,7 +187,7 @@ class MapScreenState extends State<MapScreen> {
                   alignment: Alignment.centerLeft,
                   child: GestureDetector(
                     onTap: () {
-                      ShareData().selectedPage.value = 0;
+                      Navigator.of(context).pop();
                     },
                     child: Container(
                       width: 23.w,
@@ -355,27 +357,23 @@ class MapScreenState extends State<MapScreen> {
                   SingleChildScrollView(
                     padding: EdgeInsets.symmetric(horizontal: 16.w),
                     scrollDirection: Axis.horizontal,
-                    child: SizedBox(
-                      height: 40.h,
-                      child: Row(
-                        children: _selectedItem.map((item) {
-                          return selectedCategory(
-                            title: item!.name,
-                            img: item.img,
-                            onDelete: () {
-                              _selectedItem.remove(item);
+                    child: Wrap(
+                      spacing: 6.w,
+                      children: _selectedItem.map((item) {
+                        return selectedCategory(
+                          title: item!.name,
+                          onDelete: () {
+                            _selectedItem.remove(item);
 
-                              if (_selectedItem.isEmpty) {
-                                isPanelOpen = false;
-                                _panelController.close();
-                                ShareData().categoryHeight.value = 0;
-                              }
-
-                              setState(() {});
-                            },
-                          );
-                        }).toList(),
-                      ),
+                            if (_selectedItem.isEmpty) {
+                              isPanelOpen = false;
+                              _panelController.close();
+                              ShareData().categoryHeight.value = 0;
+                            }
+                            setState(() {});
+                          },
+                        );
+                      }).toList(),
                     ),
                   ),
                 ],
@@ -390,61 +388,47 @@ class MapScreenState extends State<MapScreen> {
   /// 선택한 카테고리 칩
   Widget selectedCategory({
     required String title,
-    required String img,
     required VoidCallback onDelete,
   }) {
-    return Container(
-      height: 30.h,
-      margin: EdgeInsets.only(right: 4.w),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(28.r),
-        boxShadow: [
-          BoxShadow(
-            color: const Color(0x40000000), // #00000040의 투명도 적용
-            offset: Offset(0, 1.h), // 그림자의 x, y 오프셋
-            blurRadius: 4, // 그림자의 흐림 정도
-            spreadRadius: 0, // 그림자의 확산 반경
-          ),
-        ],
+    return Chip(
+      label: Text(
+        title,
+        style: TextStyle(
+          color: const Color(0xFF9A9A9A),
+          fontSize: 12.sp,
+          fontWeight: FontWeight.w600,
+          letterSpacing: -1.0.w,
+        ),
       ),
-      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 7.h),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Image.asset(
-            'assets/images/ic_cate_$img.png',
-            width: 16.w,
-            height: 16.h,
-            color: const Color(0xFF111111),
-          ),
-          SizedBox(width: 2.w),
-          SizedBox(
-            height: 14.h,
-            child: Text(
-              title,
-              style: TextStyle(
-                color: const Color(0xFF111111),
-                fontSize: 12.sp,
-                fontWeight: FontWeight.w600,
-                letterSpacing: -1.0.w,
-                height: 1.1,
-              ),
-            ),
-          ),
-          SizedBox(width: 2.w),
-          GestureDetector(
-            onTap: onDelete,
-            child: Image.asset(
-              'assets/images/ic_delete.png',
-              fit: BoxFit.cover,
-              width: 12.w,
-              height: 12.h,
-              color: const Color(0xFF111111),
-            ),
-          ),
-        ],
+      deleteIcon: Image.asset(
+        'assets/images/ic_delete.png',
+        fit: BoxFit.cover,
+        width: 14.w,
+        height: 14.w,
+        gaplessPlayback: true,
       ),
+      deleteButtonTooltipMessage: null,
+      onDeleted: onDelete,
+      side: const BorderSide(
+        color: Color(0xFF9A9A9A),
+      ),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20.w),
+      ),
+      padding: EdgeInsets.only(right: 14.w),
+      elevation: 0,
+      labelPadding: EdgeInsets.only(
+        top: 2.w,
+        left: 16.w,
+        right: 4.w,
+        bottom: 2.w,
+      ),
+      deleteIconBoxConstraints: BoxConstraints(
+        maxWidth: 14.w,
+        maxHeight: 14.w,
+      ),
+      visualDensity: VisualDensity.compact,
+      backgroundColor: Colors.white,
     );
   }
 
@@ -1095,10 +1079,14 @@ class MapScreenState extends State<MapScreen> {
                       mapType: _currentMapType,
                     ),
                     onMapReady: (controller) {
-                      setState(() {
-                        _mapController = controller;
-                      });
-                      _addMarkers();
+                      SchedulerBinding.instance.addPostFrameCallback(
+                        (timeStamp) {
+                          setState(() {
+                            _mapController = controller;
+                          });
+                          _addMarkers();
+                        },
+                      );
                     },
                   ),
                   // 오버레이 - 좌
@@ -1533,7 +1521,6 @@ class MapScreenState extends State<MapScreen> {
           tapMarkerId = marker.info.id;
           ShareData().categoryHeight.value = 0;
           _selectedItem.clear();
-
           setState(() {});
         });
         await _mapController!.addOverlay(marker);
