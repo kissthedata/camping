@@ -108,7 +108,7 @@ class _MyScreenState extends State<MyScreen> {
                                     child: Row(
                                       children: [
                                         Text(
-                                          '로그인 후 이용해주세요. >',
+                                          '로그인 후 이용해주세요.',
                                           style: TextStyle(
                                             fontSize: 15.sp,
                                             fontWeight: FontWeight.w600,
