@@ -218,7 +218,7 @@ class MyHomePageState extends State<MyHomePage> {
       ),
       elevation: 20.h,
       shadowColor: Colors.black,
-      toolbarHeight: 111.w,
+      toolbarHeight: 96.w,
       surfaceTintColor: Colors.white,
       backgroundColor: Colors.white,
       flexibleSpace: Column(
@@ -419,7 +419,7 @@ class MyHomePageState extends State<MyHomePage> {
     return Stack(
       children: [
         Container(
-          margin: EdgeInsets.only(top: (95 + topPadding).w),
+          margin: EdgeInsets.only(top: (70 + topPadding).w),
           height: 314.w,
           decoration: BoxDecoration(
             gradient: LinearGradient(
