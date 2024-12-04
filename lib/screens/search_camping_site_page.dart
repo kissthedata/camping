@@ -129,6 +129,7 @@ class SearchCampingSitePageState extends State<SearchCampingSitePage> {
                   ),
                   decoration: InputDecoration(
                     border: InputBorder.none,
+                    isDense: true,
                     prefixIcon: Container(
                       margin: EdgeInsets.only(left: 16.w, right: 8.w),
                       alignment: Alignment.center,
@@ -151,7 +152,7 @@ class SearchCampingSitePageState extends State<SearchCampingSitePage> {
                       fontSize: 12.sp,
                       fontWeight: FontWeight.w500,
                     ),
-                    contentPadding: EdgeInsets.only(top: 8.w),
+                    contentPadding: EdgeInsets.only(top: 10.5.w),
                   ),
                 ),
               ),
