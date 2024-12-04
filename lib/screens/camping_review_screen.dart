@@ -143,7 +143,7 @@ class _CampingReviewScreenState extends State<CampingReviewScreen>
                       height: 50.h,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12.r),
-                        color: Colors.transparent,
+                        color: Colors.white,
                         border: Border.all(
                           color: const Color(0xFF398fe3),
                           width: 1.w,
