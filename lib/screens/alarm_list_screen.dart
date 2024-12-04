@@ -48,12 +48,6 @@ class _AlarmListScreenState extends State<AlarmListScreen> {
                         decoration: BoxDecoration(
                           color: const Color(0xFFCBCBCB),
                           borderRadius: BorderRadius.circular(16.w),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.5),
-                              blurRadius: 4,
-                            ),
-                          ],
                         ),
                         padding: EdgeInsets.all(6.w),
                         child: Image.asset(
