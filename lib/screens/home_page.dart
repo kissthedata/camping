@@ -307,16 +307,19 @@ class MyHomePageState extends State<MyHomePage> {
                 ),
                 SizedBox(width: 16.w),
                 // 온도
-                Text(
-                  '31°C',
-                  style: TextStyle(
-                    color: const Color(0xFF474747),
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w400,
-                    letterSpacing: -1.5,
-                  ),
-                  strutStyle: const StrutStyle(
-                    forceStrutHeight: true,
+                Container(
+                  margin: EdgeInsets.only(top: 2.w),
+                  child: Text(
+                    '31°C',
+                    style: TextStyle(
+                      color: const Color(0xFF474747),
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w400,
+                      letterSpacing: -1.5,
+                    ),
+                    strutStyle: const StrutStyle(
+                      forceStrutHeight: true,
+                    ),
                   ),
                 ),
                 SizedBox(width: 16.w),
