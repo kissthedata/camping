@@ -172,10 +172,15 @@ class _State extends State<ReviewScreen> {
     return ScreenUtilInit(
       designSize: const Size(360, 800),
       builder: (context, _) {
-        return Scaffold(
-          appBar: _buildAppBar(),
-          body: SafeArea(
-            child: _buildChildView(),
+        return GestureDetector(
+          onTap: () {
+            FocusScope.of(context).unfocus();
+          },
+          child: Scaffold(
+            appBar: _buildAppBar(),
+            body: SafeArea(
+              child: _buildChildView(),
+            ),
           ),
         );
       },

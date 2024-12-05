@@ -22,7 +22,7 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
 
   String title = "차박지 목록";
   String addr = "차박지 상세 주소";
-  String info = "2024년 8월 27일 등록 / 한달 전 정보 수정";
+  String info = "2024년 8월 27일 등록  /  한달 전 정보 수정";
   double avg = 4.3;
   int reviewCnt = 12;
   int likeCnt = 45;
@@ -156,7 +156,7 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
                   ),
                   //상단 투명 앱바
                   Positioned(
-                    top: 20.h,
+                    top: 0.h,
                     child: _buildHeader('차박지 상세정보', Colors.transparent),
                   ),
                   //상단 투명 앱바
@@ -170,7 +170,7 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
                               width: 360.w,
                               color: Colors.white,
                             ),
-                            _buildHeader(
+                            _buildStickyHeader(
                               '차박지 상세정보',
                               Colors.white,
                             ),
@@ -266,6 +266,54 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
   }
 
   Widget _buildHeader(String title, Color color) {
+    return Container(
+      width: 360.w,
+      height: 70.h,
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            Color(0x59FFFFFF),
+            Color(0x00FFFFFF),
+          ],
+        ),
+      ),
+      padding: EdgeInsets.only(
+        top: 20.h,
+      ),
+      child: Stack(
+        children: [
+          Positioned(
+            left: 16.w,
+            top: (13.5).h,
+            child: GestureDetector(
+              onTap: () {
+                Navigator.of(context).pop();
+              },
+              child: Image.asset(
+                'assets/images/ic_back.png',
+                width: 23.w,
+                height: 23.h,
+              ),
+            ),
+          ),
+          Center(
+            child: Text(
+              title,
+              style: TextStyle(
+                color: textblack,
+                fontSize: 16.sp,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStickyHeader(String title, Color color) {
     return Container(
       width: 360.w,
       height: 50.h,
@@ -392,6 +440,8 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
                   style: TextStyle(
                     color: textblack,
                     fontSize: 24.sp,
+                    letterSpacing: (-0.04).w,
+                    height: (1.2).h,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -403,7 +453,8 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
                   style: TextStyle(
                     color: textblack,
                     fontSize: 14.sp,
-                    height: 1.2,
+                    letterSpacing: (-0.02).w,
+                    height: (1.2).h,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -416,30 +467,32 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
                   style: TextStyle(
                     color: const Color(0xFF777777),
                     fontSize: 10.sp,
+                    height: 1.h,
+                    letterSpacing: (-0.05.w),
                     fontWeight: FontWeight.w400,
                   ),
                 ),
               ),
-              SizedBox(height: (4.5).h),
+              SizedBox(height: (7).h),
               SizedBox(
-                height: 17.h,
+                height: 12.h,
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Image.asset(
                       'assets/images/ic_detail_star.png',
                       width: 12.w,
-                      height: 11.h,
+                      height: 12.h,
                     ),
                     SizedBox(width: 4.w),
                     SizedBox(
-                      height: 17.h,
+                      height: 12.h,
                       child: Text(
                         avg.toString(),
                         style: TextStyle(
                           color: const Color(0xFF777777),
                           fontSize: 12.sp,
-                          height: 1.4,
+                          height: 1.h,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -452,7 +505,7 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
                         style: TextStyle(
                           color: const Color(0xFFb8b8b8),
                           fontSize: 12.sp,
-                          height: 1.4,
+                          height: 1.h,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -465,7 +518,7 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
                         style: TextStyle(
                           color: const Color(0xFFb8b8b8),
                           fontSize: 12.sp,
-                          height: 1.4,
+                          height: 1.h,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -478,7 +531,7 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
                         style: TextStyle(
                           color: const Color(0xFFb8b8b8),
                           fontSize: 12.sp,
-                          height: 1.4,
+                          height: 1.h,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -491,7 +544,7 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
                         style: TextStyle(
                           color: const Color(0xFFb8b8b8),
                           fontSize: 12.sp,
-                          height: 1.4,
+                          height: 1.h,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -904,7 +957,7 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
                   style: TextStyle(
                     fontSize: 10.sp,
                     fontWeight: FontWeight.w400,
-                    color: infoTab ? textblack : const Color(0xFF777777),
+                    color: const Color(0xFF777777),
                     decoration: TextDecoration.underline,
                   ),
                 ),
@@ -1495,11 +1548,11 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
             height: 50.h,
             decoration: const BoxDecoration(
               gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
+                begin: Alignment.bottomCenter, // 0deg 방향 (아래쪽)
+                end: Alignment.topCenter, // 위쪽으로 이동
                 colors: [
-                  Color.fromARGB(85, 207, 207, 207),
-                  Color(0x00d9d9d9),
+                  Color(0x00D9D9D9),
+                  Color(0x55CFCFCF), // #CFCFCF
                 ],
               ),
             ),
@@ -1635,7 +1688,8 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
                     '경상북도 경산시 대구대로 1길 12',
                     style: TextStyle(
                       fontSize: 16.sp,
-                      height: 1.1,
+                      height: (1.1).h,
+                      letterSpacing: (-0.03).w,
                       color: textblack,
                       fontWeight: FontWeight.w600,
                     ),
@@ -1664,22 +1718,38 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
                   '현재 내 위치와 약',
                   style: TextStyle(
                     fontSize: 14.sp,
+                    letterSpacing: (-0.03).w,
+                    height: (1.4).h,
                     color: const Color(0xFFb3b3b3),
                     fontWeight: FontWeight.w400,
                   ),
                 ),
                 Text(
-                  ' 23.5km ',
+                  ' 23.5',
                   style: TextStyle(
                     fontSize: 14.sp,
+                    height: (1.4).h,
                     color: const Color(0xFF398ef3),
-                    fontWeight: FontWeight.w400,
+                    letterSpacing: (-0.03).w,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
                 Text(
-                  '떨어져 있어요',
+                  'km',
+                  style: TextStyle(
+                    fontSize: 12.sp,
+                    color: const Color(0xFF398ef3),
+                    height: (1.4).h,
+                    fontWeight: FontWeight.w500,
+                    letterSpacing: (-0.03).w,
+                  ),
+                ),
+                Text(
+                  ' 떨어져 있어요',
                   style: TextStyle(
                     fontSize: 14.sp,
+                    letterSpacing: (-0.03).w,
+                    height: (1.4).h,
                     color: const Color(0xFFb3b3b3),
                     fontWeight: FontWeight.w400,
                   ),
@@ -1765,14 +1835,26 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
                         builder: (c) => const CampingReviewScreen()),
                   );
                 },
-                child: Text(
-                  '전체보기 >',
-                  style: TextStyle(
-                    fontSize: 12.sp,
-                    height: 1.1,
-                    color: const Color(0xFF777777),
-                    fontWeight: FontWeight.w500,
-                  ),
+                child: Row(
+                  children: [
+                    Text(
+                      '전체보기',
+                      style: TextStyle(
+                        fontSize: 12.sp,
+                        height: 1.1,
+                        color: const Color(0xFF777777),
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    SizedBox(
+                      width: 2.w,
+                    ),
+                    Image.asset(
+                      'assets/images/ic_detail_right.png',
+                      width: 13.w,
+                      height: 13.h,
+                    ),
+                  ],
                 ),
               ),
               SizedBox(

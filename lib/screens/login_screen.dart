@@ -117,6 +117,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 // 비밀번호 입력 필드
                 _buildTextField(
                   controller: _passwordController,
+                  obscureText: true,
                   hintText: '비밀번호',
                   validator: (value) {
                     if (value == null || value.isEmpty) {

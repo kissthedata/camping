@@ -272,73 +272,95 @@ class _CateDialogState extends State<CateDialog>
   }
 
   Widget _buildCateList() {
-    return Container(
-      width: 360.w,
-      height: 258.h,
-      color: const Color(0xffF8f8f8),
-      child: GridView.builder(
-          padding: EdgeInsets.only(
-            left: 16.w,
-            right: 16.w,
-            top: 16.w,
-          ),
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 4,
-            mainAxisSpacing: 4.h,
-            crossAxisSpacing: 4.w,
-          ),
-          itemCount: cateItemList.length,
-          itemBuilder: (context, index) {
-            CateItem item = cateItemList[index];
-            return GestureDetector(
-              onTap: () {
-                setState(() {
-                  CateItem temp = item;
-                  temp.isSelected = !temp.isSelected;
-                  cateItemList[index] = temp;
-                });
-              },
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8.r),
-                  border: Border.all(
-                      color: item.isSelected
-                          ? const Color(0xFF398ef3)
-                          : const Color(0xFF868686),
-                      width: 1.w),
-                  color:
-                      item.isSelected ? const Color(0xFFe6eee7) : Colors.white,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.asset(
-                      'assets/images/ic_cate_${item.img}.png',
-                      width: 30.w,
-                      height: 30.h,
-                      color: item.isSelected
-                          ? const Color(0xFF398ef3)
-                          : const Color(0xFF868686),
-                    ),
-                    SizedBox(
-                      height: 4.h,
-                    ),
-                    Text(
-                      item.name,
-                      style: TextStyle(
-                        color: item.isSelected
-                            ? const Color(0xFF398ef3)
-                            : const Color(0xFF868686),
-                        fontSize: 12.sp,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ],
-                ),
+    return Stack(
+      children: [
+        Container(
+          width: 360.w,
+          height: 258.h,
+          color: const Color(0xffF8f8f8),
+          child: GridView.builder(
+              padding: EdgeInsets.only(
+                left: 16.w,
+                right: 16.w,
+                top: 16.w,
               ),
-            );
-          }),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 4,
+                mainAxisSpacing: 4.h,
+                crossAxisSpacing: 4.w,
+              ),
+              itemCount: cateItemList.length,
+              itemBuilder: (context, index) {
+                CateItem item = cateItemList[index];
+                return GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      CateItem temp = item;
+                      temp.isSelected = !temp.isSelected;
+                      cateItemList[index] = temp;
+                    });
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8.r),
+                      border: Border.all(
+                          color: item.isSelected
+                              ? const Color(0xFF398ef3)
+                              : const Color(0xFF868686),
+                          width: 1.w),
+                      color: item.isSelected
+                          ? const Color(0xFFe6eef7)
+                          : Colors.white,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset(
+                          'assets/images/ic_cate_${item.img}.png',
+                          width: 30.w,
+                          height: 30.h,
+                          color: item.isSelected
+                              ? const Color(0xFF398ef3)
+                              : const Color(0xFF868686),
+                        ),
+                        SizedBox(
+                          height: 4.h,
+                        ),
+                        Text(
+                          item.name,
+                          style: TextStyle(
+                            color: item.isSelected
+                                ? const Color(0xFF398ef3)
+                                : const Color(0xFF868686),
+                            fontSize: 12.sp,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              }),
+        ),
+        Positioned(
+          bottom: 0,
+          child: Container(
+            width: 360.w,
+            height: 20.h,
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.bottomCenter,
+                end: Alignment.topCenter,
+                colors: [
+                  Color(0xFFf8f8f8),
+                  Color(0x00f8f8f8),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 

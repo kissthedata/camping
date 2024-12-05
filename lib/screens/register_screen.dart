@@ -17,6 +17,8 @@ class _SignupFormState extends State<SignupForm> {
   bool termsUseCheck = false;
   bool termsPrivacyCheck = false;
 
+  String selectedEamil = "선택";
+
   final List<String> dropDownItems = [
     "naver.com",
     "gmail.com",
@@ -777,6 +779,7 @@ ID와 비밀번호에 관한 관리 책임은 회원에게 있습니다.
                     Row(
                       children: [
                         _buildTextField(
+                          obscureText: true,
                           controller: _passwordController, // 컨트롤러 연결
                           hintText: '비밀번호 (숫자 4자리 입력)',
                           width: 328,
@@ -797,6 +800,7 @@ ID와 비밀번호에 관한 관리 책임은 회원에게 있습니다.
                     Row(
                       children: [
                         _buildTextField(
+                          obscureText: true,
                           controller: _confirmPasswordController, // 컨트롤러 연결
                           hintText: '비밀번호 확인',
                           width: 328,
@@ -887,7 +891,7 @@ ID와 비밀번호에 관한 관리 책임은 회원에게 있습니다.
                                   Align(
                                     alignment: Alignment.centerLeft,
                                     child: Text(
-                                      '선택',
+                                      selectedEamil,
                                       style: TextStyle(
                                         fontSize: 12.sp,
                                         color: const Color(0xFFa0a0a0),
@@ -1088,6 +1092,9 @@ ID와 비밀번호에 관한 관리 책임은 회원에게 있습니다.
             onTap: () {
               _dropDownController.hide();
               //이메일 선택 시 동작
+              setState(() {
+                selectedEamil = dropDownItems[index];
+              });
             },
             child: Container(
               height: 44.h,

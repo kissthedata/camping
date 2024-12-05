@@ -10,6 +10,8 @@ class EditInfoScreen extends StatefulWidget {
 }
 
 class _EditInfoScreenState extends State<EditInfoScreen> {
+  String selectedEamil = "선택";
+
   final List<String> dropDownItems = [
     "naver.com",
     "gmail.com",
@@ -129,6 +131,7 @@ class _EditInfoScreenState extends State<EditInfoScreen> {
                           _buildTextField(
                             controller: _passwordController, // 컨트롤러 연결
                             width: 328,
+                            obscureText: true,
                             hintText: '현재 비밀번호 (4자리 입력)',
                             cursorColor: const Color(0xFF398EF3),
                           ),
@@ -139,6 +142,7 @@ class _EditInfoScreenState extends State<EditInfoScreen> {
                             controller: _confirmPasswordController, // 컨트롤러 연결
                             width: 328,
                             hintText: '새 비밀번호',
+                            obscureText: true,
                             cursorColor: const Color(0xFF398EF3),
                           ),
                           SizedBox(
@@ -221,7 +225,7 @@ class _EditInfoScreenState extends State<EditInfoScreen> {
                                             Align(
                                               alignment: Alignment.centerLeft,
                                               child: Text(
-                                                '선택',
+                                                selectedEamil,
                                                 style: TextStyle(
                                                   fontSize: 12.sp,
                                                   color:
@@ -518,6 +522,9 @@ class _EditInfoScreenState extends State<EditInfoScreen> {
             onTap: () {
               _dropDownController.hide();
               //이메일 선택 시 동작
+              setState(() {
+                selectedEamil = dropDownItems[index];
+              });
             },
             child: Container(
               height: 44.h,

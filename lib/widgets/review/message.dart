@@ -110,7 +110,8 @@ class Message extends StatelessWidget {
                           borderRadius: BorderRadius.circular(24), // 둥근 모서리 반경
                         ),
                         child: Padding(
-                          padding: const EdgeInsets.all(20.0), // 내부 여백
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 20.w), // 내부 여백
                           child: TextField(
                             decoration: InputDecoration(
                               border: InputBorder.none, // 기본 테두리 제거
@@ -120,6 +121,9 @@ class Message extends StatelessWidget {
                                 color: const Color(0xff777777),
                                 fontSize: 12.sp,
                                 fontWeight: FontWeight.w400,
+                              ),
+                              contentPadding: EdgeInsets.only(
+                                top: 15.h,
                               ),
                             ),
                             maxLines: null, // 여러 줄 입력 가능
@@ -132,7 +136,7 @@ class Message extends StatelessWidget {
                     ],
                   ),
                 ),
-                SizedBox(height: 76.h),
+                SizedBox(height: 70.h),
                 GestureDetector(
                   onTap: () => callback.call('후기 메세지'),
                   child: Container(

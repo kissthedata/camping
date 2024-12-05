@@ -129,7 +129,7 @@ class _CampingReviewScreenState extends State<CampingReviewScreen>
                   ),
                 ),
                 Positioned(
-                  bottom: 110.h,
+                  bottom: 35.h,
                   left: (24.5).w,
                   child: GestureDetector(
                     onTap: () {

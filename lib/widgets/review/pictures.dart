@@ -191,7 +191,7 @@ class Pictures extends StatelessWidget {
                     ],
                   ),
                 ),
-                SizedBox(height: 76.h),
+                SizedBox(height: 70.h),
                 GestureDetector(
                   onTap: () => callback.call([]),
                   child: Container(
