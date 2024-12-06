@@ -33,6 +33,24 @@ class _EditInfoScreenState extends State<EditInfoScreen> {
   final _phoneController = TextEditingController();
 
   final textblack = const Color(0xff111111);
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_scrollListener);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_scrollListener);
+    super.dispose();
+  }
+
+  // 스크롤 리스너
+  void _scrollListener() {
+    _dropDownController.hide();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,6 +65,7 @@ class _EditInfoScreenState extends State<EditInfoScreen> {
             backgroundColor: Colors.white,
             body: SafeArea(
               child: SingleChildScrollView(
+                controller: _scrollController,
                 child: Column(
                   children: [
                     //헤더 타이틀
@@ -496,7 +515,7 @@ class _EditInfoScreenState extends State<EditInfoScreen> {
             color: const Color(0xFFa0a0a0),
             fontWeight: FontWeight.w400,
           ),
-          contentPadding: EdgeInsets.only(bottom: 6.h), // 글자를 상자 중앙으로 맞춤
+          contentPadding: EdgeInsets.only(bottom: 13.h), // 글자를 상자 중앙으로 맞춤
         ),
         validator: validator,
       ),

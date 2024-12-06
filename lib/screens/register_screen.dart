@@ -551,6 +551,8 @@ ID와 비밀번호에 관한 관리 책임은 회원에게 있습니다.
     '3년 미만',
   ];
 
+  final ScrollController _scrollController = ScrollController();
+
   // Firebase 회원가입 메서드
   void _register() async {
     if (_formKey.currentState!.validate()) {
@@ -594,6 +596,23 @@ ID와 비밀번호에 관한 관리 책임은 회원에게 있습니다.
   }
 
   @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_scrollListener);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_scrollListener);
+    super.dispose();
+  }
+
+  // 스크롤 리스너
+  void _scrollListener() {
+    _dropDownController.hide();
+  }
+
+  @override
   Widget build(BuildContext context) {
     ScreenUtil.init(context, designSize: const Size(360, 800));
 
@@ -604,6 +623,7 @@ ID와 비밀번호에 관한 관리 책임은 회원에게 있습니다.
       child: Scaffold(
         body: SafeArea(
           child: SingleChildScrollView(
+            controller: _scrollController,
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.w),
               child: Form(
@@ -794,7 +814,7 @@ ID와 비밀번호에 관한 관리 책임은 회원에게 있습니다.
                       ],
                     ),
                     SizedBox(
-                      height: 4.h,
+                      height: 8.h,
                     ),
                     //비밀번호 확인 입력
                     Row(
@@ -947,12 +967,15 @@ ID와 비밀번호에 관한 관리 책임은 회원에게 있습니다.
                     ),
                     //약관
                     SizedBox(
-                      height: 12.h,
+                      height: 13.h,
                     ),
                     Row(
                       children: [
                         _buildSubTitle('약관동의'),
                       ],
+                    ),
+                    SizedBox(
+                      height: 8.h,
                     ),
                     _buildTemrs(
                       termsUse,
@@ -1016,7 +1039,7 @@ ID와 비밀번호에 관한 관리 책임은 회원에게 있습니다.
             color: const Color(0xFFa0a0a0),
             fontWeight: FontWeight.w400,
           ),
-          contentPadding: EdgeInsets.only(bottom: 6.h), // 글자를 상자 중앙으로 맞춤
+          contentPadding: EdgeInsets.only(bottom: 13.h), // 글자를 상자 중앙으로 맞춤
         ),
         validator: validator,
       ),
@@ -1178,7 +1201,7 @@ ID와 비밀번호에 관한 관리 책임은 회원에게 있습니다.
               style: TextStyle(
                 color: const Color(0xFFb4b4b4),
                 fontSize: 12.sp,
-                fontWeight: FontWeight.w400,
+                fontWeight: FontWeight.w800,
                 decoration: TextDecoration.underline,
                 decorationColor: const Color(0xFFb4b4b4), // 밑줄 색상
                 decorationThickness: 1.h, // 밑줄 두께
@@ -1287,7 +1310,7 @@ ID와 비밀번호에 관한 관리 책임은 회원에게 있습니다.
                       ),
                     ),
                     Positioned(
-                      bottom: 20.h,
+                      bottom: 15.h,
                       left: 24.w,
                       child: Row(
                         children: [

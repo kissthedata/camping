@@ -191,6 +191,7 @@ class _CateDialogState extends State<CateDialog>
                             style: TextStyle(
                                 fontSize: 12.sp,
                                 color: const Color(0xFF777777),
+                                height: (1.2).h,
                                 fontWeight: FontWeight.w500),
                           ),
                         ),
@@ -199,6 +200,7 @@ class _CateDialogState extends State<CateDialog>
                           style: TextStyle(
                               fontSize: 12.sp,
                               color: const Color(0xFF777777),
+                              height: (1.2).h,
                               fontWeight: FontWeight.w500),
                         ),
                         SizedBox(
@@ -306,7 +308,7 @@ class _CateDialogState extends State<CateDialog>
                       border: Border.all(
                           color: item.isSelected
                               ? const Color(0xFF398ef3)
-                              : const Color(0xFF868686),
+                              : const Color(0xFFe6e6e6),
                           width: 1.w),
                       color: item.isSelected
                           ? const Color(0xFFe6eef7)

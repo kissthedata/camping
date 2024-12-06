@@ -1777,10 +1777,11 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
                   color: const Color(0xFFdedede),
                   width: 1.w,
                 ),
-              ),
-              child: Image.asset(
-                'assets/images/ic_detail_map.png',
-                fit: BoxFit.fill,
+                image: const DecorationImage(
+                  image: AssetImage('assets/images/ic_detail_map.png')
+                      as ImageProvider,
+                  fit: BoxFit.fill,
+                ),
               ),
             ),
           ),
