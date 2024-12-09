@@ -46,7 +46,7 @@ class Intro extends StatelessWidget {
                       width: 328.w,
                       height: 56.w,
                       alignment: Alignment.center,
-                      margin: const EdgeInsets.symmetric(horizontal: 16),
+                      margin: EdgeInsets.symmetric(horizontal: 16.h),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(16),
                         color: const Color(0xff398EF3),
@@ -61,7 +61,9 @@ class Intro extends StatelessWidget {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 32),
+                  SizedBox(
+                    height: 16 + MediaQuery.of(context).viewPadding.bottom,
+                  ),
                 ],
               ),
             ],

@@ -65,7 +65,7 @@ class _State extends State<Atmosphere> {
               ),
               SizedBox(height: 6.h),
               Text(
-                '차박지의 분이기는요?',
+                '차박지의 분위기는요?',
                 style: TextStyle(
                   fontSize: 24.sp,
                   fontWeight: FontWeight.w600,

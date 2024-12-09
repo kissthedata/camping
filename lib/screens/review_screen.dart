@@ -179,6 +179,7 @@ class _State extends State<ReviewScreen> {
           child: Scaffold(
             appBar: _buildAppBar(),
             body: SafeArea(
+              bottom: false,
               child: _buildChildView(),
             ),
           ),

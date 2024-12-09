@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -122,6 +124,7 @@ class Message extends StatelessWidget {
                                 fontSize: 12.sp,
                                 fontWeight: FontWeight.w400,
                               ),
+                              hintMaxLines: 2,
                               contentPadding: EdgeInsets.only(
                                 top: 15.h,
                               ),
@@ -136,14 +139,14 @@ class Message extends StatelessWidget {
                     ],
                   ),
                 ),
-                SizedBox(height: 70.h),
+                SizedBox(height: 70.h - (Platform.isIOS ? 24.h : 0)),
                 GestureDetector(
                   onTap: () => callback.call('후기 메세지'),
                   child: Container(
                     width: 328.w,
-                    height: 56.h,
+                    height: 56.w,
                     alignment: Alignment.center,
-                    margin: const EdgeInsets.symmetric(horizontal: 16),
+                    margin: EdgeInsets.symmetric(horizontal: 16.h),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(16),
                       color: const Color(0xff398EF3),

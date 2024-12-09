@@ -179,19 +179,18 @@ class _State extends State<Rating> {
                     ],
                   ),
                 ),
-                SizedBox(height: 124.h),
+                const Spacer(),
                 Visibility(
                   visible: _selectedStars > 0,
-                  // visible: true,
                   child: GestureDetector(
                     onTap: () => widget.callback.call(
                       _selectedStars.toDouble(),
                     ),
                     child: Container(
                       width: 328.w,
-                      height: 56.h,
+                      height: 56.w,
                       alignment: Alignment.center,
-                      margin: EdgeInsets.symmetric(horizontal: 16.w),
+                      margin: EdgeInsets.symmetric(horizontal: 16.h),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(16.w),
                         color: const Color(0xff398EF3),
@@ -206,6 +205,9 @@ class _State extends State<Rating> {
                       ),
                     ),
                   ),
+                ),
+                SizedBox(
+                  height: 16 + MediaQuery.of(context).viewPadding.bottom,
                 ),
               ],
             ),

@@ -84,12 +84,10 @@ class _AllCampingSitesPageState extends State<AllCampingSitesPage> {
 
   /// 상단 앱바
   AppBar _buildAppBar(double categoryHeight) {
-    double toolbarHeight = 70.w;
-
     return AppBar(
       elevation: 20.w,
       shadowColor: Colors.black54,
-      toolbarHeight: toolbarHeight + categoryHeight.w,
+      toolbarHeight: 55.w + categoryHeight.w,
       backgroundColor: Colors.white,
       surfaceTintColor: Colors.white,
       flexibleSpace: Column(
