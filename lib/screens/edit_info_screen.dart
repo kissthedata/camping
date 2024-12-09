@@ -492,6 +492,7 @@ class _EditInfoScreenState extends State<EditInfoScreen> {
     return Container(
       width: width.w,
       height: 45.h,
+      alignment: Alignment.center,
       padding: EdgeInsets.only(left: 15.w), // 입력 필드 오른쪽으로 이동을 위해 패딩 조정 가능
       decoration: BoxDecoration(
         border: Border.all(
@@ -510,12 +511,12 @@ class _EditInfoScreenState extends State<EditInfoScreen> {
         decoration: InputDecoration(
           border: InputBorder.none,
           hintText: hintText ?? '',
+          isDense: true,
           hintStyle: TextStyle(
             fontSize: 12.sp,
             color: const Color(0xFFa0a0a0),
             fontWeight: FontWeight.w400,
           ),
-          contentPadding: EdgeInsets.only(bottom: 13.h), // 글자를 상자 중앙으로 맞춤
         ),
         validator: validator,
       ),

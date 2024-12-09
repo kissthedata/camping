@@ -1016,6 +1016,7 @@ ID와 비밀번호에 관한 관리 책임은 회원에게 있습니다.
     return Container(
       width: width.w,
       height: 45.h,
+      alignment: Alignment.center,
       padding: EdgeInsets.only(left: 15.w), // 입력 필드 오른쪽으로 이동을 위해 패딩 조정 가능
       decoration: BoxDecoration(
         border: Border.all(
@@ -1033,13 +1034,14 @@ ID와 비밀번호에 관한 관리 책임은 회원에게 있습니다.
         cursorColor: cursorColor,
         decoration: InputDecoration(
           border: InputBorder.none,
+          isDense: true,
           hintText: hintText,
           hintStyle: TextStyle(
             fontSize: 12.sp,
             color: const Color(0xFFa0a0a0),
             fontWeight: FontWeight.w400,
           ),
-          contentPadding: EdgeInsets.only(bottom: 13.h), // 글자를 상자 중앙으로 맞춤
+          contentPadding: EdgeInsets.zero,
         ),
         validator: validator,
       ),
