@@ -316,11 +316,6 @@ class _AllCampingSitesPageState extends State<AllCampingSitesPage> {
               //     ? const Center(child: CircularProgressIndicator())
               //     : _buildCampingSitesList(),
               body: _buildCampingSitesList(),
-              floatingActionButton: FloatingActionButton(
-                onPressed: () => _showFilterDialog(),
-                backgroundColor: Colors.orange,
-                child: const Icon(Icons.filter_list), // Figma 필터 버튼 색상
-              ),
             );
           },
         );
