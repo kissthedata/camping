@@ -56,7 +56,7 @@ class _State extends State<Atmosphere> {
               ),
               SizedBox(height: 8.h),
               Text(
-                '차박지 평가하기',
+                '캠핑장 평가하기',
                 style: TextStyle(
                   fontSize: 16.sp,
                   fontWeight: FontWeight.w600,
@@ -65,7 +65,7 @@ class _State extends State<Atmosphere> {
               ),
               SizedBox(height: 6.h),
               Text(
-                '차박지의 분위기는요?',
+                '캠핑장의 주변소음은요?',
                 style: TextStyle(
                   fontSize: 24.sp,
                   fontWeight: FontWeight.w600,
@@ -78,7 +78,7 @@ class _State extends State<Atmosphere> {
                 text: TextSpan(
                   children: [
                     TextSpan(
-                      text: '차박지명',
+                      text: '캠핑장명',
                       style: TextStyle(
                         color: const Color(0xff111111),
                         fontSize: 12.sp,
@@ -86,7 +86,7 @@ class _State extends State<Atmosphere> {
                       ),
                     ),
                     TextSpan(
-                      text: ' 전반적인 청결 상태가 궁금해요!',
+                      text: ' 의 주변소음이 궁금해요!',
                       style: TextStyle(
                         color: const Color(0xff777777),
                         fontSize: 12.sp,
@@ -105,19 +105,12 @@ class _State extends State<Atmosphere> {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(16),
                   color: const Color(0xffffffff),
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Color(0x4D000000),
-                      blurRadius: 20,
-                      offset: Offset(0, 0),
-                    ),
-                  ],
                 ),
                 child: Column(
                   children: [
                     SizedBox(height: 22.h),
                     Text(
-                      '분위기',
+                      '주변소음',
                       style: TextStyle(
                         fontSize: 22.sp,
                         fontWeight: FontWeight.w600,
@@ -126,7 +119,7 @@ class _State extends State<Atmosphere> {
                     ),
                     SizedBox(height: 6.h),
                     Text(
-                      '차박지의 전반적인 분위기를 알려주세요.',
+                      '캠핑장의 전반적인 주변소음을 알려주세요.',
                       style: TextStyle(
                         fontSize: 12.sp,
                         fontWeight: FontWeight.w400,
@@ -141,7 +134,7 @@ class _State extends State<Atmosphere> {
                           height: 28.h,
                           child: Image.asset(
                             'assets/vectors/Rectangle 460.png',
-                            width: 275.w,
+                            width: 200.w,
                             height: 7.h,
                           ),
                         ),
@@ -184,37 +177,40 @@ class _State extends State<Atmosphere> {
                     ),
                     SizedBox(height: 14.h),
                     Container(
-                      width: 275.w,
-                      margin: EdgeInsets.symmetric(horizontal: 36.w),
-                      child: Row(
+                      margin: EdgeInsets.symmetric(horizontal: 35.w),
+                      child: Stack(
+                        alignment: Alignment.center, // 컨테이너의 정중앙에 보통 배치
                         children: [
-                          Text(
-                            '시끌시끌해요',
-                            style: TextStyle(
-                              fontSize: 12.sp,
-                              fontWeight: FontWeight.w400,
-                              color: const Color(0xff9a9a9a),
-                            ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                '시끌시끌해요',
+                                style: TextStyle(
+                                  fontSize: 12.sp,
+                                  fontWeight: FontWeight.w400,
+                                  color: const Color(0xff9a9a9a),
+                                ),
+                              ),
+                              Text(
+                                '조용해요',
+                                style: TextStyle(
+                                  fontSize: 12.sp,
+                                  fontWeight: FontWeight.w400,
+                                  color: const Color(0xff9a9a9a),
+                                ),
+                              ),
+                            ],
                           ),
-                          SizedBox(
-                            width: 78.w,
-                          ),
-                          Expanded(
+                          Center(
                             child: Text(
                               '보통',
+                              textAlign: TextAlign.center,
                               style: TextStyle(
                                 fontSize: 12.sp,
                                 fontWeight: FontWeight.w400,
                                 color: const Color(0xff9a9a9a),
                               ),
-                            ),
-                          ),
-                          Text(
-                            '조용해요',
-                            style: TextStyle(
-                              fontSize: 12.sp,
-                              fontWeight: FontWeight.w400,
-                              color: const Color(0xff9a9a9a),
                             ),
                           ),
                         ],

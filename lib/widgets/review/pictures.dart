@@ -21,7 +21,7 @@ class Pictures extends StatelessWidget {
             children: [
               SizedBox(height: 47.h),
               Image.asset(
-                'assets/vectors/Group 318.png',
+                'assets/vectors/Group 317.png',
                 width: 252.w,
                 height: 5.h,
               ),
@@ -72,7 +72,7 @@ class Pictures extends StatelessWidget {
                 text: TextSpan(
                   children: [
                     TextSpan(
-                      text: '차박지명',
+                      text: '캠핑장명',
                       style: TextStyle(
                         color: const Color(0xff111111),
                         fontSize: 12.sp,

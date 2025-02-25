@@ -33,7 +33,7 @@ class Done extends StatelessWidget {
                 ),
                 SizedBox(height: 9.h),
                 Text(
-                  '차박러들에게 리뷰는 큰 도움이 됩니다.',
+                  '캠퍼들에게 리뷰는 큰 도움이 됩니다.',
                   style: TextStyle(
                     fontSize: 14.sp,
                     fontWeight: FontWeight.w500,
@@ -41,33 +41,6 @@ class Done extends StatelessWidget {
                   ),
                 ),
               ],
-            ),
-          ),
-          Positioned(
-            left: 0,
-            bottom: 32.h,
-            child: GestureDetector(
-              onTap: () {
-                Navigator.of(context).pop();
-              },
-              child: Container(
-                width: 328.w,
-                height: 56.h,
-                alignment: Alignment.center,
-                margin: EdgeInsets.symmetric(horizontal: 16.h),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(16),
-                  color: const Color(0xff398EF3),
-                ),
-                child: Text(
-                  '다음으로',
-                  style: TextStyle(
-                    fontSize: 16.sp,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
             ),
           ),
         ],

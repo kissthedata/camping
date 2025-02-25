@@ -56,7 +56,7 @@ class _State extends State<Cleanliness> {
               ),
               SizedBox(height: 8.h),
               Text(
-                '차박지 평가하기',
+                '캠핑장 평가하기',
                 style: TextStyle(
                   fontSize: 16.sp,
                   fontWeight: FontWeight.w600,
@@ -65,7 +65,7 @@ class _State extends State<Cleanliness> {
               ),
               SizedBox(height: 6.h),
               Text(
-                '차박지는 깨끗한가요?',
+                '캠핑장은 깨끗한가요?',
                 style: TextStyle(
                   fontSize: 24.sp,
                   fontWeight: FontWeight.w600,
@@ -78,7 +78,7 @@ class _State extends State<Cleanliness> {
                 text: TextSpan(
                   children: [
                     TextSpan(
-                      text: '차박지명',
+                      text: '캠핑장명',
                       style: TextStyle(
                         color: const Color(0xff111111),
                         fontSize: 12.sp,
@@ -105,13 +105,6 @@ class _State extends State<Cleanliness> {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(16),
                   color: const Color(0xffffffff),
-                  boxShadow: [
-                    BoxShadow(
-                      color: const Color(0x4D000000),
-                      blurRadius: 20.r,
-                      offset: const Offset(0, 0),
-                    ),
-                  ],
                 ),
                 child: Column(
                   children: [
@@ -141,12 +134,12 @@ class _State extends State<Cleanliness> {
                           height: 28.h,
                           child: Image.asset(
                             'assets/vectors/Rectangle 460.png',
-                            width: 275.w,
+                            width: 200.w,
                             height: 7.h,
                           ),
                         ),
                         Container(
-                          margin: EdgeInsets.symmetric(horizontal: 35.w),
+                          margin: EdgeInsets.symmetric(horizontal: 25.w),
                           child: Center(
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
@@ -154,7 +147,7 @@ class _State extends State<Cleanliness> {
                                 return Container(
                                   margin: index == 4
                                       ? null
-                                      : EdgeInsets.only(right: 22.w),
+                                      : EdgeInsets.only(right: 25.w),
                                   child: GestureDetector(
                                     onTap: () {
                                       setState(() {
@@ -184,37 +177,40 @@ class _State extends State<Cleanliness> {
                     ),
                     SizedBox(height: 14.h),
                     Container(
-                      width: 275.w,
-                      margin: EdgeInsets.symmetric(horizontal: 36.w),
-                      child: Row(
+                      margin: EdgeInsets.symmetric(horizontal: 25.w),
+                      child: Stack(
+                        alignment: Alignment.center, // 컨테이너의 정중앙에 보통 배치
                         children: [
-                          Text(
-                            '시끌시끌해요',
-                            style: TextStyle(
-                              fontSize: 12.sp,
-                              fontWeight: FontWeight.w400,
-                              color: const Color(0xff9a9a9a),
-                            ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                '지저분해요',
+                                style: TextStyle(
+                                  fontSize: 12.sp,
+                                  fontWeight: FontWeight.w400,
+                                  color: const Color(0xff9a9a9a),
+                                ),
+                              ),
+                              Text(
+                                '완전 깨끗해요',
+                                style: TextStyle(
+                                  fontSize: 12.sp,
+                                  fontWeight: FontWeight.w400,
+                                  color: const Color(0xff9a9a9a),
+                                ),
+                              ),
+                            ],
                           ),
-                          SizedBox(
-                            width: 78.w,
-                          ),
-                          Expanded(
+                          Center(
                             child: Text(
                               '보통',
+                              textAlign: TextAlign.center,
                               style: TextStyle(
                                 fontSize: 12.sp,
                                 fontWeight: FontWeight.w400,
                                 color: const Color(0xff9a9a9a),
                               ),
-                            ),
-                          ),
-                          Text(
-                            '조용해요',
-                            style: TextStyle(
-                              fontSize: 12.sp,
-                              fontWeight: FontWeight.w400,
-                              color: const Color(0xff9a9a9a),
                             ),
                           ),
                         ],

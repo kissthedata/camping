@@ -22,7 +22,7 @@ class Intro extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Text(
-                    '차박지 리뷰하기',
+                    '캠핑장 리뷰하기',
                     style: TextStyle(
                       fontSize: 16.sp,
                       fontWeight: FontWeight.w600,
@@ -31,7 +31,7 @@ class Intro extends StatelessWidget {
                   ),
                   const SizedBox(height: 6),
                   Text(
-                    '여러분의 리뷰가 안전하고 편리한\n차박 문화를 만들어 갑니다!',
+                    '여러분의 리뷰가 안전하고 편리한\n캠핑 문화를 만들어 갑니다!',
                     style: TextStyle(
                       fontSize: 22.sp,
                       fontWeight: FontWeight.w600,
@@ -52,7 +52,7 @@ class Intro extends StatelessWidget {
                         color: const Color(0xff398EF3),
                       ),
                       child: Text(
-                        '리뷰 시작',
+                        '리뷰시작',
                         style: TextStyle(
                           fontSize: 16.sp,
                           fontWeight: FontWeight.w500,

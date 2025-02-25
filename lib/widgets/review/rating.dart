@@ -58,7 +58,7 @@ class _State extends State<Rating> {
                 ),
                 SizedBox(height: 8.h),
                 Text(
-                  '차박지 평가하기',
+                  '캠핑장 평가하기',
                   style: TextStyle(
                     fontSize: 16.sp,
                     fontWeight: FontWeight.w600,
@@ -67,7 +67,7 @@ class _State extends State<Rating> {
                 ),
                 SizedBox(height: 6.h),
                 Text(
-                  '차박지 별점 남기기',
+                  '캠핑장 별점 남기기',
                   style: TextStyle(
                     fontSize: 24.sp,
                     fontWeight: FontWeight.w600,
@@ -80,7 +80,7 @@ class _State extends State<Rating> {
                   text: TextSpan(
                     children: [
                       TextSpan(
-                        text: '차박지명',
+                        text: '캠핑장명',
                         style: TextStyle(
                           color: const Color(0xff111111),
                           fontSize: 12.sp,
@@ -105,17 +105,13 @@ class _State extends State<Rating> {
                   height: 231.h, // 세로
                   decoration: BoxDecoration(
                     color: Colors.white, // 배경색
-                    border: Border.all(
-                      color: const Color(0xffe2e2e2), // 테두리 색
-                      width: 1, // 테두리 두께
-                    ),
-                    borderRadius: BorderRadius.circular(24.w), // 둥근 모서리 반경
+                    borderRadius: BorderRadius.circular(16.r), // 둥근 모서리 반경
                   ),
                   child: Column(
                     children: [
                       SizedBox(height: 26.h),
                       Text(
-                        '차박지명',
+                        '캠핑장명',
                         style: TextStyle(
                           fontSize: 20.sp,
                           fontWeight: FontWeight.w600,
@@ -124,7 +120,7 @@ class _State extends State<Rating> {
                       ),
                       SizedBox(height: 4.h),
                       Text(
-                        '차박지주소',
+                        '캠핑장 주소',
                         style: TextStyle(
                           fontSize: 12.sp,
                           fontWeight: FontWeight.w600,
@@ -163,7 +159,7 @@ class _State extends State<Rating> {
                       Container(
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(16.w),
+                            borderRadius: BorderRadius.circular(16.r),
                             color: const Color(0xfff2f3f5)),
                         width: 66.w,
                         height: 49.h,
@@ -192,7 +188,7 @@ class _State extends State<Rating> {
                       alignment: Alignment.center,
                       margin: EdgeInsets.symmetric(horizontal: 16.h),
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(16.w),
+                        borderRadius: BorderRadius.circular(16.r),
                         color: const Color(0xff398EF3),
                       ),
                       child: Text(

@@ -62,7 +62,7 @@ class Message extends StatelessWidget {
                 ),
                 SizedBox(height: 6.h),
                 Text(
-                  '차박지에 대해 궁금해요!',
+                  '캠핑장에 대해 궁금해요!',
                   style: TextStyle(
                     fontSize: 24.sp,
                     fontWeight: FontWeight.w600,
@@ -75,7 +75,7 @@ class Message extends StatelessWidget {
                   text: TextSpan(
                     children: [
                       TextSpan(
-                        text: '차박지명',
+                        text: '캠핑장명',
                         style: TextStyle(
                           color: const Color(0xff111111),
                           fontSize: 12.sp,
@@ -109,7 +109,7 @@ class Message extends StatelessWidget {
                             color: const Color(0xffe2e2e2), // 테두리 색
                             width: 1, // 테두리 두께
                           ),
-                          borderRadius: BorderRadius.circular(24), // 둥근 모서리 반경
+                          borderRadius: BorderRadius.circular(16), // 둥근 모서리 반경
                         ),
                         child: Padding(
                           padding:
@@ -118,7 +118,7 @@ class Message extends StatelessWidget {
                             decoration: InputDecoration(
                               border: InputBorder.none, // 기본 테두리 제거
                               hintText:
-                                  '여러분의 리뷰 하나 하나가 더편리하고 안전한 차박 문화를 만들어갑니다!', // 힌트 텍스트
+                                  '여러분의 리뷰 하나 하나가 더편리하고 안전한 캠핑문화를 만들어갑니다!', // 힌트 텍스트
                               hintStyle: TextStyle(
                                 color: const Color(0xff777777),
                                 fontSize: 12.sp,
