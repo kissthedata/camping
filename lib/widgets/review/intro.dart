@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:map_sample/utils/display_util.dart';
 
 class Intro extends StatelessWidget {
   const Intro({
@@ -35,6 +36,8 @@ class Intro extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 22.sp,
                       fontWeight: FontWeight.w600,
+                      letterSpacing:
+                          DisplayUtil.getLetterSpacing(px: 22, percent: -4).w,
                       color: const Color(0xff111111),
                     ),
                     textAlign: TextAlign.center,
@@ -48,14 +51,17 @@ class Intro extends StatelessWidget {
                       alignment: Alignment.center,
                       margin: EdgeInsets.symmetric(horizontal: 16.h),
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(16),
+                        borderRadius: BorderRadius.circular(8),
                         color: const Color(0xff398EF3),
                       ),
                       child: Text(
                         '리뷰시작',
                         style: TextStyle(
-                          fontSize: 16.sp,
+                          fontSize: 14.sp,
                           fontWeight: FontWeight.w500,
+                          letterSpacing:
+                              DisplayUtil.getLetterSpacing(px: 14, percent: -5)
+                                  .w,
                           color: Colors.white,
                         ),
                       ),
