@@ -47,7 +47,7 @@ class Intro extends StatelessWidget {
                     onTap: () => callback.call(),
                     child: Container(
                       width: 328.w,
-                      height: 56.w,
+                      height: 56.h,
                       alignment: Alignment.center,
                       margin: EdgeInsets.symmetric(horizontal: 16.h),
                       decoration: BoxDecoration(
