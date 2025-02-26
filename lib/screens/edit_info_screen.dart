@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:map_sample/share_data.dart';
 
+import '../utils/display_util.dart';
+
 class EditInfoScreen extends StatefulWidget {
   const EditInfoScreen({super.key});
 
@@ -22,7 +24,7 @@ class _EditInfoScreenState extends State<EditInfoScreen> {
   final _dropDownKey = GlobalKey();
   bool isLogin = false;
   String name = "김성식";
-  String nickName = "힐링을 원하는 차박러";
+  String nickName = "힐링을 원하는 캠핑러";
 
   final _nicknameController = TextEditingController(); // 닉네임 컨트롤러
   final _idController = TextEditingController(); // 닉네임 컨트롤러
@@ -70,9 +72,54 @@ class _EditInfoScreenState extends State<EditInfoScreen> {
                   children: [
                     //헤더 타이틀
                     _buildHeader("정보수정"),
-                    SizedBox(
-                      height: 22.h,
+
+                    SizedBox(height: 21.h),
+
+                    Column(
+                      children: [
+                        Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            Container(
+                              width: 115.w,
+                              height: 115.h,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Color(0xFFF3F5F7),
+                              ),
+                            ),
+                            SizedBox(
+                              width: 40.w,
+                              height: 40.h,
+                              child: Image.asset(
+                                'assets/images/avatar.png',
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 16.h),
+                        Text(
+                          '사진 수정',
+                          style: TextStyle(
+                            fontSize: 12.sp,
+                            fontWeight: FontWeight.w500,
+                            letterSpacing: DisplayUtil.getLetterSpacing(
+                                    px: 12, percent: -2)
+                                .w,
+                            color: Color(0xFF777777),
+                          ),
+                        ),
+                        Container(
+                          height: 1.h,
+                          width: 43.w,
+                          margin: EdgeInsets.only(top: 3.h),
+                          color: Color(0xFF777777),
+                        )
+                      ],
                     ),
+
+                    SizedBox(height: 34.h),
+
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 16.h),
                       child: Column(
@@ -85,6 +132,7 @@ class _EditInfoScreenState extends State<EditInfoScreen> {
                             controller: _nicknameController, // 컨트롤러 연결
                             width: 328,
                             cursorColor: const Color(0xFF398EF3),
+                            hintText: '김성식',
                           ),
                           SizedBox(
                             height: 14.h,
@@ -97,61 +145,38 @@ class _EditInfoScreenState extends State<EditInfoScreen> {
                             controller: _descriptionController, // 컨트롤러 연결
                             width: 328,
                             cursorColor: const Color(0xFF398EF3),
+                            hintText: '힐링을 원하는 캠핑러',
                           ),
                           SizedBox(
-                            height: 14.h,
+                            height: 24.h,
                           ),
-                          Row(
-                            children: [
-                              _buildSubTitle('아이디'),
-                              SizedBox(
-                                width: 2.w,
-                              ),
-                              Text(
-                                '(4자리)',
-                                style: TextStyle(
-                                  color: const Color(0xFFA0A0A0),
-                                  fontSize: 12.sp,
-                                  fontWeight: FontWeight.w400,
-                                ),
-                              )
-                            ],
+
+                          Divider(
+                            height: 1.h,
+                            color: Color(0xFFEDEDED),
                           ),
+
                           SizedBox(
-                            height: 4.h,
+                            height: 16.h,
                           ),
-                          _buildTextField(
-                            controller: _idController, // 컨트롤러 연결
-                            width: 328,
-                            cursorColor: const Color(0xFF398EF3),
-                          ),
-                          SizedBox(
-                            height: 14.h,
-                          ),
+
                           Row(
                             children: [
                               _buildSubTitle('비밀번호 변경'),
                               SizedBox(
                                 width: 2.w,
                               ),
-                              Text(
-                                '(4자리)',
-                                style: TextStyle(
-                                  color: const Color(0xFFA0A0A0),
-                                  fontSize: 12.sp,
-                                  fontWeight: FontWeight.w400,
-                                ),
-                              )
                             ],
                           ),
                           SizedBox(
                             height: 4.h,
                           ),
+
                           _buildTextField(
                             controller: _passwordController, // 컨트롤러 연결
                             width: 328,
                             obscureText: true,
-                            hintText: '현재 비밀번호 (4자리 입력)',
+                            hintText: '현재 비밀번호',
                             cursorColor: const Color(0xFF398EF3),
                           ),
                           SizedBox(
@@ -180,7 +205,6 @@ class _EditInfoScreenState extends State<EditInfoScreen> {
                             children: [
                               _buildTextField(
                                 controller: _emailController, // 컨트롤러 연결
-                                hintText: 'honggildong123',
                                 width: 181,
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
@@ -256,8 +280,8 @@ class _EditInfoScreenState extends State<EditInfoScreen> {
                                             const Spacer(),
                                             Image.asset(
                                               'assets/images/ic_down.png',
-                                              width: 5.w,
-                                              height: 10.h,
+                                              width: 14.w,
+                                              height: 14.h,
                                             ),
                                             SizedBox(
                                               width: 13.w,
@@ -275,61 +299,11 @@ class _EditInfoScreenState extends State<EditInfoScreen> {
                           SizedBox(
                             height: 16.h,
                           ),
-                          //닉네임 타이틀
-                          Row(
-                            children: [
-                              _buildSubTitle('휴대폰번호'),
-                            ],
-                          ),
-                          SizedBox(
-                            height: 4.h,
-                          ),
-                          //휴대폰번호 입력
-                          Row(
-                            children: [
-                              _buildTextField(
-                                controller: _phoneController, // 컨트롤러 연결
-                                hintText: '',
-                                width: 213,
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return '휴대폰번호를 입력해주세요';
-                                  }
-                                  return null;
-                                },
-                                cursorColor: const Color(0xFF398EF3),
-                              ),
-                              SizedBox(
-                                width: 8.w,
-                              ),
-                              Expanded(
-                                child: Container(
-                                  height: 45.h,
-                                  alignment: Alignment.center,
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                      color: const Color(0xFFa0a0a0),
-                                      width: (0.8).w,
-                                    ), // 테두리 유지
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(12.r),
-                                  ),
-                                  child: Text(
-                                    '본인인증 완료',
-                                    style: TextStyle(
-                                      color: const Color(0xFF5c5c5c),
-                                      fontSize: 12.sp,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
                         ],
                       ),
                     ),
                     SizedBox(
-                      height: 64.h,
+                      height: 39.h,
                     ),
                     GestureDetector(
                       onTap: () {
@@ -344,20 +318,23 @@ class _EditInfoScreenState extends State<EditInfoScreen> {
                         height: 56.h,
                         decoration: BoxDecoration(
                           color: const Color(0xFF398EF3),
-                          borderRadius: BorderRadius.circular(12.r),
+                          borderRadius: BorderRadius.circular(8.r),
                         ),
                         child: Center(
                           child: Text(
                             '수정하기',
                             style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 16.sp,
-                              fontWeight: FontWeight.w500,
-                            ),
+                                color: Colors.white,
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.w500,
+                                letterSpacing: DisplayUtil.getLetterSpacing(
+                                        px: 14, percent: -5)
+                                    .w),
                           ),
                         ),
                       ),
                     ),
+                    SizedBox(height: 20.h),
                   ],
                 ),
               ),
@@ -516,6 +493,8 @@ class _EditInfoScreenState extends State<EditInfoScreen> {
             fontSize: 12.sp,
             color: const Color(0xFFa0a0a0),
             fontWeight: FontWeight.w400,
+            letterSpacing:
+                DisplayUtil.getLetterSpacing(px: 12, percent: -2.5).w,
           ),
         ),
         validator: validator,

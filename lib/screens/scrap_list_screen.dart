@@ -1,10 +1,12 @@
-import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/material.dart';
 import 'package:map_sample/models/car_camping_site.dart';
 import 'package:map_sample/screens/info_camping_site_screen.dart';
 
 class ScrapListScreen extends StatefulWidget {
+  const ScrapListScreen({super.key});
+
   @override
   _ScrapListScreenState createState() => _ScrapListScreenState();
 }
@@ -44,7 +46,7 @@ class _ScrapListScreenState extends State<ScrapListScreen> {
         _scraps = scraps;
       });
     } else {
-      print("좋아요한 차박지가 없습니다.");
+      print("좋아요한 장소가 없습니다.");
     }
   }
 
@@ -79,7 +81,7 @@ class _ScrapListScreenState extends State<ScrapListScreen> {
         Expanded(
           child: Center(
             child: Text(
-              '좋아요한 차박지',
+              '좋아요한 장소',
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.w600,
@@ -97,7 +99,7 @@ class _ScrapListScreenState extends State<ScrapListScreen> {
   Widget _buildScrapList() {
     return Expanded(
       child: _scraps.isEmpty
-          ? Center(child: Text('좋아요한 차박지가 없습니다.'))
+          ? Center(child: Text('좋아요한 장소가 없습니다.'))
           : ListView.builder(
               itemCount: _scraps.length,
               itemBuilder: (context, index) {
@@ -126,13 +128,6 @@ class _ScrapListScreenState extends State<ScrapListScreen> {
           color: Colors.white,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(color: Color(0xFFBCBCBC), width: 1.5),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              blurRadius: 6.0,
-              offset: Offset(0, 3),
-            ),
-          ],
         ),
         child: ListTile(
           contentPadding: EdgeInsets.all(16.0),

@@ -72,12 +72,11 @@ class _LoginScreenState extends State<LoginScreen> {
                   height: 182.h,
                 ),
                 // 이미지 섹션
-                Container(
-                  margin: EdgeInsets.only(left: 55.w),
-                  width: 217.w,
-                  height: 61.h,
+                Center(
                   child: Image.asset(
-                    'assets/images/login_logo.png',
+                    width: 161.w,
+                    height: 50.h,
+                    'assets/images/logo_blue.png',
                   ),
                 ),
                 SizedBox(

@@ -11,7 +11,7 @@ class SaveLikeScreen extends StatefulWidget {
 class _SaveLikeScreenState extends State<SaveLikeScreen> {
   final textblack = const Color(0xFF111111);
 
-  var titleList = ['산 속 차박지', '힐링스러운 곳', '바다', '꼭 가야하는 곳'];
+  var titleList = ['산 속 캠핑장', '힐링스러운 곳', '바다', '꼭 가야하는 곳'];
 
   @override
   Widget build(BuildContext context) {
@@ -137,7 +137,7 @@ class _SaveLikeScreenState extends State<SaveLikeScreen> {
                               ),
                             ),
                             Text(
-                              isLast ? '' : '12개 차박지',
+                              isLast ? '' : '12개의 장소',
                               style: TextStyle(
                                 color: const Color(0xFFababab),
                                 fontSize: 8.sp,
@@ -191,7 +191,7 @@ class _SaveLikeScreenState extends State<SaveLikeScreen> {
             // 타이틀
             Center(
               child: Text(
-                '위시리스트',
+                '좋아요한 장소',
                 style: TextStyle(
                   color: const Color(0xFF111111),
                   fontSize: 16.sp,

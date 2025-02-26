@@ -4,6 +4,8 @@ import 'package:map_sample/screens/edit_info_screen.dart';
 import 'package:map_sample/screens/login_screen.dart';
 import 'package:map_sample/share_data.dart';
 
+import 'save_like_screen.dart';
+
 class MyScreen extends StatefulWidget {
   const MyScreen({super.key});
 
@@ -14,7 +16,7 @@ class MyScreen extends StatefulWidget {
 class _MyScreenState extends State<MyScreen> {
   bool isLogin = true;
   String name = "김성식";
-  String nickName = "힐링을 원하는 차박러";
+  String nickName = "힐링을 원하는 캠핑러";
 
   final textblack = const Color(0xff111111);
 
@@ -131,9 +133,20 @@ class _MyScreenState extends State<MyScreen> {
                   ),
                   _buildButtonRow(
                     icon: 'ic_my_heart.png',
-                    title: '좋아요한 차박지',
+                    title: '좋아요한 장소',
                     clickRow: () {
-                      ShareData().selectedPage.value = 6;
+                      //좋아요한 장소 - 가나다순
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(builder: (context) => LikeScreen()),
+                      // );
+
+                      //좋아요한 장소 - 편집
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => SaveLikeScreen()),
+                      );
                     },
                   ),
                   _buildButtonRow(
@@ -151,6 +164,7 @@ class _MyScreenState extends State<MyScreen> {
                     title: '문의하기',
                     fontWeight: FontWeight.w400,
                     height: 52.h,
+                    isShowBadge: true,
                     clickRow: () {
                       ShareData().selectedPage.value = 5;
                     },
@@ -207,6 +221,7 @@ class _MyScreenState extends State<MyScreen> {
       String title = "",
       double? height,
       FontWeight? fontWeight,
+      bool isShowBadge = false,
       void Function()? clickRow}) {
     return GestureDetector(
       onTap: () {
@@ -229,16 +244,30 @@ class _MyScreenState extends State<MyScreen> {
                 width: 10.w,
               ),
             ],
-            Expanded(
-              child: Text(
-                title,
-                style: TextStyle(
-                  color: textblack,
-                  fontSize: 14.sp,
-                  fontWeight: fontWeight ?? FontWeight.w500,
+            Text(
+              title,
+              style: TextStyle(
+                color: textblack,
+                fontSize: 14.sp,
+                fontWeight: fontWeight ?? FontWeight.w500,
+              ),
+            ),
+            Visibility(
+              visible: isShowBadge,
+              child: Container(
+                margin: EdgeInsets.fromLTRB(1.w, 12.h, 0, 0),
+                alignment: Alignment.topLeft,
+                child: Container(
+                  width: 6.w,
+                  height: 6.h,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(3),
+                    color: Color(0xFFEB3E3E),
+                  ),
                 ),
               ),
             ),
+            Spacer(),
             Image.asset(
               'assets/images/ic_my_enter.png',
               width: 16.w,

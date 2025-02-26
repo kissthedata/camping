@@ -27,7 +27,6 @@ class _QnAScreenState extends State<QnAScreen> {
                   _buildHeader("문의하기"),
                   Container(
                     height: 8.h,
-                    color: const Color(0xfff3f5f7),
                   ),
                   _buildButtonRow(
                     title: '문의하기',
@@ -43,15 +42,20 @@ class _QnAScreenState extends State<QnAScreen> {
                     },
                   ),
                   Container(
-                    height: 8.h,
+                    height: 4.h,
                     color: const Color(0xfff3f5f7),
                   ),
                   _buildButtonRow(
                     title: '문의내역',
                     fontWeight: FontWeight.w400,
                     height: 52.h,
+                    isShowBadge: true,
                     clickRow: () {},
                   ),
+                  Expanded(
+                      child: Container(
+                    color: Color(0xffF3F5F7),
+                  ))
                 ],
               ),
             ),
@@ -99,6 +103,7 @@ class _QnAScreenState extends State<QnAScreen> {
       String title = "",
       double? height,
       FontWeight? fontWeight,
+      bool isShowBadge = false,
       void Function()? clickRow}) {
     return GestureDetector(
       onTap: () {
@@ -121,16 +126,30 @@ class _QnAScreenState extends State<QnAScreen> {
                 width: 10.w,
               ),
             ],
-            Expanded(
-              child: Text(
-                title,
-                style: TextStyle(
-                  color: textblack,
-                  fontSize: 14.sp,
-                  fontWeight: fontWeight ?? FontWeight.w500,
+            Text(
+              title,
+              style: TextStyle(
+                color: textblack,
+                fontSize: 14.sp,
+                fontWeight: fontWeight ?? FontWeight.w500,
+              ),
+            ),
+            Visibility(
+              visible: isShowBadge,
+              child: Container(
+                margin: EdgeInsets.fromLTRB(1.w, 12.h, 0, 0),
+                alignment: Alignment.topLeft,
+                child: Container(
+                  width: 6.w,
+                  height: 6.h,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(3),
+                    color: Color(0xFFEB3E3E),
+                  ),
                 ),
               ),
             ),
+            Spacer(),
             Image.asset(
               'assets/images/ic_my_enter.png',
               width: 16.w,

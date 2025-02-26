@@ -84,7 +84,13 @@ class CustomBottomAppBar extends StatelessWidget {
     required int index,
   }) {
     return InkWell(
+      // TestOnly
       onTap: () => onItemSelected(index),
+      // onTap: () {
+      //   Navigator.of(context).push(MaterialPageRoute(builder: (_) {
+      //     return ReviewScreen();
+      //   }));
+      // },
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [

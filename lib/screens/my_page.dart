@@ -1,20 +1,24 @@
-import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'login_screen.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'info_edit_screen.dart';
-import 'scrap_list_screen.dart';
 import 'package:map_sample/main_scaffold.dart'; // MainScaffold import
 
+import 'info_edit_screen.dart';
+import 'login_screen.dart';
+import 'scrap_list_screen.dart';
+
 class MyPage extends StatefulWidget {
+  const MyPage({super.key});
+
   @override
   _MyPageState createState() => _MyPageState();
 }
 
 class _MyPageState extends State<MyPage> {
   final _nicknameController = TextEditingController();
-  final _descriptionController = TextEditingController(); // Description controller
+  final _descriptionController =
+      TextEditingController(); // Description controller
   final _emailController = TextEditingController();
   bool isLoading = true;
 
@@ -79,7 +83,8 @@ class _MyPageState extends State<MyPage> {
 
     if (result != null) {
       setState(() {
-        _nicknameController.text = result['nickname'] ?? _nicknameController.text;
+        _nicknameController.text =
+            result['nickname'] ?? _nicknameController.text;
         _descriptionController.text =
             result['description'] ?? _descriptionController.text;
       });
@@ -179,7 +184,7 @@ class _MyPageState extends State<MyPage> {
             _navigateToInfoEditScreen,
           ),
           _buildMenuItem(
-            '좋아요한 차박지',
+            '좋아요한 장소',
             Icons.favorite,
             () {
               Navigator.push(

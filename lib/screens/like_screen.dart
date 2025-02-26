@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:map_sample/share_data.dart';
 
+import '../utils/display_util.dart';
+
 class LikeScreen extends StatefulWidget {
   const LikeScreen({super.key});
 
@@ -152,41 +154,45 @@ class _LikeScreenState extends State<LikeScreen> {
                   );
                 },
                 child: Container(
-                  width: 64.w,
-                  margin: EdgeInsets.only(right: 21.w),
+                  width: 68.w,
+                  height: 22.h,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(6.r),
+                    color: Color(0xFFF7F7F7),
+                  ),
+                  margin: EdgeInsets.only(right: 16.w),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      // 아이콘
-                      Image.asset(
-                        'assets/images/ic_down.png',
-                        color: const Color(0xFF383838),
-                        height: 14.w,
-                      ),
-                      SizedBox(width: 2.w),
                       Text(
                         '가나다순',
                         style: TextStyle(
-                          color: const Color(0xFF383838),
+                          color: const Color(0xFF777777),
                           fontSize: 12.sp,
                           fontWeight: FontWeight.w400,
                           letterSpacing: -1.0,
                         ),
+                      ),
+                      SizedBox(width: 0.35.w),
+                      // 아이콘
+                      Image.asset(
+                        'assets/images/ic_down.png',
+                        color: const Color(0xFF9A9A9A),
+                        height: 14.w,
                       ),
                     ],
                   ),
                 ),
               ),
             ),
-            SizedBox(height: 16.w),
+            SizedBox(height: 13.w),
             // 리스트
             Expanded(
               child: GridView.builder(
                 padding: EdgeInsets.only(
                   left: 16.w,
                   right: 16.w,
-                  bottom: 32.w,
+                  bottom: 36.w,
                 ),
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
@@ -197,7 +203,6 @@ class _LikeScreenState extends State<LikeScreen> {
                 itemCount: 12,
                 itemBuilder: (context, index) {
                   return Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Stack(
                         children: [
@@ -212,109 +217,118 @@ class _LikeScreenState extends State<LikeScreen> {
                                 ),
                                 borderRadius: BorderRadius.circular(8.w),
                               ),
+                              //TestOnly
                               child: Center(
                                 child: Image.asset(
-                                  'assets/images/ic_photo.png',
-                                  width: 32.w,
-                                  height: 32.w,
+                                  'assets/images/sample_like_bg.png',
+                                  width: width,
+                                  height: width,
                                   gaplessPlayback: true,
                                 ),
                               ),
+                              // child: Center(
+                              //   child: Image.asset(
+                              //     'assets/images/ic_photo.png',
+                              //     width: 32.w,
+                              //     height: 32.w,
+                              //     gaplessPlayback: true,
+                              //   ),
+                              // ),
                             ),
                           ),
-                          // 좋아요
+                          // 주소
                           Positioned(
-                            top: 7.w,
-                            right: 7.w,
-                            child: GestureDetector(
-                              onTap: () => showSnackbar('좋아요 [$index]'),
-                              child: Image.asset(
-                                'assets/images/ic_blue_like.png',
-                                width: 20.w,
-                                height: 20.w,
-                                gaplessPlayback: true,
+                            bottom: 8.h,
+                            child: Container(
+                              padding: EdgeInsets.symmetric(horizontal: 12.w),
+                              width: width,
+                              child: Row(
+                                children: [
+                                  Text(
+                                    '카라반',
+                                    style: TextStyle(
+                                      color: const Color(0xFFFFFFFF),
+                                      fontSize: 12.sp,
+                                      fontWeight: FontWeight.w400,
+                                      letterSpacing: -1.0,
+                                    ),
+                                    strutStyle: const StrutStyle(
+                                      forceStrutHeight: true,
+                                    ),
+                                  ),
+                                  const Spacer(),
+                                  Row(
+                                    children: [
+                                      SizedBox(
+                                        width: 18.37.w,
+                                        height: 18.37.h,
+                                        child: Image.asset(
+                                          'assets/images/ico_facilities_1.png',
+                                        ),
+                                      ),
+                                      SizedBox(width: 1.67.w),
+                                      SizedBox(
+                                        width: 18.37.w,
+                                        height: 18.37.h,
+                                        child: Image.asset(
+                                          'assets/images/ico_facilities_2.png',
+                                        ),
+                                      ),
+                                      SizedBox(width: 1.67.w),
+                                      SizedBox(
+                                        width: 18.37.w,
+                                        height: 18.37.h,
+                                        child: Image.asset(
+                                          'assets/images/ico_facilities_3.png',
+                                        ),
+                                      ),
+                                      SizedBox(width: 1.67.w),
+                                      Text(
+                                        '+5',
+                                        style: TextStyle(
+                                          color: Color(0xFFEBF4FE),
+                                          fontSize: 10.sp,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ],
                               ),
                             ),
                           ),
                         ],
                       ),
-                      Container(
-                        height: 47.w,
-                        margin: EdgeInsets.only(left: 5.w, right: 4.w),
-                        alignment: Alignment.centerLeft,
+                      SizedBox(
+                        height: 6.h,
+                      ),
+                      Align(
+                        alignment: Alignment.topLeft,
                         child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             // 타이틀
                             Text(
                               '캠핑장명',
                               style: TextStyle(
-                                color: const Color(0xFF474747),
-                                fontSize: 18.sp,
+                                color: const Color(0xFF242424),
+                                fontSize: 16.sp,
                                 fontWeight: FontWeight.w500,
-                                letterSpacing: -1.5,
+                                letterSpacing: DisplayUtil.getLetterSpacing(
+                                        px: 16.sp, percent: -2)
+                                    .w,
                               ),
-                              // strutStyle: const StrutStyle(
-                              //   forceStrutHeight: true,
-                              // ),
                             ),
                             // 주소
-                            Row(
-                              children: [
-                                Text(
-                                  '경상남도 포항시',
-                                  style: TextStyle(
-                                    color: const Color(0xFF3E3E3E),
-                                    fontSize: 10.sp,
-                                    fontWeight: FontWeight.w400,
-                                    letterSpacing: -1.0,
-                                  ),
-                                  strutStyle: const StrutStyle(
-                                    forceStrutHeight: true,
-                                  ),
-                                ),
-                                const Spacer(),
-                                Row(
-                                  children: [
-                                    SizedBox(
-                                      width: 16.w,
-                                      height: 14.w,
-                                      child: Image.asset(
-                                        'assets/images/ic_like3.png',
-                                      ),
-                                    ),
-                                    SizedBox(width: 4.w),
-                                    Container(
-                                      color: const Color(0xFFD9D9D9),
-                                      width: 16.w,
-                                      height: 16.w,
-                                    ),
-                                    SizedBox(width: 4.w),
-                                    Container(
-                                      color: const Color(0xFFD9D9D9),
-                                      width: 15.w,
-                                      height: 16.w,
-                                    ),
-                                    SizedBox(width: 4.w),
-                                    SizedBox(
-                                      width: 16.w,
-                                      height: 16.w,
-                                      child: Stack(
-                                        children: [
-                                          Image.asset(
-                                            'assets/images/ic_like3.png',
-                                            color: Colors.grey.withOpacity(0.5),
-                                          ),
-                                          Image.asset(
-                                            'assets/images/ic_round-plus.png',
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
+                            Text(
+                              '경상남도 포항시',
+                              style: TextStyle(
+                                color: const Color(0xFF3E3E3E),
+                                fontSize: 10.sp,
+                                fontWeight: FontWeight.w400,
+                                letterSpacing: DisplayUtil.getLetterSpacing(
+                                    px: 10.sp, percent: -2),
+                              ),
                             ),
                           ],
                         ),
@@ -365,7 +379,7 @@ class _LikeScreenState extends State<LikeScreen> {
             // 타이틀
             Center(
               child: Text(
-                '위시리스트',
+                '좋아요한 장소',
                 style: TextStyle(
                   color: const Color(0xFF111111),
                   fontSize: 16.sp,
