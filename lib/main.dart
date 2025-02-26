@@ -1,10 +1,11 @@
-import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
-import 'package:flutter_naver_map/flutter_naver_map.dart';
-import 'package:geolocator/geolocator.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
+
 import 'config/firebase_options.dart';
 import 'main_scaffold.dart'; // MainScaffold 구조
 import 'services/kakao_location_service.dart';
@@ -21,7 +22,7 @@ Future<void> main() async {
   // 위치 권한 요청
   await _requestLocationPermission();
 
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 Future<void> _initializeApp() async {
@@ -82,6 +83,8 @@ Future<void> _requestLocationPermission() async {
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
@@ -113,6 +116,8 @@ class MyApp extends StatelessWidget {
 }
 
 class SplashScreen extends StatefulWidget {
+  const SplashScreen({super.key});
+
   @override
   _SplashScreenState createState() => _SplashScreenState();
 }
@@ -126,10 +131,10 @@ class _SplashScreenState extends State<SplashScreen> {
 
   Future<void> _navigateToMain() async {
     try {
-      await Future.delayed(Duration(seconds: 3));
+      await Future.delayed(const Duration(seconds: 3));
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => MainScaffold()),
+        MaterialPageRoute(builder: (context) => const MainScaffold()),
       );
     } catch (e) {
       print('Navigation error: $e'); // 예외 발생 시 로그
@@ -142,11 +147,11 @@ class _SplashScreenState extends State<SplashScreen> {
       backgroundColor: const Color(0xFF398EF3),
       body: Center(
         child: Image.asset(
-          'assets/images/image.png',
-          width: 200,
-          height: 200,
+          'assets/images/logo.png',
+          width: 161.w,
+          height: 50.h,
           errorBuilder: (context, error, stackTrace) {
-            return Icon(
+            return const Icon(
               Icons.error,
               size: 50,
               color: Colors.white,
