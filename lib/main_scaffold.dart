@@ -9,7 +9,7 @@ import 'package:map_sample/share_data.dart';
 import 'custom_bottom_app_bar.dart'; // CustomBottomAppBar 임포트
 import 'screens/camping_list.dart';
 import 'screens/community_page.dart';
-import 'screens/home_page.dart'; // 각 페이지 임포트
+import 'screens/home_page_new.dart';
 import 'screens/map_screen.dart';
 
 class MainScaffold extends StatefulWidget {
@@ -24,7 +24,8 @@ class _MainScaffoldState extends State<MainScaffold> {
 
   // 각 탭에 대응되는 페이지 리스트
   final List<Widget> _pages = [
-    const MyHomePage(),
+    // const MyHomePage(),
+    const MyHomePageNew(),
     const MapScreen(),
     const AllCampingSitesPage(),
     CommunityPage(),
