@@ -4,8 +4,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:map_sample/cate_dialog.dart';
 import 'package:map_sample/models/car_camping_site.dart';
 import 'package:map_sample/screens/camping_detail_screen.dart';
-import 'package:map_sample/screens/search_camping_site_page.dart';
 import 'package:map_sample/share_data.dart';
+import 'package:map_sample/utils/display_util.dart';
 
 class AllCampingSitesPage extends StatefulWidget {
   const AllCampingSitesPage({super.key});
@@ -19,6 +19,7 @@ class _AllCampingSitesPageState extends State<AllCampingSitesPage> {
   List<CarCampingSite> _filteredCampingSites = [];
   List<CateItem?> _selectedItem = [];
   final TextEditingController _searchController = TextEditingController();
+  List<String> facilities = ['1', '2', '3', '4', '5', '6', '7', '8', '9'];
 
   bool _filterRestRoom = false;
   bool _filterAnimal = false;
@@ -85,9 +86,9 @@ class _AllCampingSitesPageState extends State<AllCampingSitesPage> {
   /// 상단 앱바
   AppBar _buildAppBar(double categoryHeight) {
     return AppBar(
-      elevation: 20.w,
       shadowColor: Colors.black54,
-      toolbarHeight: 55.w + categoryHeight.w,
+      // toolbarHeight: 55.w + categoryHeight.w,
+      toolbarHeight: 55.h + 148.5.h,
       backgroundColor: Colors.white,
       surfaceTintColor: Colors.white,
       flexibleSpace: Column(
@@ -113,141 +114,483 @@ class _AllCampingSitesPageState extends State<AllCampingSitesPage> {
                       height: 23.w,
                       margin: EdgeInsets.only(left: 16.w),
                       child: Image.asset(
-                        'assets/images/ic_back.png',
+                        'assets/images/ic_back_new.png',
                         gaplessPlayback: true,
                       ),
                     ),
                   ),
                 ),
                 SizedBox(width: 16.w),
+
                 // 검색
                 Expanded(
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const SearchCampingSitePage(),
-                        ),
-                      );
-                    },
-                    child: Container(
-                      height: 40.w,
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFF3F5F7),
-                        borderRadius: BorderRadius.circular(40.w),
+                  child: Container(
+                    height: 40.w,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFF7F7F7),
+                      borderRadius: BorderRadius.circular(20.w),
+                    ),
+                    child: TextFormField(
+                      controller: _searchController,
+                      onChanged: (value) {
+                        //
+                      },
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 12.sp,
+                        fontWeight: FontWeight.w500,
+                        letterSpacing:
+                            DisplayUtil.getLetterSpacing(px: 12.sp, percent: -6)
+                                .w,
                       ),
-                      padding: EdgeInsets.symmetric(horizontal: 13.w),
-                      child: Row(
-                        children: [
-                          Image.asset(
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        isDense: true,
+                        prefixIcon: Container(
+                          margin: EdgeInsets.only(left: 16.w, right: 8.w),
+                          alignment: Alignment.center,
+                          child: Image.asset(
                             'assets/images/ic_search.png',
                             color: const Color(0xFF5D646C),
                             width: 16.w,
                             height: 16.w,
+                            fit: BoxFit.cover,
                             gaplessPlayback: true,
                           ),
-                          SizedBox(width: 8.w),
-                          Expanded(
-                            child: Text(
-                              '원하시는 차박지를 검색해보세요!',
-                              style: TextStyle(
-                                color: const Color(0xFFA7A7A7),
-                                fontSize: 12.sp,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ),
-                        ],
+                        ),
+                        prefixIconConstraints: BoxConstraints(
+                          maxWidth: 40.w,
+                          maxHeight: 40.w,
+                        ),
+                        hintText: '원하시는 캠핑장을 검색해보세요!',
+                        hintStyle: TextStyle(
+                          color: const Color(0xFFA7A7A7),
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.w500,
+                          letterSpacing: DisplayUtil.getLetterSpacing(
+                                  px: 12.sp, percent: -6)
+                              .w,
+                        ),
+                        contentPadding: EdgeInsets.only(top: 12.w),
                       ),
                     ),
                   ),
                 ),
                 SizedBox(width: 16.w),
-                // 필터
+
+                // 찜 갯수
                 Align(
                   alignment: Alignment.centerRight,
-                  child: GestureDetector(
-                    onTap: () async {
-                      if (_selectedItem.isNotEmpty) {
-                        _selectedItem.clear();
-                      }
+                  child: Stack(
+                    children: [
+                      GestureDetector(
+                        onTap: () async {
+                          if (_selectedItem.isNotEmpty) {
+                            _selectedItem.clear();
+                          }
 
-                      _selectedItem = await showModalBottomSheet(
-                        context: context,
-                        isScrollControlled: true,
-                        builder: (_) => const CateDialog(),
-                      );
+                          _selectedItem = await showModalBottomSheet(
+                            context: context,
+                            isScrollControlled: true,
+                            builder: (_) => const CateDialog(),
+                          );
 
-                      ShareData().categoryHeight.value = 45;
+                          ShareData().categoryHeight.value = 45;
 
-                      if (_selectedItem.isNotEmpty) {
-                        ShareData().categoryHeight.value = 83;
-                      }
-                    },
-                    child: SizedBox(
-                      width: 24.w,
-                      height: 24.w,
-                      child: Image.asset(
-                        'assets/images/search_filter.png',
-                        gaplessPlayback: true,
+                          if (_selectedItem.isNotEmpty) {
+                            ShareData().categoryHeight.value = 83;
+                          }
+                        },
+                        child: Container(
+                          alignment: Alignment.centerLeft,
+                          height: 40.h,
+                          width: 36.w,
+                          child: SizedBox(
+                            width: 24.w,
+                            height: 24.w,
+                            child: Image.asset(
+                              'assets/images/search_like.png',
+                              gaplessPlayback: true,
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
+                      //Todo 숫자 자리수에 따라서 BorderRadius 또는 BoxShape 변경 필요.
+                      // Positioned(
+                      //   top: 0.h,
+                      //   left: 12.w,
+                      //   child: Container(
+                      //     alignment: Alignment.center,
+                      //     padding: EdgeInsets.all(2),
+                      //     decoration: BoxDecoration(
+                      //       color: Color(0xffEB3E3E),
+                      //       borderRadius: BorderRadius.circular(9999.r),
+                      //     ),
+                      //     child: Text(
+                      //       '999+',
+                      //       style: TextStyle(
+                      //         fontSize: 9.sp,
+                      //         fontWeight: FontWeight.w400,
+                      //         color: Colors.white,
+                      //         letterSpacing: -1.0.w,
+                      //       ),
+                      //     ),
+                      //   ),
+                      // ),
+                    ],
                   ),
                 ),
-                SizedBox(width: 16.w),
+                SizedBox(width: 4.w),
               ],
             ),
           ),
-          // 카테고리
-          Container(
-            height: categoryHeight.w,
-            padding: EdgeInsets.only(top: 16.w),
-            alignment: Alignment.centerLeft,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+
+          SizedBox(height: 25.h),
+
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.w),
+            child: Row(
               children: [
-                // 타이틀
                 Container(
-                  margin: EdgeInsets.only(left: 16.w),
+                  height: 25.h,
+                  width: 66.w,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: Color(0xff398EF3),
+                    borderRadius: BorderRadius.circular(100.r),
+                  ),
                   child: Text(
-                    '선택한 카테고리',
+                    '전체',
                     style: TextStyle(
-                      color: const Color(0xFF777777),
-                      fontSize: 12.sp,
-                      fontWeight: FontWeight.w500,
-                      letterSpacing: -1.0,
-                    ),
+                        fontSize: 12.sp,
+                        fontWeight: FontWeight.w500,
+                        color: Color(0xffEBF4FE),
+                        letterSpacing:
+                            DisplayUtil.getLetterSpacing(px: 12.sp, percent: -2)
+                                .w),
                   ),
                 ),
-                // 칩
-                if (_selectedItem.isNotEmpty) ...[
-                  SizedBox(height: 4.w),
-                  SingleChildScrollView(
-                    padding: EdgeInsets.symmetric(horizontal: 16.w),
-                    scrollDirection: Axis.horizontal,
-                    child: Wrap(
-                      spacing: 6.w,
-                      children: _selectedItem.map((item) {
-                        return selectedCategory(
-                          title: item!.name,
-                          onDelete: () {
-                            _selectedItem.remove(item);
-
-                            if (_selectedItem.isEmpty) {
-                              ShareData().categoryHeight.value = 45;
-                            }
-
-                            setState(() {});
-                          },
-                        );
-                      }).toList(),
-                    ),
+                SizedBox(width: 6.w),
+                Container(
+                  height: 25.h,
+                  width: 66.w,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: Color(0xffD7E8FD),
+                    borderRadius: BorderRadius.circular(100.r),
                   ),
-                ],
+                  child: Text(
+                    '오토캠핑',
+                    style: TextStyle(
+                        fontSize: 12.sp,
+                        fontWeight: FontWeight.w500,
+                        color: Color(0xff398EF3),
+                        letterSpacing:
+                            DisplayUtil.getLetterSpacing(px: 12.sp, percent: -2)
+                                .w),
+                  ),
+                ),
+                SizedBox(width: 6.w),
+                Container(
+                  height: 25.h,
+                  width: 66.w,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: Color(0xffECF7FB),
+                    borderRadius: BorderRadius.circular(100.r),
+                  ),
+                  child: Text(
+                    '글램핑',
+                    style: TextStyle(
+                        fontSize: 12.sp,
+                        fontWeight: FontWeight.w500,
+                        color: Color(0xff3AB9D9),
+                        letterSpacing:
+                            DisplayUtil.getLetterSpacing(px: 12.sp, percent: -2)
+                                .w),
+                  ),
+                ),
+                SizedBox(width: 6.w),
+                Container(
+                  height: 25.h,
+                  width: 66.w,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: Color(0xffE9F9EF),
+                    borderRadius: BorderRadius.circular(100.r),
+                  ),
+                  child: Text(
+                    '카라반',
+                    style: TextStyle(
+                        fontSize: 12.sp,
+                        fontWeight: FontWeight.w500,
+                        color: Color(0xff33c46f),
+                        letterSpacing:
+                            DisplayUtil.getLetterSpacing(px: 12.sp, percent: -2)
+                                .w),
+                  ),
+                ),
+                Spacer(),
+                Image.asset(
+                  'assets/images/search_filter_new.png',
+                  width: 20.w,
+                  height: 20.h,
+                ),
               ],
             ),
           ),
+
+          SizedBox(height: 9.h),
+
+          Container(
+            height: 1.5.h,
+            color: Color(0xffF3F5F7),
+          ),
+
+          SizedBox(
+            height: 12.59.h,
+          ),
+
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.w),
+            child: Row(
+              children: [
+                // 지역 칩 영역
+                Container(
+                  padding: EdgeInsets.fromLTRB(6.52.w, 4.89.h, 6.52.h, 4.89.h),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(4.89.r),
+                    shape: BoxShape.rectangle,
+                    border: Border.all(
+                      color: Color(0xff398EF3),
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      Text(
+                        '대구 수성구',
+                        style: TextStyle(
+                          color: Color(0xff398EF3),
+                          fontSize: 9.78.sp,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      SizedBox(
+                        width: 3.26.w,
+                      ),
+                      Image.asset(
+                        'assets/images/search_arrow_blue.png',
+                        width: 11.41.w,
+                        height: 11.41.h,
+                        color: Color(0xff398EF3),
+                      ),
+                    ],
+                  ),
+                ),
+
+                SizedBox(width: 9.78.w),
+
+                // 시설 칩 영역
+                Container(
+                  padding: EdgeInsets.fromLTRB(6.52.w, 4.89.h, 6.52.h, 4.89.h),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(4.89.r),
+                    shape: BoxShape.rectangle,
+                    border: Border.all(
+                      color: Color(0xff398EF3),
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      Text(
+                        '시설',
+                        style: TextStyle(
+                          color: Color(0xff398EF3),
+                          fontSize: 9.78.sp,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      SizedBox(
+                        width: 3.26.w,
+                      ),
+                      Image.asset(
+                        'assets/images/search_arrow_blue.png',
+                        width: 11.41.w,
+                        height: 11.41.h,
+                        color: Color(0xff398EF3),
+                      ),
+                    ],
+                  ),
+                ),
+
+                SizedBox(width: 9.78.w),
+
+                // 주변환경 칩 영역
+                Container(
+                  padding: EdgeInsets.fromLTRB(6.52.w, 4.89.h, 6.52.h, 4.89.h),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(4.89.r),
+                    shape: BoxShape.rectangle,
+                    border: Border.all(
+                      color: Color(0xff9a9a9a),
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      Text(
+                        '주변환경',
+                        style: TextStyle(
+                          color: Color(0xff9a9a9a),
+                          fontSize: 9.78.sp,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      SizedBox(
+                        width: 3.26.w,
+                      ),
+                      Image.asset(
+                        'assets/images/search_arrow_blue.png',
+                        width: 11.41.w,
+                        height: 11.41.h,
+                        color: Color(0xff9a9a9a),
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            ),
+          ),
+
+          SizedBox(height: 8.5.h),
+
+          SizedBox(
+            height: 22.h,
+            child: Stack(
+              children: [
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16.w),
+                  child: ListView.separated(
+                    scrollDirection: Axis.horizontal,
+                    shrinkWrap: true,
+                    itemBuilder: (context, index) {
+                      final sample = [
+                        '등산',
+                        '전기사용',
+                        '와이파이',
+                        '화장실',
+                        '분리수거',
+                        '등산',
+                        '전기사용',
+                        '와이파이',
+                        '화장실',
+                        '분리수거',
+                      ];
+
+                      return Container(
+                        padding: EdgeInsets.symmetric(horizontal: 6.w),
+                        child: Row(
+                          children: [
+                            Text(
+                              sample[index],
+                              style: TextStyle(
+                                fontSize: 12.sp,
+                                fontWeight: FontWeight.w600,
+                                color: Color(0xffa9a9a9),
+                                letterSpacing: DisplayUtil.getLetterSpacing(
+                                  px: 12.sp,
+                                  percent: -5,
+                                ).w,
+                              ),
+                            ),
+                            SizedBox(
+                              width: 4.w,
+                            ),
+                            Image.asset(
+                              'assets/images/search_close.png',
+                              width: 14.w,
+                              height: 14.h,
+                            )
+                          ],
+                        ),
+                      );
+                    },
+                    separatorBuilder: (context, item) {
+                      return SizedBox(
+                        width: 6.w,
+                      );
+                    },
+                    itemCount: 10,
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: Image.asset(
+                    'assets/images/search_opacity.png',
+                    width: 66.w,
+                    height: 20.h,
+                    fit: BoxFit.fitWidth,
+                  ),
+                )
+              ],
+            ),
+          ),
+
+          SizedBox(height: 10.79.h),
+
+          Container(
+            height: 3.92.h,
+            color: Color(0xffF3F5F7),
+          ),
+
+          // // 카테고리
+          // Container(
+          //   height: categoryHeight.w,
+          //   padding: EdgeInsets.only(top: 16.w),
+          //   alignment: Alignment.centerLeft,
+          //   child: Column(
+          //     crossAxisAlignment: CrossAxisAlignment.start,
+          //     children: [
+          //       // 타이틀
+          //       Container(
+          //         margin: EdgeInsets.only(left: 16.w),
+          //         child: Text(
+          //           '선택한 카테고리',
+          //           style: TextStyle(
+          //             color: const Color(0xFF777777),
+          //             fontSize: 12.sp,
+          //             fontWeight: FontWeight.w500,
+          //             letterSpacing: -1.0,
+          //           ),
+          //         ),
+          //       ),
+          //       // 칩
+          //       if (_selectedItem.isNotEmpty) ...[
+          //         SizedBox(height: 4.w),
+          //         SingleChildScrollView(
+          //           padding: EdgeInsets.symmetric(horizontal: 16.w),
+          //           scrollDirection: Axis.horizontal,
+          //           child: Wrap(
+          //             spacing: 6.w,
+          //             children: _selectedItem.map((item) {
+          //               return selectedCategory(
+          //                 title: item!.name,
+          //                 onDelete: () {
+          //                   _selectedItem.remove(item);
+
+          //                   if (_selectedItem.isEmpty) {
+          //                     ShareData().categoryHeight.value = 45;
+          //                   }
+
+          //                   setState(() {});
+          //                 },
+          //               );
+          //             }).toList(),
+          //           ),
+          //         ),
+          //       ],
+          //     ],
+          //   ),
+          // ),
         ],
       ),
     );
@@ -359,7 +702,6 @@ class _AllCampingSitesPageState extends State<AllCampingSitesPage> {
     return ListView.separated(
       padding: EdgeInsets.only(
         left: 16.w,
-        right: 16.w,
         bottom: (75 + 32).w,
       ),
       itemCount: 9,
@@ -368,300 +710,59 @@ class _AllCampingSitesPageState extends State<AllCampingSitesPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             if (index == 0) ...[
-              if (_selectedItem.isEmpty) ...[
-                Container(
-                  height: 39.w,
-                  padding: EdgeInsets.only(top: 5.w),
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    '추천 차박지',
+              SizedBox(height: 24.h),
+              Row(
+                children: [
+                  Text(
+                    '카테고리를 통해 원하는 캠핑장을 찾아봐요!',
                     style: TextStyle(
-                      color: const Color(0xFF777777),
+                      color: Color(0xff777777),
                       fontSize: 12.sp,
                       fontWeight: FontWeight.w500,
                       letterSpacing: -1.0,
                     ),
                   ),
-                ),
-              ] else ...[
-                Container(
-                  height: 49.w,
-                  alignment: Alignment.bottomLeft,
-                  margin: EdgeInsets.only(left: 8.w),
-                  padding: EdgeInsets.only(bottom: 8.w),
-                  child: RichText(
-                    text: TextSpan(
+                  Spacer(),
+                  Container(
+                    height: 22.h,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(6.r),
+                      color: Color(0xfff7f7f7),
+                    ),
+                    padding: EdgeInsets.only(left: 9.w, right: 3.w),
+                    child: Row(
                       children: [
-                        TextSpan(
-                          text: '1103 ',
+                        Text(
+                          '리뷰순',
                           style: TextStyle(
-                            color: const Color(0xFF398EF3),
-                            fontSize: 12.sp,
-                            fontWeight: FontWeight.w600,
-                            letterSpacing: -1.0,
-                          ),
-                        ),
-                        TextSpan(
-                          text: '개의 차박지',
-                          style: TextStyle(
-                            color: const Color(0xFF777777),
+                            color: const Color(0xFF383838),
                             fontSize: 12.sp,
                             fontWeight: FontWeight.w500,
                             letterSpacing: -1.0,
                           ),
                         ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ],
-            // 콘텐츠 영역
-            GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const CampingDetailScreen(),
-                  ),
-                );
-              },
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // 이미지
-                  SizedBox(
-                    height: 135.w,
-                    child: Stack(
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(16.w),
-                          child: Image.network(
-                            'https://picsum.photos/id/10$index/428/135.jpg',
-                            fit: BoxFit.cover,
-                            width: double.infinity,
-                            height: 135.w,
-                          ),
-                        ),
-                        // 좋아요
-                        Container(
-                          margin: EdgeInsets.only(top: 13.w, right: 12.w),
-                          alignment: Alignment.topRight,
-                          child: Image.asset(
-                            'assets/images/ic_my_heart.png',
-                            color: Colors.white,
-                            width: 23.w,
-                            height: 23.w,
-                            gaplessPlayback: true,
-                          ),
-                        ),
-                        // 이미지 갯수
-                        Align(
-                          alignment: Alignment.bottomRight,
-                          child: Container(
-                            width: 26.w,
-                            height: 13.w,
-                            margin: EdgeInsets.only(
-                              right: 13.w,
-                              bottom: 16.w,
-                            ),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFF111111).withOpacity(0.4),
-                              borderRadius: BorderRadius.circular(14.w),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  '1',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 8.sp,
-                                    fontWeight: FontWeight.w400,
-                                    letterSpacing: -1.0,
-                                  ),
-                                ),
-                                Text(
-                                  '/3',
-                                  style: TextStyle(
-                                    color: Colors.white.withOpacity(0.5),
-                                    fontSize: 8.sp,
-                                    fontWeight: FontWeight.w400,
-                                    letterSpacing: -1.0,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
+                        SizedBox(width: 4.w),
+                        Image.asset(
+                          'assets/images/ic_down.png',
+                          color: const Color(0xFF383838),
+                          height: 12.w,
+                          gaplessPlayback: true,
                         ),
                       ],
                     ),
                   ),
-                  SizedBox(height: 8.w),
-                  // 하단
-                  Container(
-                    color: Colors.white,
-                    margin: EdgeInsets.symmetric(horizontal: 8.w),
-                    child: Stack(
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            // 타이틀
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                Text(
-                                  '동촌 유원지',
-                                  style: TextStyle(
-                                    color: const Color(0xFF111111),
-                                    fontSize: 18.sp,
-                                    fontWeight: FontWeight.w500,
-                                    letterSpacing: -1.0,
-                                  ),
-                                ),
-                                SizedBox(width: 4.w),
-                                Text(
-                                  '대구광역시',
-                                  style: TextStyle(
-                                    color: const Color(0xFF111111),
-                                    fontSize: 9.sp,
-                                    fontWeight: FontWeight.w400,
-                                    letterSpacing: -1.0,
-                                  ),
-                                  strutStyle: StrutStyle(
-                                    height: 1.3.w,
-                                    forceStrutHeight: true,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 3.w),
-                            // 설명
-                            Text(
-                              '울창한 나무들 사이에 있는 차박지',
-                              style: TextStyle(
-                                color: const Color(0xFF777777),
-                                fontSize: 12.sp,
-                                fontWeight: FontWeight.w500,
-                                letterSpacing: -1.0,
-                              ),
-                              strutStyle: StrutStyle(
-                                height: 1.3.w,
-                                forceStrutHeight: true,
-                              ),
-                            ),
-                            SizedBox(height: 5.w),
-                            // 리뷰
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                // 아이콘
-                                SizedBox(
-                                  width: 12.w,
-                                  height: 11.w,
-                                  child: Image.asset(
-                                    'assets/images/home_rating.png',
-                                    fit: BoxFit.cover,
-                                    gaplessPlayback: true,
-                                  ),
-                                ),
-                                SizedBox(width: 4.w),
-                                // 평점
-                                Text(
-                                  '4.3',
-                                  style: TextStyle(
-                                    color: const Color(0xFFB8B8B8),
-                                    fontSize: 12.sp,
-                                    fontWeight: FontWeight.w500,
-                                    letterSpacing: -1.0,
-                                  ),
-                                ),
-                                SizedBox(width: 10.w),
-                                // 리뷰
-                                Text(
-                                  '리뷰  12',
-                                  style: TextStyle(
-                                    color: const Color(0xFFB8B8B8),
-                                    fontSize: 12.sp,
-                                    fontWeight: FontWeight.w500,
-                                    letterSpacing: -1.0,
-                                  ),
-                                ),
-                                SizedBox(width: 10.w),
-                                // 좋아요
-                                Text(
-                                  '좋아요  45',
-                                  style: TextStyle(
-                                    color: const Color(0xFFB8B8B8),
-                                    fontSize: 12.sp,
-                                    fontWeight: FontWeight.w500,
-                                    letterSpacing: -1.0,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        // 더보기
-                        Positioned(
-                          top: 11.w,
-                          right: 7.w,
-                          child: GestureDetector(
-                            onTap: () {
-                              ShareData().showSnackbar(context, content: '더보기');
-                            },
-                            child: SizedBox(
-                              width: 12.w,
-                              height: 12.w,
-                              child: Image.asset(
-                                'assets/images/ic_more.png',
-                                width: 2.w,
-                                height: 12.w,
-                                gaplessPlayback: true,
-                              ),
-                            ),
-                          ),
-                        ),
-                        // 리뷰어
-                        Positioned(
-                          right: 0.w,
-                          bottom: 0.w,
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: List.generate(4, (index) {
-                              return Container(
-                                width: 19.w,
-                                height: 19.w,
-                                margin: EdgeInsets.only(left: 4.w),
-                                child: Image.asset(
-                                  'assets/images/ic_reviewer.png',
-                                  width: 19.w,
-                                  height: 19.w,
-                                  gaplessPlayback: true,
-                                ),
-                              );
-                            }),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                  SizedBox(width: 16.w),
                 ],
               ),
-            ),
+              SizedBox(height: 20.h),
+            ],
+            // 콘텐츠 영역
+            _buildPanelItem(index: index),
           ],
         );
       },
       separatorBuilder: (context, index) {
-        return Container(
-          color: const Color(0xFFD3D3D3),
-          margin: EdgeInsets.symmetric(
-            vertical: 16.w,
-            horizontal: 8.w,
-          ),
-          height: 0.5.w,
-        );
+        return SizedBox(height: 24.h);
       },
     );
   }
@@ -784,6 +885,212 @@ class _AllCampingSitesPageState extends State<AllCampingSitesPage> {
           ],
         );
       },
+    );
+  }
+
+  /// 패널 내부 아이템
+  Widget _buildPanelItem({required int index}) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // 콘텐츠 영역
+        GestureDetector(
+          onTap: () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (c) => const CampingDetailScreen()));
+          },
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // 이미지
+              SizedBox(
+                height: 156.h,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: EdgeInsets.only(right: 4.w),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(4.w),
+                        child: Image.network(
+                          'https://picsum.photos/id/10$index/204/156.jpg',
+                          fit: BoxFit.cover,
+                          width: index % 2 == 0 ? 120.w : 204.w,
+                          height: 156.h,
+                        ),
+                      ),
+                    );
+                  },
+                  itemCount: 3,
+                ),
+              ),
+              SizedBox(height: 8.w),
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    height: 18.h,
+                    padding: EdgeInsets.symmetric(horizontal: 6.w),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(4.r),
+                      color: Color(0xffD7E8FD),
+                    ),
+                    child: Text(
+                      '오토캠핑',
+                      style: TextStyle(
+                          color: Color(0xff398EF3),
+                          fontSize: 10.sp,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: DisplayUtil.getLetterSpacing(
+                                  px: 10.sp, percent: -2)
+                              .w),
+                    ),
+                  ),
+                  Container(
+                    width: 20.w,
+                    height: 20.w,
+                    margin: EdgeInsets.only(right: 16.w),
+                    child: Image.asset(
+                      'assets/images/like_map_item.png',
+                      fit: BoxFit.cover,
+                      gaplessPlayback: true,
+                      color: Color(0xff464646),
+                    ),
+                  ),
+                ],
+              ),
+
+              SizedBox(height: 7.h),
+
+              // 타이틀
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    '캠핑장명',
+                    style: TextStyle(
+                      color: const Color(0xFF111111),
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.w600,
+                      letterSpacing:
+                          DisplayUtil.getLetterSpacing(px: 16.sp, percent: -2.5)
+                              .w,
+                    ),
+                    strutStyle: StrutStyle(
+                      height: 1.3.h,
+                      forceStrutHeight: true,
+                    ),
+                  ),
+                  SizedBox(width: 4.w),
+                  Text(
+                    '대구광역시',
+                    style: TextStyle(
+                      color: const Color(0xFF9d9d9d),
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.w400,
+                      letterSpacing:
+                          DisplayUtil.getLetterSpacing(px: 12.sp, percent: -3)
+                              .w,
+                    ),
+                    strutStyle: StrutStyle(
+                      height: 1.3.w,
+                      forceStrutHeight: true,
+                    ),
+                  ),
+                ],
+              ),
+
+              SizedBox(height: 5.h),
+
+              // 리뷰 및 편의 시설
+              Row(
+                children: [
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      // 아이콘
+                      SizedBox(
+                        width: 12.w,
+                        height: 11.w,
+                        child: Image.asset(
+                          'assets/images/home_rating.png',
+                          fit: BoxFit.cover,
+                          gaplessPlayback: true,
+                        ),
+                      ),
+                      SizedBox(width: 4.w),
+                      // 평점
+                      Text(
+                        '4.3',
+                        style: TextStyle(
+                          color: const Color(0xFFB8B8B8),
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.w500,
+                          letterSpacing: -1.0,
+                        ),
+                      ),
+                      SizedBox(width: 10.w),
+                      // 리뷰
+                      Text(
+                        '리뷰  12',
+                        style: TextStyle(
+                          color: const Color(0xFFB8B8B8),
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.w500,
+                          letterSpacing: -1.0,
+                        ),
+                      ),
+                      SizedBox(width: 10.w),
+                      // 좋아요
+                      Text(
+                        '좋아요  45',
+                        style: TextStyle(
+                          color: const Color(0xFFB8B8B8),
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.w500,
+                          letterSpacing: -1.0,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Spacer(),
+                  Row(
+                    spacing: 1.w,
+                    children: facilities.take(4).map((item) {
+                      return SizedBox(
+                        width: 18.37.w,
+                        height: 18.37.h,
+                        child: Image.asset(
+                          'assets/images/map_facilities_$item.png',
+                          fit: BoxFit.cover,
+                          gaplessPlayback: true,
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                  SizedBox(width: 5.w),
+                  Visibility(
+                    visible: facilities.length > 4,
+                    child: Text(
+                      '+${facilities.length - 4}',
+                      style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          color: Color(0xff777777),
+                          fontSize: 10.sp,
+                          letterSpacing: DisplayUtil.getLetterSpacing(
+                                  px: 10.sp, percent: -2.5)
+                              .w),
+                    ),
+                  ),
+                  SizedBox(width: 16.w),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }
