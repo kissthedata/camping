@@ -17,7 +17,7 @@ class ShareData {
   var overlaySubTitle = '';
 
   /// 홈 - 지도
-  final panelSlidePosition = ValueNotifier<double>(0.0);
+  final panelSlidePosition = ValueNotifier<double>(200.0);
 
   /// 홈 - 카테고리 높이
   final categoryHeight = ValueNotifier<int>(45);

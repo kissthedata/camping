@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:map_sample/utils/display_util.dart';
 
 class Rating extends StatefulWidget {
   const Rating({
@@ -108,6 +109,7 @@ class _State extends State<Rating> {
                     borderRadius: BorderRadius.circular(16.r), // 둥근 모서리 반경
                   ),
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       SizedBox(height: 26.h),
                       Text(
@@ -119,48 +121,59 @@ class _State extends State<Rating> {
                         ),
                       ),
                       SizedBox(height: 4.h),
-                      Text(
-                        '캠핑장 주소',
-                        style: TextStyle(
-                          fontSize: 12.sp,
-                          fontWeight: FontWeight.w600,
-                          color: const Color(0xff777777),
+                      Container(
+                        child: Text(
+                          '캠핑장 주소',
+                          style: TextStyle(
+                            fontSize: 12.sp,
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: DisplayUtil.getLetterSpacing(
+                                    px: 12, percent: -5)
+                                .w,
+                            color: const Color(0xff777777),
+                          ),
                         ),
                       ),
                       SizedBox(height: 29.h),
-                      Center(
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: List.generate(5, (index) {
-                            return Container(
-                              margin: index == 4
-                                  ? null
-                                  : EdgeInsets.only(right: 10.11.w),
-                              child: GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    _selectedStars = index + 1; // 선택된 별 개수 업데이트
-                                  });
-                                },
-                                child: Image.asset(
-                                  'assets/vectors/ico_star_unselected.png',
-                                  width: 35.4.w,
-                                  height: 32.87.h,
-                                  color: index < _selectedStars
-                                      ? const Color(0xffFFD233)
-                                      : null,
+                      Container(
+                        color: Colors.amber,
+                        child: Center(
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: List.generate(5, (index) {
+                              return Container(
+                                color: Colors.red,
+                                margin: index == 4
+                                    ? null
+                                    : EdgeInsets.only(right: 10.11.w),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      _selectedStars =
+                                          index + 1; // 선택된 별 개수 업데이트
+                                    });
+                                  },
+                                  child: Image.asset(
+                                    'assets/vectors/ico_star_unselected.png',
+                                    width: 35.4.w,
+                                    height: 32.87.h,
+                                    color: index < _selectedStars
+                                        ? const Color(0xffFFD233)
+                                        : null,
+                                  ),
                                 ),
-                              ),
-                            );
-                          }),
+                              );
+                            }),
+                          ),
                         ),
                       ),
                       SizedBox(height: 28.13.h),
                       Container(
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(16.r),
-                            color: const Color(0xfff2f3f5)),
+                          borderRadius: BorderRadius.circular(16.r),
+                          color: const Color(0xfff2f3f5),
+                        ),
                         width: 66.w,
                         height: 49.h,
                         child: Text(

@@ -345,7 +345,7 @@ class SearchCampingSitePageState extends State<SearchCampingSitePage> {
                       children: [1, 2, 3, 4, 5, 6].map((item) {
                         return SizedBox(
                           width:
-                              (MediaQuery.of(context).size.width / 2).w - 36.w,
+                              (MediaQuery.of(context).size.width / 2).w - 50.w,
                           height: 16.h,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -474,7 +474,7 @@ class SearchCampingSitePageState extends State<SearchCampingSitePage> {
                                                 .w,
                                       ),
                                       strutStyle: StrutStyle(
-                                        height: 1.3.w,
+                                        height: 1.3.h,
                                         forceStrutHeight: true,
                                       ),
                                     ),

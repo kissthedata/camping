@@ -81,7 +81,7 @@ class _State extends State<ReviewScreen> {
                   height: 23.w,
                   margin: EdgeInsets.only(left: 16.w),
                   child: Image.asset(
-                    'assets/images/ic_back.png',
+                    'assets/images/ic_back_new.png',
                     gaplessPlayback: true,
                   ),
                 ),

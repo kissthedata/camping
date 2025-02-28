@@ -24,7 +24,7 @@ class MarkerUtils {
             caption: NOverlayCaption(text: location.place),
             icon: NOverlayImage.fromAssetImage(
                 'assets/images/${_getCategoryImage(location.category)}.png'),
-            size: Size(40, 40),
+            size: Size(82, 84),
           ),
         );
       }
@@ -37,11 +37,11 @@ class MarkerUtils {
   static String _getCategoryImage(String category) {
     switch (category) {
       case '마트':
-        return 'mart';
+        return 'marker';
       case '편의점':
-        return 'convenience_store';
+        return 'marker';
       case '주유소':
-        return 'gas_station';
+        return 'marker';
       default:
         return 'kakao';
     }

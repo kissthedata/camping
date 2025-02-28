@@ -15,32 +15,208 @@ class _CateDialogState extends State<CateDialog>
   int selectDistance = 14;
   late TabController _tabController;
 
-  List<CateItem> cateItemList = [
-    CateItem(name: '등산', img: 'climb', isSelected: false),
-    CateItem(name: '낚시', img: 'fish', isSelected: false),
-    CateItem(name: '물놀이', img: 'play', isSelected: false),
-    CateItem(name: '배달가능', img: 'deliv', isSelected: false),
-    CateItem(name: '전기사용', img: 'elec', isSelected: false),
-    CateItem(name: '와이파이', img: 'wifi', isSelected: false),
-    CateItem(name: '화장실', img: 'toilet', isSelected: false),
-    CateItem(name: '샤워실', img: 'shower', isSelected: false),
-    CateItem(name: '개수대', img: 'wash', isSelected: false),
-    CateItem(name: '수돗물', img: 'water', isSelected: false),
-    CateItem(name: '주차장', img: 'park', isSelected: false),
-    CateItem(name: '분리수거', img: 'recycle', isSelected: false),
-    CateItem(name: '오션뷰', img: 'view_o', isSelected: false),
-    CateItem(name: '리버뷰', img: 'view_r', isSelected: false),
-    CateItem(name: '마운틴뷰', img: 'view_m', isSelected: false),
-    CateItem(name: '취사가능', img: 'cook', isSelected: false),
-    CateItem(name: '편의점', img: 'conv', isSelected: false),
-    CateItem(name: '약국', img: 'drug', isSelected: false),
-    CateItem(name: '주유소', img: 'gas', isSelected: false),
+  List<CateItem> regions = [
+    CateItem(name: '전체', img: '', isSelected: true),
+    CateItem(name: '대구', img: '', isSelected: false),
+    CateItem(name: '경북', img: '', isSelected: false),
   ];
+
+  final List<Region> regionList = [
+    Region(city: '전체', name: '전체', isSelected: false),
+    Region(city: '대구', name: '전체', isSelected: false),
+    Region(city: '경북', name: '전체', isSelected: false),
+    Region(city: '경북', name: '경산시', isSelected: false),
+    Region(city: '경북', name: '경주시', isSelected: false),
+    Region(city: '경북', name: '고령군', isSelected: false),
+    Region(city: '경북', name: '구미시', isSelected: false),
+    Region(city: '대구', name: '군위군', isSelected: false),
+    Region(city: '경북', name: '김천시', isSelected: false),
+    Region(city: '대구', name: '남구', isSelected: false),
+    Region(city: '경북', name: '남주시', isSelected: false),
+    Region(city: '대구', name: '달서구', isSelected: false),
+    Region(city: '대구', name: '달성군', isSelected: false),
+    Region(city: '대구', name: '동구', isSelected: false),
+    Region(city: '경북', name: '문경시', isSelected: false),
+    Region(city: '경북', name: '봉화군', isSelected: false),
+    Region(city: '대구', name: '북구', isSelected: false),
+    Region(city: '대구', name: '서구', isSelected: false),
+    Region(city: '경북', name: '성주군', isSelected: false),
+    Region(city: '대구', name: '수성구', isSelected: false),
+    Region(city: '경북', name: '안동시', isSelected: false),
+    Region(city: '경북', name: '영덕군', isSelected: false),
+    Region(city: '경북', name: '영양군', isSelected: false),
+    Region(city: '경북', name: '영주시', isSelected: false),
+    Region(city: '경북', name: '영천시', isSelected: false),
+    Region(city: '경북', name: '예천군', isSelected: false),
+    Region(city: '경북', name: '울릉군', isSelected: false),
+    Region(city: '경북', name: '울진군', isSelected: false),
+    Region(city: '경북', name: '의성군', isSelected: false),
+    Region(city: '대구', name: '중구', isSelected: false),
+    Region(city: '경북', name: '청도군', isSelected: false),
+    Region(city: '경북', name: '청송군', isSelected: false),
+    Region(city: '경북', name: '칠곡군', isSelected: false),
+    Region(city: '경북', name: '포항시', isSelected: false),
+  ];
+
+  List<CateItem> cateItemList = [
+    CateItem(name: '마사토', img: 'masato', isSelected: false),
+    CateItem(name: '데크', img: 'deck', isSelected: false),
+    CateItem(name: '파쇄석', img: 'stone', isSelected: false),
+    CateItem(name: '잔디', img: 'grass', isSelected: false),
+    CateItem(name: '방갈로', img: 'bungalow', isSelected: false),
+    CateItem(name: '독채', img: 'private_house', isSelected: false),
+    CateItem(name: '복층', img: 'duplex', isSelected: false),
+    CateItem(name: '펜션', img: 'pension', isSelected: false),
+    CateItem(name: '한옥', img: 'hanok', isSelected: false),
+    CateItem(name: '풀빌라', img: 'pool_villa', isSelected: false),
+    CateItem(name: '매점', img: 'shop', isSelected: false),
+    CateItem(name: '차박', img: 'chabak', isSelected: false),
+    CateItem(name: '온수', img: 'hot_water', isSelected: false),
+    CateItem(name: '사우나', img: 'sauna', isSelected: false),
+    CateItem(name: '온돌방', img: 'ondol_room', isSelected: false),
+    CateItem(name: '스파', img: 'spa', isSelected: false),
+    CateItem(name: '세미나실', img: 'seminar', isSelected: false),
+    CateItem(name: '모래장', img: 'sand', isSelected: false),
+    CateItem(name: '반려동물', img: 'pet', isSelected: false),
+    CateItem(name: '동물체험', img: 'animal', isSelected: false),
+    CateItem(name: '체험시설', img: 'excercise', isSelected: false),
+    CateItem(name: '놀이시설', img: 'playground', isSelected: false),
+    CateItem(name: '체육시설', img: 'gym', isSelected: false),
+    CateItem(name: '전자레인지', img: 'microwave', isSelected: false),
+    CateItem(name: '세탁시설', img: 'laundry', isSelected: false),
+    CateItem(name: '냉장고', img: 'refrigerator', isSelected: false),
+    CateItem(name: '운동장', img: 'ground', isSelected: false),
+    CateItem(name: '바비큐', img: 'barbecue', isSelected: false),
+    CateItem(name: '개별 바비큐', img: 'private_barbecue', isSelected: false),
+    CateItem(name: '바비큐장', img: 'barbecue_facility', isSelected: false),
+    CateItem(name: '취사시설', img: 'cooking', isSelected: false),
+    CateItem(name: 'WI-FI', img: 'wifi', isSelected: false),
+    CateItem(name: '개별 샤워실', img: 'private_shower', isSelected: false),
+    CateItem(name: '공용 샤워실', img: 'public_shower', isSelected: false),
+    CateItem(name: '개별 화장실', img: 'private_toilet', isSelected: false),
+    CateItem(name: '공용 화장실', img: 'public_toilet', isSelected: false),
+    CateItem(name: '개수대', img: 'sink', isSelected: false),
+    CateItem(name: '분리수거장', img: 'waste', isSelected: false),
+    CateItem(name: '전기', img: 'electronic', isSelected: false),
+    CateItem(name: '조식', img: 'breakfast', isSelected: false),
+    CateItem(name: '카페', img: 'cafe', isSelected: false),
+    CateItem(name: '침대', img: 'bed', isSelected: false),
+    CateItem(name: '화로대', img: 'fire', isSelected: false),
+    CateItem(name: '휠체어\n진입가능', img: 'can_wheel_chair', isSelected: false),
+    CateItem(name: '장애인\n주차공간', img: 'parking_wheel_chair', isSelected: false),
+    CateItem(name: '픽업 서비스', img: 'pickup', isSelected: false),
+    CateItem(name: '전기차\n충전소', img: 'electronic_car', isSelected: false),
+    CateItem(name: '트레일러\n진입가능', img: 'trailer', isSelected: false),
+    CateItem(name: '캠핑카\n진입가능', img: 'can_camping_car', isSelected: false),
+    CateItem(name: '카라반\n진입가능', img: 'can_caravan', isSelected: false),
+    CateItem(name: '캠핑카\n예약가능', img: 'reserve_camping_car', isSelected: false),
+    CateItem(name: '카라반\n예약가능', img: 'reserve_caravan', isSelected: false),
+  ];
+
+  bool isCollapseRegion = true;
+  bool isCollapseFacility = true;
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 4, vsync: this);
+    _tabController = TabController(initialIndex: 1, length: 3, vsync: this);
+  }
+
+  /// 시/도 선택 시
+  void _setSelectedRegion(int index) {
+    setState(() {
+      for (var item in regions) {
+        item.isSelected = false;
+      }
+      regions[index].isSelected = true;
+    });
+  }
+
+  /// 시/도 명 가져오기
+  String _getSelectedRegionName() {
+    return regions.firstWhere((item) => item.isSelected == true).name;
+  }
+
+  /// 선택된 시/군/구 가져오기 (칩 영역)
+  List<Region> _getSelectedRegionList() {
+    return _getRegionList()
+        .getRange(1, _getRegionList().length)
+        .where((item) => item.isSelected == true)
+        .toList();
+  }
+
+  List<dynamic> _getSelectedList(int type) {
+    switch (type) {
+      case 0:
+        return _getSelectedRegionList();
+      case 1:
+        return _getSelectedFacility();
+      case 2:
+      default:
+        return [];
+    }
+  }
+
+  List<Region> _getRegionList() {
+    String selectedCity = _getSelectedRegionName();
+
+    List<Region> list;
+    if (selectedCity == '전체') {
+      list = regionList.where((item) {
+        return !(item.name == '전체' && (item.city == '대구' || item.city == '경북'));
+      }).toList();
+    } else {
+      list = regionList.where((item) {
+        return item.city == selectedCity;
+      }).toList();
+    }
+
+    bool isSelectedAll =
+        list.getRange(1, list.length).every((item) => item.isSelected == true);
+
+    list[0].isSelected = isSelectedAll;
+
+    return list;
+  }
+
+  List<CateItem?> _getSelectedFacility() {
+    return cateItemList.where(
+      (e) {
+        return e.isSelected == true;
+      },
+    ).toList();
+  }
+
+  void _removeItem(int type, int index) {
+    setState(() {
+      switch (type) {
+        case 0:
+          Region item = _getSelectedList(type)[index];
+          int tapIndex = regionList.indexOf(item);
+          regionList[tapIndex].isSelected = false;
+          break;
+        case 1:
+          _getSelectedList(type)[index].isSelected =
+              !_getSelectedList(type)[index].isSelected;
+
+          break;
+        case 2:
+        default:
+          break;
+      }
+    });
+  }
+
+  void clear() {
+    setState(() {
+      for (int i = 0; i < regionList.length; i++) {
+        regionList[i].isSelected = false;
+      }
+
+      for (var item in cateItemList) {
+        item.isSelected = false;
+      }
+    });
   }
 
   @override
@@ -64,9 +240,15 @@ class _CateDialogState extends State<CateDialog>
               margin: EdgeInsets.symmetric(horizontal: 24.w),
               child: Row(
                 children: [
+                  Image.asset(
+                    'assets/images/Frame 559_white.png',
+                    width: 20.w,
+                    height: 20.h,
+                  ),
+                  SizedBox(width: 8.46.w),
                   Expanded(
                     child: Text(
-                      '카테고리',
+                      '필터링',
                       style: TextStyle(
                           fontSize: 18.sp,
                           color: const Color(0xFF111111),
@@ -84,144 +266,11 @@ class _CateDialogState extends State<CateDialog>
                 ],
               ),
             ),
-            SizedBox(
-              height: 16.h,
-            ),
-            Container(
-              width: 328.w,
-              height: 103.h,
-              decoration: BoxDecoration(
-                color: const Color(0xFFf8f8f8),
-                borderRadius: BorderRadius.circular(16.r),
-              ),
-              child: Column(
-                children: [
-                  SizedBox(height: 20.h),
-                  SizedBox(
-                    height: 22.h,
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        SizedBox(
-                          width: 16.w,
-                        ),
-                        Text(
-                          '$selectDistance',
-                          style: TextStyle(
-                              fontSize: 18.sp,
-                              color: const Color(0xFF398ef3),
-                              fontWeight: FontWeight.w700),
-                        ),
-                        Container(
-                          margin: EdgeInsets.only(top: 4.h),
-                          child: Text(
-                            'km  이내 검색',
-                            style: TextStyle(
-                                fontSize: 14.sp,
-                                color: const Color(0xFF777777),
-                                fontWeight: FontWeight.w500),
-                          ),
-                        ),
-                        SizedBox(
-                          width: 16.w,
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    height: 5.h,
-                  ),
-                  //slider
-                  SizedBox(
-                    height: 18.h,
-                    child: Row(
-                      children: [
-                        SizedBox(
-                          width: 8.w,
-                        ),
-                        SizedBox(
-                          height: 18.h,
-                          width: (296 + 16).w,
-                          child: SliderTheme(
-                            data: SliderTheme.of(context).copyWith(
-                              activeTrackColor:
-                                  const Color(0xFF398EF3), // 진행된 부분 색상
-                              inactiveTrackColor:
-                                  const Color(0xFFE3E3E3), // 진행되지 않은 부분 색상
-                              trackHeight: 8.h, // 트랙의 높이
-                              thumbColor: Colors.white, // 슬라이더 핸들 색상
-                              thumbShape: CustomThumbShape(),
-                              overlayColor: Colors.transparent,
-                              overlayShape: SliderComponentShape.noOverlay,
-                              showValueIndicator: ShowValueIndicator.never,
-                            ),
-                            child: Slider(
-                              value: selectDistance.toDouble(),
-                              min: 1, // 최소 값
-                              max: 100, // 최대 값
-                              divisions: 99, // 구간을 1씩 증가
-                              label: selectDistance
-                                  .toInt()
-                                  .toString(), // 현재 값을 표시하는 레이블
-                              onChanged: (value) {
-                                setState(() {
-                                  selectDistance = value.toInt(); // 값 업데이트
-                                });
-                              },
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          width: 8.w,
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 4.h),
-                  SizedBox(
-                    height: 15.h,
-                    child: Row(
-                      children: [
-                        SizedBox(
-                          width: 16.w,
-                        ),
-                        Expanded(
-                          child: Text(
-                            '가까운 차박지',
-                            style: TextStyle(
-                                fontSize: 12.sp,
-                                color: const Color(0xFF777777),
-                                height: (1.2).h,
-                                fontWeight: FontWeight.w500),
-                          ),
-                        ),
-                        Text(
-                          '먼 차박지',
-                          style: TextStyle(
-                              fontSize: 12.sp,
-                              color: const Color(0xFF777777),
-                              height: (1.2).h,
-                              fontWeight: FontWeight.w500),
-                        ),
-                        SizedBox(
-                          width: 16.w,
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 19.h),
-                ],
-              ),
-            ),
+            SizedBox(height: 20.h),
             //탭
-
-            SizedBox(
-              height: 14.h,
-            ),
             _buildTabBar(),
-            _buildCateList(),
-            _buildSelectList(),
-            _buildButtons(),
+            //탭뷰
+            _buildTabBarView(),
           ],
         ),
       ),
@@ -248,265 +297,195 @@ class _CateDialogState extends State<CateDialog>
         fontSize: 12.sp,
         fontWeight: FontWeight.w500,
       ),
+
       tabs: [
         Container(
           height: 40.0.h, // 각 Tab의 높이를 40으로 설정
           alignment: Alignment.center,
-          child: const Tab(text: '전체'),
+          child: const Tab(text: '지역'),
         ),
         Container(
           height: 40.0.h, // 각 Tab의 높이를 40으로 설정
           alignment: Alignment.center,
-          child: const Tab(text: '편의시설'),
+          child: const Tab(text: '시설'),
         ),
         Container(
           height: 40.0.h, // 각 Tab의 높이를 40으로 설정
           alignment: Alignment.center,
-          child: const Tab(text: '취미활동'),
-        ),
-        Container(
-          height: 40.0.h, // 각 Tab의 높이를 40으로 설정
-          alignment: Alignment.center,
-          child: const Tab(text: '뷰'),
+          child: const Tab(text: '주변환경'),
         ),
       ],
     );
   }
 
-  Widget _buildCateList() {
-    return Stack(
-      children: [
-        Container(
-          width: 360.w,
-          height: 258.h,
-          color: const Color(0xffF8f8f8),
-          child: GridView.builder(
-              padding: EdgeInsets.only(
-                left: 16.w,
-                right: 16.w,
-                top: 16.w,
-              ),
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 4,
-                mainAxisSpacing: 4.h,
-                crossAxisSpacing: 4.w,
-              ),
-              itemCount: cateItemList.length,
-              itemBuilder: (context, index) {
-                CateItem item = cateItemList[index];
-                return GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      CateItem temp = item;
-                      temp.isSelected = !temp.isSelected;
-                      cateItemList[index] = temp;
-                    });
-                  },
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8.r),
-                      border: Border.all(
-                          color: item.isSelected
-                              ? const Color(0xFF398ef3)
-                              : const Color(0xFFe6e6e6),
-                          width: 1.w),
-                      color: item.isSelected
-                          ? const Color(0xFFe6eef7)
-                          : Colors.white,
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.asset(
-                          'assets/images/ic_cate_${item.img}.png',
-                          width: 30.w,
-                          height: 30.h,
-                          color: item.isSelected
-                              ? const Color(0xFF398ef3)
-                              : const Color(0xFF868686),
-                        ),
-                        SizedBox(
-                          height: 4.h,
-                        ),
-                        Text(
-                          item.name,
-                          style: TextStyle(
-                            color: item.isSelected
-                                ? const Color(0xFF398ef3)
-                                : const Color(0xFF868686),
-                            fontSize: 12.sp,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              }),
-        ),
-        Positioned(
-          bottom: 0,
-          child: Container(
-            width: 360.w,
-            height: 20.h,
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.bottomCenter,
-                end: Alignment.topCenter,
-                colors: [
-                  Color(0xFFf8f8f8),
-                  Color(0x00f8f8f8),
-                ],
-              ),
-            ),
+  Widget _buildTabBarView() {
+    return Expanded(
+      child: TabBarView(
+        controller: _tabController, // ✅ 탭 컨트롤러 연결
+        children: [
+          Column(
+            children: [
+              _buildSelectList(_getSelectedRegionList(), 0, '지역'),
+              _buildRegionList(),
+              _buildButtons(),
+            ],
           ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildSelectList() {
-    return Container(
-      height: 36.h,
-      color: const Color(0xFFF8F8F8),
-      padding: EdgeInsets.only(
-        left: 16.w,
-        top: 10.h,
-      ),
-      child: ListView.separated(
-        separatorBuilder: (context, index) {
-          return SizedBox(
-            width: 4.w,
-          );
-        },
-        scrollDirection: Axis.horizontal,
-        itemCount: _getSelectedItem().length,
-        itemBuilder: (context, index) {
-          return GestureDetector(
-            onTap: () {
-              int tapIndex = cateItemList.indexWhere(
-                (element) {
-                  return element.name == _getSelectedItem()[index]?.name;
-                },
-              );
-              setState(() {
-                cateItemList[tapIndex].isSelected =
-                    !cateItemList[tapIndex].isSelected;
-              });
-            },
-            child: Container(
-              height: 26.h,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(25.r),
-                border: Border.all(color: const Color(0xFF9a9a9a), width: 1.w),
-                color: const Color(0xFFf8f8f8),
-              ),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    width: 14.w,
-                  ),
-                  Text(
-                    _getSelectedItem()[index]?.name ?? '',
-                    style: TextStyle(
-                        color: const Color(0xFF9a9a9a),
-                        fontSize: 12.sp,
-                        fontWeight: FontWeight.w600),
-                  ),
-                  SizedBox(
-                    width: 4.w,
-                  ),
-                  Image.asset(
-                    'assets/images/ic_close_cate.png',
-                    width: 14.w,
-                    height: 14.h,
-                    color: const Color(0xFF9a9a9a),
-                  ),
-                  SizedBox(
-                    width: 14.w,
-                  ),
-                ],
-              ),
-            ),
-          );
-        },
+          Column(
+            children: [
+              _buildSelectList(_getSelectedFacility(), 1, '시설'),
+              _buildFacilitiesGrid(),
+              _buildButtons(),
+            ],
+          ),
+          Center(child: Text('주변환경 페이지', style: TextStyle(fontSize: 20))),
+        ],
       ),
     );
   }
 
-  Widget _buildButtons() {
+  Widget _buildRegionList() {
     return Expanded(
       child: Container(
-        color: const Color(0xFFf8f8f8),
+        color: Color(0xfff8f8f8),
+        padding: EdgeInsets.fromLTRB(16.w, 10.h, 16.w, 0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
           children: [
             Row(
               children: [
-                SizedBox(
-                  width: 16.w,
-                ),
-                GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      for (var item in cateItemList) {
-                        item.isSelected = false;
-                      }
-                    });
-                  },
-                  child: Container(
-                    width: 94.w,
-                    height: 50.h,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12.r),
-                      border: Border.all(
-                          color: const Color(0xFF777777), width: 1.w),
-                      color: const Color(0xFFf8f8f8),
-                    ),
-                    alignment: Alignment.center,
-                    child: Text(
-                      '초기화',
-                      style: TextStyle(
-                        color: const Color(0xFF777777),
-                        fontSize: 14.sp,
-                        fontWeight: FontWeight.w500,
-                      ),
+                Container(
+                  width: 99.w,
+                  alignment: Alignment.center,
+                  child: Text(
+                    '시/도',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 12.sp,
+                      color: Color(0xff777777),
                     ),
                   ),
                 ),
-                SizedBox(
-                  width: 8.w,
-                ),
+                SizedBox(width: 17.w + 20.56.w),
                 Expanded(
-                  child: GestureDetector(
-                    onTap: () => Navigator.pop(context, _getSelectedItem()),
-                    child: Container(
-                      height: 50.h,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12.r),
-                        color: const Color(0xFF398EF3),
-                      ),
-                      alignment: Alignment.center,
-                      child: Text(
-                        '차박지 탐색',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
+                  child: Text(
+                    '시/군/구',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 12.sp,
+                      color: Color(0xff777777),
                     ),
                   ),
-                ),
-                SizedBox(
-                  width: 16.w,
                 ),
               ],
             ),
-            SizedBox(
-              height: 16.h,
+            SizedBox(height: 9.13.h),
+            Expanded(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // 시/도
+                  Container(
+                    width: 99.w,
+                    height: 96.h,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12.r),
+                    ),
+                    child: ListView.separated(
+                      itemCount: regions.length,
+                      separatorBuilder: (context, index) {
+                        return Divider(
+                          height: 0.5.h,
+                          color: Color(0xffe3e3e3),
+                        );
+                      },
+                      itemBuilder: (context, index) {
+                        return GestureDetector(
+                          onTap: () {
+                            _setSelectedRegion(index);
+                          },
+                          child: Container(
+                            width: 72.w,
+                            height: 32.h,
+                            alignment: Alignment.center,
+                            child: Text(
+                              regions[index].name,
+                              style: TextStyle(
+                                color: regions[index].isSelected
+                                    ? Color(0xff398EF3)
+                                    : Color(0xff777777),
+                                fontWeight: FontWeight.w400,
+                                fontSize: 12.sp,
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  SizedBox(width: 17.w),
+                  // 시/군/구
+                  Expanded(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(12.r),
+                      ),
+                      child: ListView.separated(
+                        itemCount: _getRegionList().length,
+                        shrinkWrap: true,
+                        separatorBuilder: (context, index) {
+                          return Divider(
+                            height: 0.5.h,
+                            color: Color(0xffe3e3e3),
+                          );
+                        },
+                        itemBuilder: (context, index) {
+                          return GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                if (index == 0) {
+                                  final value =
+                                      !_getRegionList()[index].isSelected;
+                                  for (int i = 0;
+                                      i < _getRegionList().length;
+                                      i++) {
+                                    _getRegionList()[i].isSelected = value;
+                                  }
+                                } else {
+                                  _getRegionList()[index].isSelected =
+                                      !_getRegionList()[index].isSelected;
+
+                                  bool isSelectedAll = _getRegionList()
+                                      .getRange(1, _getRegionList().length)
+                                      .every((item) => item.isSelected == true);
+
+                                  _getRegionList()[0].isSelected =
+                                      isSelectedAll;
+                                }
+                              });
+                            },
+                            child: Container(
+                              width: 72.w,
+                              height: 32.h,
+                              alignment: Alignment.center,
+                              child: Text(
+                                _getRegionList()[index].name,
+                                style: TextStyle(
+                                  color: _getRegionList()[index].isSelected
+                                      ? Color(0xff398EF3)
+                                      : Color(0xff777777),
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 12.sp,
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
@@ -514,12 +493,349 @@ class _CateDialogState extends State<CateDialog>
     );
   }
 
-  List<CateItem?> _getSelectedItem() {
-    return cateItemList.where(
-      (e) {
-        return e.isSelected == true;
-      },
-    ).toList();
+  Widget _buildFacilitiesGrid() {
+    return Expanded(
+      child: Stack(
+        children: [
+          Container(
+            width: 360.w,
+            color: const Color(0xffF8f8f8),
+            child: GridView.builder(
+                padding: EdgeInsets.only(
+                  left: 16.w,
+                  right: 16.w,
+                  top: 16.w,
+                ),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 4,
+                  mainAxisSpacing: 4.h,
+                  crossAxisSpacing: 4.w,
+                ),
+                itemCount: cateItemList.length,
+                itemBuilder: (context, index) {
+                  CateItem item = cateItemList[index];
+                  return GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        CateItem temp = item;
+                        temp.isSelected = !temp.isSelected;
+                        cateItemList[index] = temp;
+                      });
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8.r),
+                        border: Border.all(
+                            color: item.isSelected
+                                ? const Color(0xFF398ef3)
+                                : const Color(0xFFB6B6B6),
+                            width: 1.w),
+                        color: item.isSelected
+                            ? const Color(0xFFEBF4FE)
+                            : Color(0xFFF5F5F5),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            'assets/images/ic_cate_${item.img}.png',
+                            width: 40.w,
+                            height: 40.h,
+                            color: item.isSelected
+                                ? const Color(0xFF398ef3)
+                                : const Color(0xFFB6B6B6),
+                          ),
+                          SizedBox(
+                            height: 4.h,
+                          ),
+                          Text(
+                            item.name,
+                            style: TextStyle(
+                              color: item.isSelected
+                                  ? const Color(0xFF398ef3)
+                                  : const Color(0xFF868686),
+                              fontSize: 12.sp,
+                              fontWeight: FontWeight.w500,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                }),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void toggleActions(int type) {
+    switch (type) {
+      case 0:
+        isCollapseRegion = !isCollapseRegion;
+        break;
+      case 1:
+        isCollapseFacility = !isCollapseFacility;
+        break;
+      default:
+    }
+
+    setState(() {});
+  }
+
+  bool isCollapsed(int type) {
+    switch (type) {
+      case 0:
+        return isCollapseRegion;
+      case 1:
+        return isCollapseFacility;
+      default:
+        return false;
+    }
+  }
+
+  Widget _buildSelectList(List<dynamic> list, int type, String title) {
+    return Container(
+      color: const Color(0xFFF8F8F8),
+      padding: EdgeInsets.only(
+        left: 16.w,
+        top: 16.h,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: EdgeInsets.only(left: 4.w),
+            child: Text(
+              '선택된 카테고리',
+              style: TextStyle(
+                fontSize: 12.sp,
+                fontWeight: FontWeight.w500,
+                color: Color(0xFF868686),
+              ),
+            ),
+          ),
+          SizedBox(height: 9.69.h),
+          _buildChipList(list, type, title),
+          SizedBox(height: 9.69.h),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildChipList(List<dynamic> list, int type, String title) {
+    return Container(
+      height: 26.h,
+      padding: EdgeInsets.only(right: 16.w),
+      child: Row(
+        children: [
+          //지역, 시설, 주변환경
+          if (list.isNotEmpty) ...[
+            GestureDetector(
+              onTap: () {
+                toggleActions(type);
+              },
+              child: Container(
+                height: 26.h,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(25.r),
+                  border: Border.all(
+                    color: const Color(0xFF398ef3),
+                    width: 1.w,
+                  ),
+                ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      width: 14.w,
+                    ),
+                    Text(
+                      '$title ${list.where((item) => item.name != '전체').toList().length}개',
+                      style: TextStyle(
+                        color: const Color(0xFF398EF3),
+                        fontSize: 12.sp,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    SizedBox(
+                      width: 6.2.w,
+                    ),
+                    Image.asset(
+                      isCollapsed(type)
+                          ? 'assets/vectors/Vector.png'
+                          : 'assets/vectors/Vector_2.png',
+                      width: 4.w,
+                      height: 7.75.h,
+                    ),
+                    SizedBox(
+                      width: 14.w,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ] else ...[
+            Container(
+              height: 26.h,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(25.r),
+                border: Border.all(
+                  color: const Color(0xFF868686),
+                  width: 1.w,
+                ),
+              ),
+              padding: EdgeInsets.symmetric(horizontal: 14.w),
+              child: Center(
+                child: Text(
+                  '$title 없음',
+                  style: TextStyle(
+                    color: const Color(0xFF868686),
+                    fontSize: 12.sp,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ),
+          ],
+
+          SizedBox(
+            width: 6.2.w,
+          ),
+
+          Visibility(
+            visible: !isCollapsed(type),
+            child: Expanded(
+              child: ListView.separated(
+                separatorBuilder: (context, index) {
+                  return SizedBox(
+                    width: 4.w,
+                  );
+                },
+                scrollDirection: Axis.horizontal,
+                itemCount: _getSelectedList(type).length,
+                itemBuilder: (context, index) {
+                  return GestureDetector(
+                    onTap: () {
+                      _removeItem(type, index);
+                    },
+                    child: Container(
+                      height: 26.h,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(25.r),
+                      ),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            width: 14.w,
+                          ),
+                          Text(
+                            list[index]?.name ?? '',
+                            style: TextStyle(
+                              color: const Color(0xFF398EF3),
+                              fontSize: 12.sp,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          SizedBox(
+                            width: 4.w,
+                          ),
+                          Image.asset(
+                            'assets/images/Union.png',
+                            width: 8.w,
+                            height: 8.h,
+                            color: const Color(0xFF777777),
+                          ),
+                          SizedBox(
+                            width: 14.w,
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildButtons() {
+    return Container(
+      color: const Color(0xFFf8f8f8),
+      height: 82.h,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          Row(
+            children: [
+              SizedBox(
+                width: 16.w,
+              ),
+              GestureDetector(
+                onTap: () {
+                  clear();
+                },
+                child: Container(
+                  width: 94.w,
+                  height: 50.h,
+                  alignment: Alignment.center,
+                  child: Text(
+                    '재설정',
+                    style: TextStyle(
+                      color: const Color(0xFF777777),
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(
+                width: 8.w,
+              ),
+              Expanded(
+                child: GestureDetector(
+                  onTap: () => Navigator.pop(
+                    context,
+                    [CateItem(name: '방갈로', img: 'bungalow', isSelected: false)],
+                  ),
+                  child: Container(
+                    height: 50.h,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8.r),
+                      color: const Color(0xFF398EF3),
+                    ),
+                    alignment: Alignment.center,
+                    child: Text(
+                      '1,245개의 캠핑장 탐색',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(
+                width: 16.w,
+              ),
+            ],
+          ),
+          SizedBox(
+            height: 16.h,
+          ),
+        ],
+      ),
+    );
   }
 }
 
@@ -528,6 +844,14 @@ class CateItem {
   String img;
   bool isSelected;
   CateItem({required this.name, required this.img, required this.isSelected});
+}
+
+class Region {
+  final String city;
+  final String name;
+  bool isSelected;
+
+  Region({required this.city, required this.name, required this.isSelected});
 }
 
 class CustomThumbShape extends SliderComponentShape {
