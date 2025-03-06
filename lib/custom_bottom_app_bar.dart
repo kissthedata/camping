@@ -19,7 +19,7 @@ class CustomBottomAppBar extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.vertical(
-          top: Radius.circular(20.w),
+          top: Radius.circular(16.r),
         ),
         boxShadow: [
           BoxShadow(
@@ -29,50 +29,44 @@ class CustomBottomAppBar extends StatelessWidget {
           ),
         ],
       ),
-      child: Row(
-        // mainAxisAlignment: MainAxisAlignment.spaceBetween, // 간격 균등 분배
-        children: [
-          Expanded(
-            child: _buildNavItem(
-              context,
-              iconPath: 'home',
-              label: "홈",
-              index: 0,
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 44.w),
+        child: Row(
+          children: [
+            Expanded(
+              child: _buildNavItem(
+                context,
+                iconPath: 'home',
+                label: "홈",
+                index: 0,
+              ),
             ),
-          ),
-          Expanded(
-            child: _buildNavItem(
-              context,
-              iconPath: 'map',
-              label: "지도",
-              index: 1,
+            Expanded(
+              child: _buildNavItem(
+                context,
+                iconPath: 'map',
+                label: "지도",
+                index: 1,
+              ),
             ),
-          ),
-          Expanded(
-            child: _buildNavItem(
-              context,
-              iconPath: 'list',
-              label: "차박지",
-              index: 2,
+            Expanded(
+              child: _buildNavItem(
+                context,
+                iconPath: 'commu',
+                label: "커뮤니티",
+                index: 3,
+              ),
             ),
-          ),
-          Expanded(
-            child: _buildNavItem(
-              context,
-              iconPath: 'commu',
-              label: "커뮤니티",
-              index: 3,
+            Expanded(
+              child: _buildNavItem(
+                context,
+                iconPath: 'my',
+                label: "마이페이지",
+                index: 4,
+              ),
             ),
-          ),
-          Expanded(
-            child: _buildNavItem(
-              context,
-              iconPath: 'my',
-              label: "마이페이지",
-              index: 4,
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -84,20 +78,14 @@ class CustomBottomAppBar extends StatelessWidget {
     required int index,
   }) {
     return InkWell(
-      // TestOnly
       onTap: () => onItemSelected(index),
-      // onTap: () {
-      //   Navigator.of(context).push(MaterialPageRoute(builder: (_) {
-      //     return ReviewScreen();
-      //   }));
-      // },
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Image.asset(
             'assets/images/bottom_${iconPath}_${selectedIndex == index ? 'selected' : 'normal'}.png',
-            width: 24,
-            height: 24,
+            width: 30.w,
+            height: 30.h,
           ),
           const SizedBox(height: 6),
           Text(
@@ -107,7 +95,7 @@ class CustomBottomAppBar extends StatelessWidget {
               fontWeight: FontWeight.w700,
               color: selectedIndex == index
                   ? const Color(0xFF398ef3)
-                  : Colors.black,
+                  : Color(0xff777777),
             ),
           ),
         ],
