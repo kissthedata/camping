@@ -644,10 +644,16 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
                                     onTap: () {
                                       Navigator.of(context).pop();
                                     },
-                                    child: Image.asset(
-                                      'assets/images/ic_close_small.png',
-                                      width: 16.w,
-                                      height: 16.h,
+                                    child: Text(
+                                      '취소',
+                                      style: TextStyle(
+                                          fontSize: 12.sp,
+                                          fontWeight: FontWeight.w600,
+                                          color: Color(0xff777777),
+                                          letterSpacing:
+                                              DisplayUtil.getLetterSpacing(
+                                                      px: 12.sp, percent: -5)
+                                                  .w),
                                     ),
                                   ),
                                 ],
@@ -673,36 +679,20 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
                                             width: 1.w,
                                           ),
                                         ),
-                                        child: GridView.builder(
-                                          physics:
-                                              const NeverScrollableScrollPhysics(),
-                                          padding: EdgeInsets.only(
-                                            left: 4.w,
-                                            right: 4.w,
-                                            top: 4.h,
-                                            bottom: 4.h,
+                                        child: Container(
+                                          margin: EdgeInsets.all(4.w),
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(2.r),
                                           ),
-                                          gridDelegate:
-                                              SliverGridDelegateWithFixedCrossAxisCount(
-                                            crossAxisCount: 2,
-                                            mainAxisSpacing: 2.h,
-                                            crossAxisSpacing: 2.w,
-                                            childAspectRatio: 30.w / 30.h,
+                                          width: 62.w,
+                                          height: 62.h,
+                                          alignment: Alignment.center,
+                                          child: Image.asset(
+                                            'assets/images/ic_photo.png',
+                                            width: 12.w,
+                                            height: 12.h,
                                           ),
-                                          itemCount: 4,
-                                          itemBuilder: (context, index) {
-                                            return Container(
-                                              width: 30.w,
-                                              height: 30.h,
-                                              color: Colors.white,
-                                              alignment: Alignment.center,
-                                              child: Image.asset(
-                                                'assets/images/ic_photo.png',
-                                                width: 6.w,
-                                                height: 6.h,
-                                              ),
-                                            );
-                                          },
                                         ),
                                       ),
                                       SizedBox(
@@ -713,7 +703,7 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
                                           left: 3.w,
                                         ),
                                         child: Text(
-                                          '산 속 차박지',
+                                          '저장명',
                                           style: TextStyle(
                                             fontSize: 12.sp,
                                             fontWeight: FontWeight.w500,
@@ -729,7 +719,76 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
                                           left: 3.w,
                                         ),
                                         child: Text(
-                                          '12개 차박지',
+                                          '12개 캠핑장',
+                                          style: TextStyle(
+                                            fontSize: 10.sp,
+                                            fontWeight: FontWeight.w500,
+                                            color: const Color(0xFFababab),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    width: 16.w,
+                                  ),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                        width: 70.w,
+                                        height: 70.h,
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(4.r),
+                                          color: const Color(0xFFF3F5F7),
+                                          border: Border.all(
+                                            color: const Color(0x6BBFBFBF),
+                                            width: 1.w,
+                                          ),
+                                        ),
+                                        child: Container(
+                                          margin: EdgeInsets.all(4.w),
+                                          width: 62.w,
+                                          height: 62.h,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(2.r),
+                                          ),
+                                          alignment: Alignment.center,
+                                          child: Image.asset(
+                                            'assets/images/ic_photo.png',
+                                            width: 12.w,
+                                            height: 12.h,
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 9.h,
+                                      ),
+                                      Container(
+                                        padding: EdgeInsets.only(
+                                          left: 3.w,
+                                        ),
+                                        child: Text(
+                                          '저장명',
+                                          style: TextStyle(
+                                            fontSize: 12.sp,
+                                            fontWeight: FontWeight.w500,
+                                            color: const Color(0xFF242424),
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 1.h,
+                                      ),
+                                      Container(
+                                        padding: EdgeInsets.only(
+                                          left: 3.w,
+                                        ),
+                                        child: Text(
+                                          '12개 캠핑장',
                                           style: TextStyle(
                                             fontSize: 10.sp,
                                             fontWeight: FontWeight.w500,
@@ -758,36 +817,20 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
                                             width: 1.w,
                                           ),
                                         ),
-                                        child: GridView.builder(
-                                          physics:
-                                              const NeverScrollableScrollPhysics(),
-                                          padding: EdgeInsets.only(
-                                            left: 4.w,
-                                            right: 4.w,
-                                            top: 4.h,
-                                            bottom: 4.h,
+                                        child: Container(
+                                          margin: EdgeInsets.all(4.w),
+                                          width: 62.w,
+                                          height: 62.h,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(2.r),
                                           ),
-                                          gridDelegate:
-                                              SliverGridDelegateWithFixedCrossAxisCount(
-                                            crossAxisCount: 2,
-                                            mainAxisSpacing: 2.h,
-                                            crossAxisSpacing: 2.w,
-                                            childAspectRatio: 30.w / 30.h,
+                                          alignment: Alignment.center,
+                                          child: Image.asset(
+                                            'assets/images/ic_photo.png',
+                                            width: 12.w,
+                                            height: 12.h,
                                           ),
-                                          itemCount: 4,
-                                          itemBuilder: (context, index) {
-                                            return Container(
-                                              width: 30.w,
-                                              height: 30.h,
-                                              color: Colors.white,
-                                              alignment: Alignment.center,
-                                              child: Image.asset(
-                                                'assets/images/ic_photo.png',
-                                                width: 6.w,
-                                                height: 6.h,
-                                              ),
-                                            );
-                                          },
                                         ),
                                       ),
                                       SizedBox(
@@ -798,7 +841,7 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
                                           left: 3.w,
                                         ),
                                         child: Text(
-                                          '산 속 차박지',
+                                          '저장명',
                                           style: TextStyle(
                                             fontSize: 12.sp,
                                             fontWeight: FontWeight.w500,
@@ -814,92 +857,7 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
                                           left: 3.w,
                                         ),
                                         child: Text(
-                                          '12개 차박지',
-                                          style: TextStyle(
-                                            fontSize: 10.sp,
-                                            fontWeight: FontWeight.w500,
-                                            color: const Color(0xFFababab),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    width: 16.w,
-                                  ),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Container(
-                                        width: 70.w,
-                                        height: 70.h,
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(4.r),
-                                          color: const Color(0xFFf3f5f7),
-                                          border: Border.all(
-                                            color: const Color(0x6BBFBFBF),
-                                            width: 1.w,
-                                          ),
-                                        ),
-                                        child: GridView.builder(
-                                          physics:
-                                              const NeverScrollableScrollPhysics(),
-                                          padding: EdgeInsets.only(
-                                            left: 4.w,
-                                            right: 4.w,
-                                            top: 4.h,
-                                            bottom: 4.h,
-                                          ),
-                                          gridDelegate:
-                                              SliverGridDelegateWithFixedCrossAxisCount(
-                                            crossAxisCount: 2,
-                                            mainAxisSpacing: 2.h,
-                                            crossAxisSpacing: 2.w,
-                                            childAspectRatio: 30.w / 30.h,
-                                          ),
-                                          itemCount: 4,
-                                          itemBuilder: (context, index) {
-                                            return Container(
-                                              width: 30.w,
-                                              height: 30.h,
-                                              color: Colors.white,
-                                              alignment: Alignment.center,
-                                              child: Image.asset(
-                                                'assets/images/ic_photo.png',
-                                                width: 6.w,
-                                                height: 6.h,
-                                              ),
-                                            );
-                                          },
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        height: 9.h,
-                                      ),
-                                      Container(
-                                        padding: EdgeInsets.only(
-                                          left: 3.w,
-                                        ),
-                                        child: Text(
-                                          '산 속 차박지',
-                                          style: TextStyle(
-                                            fontSize: 12.sp,
-                                            fontWeight: FontWeight.w500,
-                                            color: const Color(0xFF242424),
-                                          ),
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        height: 1.h,
-                                      ),
-                                      Container(
-                                        padding: EdgeInsets.only(
-                                          left: 3.w,
-                                        ),
-                                        child: Text(
-                                          '12개 차박지',
+                                          '12개 캠핑장',
                                           style: TextStyle(
                                             fontSize: 10.sp,
                                             fontWeight: FontWeight.w500,
@@ -943,7 +901,7 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
                                           left: 3.w,
                                         ),
                                         child: Text(
-                                          '산 속 차박지',
+                                          '목록 추가',
                                           style: TextStyle(
                                             fontSize: 12.sp,
                                             fontWeight: FontWeight.w500,
@@ -959,7 +917,7 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
                                           left: 3.w,
                                         ),
                                         child: Text(
-                                          '12개 차박지',
+                                          ' ',
                                           style: TextStyle(
                                             fontSize: 10.sp,
                                             fontWeight: FontWeight.w500,
