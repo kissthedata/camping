@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:map_sample/screens/camping_review_screen.dart';
-import 'package:map_sample/screens/map_detail_new_screen.dart';
 import 'package:map_sample/screens/review_screen.dart';
+
+import '../utils/display_util.dart';
 
 class CampingDetailScreen extends StatefulWidget {
   const CampingDetailScreen({super.key});
@@ -20,12 +21,14 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
   final GlobalKey _targetKey = GlobalKey();
   bool _isSticky = false;
 
-  String title = "차박지 목록";
-  String addr = "차박지 상세 주소";
-  String info = "2024년 8월 27일 등록  /  한달 전 정보 수정";
+  bool isAmenityExpanded = false;
+  String title = "캠핑장명";
+  String addr = "캠핑장 상세 주소";
   double avg = 4.3;
   int reviewCnt = 12;
   int likeCnt = 45;
+
+  int amenityCnt = 23;
 
   List<String> images = [
     'assets/images/img_detail_top.png',
@@ -157,7 +160,7 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
                   //상단 투명 앱바
                   Positioned(
                     top: 0.h,
-                    child: _buildHeader('차박지 상세정보', Colors.transparent),
+                    child: _buildHeader('캠핑장 상세정보', Colors.transparent),
                   ),
                   //상단 투명 앱바
                   if (_isSticky) ...[
@@ -292,7 +295,7 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
                 Navigator.of(context).pop();
               },
               child: Image.asset(
-                'assets/images/ic_back.png',
+                'assets/images/detail_back.png',
                 width: 23.w,
                 height: 23.h,
               ),
@@ -302,7 +305,7 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
             child: Text(
               title,
               style: TextStyle(
-                color: textblack,
+                color: Colors.white,
                 fontSize: 16.sp,
                 fontWeight: FontWeight.w600,
               ),
@@ -352,7 +355,7 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
   Widget _buildTopImage() {
     return SizedBox(
       width: 360.w,
-      height: 301.h,
+      height: 278.h,
       child: Stack(
         children: [
           PageView.builder(
@@ -406,18 +409,6 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
               ),
             ),
           ),
-          Positioned(
-            bottom: -1,
-            child: Container(
-              width: 360.w,
-              height: 28.h,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.vertical(
-                    top: Radius.circular(16.r),
-                  ),
-                  color: Colors.white),
-            ),
-          ),
         ],
       ),
     );
@@ -425,14 +416,35 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
 
   Widget _buildTitle() {
     return Container(
-      height: 94.h,
+      height: 189.h,
       width: 360.w,
+      color: Colors.white,
       padding: EdgeInsets.symmetric(horizontal: 16.w),
       child: Stack(
         children: [
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              SizedBox(height: 12.h),
+              Container(
+                height: 18.h,
+                padding: EdgeInsets.fromLTRB(6.w, 1.h, 6.w, 0.h),
+                decoration: BoxDecoration(
+                  color: Color(0xffE9F9EF),
+                  borderRadius: BorderRadius.circular(100.r),
+                ),
+                child: Text(
+                  '카라반',
+                  style: TextStyle(
+                      fontSize: 10.sp,
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xff33c46f),
+                      letterSpacing:
+                          DisplayUtil.getLetterSpacing(px: 10.sp, percent: -2)
+                              .w),
+                ),
+              ),
+              SizedBox(height: 6.h),
               SizedBox(
                 height: 29.h,
                 child: Text(
@@ -451,7 +463,7 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
                 child: Text(
                   addr,
                   style: TextStyle(
-                    color: textblack,
+                    color: Color(0xff777777),
                     fontSize: 14.sp,
                     letterSpacing: (-0.02).w,
                     height: (1.2).h,
@@ -459,21 +471,7 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
                   ),
                 ),
               ),
-              SizedBox(height: 6.h),
-              SizedBox(
-                height: 13.h,
-                child: Text(
-                  info,
-                  style: TextStyle(
-                    color: const Color(0xFF777777),
-                    fontSize: 10.sp,
-                    height: 1.h,
-                    letterSpacing: (-0.05.w),
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-              ),
-              SizedBox(height: (7).h),
+              SizedBox(height: 8.h),
               SizedBox(
                 height: 12.h,
                 child: Row(
@@ -552,11 +550,60 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
                   ],
                 ),
               ),
-              SizedBox(height: (7.5).h),
+              SizedBox(height: 20.h),
+              Container(
+                padding: EdgeInsets.fromLTRB(15.w, 9.h, 15.w, 11.h),
+                alignment: Alignment.centerLeft,
+                decoration: BoxDecoration(
+                  color: Color(0xffF8F8F8),
+                  borderRadius: BorderRadius.circular(8.r),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    RichText(
+                      text: TextSpan(
+                        style: TextStyle(
+                          color: const Color(0xFF111111),
+                          fontSize: 13.sp,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: -1.0,
+                        ),
+                        children: [
+                          TextSpan(
+                            text: '이 카라반 캠핑장은 ',
+                          ),
+                          TextSpan(
+                            text: '선착순',
+                            style: TextStyle(
+                              color: const Color(0xFF398EF3),
+                              fontSize: 13.sp,
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: -1.0,
+                            ),
+                          ),
+                          TextSpan(
+                            text: ' 입장입니다.',
+                          ),
+                        ],
+                      ),
+                    ),
+                    Text(
+                      '해당 캠핑장 이용 시 주의하세요.',
+                      style: TextStyle(
+                        color: const Color(0xff777777),
+                        fontSize: 10.sp,
+                        fontWeight: FontWeight.w400,
+                        letterSpacing: -1.0,
+                      ),
+                    ),
+                  ],
+                ),
+              )
             ],
           ),
           Positioned(
-            top: 2.h,
+            top: 38.h,
             right: 0.w,
             child: Row(
               children: [
@@ -948,17 +995,18 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
             ),
           ),
           Positioned(
-            top: 71.h,
+            top: 86.h,
             right: 2.w,
             child: Row(
               children: [
                 Text(
-                  "차박지 신고",
+                  "문의하기",
                   style: TextStyle(
                     fontSize: 10.sp,
                     fontWeight: FontWeight.w400,
                     color: const Color(0xFF777777),
                     decoration: TextDecoration.underline,
+                    decorationColor: Color(0xFF777777),
                   ),
                 ),
               ],
@@ -1031,7 +1079,7 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
                             fontSize: 14.sp,
                             fontWeight: FontWeight.w500,
                             color:
-                                infoTab ? const Color(0xFF777777) : textblack,
+                                infoTab ? const Color(0xFFb8b8b8) : textblack,
                           ),
                         ),
                       ),
@@ -1060,11 +1108,6 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
       children: [
         _contentTop(),
         _contentAmeniti(),
-        _contentLocation(),
-        Container(
-          height: 16.h,
-          color: const Color(0xFFf3f5f7),
-        ),
         _contentReview(),
       ],
     );
@@ -1081,69 +1124,6 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
             children: [
               SizedBox(
                 height: 23.h,
-              ),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 4.w),
-                height: 44.h,
-                child: Text(
-                  '대구광역시에 위치한\n자연을 즐기며 힐링할 수 있는 차박지',
-                  style: TextStyle(
-                      fontSize: 16.sp,
-                      color: textblack,
-                      fontWeight: FontWeight.w600,
-                      height: 1.3),
-                ),
-              ),
-              SizedBox(
-                height: 4.h,
-              ),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 4.w),
-                height: 17.h,
-                child: Text(
-                  '명소에서 10분거리 · 주유소 앞 15분 거리',
-                  style: TextStyle(
-                      fontSize: 12.sp,
-                      color: const Color(0xFFb3b3b3),
-                      fontWeight: FontWeight.w600,
-                      height: 1.3),
-                ),
-              ),
-              SizedBox(
-                height: 16.h,
-              ),
-              //태그 영역
-              Row(
-                children: List.generate(
-                  tags.length,
-                  (index) {
-                    return Container(
-                      height: 23.h,
-                      padding: EdgeInsets.fromLTRB(
-                        9.w,
-                        3.w,
-                        9.w,
-                        3.w,
-                      ),
-                      margin: EdgeInsets.only(right: 6.w),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(36.r),
-                        color: const Color(0xFFF3F4F8),
-                      ),
-                      child: Text(
-                        tags[index],
-                        style: TextStyle(
-                          fontSize: 12.sp,
-                          color: const Color(0xFF398ef3),
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-              SizedBox(
-                height: 16.h,
               ),
               //리뷰 평점
               GestureDetector(
@@ -1545,7 +1525,7 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
           top: 0,
           child: Container(
             width: 360.w,
-            height: 50.h,
+            height: 10.h,
             decoration: const BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.bottomCenter, // 0deg 방향 (아래쪽)
@@ -1564,7 +1544,8 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
 
   Widget _contentAmeniti() {
     return Container(
-      height: 207.h,
+      height:
+          isAmenityExpanded ? 320.h + (30 * ((amenityCnt - 10) ~/ 2).h) : 320.h,
       width: 360.w,
       padding: EdgeInsets.symmetric(
         horizontal: 21.w,
@@ -1573,12 +1554,12 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(
-            height: 32.h,
+            height: 24.h,
           ),
           SizedBox(
             height: 21.h,
             child: Text(
-              '편의시설',
+              '캠핑장 편의시설',
               style: TextStyle(
                 fontSize: 18.sp,
                 height: 1.1,
@@ -1588,205 +1569,59 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
             ),
           ),
           SizedBox(
-            height: 5.h,
+            height: 15.h,
           ),
-          SizedBox(
-            height: 14.h,
-            child: Text(
-              '이 차박지엔 어떤 편의시설이 있을까?',
-              style: TextStyle(
-                fontSize: 12.sp,
-                height: 1.1,
-                color: const Color(0xFF777777),
-                fontWeight: FontWeight.w500,
-              ),
-            ),
+          Wrap(
+            runSpacing: 10.h,
+            children: List.generate(isAmenityExpanded ? 23 : 10, (index) {
+              return SizedBox(
+                width: MediaQuery.of(context).size.width / 2 - 32, // 한 줄에 2개 배치
+                child: Row(
+                  children: [
+                    Image.asset(
+                      'assets/images/detail_ic_deck.png', // 임시 이미지
+                      width: 20.w,
+                      height: 20.h,
+                    ),
+                    SizedBox(width: 4.w),
+                    Text("편의시설 $index"),
+                  ],
+                ),
+              );
+            }),
           ),
-          SizedBox(
-            height: 20.h,
-          ),
-          Container(
-            width: 294.w,
-            height: 86.h,
-            margin: EdgeInsets.symmetric(horizontal: 12.w),
-            child: GridView.builder(
-              physics: const NeverScrollableScrollPhysics(),
-              padding: EdgeInsets.zero,
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 5,
-                mainAxisSpacing: 8.h,
-                crossAxisSpacing: 16.w,
-                childAspectRatio: 46.w / 39.h,
-              ),
-              itemCount: 10,
-              itemBuilder: (context, index) {
-                return SizedBox(
-                  width: 46.w,
-                  height: 39.h,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Image.asset(
-                        'assets/images/ic_detail_tent.png',
-                        width: 22.w,
-                        height: 22.h,
-                      ),
-                      SizedBox(
-                        height: 4.h,
-                      ),
-                      SizedBox(
-                        height: 13.h,
-                        child: Text(
-                          '반려동물',
-                          style: TextStyle(
-                            fontSize: 10.sp,
-                            height: 1.1,
-                            color: textblack,
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                );
+          SizedBox(height: 25.h),
+          Visibility(
+            visible: !isAmenityExpanded,
+            child: GestureDetector(
+              onTap: () {
+                setState(() {
+                  isAmenityExpanded = true;
+                });
               },
+              child: Container(
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8.r),
+                  color: Color(0xffF7F7F7),
+                ),
+                height: 50.h,
+                child: Text(
+                  '편의시설 23개 모두 보기',
+                  style: TextStyle(
+                    color: Color(0xff777777),
+                    fontSize: 14.sp,
+                    letterSpacing:
+                        DisplayUtil.getLetterSpacing(px: 14.sp, percent: -5).w,
+                  ),
+                ),
+              ),
             ),
           ),
-          SizedBox(
-            height: 28.h,
-          ),
+          SizedBox(height: 24.h),
           Container(
-            width: 328.w,
             height: 1.h,
             color: const Color(0xFFdedede),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _contentLocation() {
-    return Container(
-      width: 360.w,
-      padding: EdgeInsets.symmetric(horizontal: 16.w),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            height: 16.h,
-          ),
-          GestureDetector(
-            onTap: () {
-              showAlertMsg();
-            },
-            child: Container(
-              height: 19.h,
-              padding: EdgeInsets.symmetric(horizontal: 4.w),
-              child: Row(
-                children: [
-                  Text(
-                    '경상북도 경산시 대구대로 1길 12',
-                    style: TextStyle(
-                      fontSize: 16.sp,
-                      height: (1.1).h,
-                      letterSpacing: (-0.03).w,
-                      color: textblack,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  SizedBox(
-                    width: 8.w,
-                  ),
-                  Image.asset(
-                    'assets/images/ic_detail_copy.png',
-                    width: 9.w,
-                    height: 11.h,
-                  )
-                ],
-              ),
-            ),
-          ),
-          SizedBox(
-            height: 4.h,
-          ),
-          Container(
-            height: 20.h,
-            padding: EdgeInsets.symmetric(horizontal: 4.w),
-            child: Row(
-              children: [
-                Text(
-                  '현재 내 위치와 약',
-                  style: TextStyle(
-                    fontSize: 14.sp,
-                    letterSpacing: (-0.03).w,
-                    height: (1.4).h,
-                    color: const Color(0xFFb3b3b3),
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-                Text(
-                  ' 23.5',
-                  style: TextStyle(
-                    fontSize: 14.sp,
-                    height: (1.4).h,
-                    color: const Color(0xFF398ef3),
-                    letterSpacing: (-0.03).w,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                Text(
-                  'km',
-                  style: TextStyle(
-                    fontSize: 12.sp,
-                    color: const Color(0xFF398ef3),
-                    height: (1.4).h,
-                    fontWeight: FontWeight.w500,
-                    letterSpacing: (-0.03).w,
-                  ),
-                ),
-                Text(
-                  ' 떨어져 있어요',
-                  style: TextStyle(
-                    fontSize: 14.sp,
-                    letterSpacing: (-0.03).w,
-                    height: (1.4).h,
-                    color: const Color(0xFFb3b3b3),
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          SizedBox(
-            height: 14.h,
-          ),
-          GestureDetector(
-            onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const MapDetailNewScreen(),
-                  ));
-            },
-            child: Container(
-              width: 327.w,
-              height: 148.h,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(16.r),
-                border: Border.all(
-                  color: const Color(0xFFdedede),
-                  width: 1.w,
-                ),
-                image: const DecorationImage(
-                  image: AssetImage('assets/images/ic_detail_map.png')
-                      as ImageProvider,
-                  fit: BoxFit.fill,
-                ),
-              ),
-            ),
-          ),
-          SizedBox(
-            height: 18.h,
           ),
         ],
       ),
@@ -1797,7 +1632,7 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
     return Column(
       children: [
         SizedBox(
-          height: 32.h,
+          height: 24.h,
         ),
         SizedBox(
           height: 21.h,
@@ -1807,7 +1642,7 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
                 width: 20.w,
               ),
               Text(
-                '차박지 리뷰',
+                '캠핑장 추천 리뷰',
                 style: TextStyle(
                   fontSize: 18.sp,
                   height: 1.1,
@@ -1815,83 +1650,44 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              SizedBox(
-                width: 6.w,
-              ),
-              Text(
-                reviewCnt.toString(),
-                style: TextStyle(
-                  fontSize: 18.sp,
-                  height: 1.1,
-                  color: const Color(0xFF398FE3),
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              const Spacer(),
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (c) => const CampingReviewScreen()),
-                  );
-                },
-                child: Row(
-                  children: [
-                    Text(
-                      '전체보기',
-                      style: TextStyle(
-                        fontSize: 12.sp,
-                        height: 1.1,
-                        color: const Color(0xFF777777),
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    SizedBox(
-                      width: 2.w,
-                    ),
-                    Image.asset(
-                      'assets/images/ic_detail_right.png',
-                      width: 13.w,
-                      height: 13.h,
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(
-                width: 16.w,
-              ),
             ],
           ),
         ),
         SizedBox(
-          height: 4.h,
+          height: 9.h,
         ),
-        SizedBox(
-          height: 18.h,
-          child: Row(
-            children: [
-              SizedBox(
-                width: 20.w,
-              ),
-              Text(
-                '최신순',
-                style: TextStyle(
-                  fontSize: 12.sp,
-                  height: 1.1,
-                  color: const Color(0xFF818181),
-                  fontWeight: FontWeight.w400,
+        Container(
+          alignment: Alignment.centerLeft,
+          padding: EdgeInsets.only(left: 16.w),
+          child: Container(
+            width: 66.w,
+            height: 22.h,
+            padding: EdgeInsets.fromLTRB(7.w, 3.h, 7.w, 3.h),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(6.r),
+              color: Color(0xfff7f7f7),
+            ),
+            child: Row(
+              children: [
+                Text(
+                  '최신순',
+                  style: TextStyle(
+                    fontSize: 12.sp,
+                    height: 1.1,
+                    color: const Color(0xFF777777),
+                    fontWeight: FontWeight.w400,
+                  ),
                 ),
-              ),
-              SizedBox(
-                width: 4.w,
-              ),
-              Image.asset(
-                'assets/images/ic_detail_filter.png',
-                width: 15.w,
-                height: 15.h,
-              ),
-            ],
+                SizedBox(
+                  width: 4.w,
+                ),
+                Image.asset(
+                  'assets/images/detail_sort.png',
+                  width: 14.w,
+                  height: 14.h,
+                ),
+              ],
+            ),
           ),
         ),
         Container(
@@ -2121,29 +1917,18 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
             height: 50,
             width: 311.w,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12.r),
-              border: Border.all(
-                color: const Color(0xFF398fe3),
-                width: 1.w,
-              ),
+              borderRadius: BorderRadius.circular(8.r),
+              color: Color(0xFF398EF3),
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Image.asset(
-                  'assets/images/ic_detail_write.png',
-                  width: 10.w,
-                  height: 10.h,
-                ),
-                SizedBox(
-                  width: 5.w,
-                ),
                 Text(
                   '리뷰 작성하기',
                   style: TextStyle(
                     fontSize: 14.sp,
                     height: 1.1,
-                    color: const Color(0xFF398fe3),
+                    color: const Color(0xffffffff),
                     fontWeight: FontWeight.w500,
                   ),
                 ),

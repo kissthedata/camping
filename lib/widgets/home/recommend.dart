@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../screens/camping_detail_screen.dart';
 import '../../utils/display_util.dart';
 
 class Recommend extends StatefulWidget {
@@ -127,120 +128,128 @@ class RecommendState extends State<Recommend> {
             child: ListView.separated(
                 scrollDirection: Axis.horizontal,
                 itemBuilder: (context, index) {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Stack(
-                        children: [
-                          ClipRRect(
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (c) => const CampingDetailScreen()));
+                    },
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Stack(
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(4.r),
+                              child: Image.network(
+                                'https://picsum.photos/id/1$index/222/160.jpg',
+                                fit: BoxFit.fill,
+                                width: 222.w,
+                                height: 160.h,
+                              ),
+                            ),
+                            Positioned(
+                              top: 10.h,
+                              right: 12.w,
+                              child: Image.asset(
+                                'assets/images/main_like_disable.png',
+                                fit: BoxFit.cover,
+                                gaplessPlayback: true,
+                                width: 20.w,
+                                height: 20.h,
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 12.h),
+                        Container(
+                          height: 18.h,
+                          padding: EdgeInsets.symmetric(horizontal: 6.w),
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(4.r),
-                            child: Image.network(
-                              'https://picsum.photos/id/1$index/222/160.jpg',
-                              fit: BoxFit.fill,
-                              width: 222.w,
-                              height: 160.h,
-                            ),
+                            color: Color(0xffE9F9EF),
                           ),
-                          Positioned(
-                            top: 10.h,
-                            right: 12.w,
-                            child: Image.asset(
-                              'assets/images/main_like_disable.png',
-                              fit: BoxFit.cover,
-                              gaplessPlayback: true,
-                              width: 20.w,
-                              height: 20.h,
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 12.h),
-                      Container(
-                        height: 18.h,
-                        padding: EdgeInsets.symmetric(horizontal: 6.w),
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(4.r),
-                          color: Color(0xffE9F9EF),
-                        ),
-                        child: Text(
-                          '카라반',
-                          style: TextStyle(
-                            fontSize: 10.sp,
-                            color: Color(0xff33C46F),
-                            fontWeight: FontWeight.w600,
-                            letterSpacing: DisplayUtil.getLetterSpacing(
-                                    px: 10.sp, percent: -2)
-                                .w,
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 4.h),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Text(
-                            '오량 대공원',
+                          child: Text(
+                            '카라반',
                             style: TextStyle(
-                              fontSize: 16.sp,
-                              color: Color(0xff111111),
+                              fontSize: 10.sp,
+                              color: Color(0xff33C46F),
                               fontWeight: FontWeight.w600,
                               letterSpacing: DisplayUtil.getLetterSpacing(
-                                      px: 16.sp, percent: -4)
+                                      px: 10.sp, percent: -2)
                                   .w,
                             ),
                           ),
-                          SizedBox(width: 4.w),
-                          Text(
-                            '부산시 기장군',
-                            style: TextStyle(
-                              fontSize: 12.sp,
-                              color: Color(0xff4F4F4F),
-                              fontWeight: FontWeight.w600,
+                        ),
+                        SizedBox(height: 4.h),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Text(
+                              '오량 대공원',
+                              style: TextStyle(
+                                fontSize: 16.sp,
+                                color: Color(0xff111111),
+                                fontWeight: FontWeight.w600,
+                                letterSpacing: DisplayUtil.getLetterSpacing(
+                                        px: 16.sp, percent: -4)
+                                    .w,
+                              ),
                             ),
-                            strutStyle: StrutStyle(
-                              height: 1.5.h,
-                              forceStrutHeight: true,
+                            SizedBox(width: 4.w),
+                            Text(
+                              '부산시 기장군',
+                              style: TextStyle(
+                                fontSize: 12.sp,
+                                color: Color(0xff4F4F4F),
+                                fontWeight: FontWeight.w600,
+                              ),
+                              strutStyle: StrutStyle(
+                                height: 1.5.h,
+                                forceStrutHeight: true,
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          // 아이콘
-                          SizedBox(
-                            width: 12.w,
-                            height: 11.w,
-                            child: Image.asset(
-                              'assets/images/home_rating.png',
-                              fit: BoxFit.cover,
-                              gaplessPlayback: true,
+                          ],
+                        ),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            // 아이콘
+                            SizedBox(
+                              width: 12.w,
+                              height: 11.w,
+                              child: Image.asset(
+                                'assets/images/home_rating.png',
+                                fit: BoxFit.cover,
+                                gaplessPlayback: true,
+                              ),
                             ),
-                          ),
-                          SizedBox(width: 2.6.w),
-                          // 평점
-                          Text(
-                            '4.3',
-                            style: TextStyle(
-                              color: const Color(0xFF777777),
-                              fontSize: 12.sp,
-                              fontWeight: FontWeight.w500,
+                            SizedBox(width: 2.6.w),
+                            // 평점
+                            Text(
+                              '4.3',
+                              style: TextStyle(
+                                color: const Color(0xFF777777),
+                                fontSize: 12.sp,
+                                fontWeight: FontWeight.w500,
+                              ),
                             ),
-                          ),
-                          SizedBox(width: 1.w),
-                          // 리뷰
-                          Text(
-                            '(414)',
-                            style: TextStyle(
-                              color: const Color(0xFFb1b1b1),
-                              fontSize: 10.sp,
-                              fontWeight: FontWeight.w500,
+                            SizedBox(width: 1.w),
+                            // 리뷰
+                            Text(
+                              '(414)',
+                              style: TextStyle(
+                                color: const Color(0xFFb1b1b1),
+                                fontSize: 10.sp,
+                                fontWeight: FontWeight.w500,
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                    ],
+                          ],
+                        ),
+                      ],
+                    ),
                   );
                 },
                 separatorBuilder: (context, index) {
@@ -281,41 +290,49 @@ class RecommendState extends State<Recommend> {
             child: ListView.separated(
               scrollDirection: Axis.horizontal,
               itemBuilder: (context, index) {
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Stack(
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(4.r),
-                          child: Image.network(
-                            'https://picsum.photos/id/1$index/120/160.jpg',
-                            fit: BoxFit.fill,
-                            width: 120.w,
-                            height: 160.h,
-                          ),
-                        ),
-                        Positioned.fill(
-                            child: Container(
-                          decoration: BoxDecoration(
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (c) => const CampingDetailScreen()));
+                  },
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Stack(
+                        children: [
+                          ClipRRect(
                             borderRadius: BorderRadius.circular(4.r),
-                            color: Colors.black.withValues(
-                              alpha: 0.5,
+                            child: Image.network(
+                              'https://picsum.photos/id/1$index/120/160.jpg',
+                              fit: BoxFit.fill,
+                              width: 120.w,
+                              height: 160.h,
                             ),
                           ),
-                          alignment: AlignmentDirectional.center,
-                          child: Text(
-                            '계곡',
-                            style: TextStyle(
-                              fontSize: 18.sp,
-                              color: Colors.white,
-                              fontWeight: FontWeight.w500,
+                          Positioned.fill(
+                              child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(4.r),
+                              color: Colors.black.withValues(
+                                alpha: 0.5,
+                              ),
                             ),
-                          ),
-                        )),
-                      ],
-                    ),
-                  ],
+                            alignment: AlignmentDirectional.center,
+                            child: Text(
+                              '계곡',
+                              style: TextStyle(
+                                fontSize: 18.sp,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          )),
+                        ],
+                      ),
+                    ],
+                  ),
                 );
               },
               separatorBuilder: (context, index) {
@@ -403,120 +420,128 @@ class RecommendState extends State<Recommend> {
             child: ListView.separated(
                 scrollDirection: Axis.horizontal,
                 itemBuilder: (context, index) {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Stack(
-                        children: [
-                          ClipRRect(
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (c) => const CampingDetailScreen()));
+                    },
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Stack(
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(4.r),
+                              child: Image.network(
+                                'https://picsum.photos/id/1$index/222/160.jpg',
+                                fit: BoxFit.fill,
+                                width: 222.w,
+                                height: 160.h,
+                              ),
+                            ),
+                            Positioned(
+                              top: 10.h,
+                              right: 12.w,
+                              child: Image.asset(
+                                'assets/images/main_like_disable.png',
+                                fit: BoxFit.cover,
+                                gaplessPlayback: true,
+                                width: 20.w,
+                                height: 20.h,
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 12.h),
+                        Container(
+                          height: 18.h,
+                          padding: EdgeInsets.symmetric(horizontal: 6.w),
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(4.r),
-                            child: Image.network(
-                              'https://picsum.photos/id/1$index/222/160.jpg',
-                              fit: BoxFit.fill,
-                              width: 222.w,
-                              height: 160.h,
-                            ),
+                            color: Color(0xffECF7FB),
                           ),
-                          Positioned(
-                            top: 10.h,
-                            right: 12.w,
-                            child: Image.asset(
-                              'assets/images/main_like_disable.png',
-                              fit: BoxFit.cover,
-                              gaplessPlayback: true,
-                              width: 20.w,
-                              height: 20.h,
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 12.h),
-                      Container(
-                        height: 18.h,
-                        padding: EdgeInsets.symmetric(horizontal: 6.w),
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(4.r),
-                          color: Color(0xffECF7FB),
-                        ),
-                        child: Text(
-                          '글램핑',
-                          style: TextStyle(
-                            fontSize: 10.sp,
-                            color: Color(0xff3AB9D9),
-                            fontWeight: FontWeight.w600,
-                            letterSpacing: DisplayUtil.getLetterSpacing(
-                                    px: 10.sp, percent: -2)
-                                .w,
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 4.h),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Text(
-                            '오량 대공원',
+                          child: Text(
+                            '글램핑',
                             style: TextStyle(
-                              fontSize: 16.sp,
-                              color: Color(0xff111111),
+                              fontSize: 10.sp,
+                              color: Color(0xff3AB9D9),
                               fontWeight: FontWeight.w600,
                               letterSpacing: DisplayUtil.getLetterSpacing(
-                                      px: 16.sp, percent: -4)
+                                      px: 10.sp, percent: -2)
                                   .w,
                             ),
                           ),
-                          SizedBox(width: 4.w),
-                          Text(
-                            '부산시 기장군',
-                            style: TextStyle(
-                              fontSize: 12.sp,
-                              color: Color(0xff4F4F4F),
-                              fontWeight: FontWeight.w600,
+                        ),
+                        SizedBox(height: 4.h),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Text(
+                              '오량 대공원',
+                              style: TextStyle(
+                                fontSize: 16.sp,
+                                color: Color(0xff111111),
+                                fontWeight: FontWeight.w600,
+                                letterSpacing: DisplayUtil.getLetterSpacing(
+                                        px: 16.sp, percent: -4)
+                                    .w,
+                              ),
                             ),
-                            strutStyle: StrutStyle(
-                              height: 1.5.h,
-                              forceStrutHeight: true,
+                            SizedBox(width: 4.w),
+                            Text(
+                              '부산시 기장군',
+                              style: TextStyle(
+                                fontSize: 12.sp,
+                                color: Color(0xff4F4F4F),
+                                fontWeight: FontWeight.w600,
+                              ),
+                              strutStyle: StrutStyle(
+                                height: 1.5.h,
+                                forceStrutHeight: true,
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          // 아이콘
-                          SizedBox(
-                            width: 12.w,
-                            height: 11.w,
-                            child: Image.asset(
-                              'assets/images/home_rating.png',
-                              fit: BoxFit.cover,
-                              gaplessPlayback: true,
+                          ],
+                        ),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            // 아이콘
+                            SizedBox(
+                              width: 12.w,
+                              height: 11.w,
+                              child: Image.asset(
+                                'assets/images/home_rating.png',
+                                fit: BoxFit.cover,
+                                gaplessPlayback: true,
+                              ),
                             ),
-                          ),
-                          SizedBox(width: 2.6.w),
-                          // 평점
-                          Text(
-                            '4.3',
-                            style: TextStyle(
-                              color: const Color(0xFF777777),
-                              fontSize: 12.sp,
-                              fontWeight: FontWeight.w500,
+                            SizedBox(width: 2.6.w),
+                            // 평점
+                            Text(
+                              '4.3',
+                              style: TextStyle(
+                                color: const Color(0xFF777777),
+                                fontSize: 12.sp,
+                                fontWeight: FontWeight.w500,
+                              ),
                             ),
-                          ),
-                          SizedBox(width: 1.w),
-                          // 리뷰
-                          Text(
-                            '(414)',
-                            style: TextStyle(
-                              color: const Color(0xFFb1b1b1),
-                              fontSize: 10.sp,
-                              fontWeight: FontWeight.w500,
+                            SizedBox(width: 1.w),
+                            // 리뷰
+                            Text(
+                              '(414)',
+                              style: TextStyle(
+                                color: const Color(0xFFb1b1b1),
+                                fontSize: 10.sp,
+                                fontWeight: FontWeight.w500,
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                    ],
+                          ],
+                        ),
+                      ],
+                    ),
                   );
                 },
                 separatorBuilder: (context, index) {
