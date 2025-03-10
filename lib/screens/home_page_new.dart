@@ -3,6 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:map_sample/utils/display_util.dart';
 import 'package:map_sample/widgets/home/recommend.dart';
 
+import 'search_camping_site_page.dart';
+
 class MyHomePageNew extends StatefulWidget {
   const MyHomePageNew({super.key});
 
@@ -100,10 +102,20 @@ class MyHomePageNewState extends State<MyHomePageNew>
                 height: 23.h,
               ),
               Spacer(),
-              Image.asset(
-                'assets/images/main_appbar_search.png',
-                width: 27.w,
-                height: 27.h,
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const SearchCampingSitePage(),
+                    ),
+                  );
+                },
+                child: Image.asset(
+                  'assets/images/main_appbar_search.png',
+                  width: 27.w,
+                  height: 27.h,
+                ),
               ),
               SizedBox(width: 4.w),
               Image.asset(

@@ -221,7 +221,7 @@ class _LoginScreenState extends State<LoginScreen> {
             fontSize: 12.sp,
             color: const Color(0xFFBABABA),
           ),
-          contentPadding: EdgeInsets.only(bottom: 2.h), // 글자를 상자 중앙으로 맞춤
+          contentPadding: EdgeInsets.only(bottom: -6.h), // 글자를 상자 중앙으로 맞춤
           suffixIcon: suffixIcon,
         ),
         validator: validator,

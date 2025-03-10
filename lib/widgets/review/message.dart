@@ -58,6 +58,7 @@ class Message extends StatelessWidget {
                     fontSize: 16.sp,
                     fontWeight: FontWeight.w600,
                     color: const Color(0xff398EF3),
+                    letterSpacing: -1.0.w,
                   ),
                 ),
                 SizedBox(height: 6.h),
@@ -67,6 +68,7 @@ class Message extends StatelessWidget {
                     fontSize: 24.sp,
                     fontWeight: FontWeight.w600,
                     color: const Color(0xff111111),
+                    letterSpacing: -1.0.w,
                   ),
                   textAlign: TextAlign.center,
                 ),
@@ -80,6 +82,7 @@ class Message extends StatelessWidget {
                           color: const Color(0xff111111),
                           fontSize: 12.sp,
                           fontWeight: FontWeight.w600,
+                          letterSpacing: -1.0.w,
                         ),
                       ),
                       TextSpan(
@@ -88,6 +91,7 @@ class Message extends StatelessWidget {
                           color: const Color(0xff777777),
                           fontSize: 12.sp,
                           fontWeight: FontWeight.w500,
+                          letterSpacing: -1.0.w,
                         ),
                       ),
                     ],
@@ -123,11 +127,17 @@ class Message extends StatelessWidget {
                                 color: const Color(0xff777777),
                                 fontSize: 12.sp,
                                 fontWeight: FontWeight.w400,
+                                letterSpacing: -1.0.w,
                               ),
                               hintMaxLines: 2,
                               contentPadding: EdgeInsets.only(
                                 top: 15.h,
                               ),
+                            ),
+                            style: TextStyle(
+                              fontSize: 12.sp,
+                              fontWeight: FontWeight.w400,
+                              letterSpacing: -1.0.w,
                             ),
                             maxLines: null, // 여러 줄 입력 가능
                             expands: true, // TextField가 부모 높이에 맞게 확장

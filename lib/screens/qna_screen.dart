@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:map_sample/screens/inquiry_screen.dart';
 import 'package:map_sample/share_data.dart';
+import 'package:map_sample/utils/display_util.dart';
 
 class QnAScreen extends StatefulWidget {
   const QnAScreen({super.key});
@@ -30,7 +31,7 @@ class _QnAScreenState extends State<QnAScreen> {
                   ),
                   _buildButtonRow(
                     title: '문의하기',
-                    fontWeight: FontWeight.w400,
+                    fontWeight: FontWeight.w500,
                     height: 52.h,
                     clickRow: () {
                       Navigator.push(
@@ -47,7 +48,7 @@ class _QnAScreenState extends State<QnAScreen> {
                   ),
                   _buildButtonRow(
                     title: '문의내역',
-                    fontWeight: FontWeight.w400,
+                    fontWeight: FontWeight.w500,
                     height: 52.h,
                     isShowBadge: true,
                     clickRow: () {},
@@ -132,6 +133,8 @@ class _QnAScreenState extends State<QnAScreen> {
                 color: textblack,
                 fontSize: 14.sp,
                 fontWeight: fontWeight ?? FontWeight.w500,
+                letterSpacing:
+                    DisplayUtil.getLetterSpacing(px: 14.sp, percent: -2.5).w,
               ),
             ),
             Visibility(

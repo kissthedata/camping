@@ -65,6 +65,7 @@ class _State extends State<ReviewScreen> {
       elevation: 0,
       toolbarHeight: 50.w,
       leading: const SizedBox.shrink(),
+      scrolledUnderElevation: 0,
       backgroundColor: _bg,
       flexibleSpace: Container(
         height: 50.w + topPadding.w,
@@ -109,7 +110,7 @@ class _State extends State<ReviewScreen> {
     if (_reviewModel.idx == null) {
       return Intro(callback: () {
         setState(() {
-          _title = '리뷰 쓰기';
+          _title = '리뷰쓰기';
           _bg = const Color(0xffF3F5F7);
           _reviewModel.idx = 0;
         });

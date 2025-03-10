@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:map_sample/utils/display_util.dart';
 
 class Rating extends StatefulWidget {
   const Rating({
@@ -64,6 +63,7 @@ class _State extends State<Rating> {
                     fontSize: 16.sp,
                     fontWeight: FontWeight.w600,
                     color: const Color(0xff398EF3),
+                    letterSpacing: -1.0.w,
                   ),
                 ),
                 SizedBox(height: 6.h),
@@ -73,6 +73,7 @@ class _State extends State<Rating> {
                     fontSize: 24.sp,
                     fontWeight: FontWeight.w600,
                     color: const Color(0xff111111),
+                    letterSpacing: -1.0.w,
                   ),
                   textAlign: TextAlign.center,
                 ),
@@ -86,6 +87,7 @@ class _State extends State<Rating> {
                           color: const Color(0xff111111),
                           fontSize: 12.sp,
                           fontWeight: FontWeight.w600,
+                          letterSpacing: -1.0.w,
                         ),
                       ),
                       TextSpan(
@@ -94,6 +96,7 @@ class _State extends State<Rating> {
                           color: const Color(0xff777777),
                           fontSize: 12.sp,
                           fontWeight: FontWeight.w500,
+                          letterSpacing: -1.0.w,
                         ),
                       ),
                     ],
@@ -118,6 +121,7 @@ class _State extends State<Rating> {
                           fontSize: 20.sp,
                           fontWeight: FontWeight.w600,
                           color: const Color(0xff111111),
+                          letterSpacing: -1.0.w,
                         ),
                       ),
                       SizedBox(height: 4.h),
@@ -127,22 +131,18 @@ class _State extends State<Rating> {
                           style: TextStyle(
                             fontSize: 12.sp,
                             fontWeight: FontWeight.w600,
-                            letterSpacing: DisplayUtil.getLetterSpacing(
-                                    px: 12, percent: -5)
-                                .w,
+                            letterSpacing: -1.0.w,
                             color: const Color(0xff777777),
                           ),
                         ),
                       ),
-                      SizedBox(height: 29.h),
+                      SizedBox(height: 24.h),
                       Container(
-                        color: Colors.amber,
                         child: Center(
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: List.generate(5, (index) {
                               return Container(
-                                color: Colors.red,
                                 margin: index == 4
                                     ? null
                                     : EdgeInsets.only(right: 10.11.w),
@@ -167,7 +167,7 @@ class _State extends State<Rating> {
                           ),
                         ),
                       ),
-                      SizedBox(height: 28.13.h),
+                      SizedBox(height: 24.h),
                       Container(
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
@@ -185,6 +185,7 @@ class _State extends State<Rating> {
                           ),
                         ),
                       ),
+                      SizedBox(height: 23.h),
                     ],
                   ),
                 ),

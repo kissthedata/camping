@@ -81,7 +81,7 @@ class _MyScreenState extends State<MyScreen> {
                                     ],
                                   ),
                                   SizedBox(
-                                    height: 6.h,
+                                    height: 3.h,
                                   ),
                                   Text(
                                     nickName,
@@ -89,6 +89,9 @@ class _MyScreenState extends State<MyScreen> {
                                       fontSize: 12.sp,
                                       fontWeight: FontWeight.w600,
                                       color: const Color(0xff398ef3),
+                                    ),
+                                    strutStyle: StrutStyle(
+                                      forceStrutHeight: true,
                                     ),
                                   ),
                                 ],
@@ -157,7 +160,7 @@ class _MyScreenState extends State<MyScreen> {
                     },
                   ),
                   Container(
-                    height: 8.h,
+                    height: 4.h,
                     color: const Color(0xfff3f5f7),
                   ),
                   _buildButtonRow(

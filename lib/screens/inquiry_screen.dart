@@ -14,10 +14,9 @@ class _InquiryScreenState extends State<InquiryScreen> {
   final textblack = const Color(0xff111111);
 
   final List<String> dropDownItems = [
-    "차박지 정보와 실제 정보가 달라요.",
-    "리뷰쓰기가 안돼요.",
-    "차박지 예약은 못하나요?",
-    "편안차박 너무 편해요~!!",
+    "앱 사용 관련 문의",
+    "캠핑장 정보 관련 문의",
+    "기타 문의",
   ];
 
   final _dropDownController = OverlayPortalController();
@@ -30,6 +29,7 @@ class _InquiryScreenState extends State<InquiryScreen> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTapDown: (details) {
+        FocusManager.instance.primaryFocus?.unfocus();
         _dropDownController.hide();
       },
       child: Scaffold(
@@ -196,7 +196,7 @@ class _InquiryScreenState extends State<InquiryScreen> {
                       '문의하기',
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 16.sp,
+                        fontSize: 14.sp,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -254,7 +254,7 @@ class _InquiryScreenState extends State<InquiryScreen> {
       },
       child: Container(
         width: 328.w,
-        height: 197.h,
+        height: 153.h,
         padding: EdgeInsets.fromLTRB(
           16.w,
           16.w,
@@ -262,7 +262,7 @@ class _InquiryScreenState extends State<InquiryScreen> {
           0,
         ),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(24.r),
+          borderRadius: BorderRadius.circular(8.r),
           color: Colors.white,
           border: Border.all(
             color: const Color(0xFFd9d9d9),
@@ -291,7 +291,7 @@ class _InquiryScreenState extends State<InquiryScreen> {
             ),
             SizedBox(
               width: 293.w,
-              height: 128.h,
+              height: 92.h,
               child: ListView.separated(
                 itemCount: dropDownItems.length,
                 itemBuilder: (context, index) {
@@ -304,6 +304,9 @@ class _InquiryScreenState extends State<InquiryScreen> {
                         color: const Color(0xFF565656),
                         fontSize: 14.sp,
                         fontWeight: FontWeight.w500,
+                        letterSpacing: DisplayUtil.getLetterSpacing(
+                                px: 14.sp, percent: -2.5)
+                            .w,
                       ),
                     ),
                   );

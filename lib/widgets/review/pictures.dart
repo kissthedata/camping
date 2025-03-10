@@ -55,6 +55,7 @@ class Pictures extends StatelessWidget {
                   fontSize: 16.sp,
                   fontWeight: FontWeight.w600,
                   color: const Color(0xff398EF3),
+                  letterSpacing: -1.0.w,
                 ),
               ),
               SizedBox(height: 6.h),
@@ -64,6 +65,7 @@ class Pictures extends StatelessWidget {
                   fontSize: 24.sp,
                   fontWeight: FontWeight.w600,
                   color: const Color(0xff111111),
+                  letterSpacing: -1.0.w,
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -77,6 +79,7 @@ class Pictures extends StatelessWidget {
                         color: const Color(0xff111111),
                         fontSize: 12.sp,
                         fontWeight: FontWeight.w600,
+                        letterSpacing: -1.0.w,
                       ),
                     ),
                     TextSpan(
@@ -85,6 +88,7 @@ class Pictures extends StatelessWidget {
                         color: const Color(0xff777777),
                         fontSize: 12.sp,
                         fontWeight: FontWeight.w500,
+                        letterSpacing: -1.0.w,
                       ),
                     ),
                   ],
@@ -103,7 +107,7 @@ class Pictures extends StatelessWidget {
                           fit: BoxFit.fitWidth,
                         ),
                         Positioned(
-                          top: 46,
+                          top: 46.h,
                           left: 0,
                           right: 0,
                           child: Image.asset(
@@ -121,7 +125,7 @@ class Pictures extends StatelessWidget {
                               color: Colors.black.withOpacity(0.4),
                             ),
                             padding:
-                                EdgeInsets.fromLTRB(6.w, 1.6.h, 6.w, 1.5.h),
+                                EdgeInsets.fromLTRB(8.w, 2.5.h, 8.w, 2.5.h),
                             child: RichText(
                               text: TextSpan(
                                 children: [
@@ -169,6 +173,7 @@ class Pictures extends StatelessWidget {
                             fontSize: 16.sp,
                             fontWeight: FontWeight.w500,
                             color: const Color(0xffb8b8b8),
+                            letterSpacing: -1.0.w,
                           ),
                         ),
                       ),
@@ -180,9 +185,10 @@ class Pictures extends StatelessWidget {
                       child: Text(
                         '*최대 10장까지',
                         style: TextStyle(
-                          fontSize: 10.sp,
+                          fontSize: 11.sp,
                           fontWeight: FontWeight.w500,
                           color: const Color(0xffb4b4b4),
+                          letterSpacing: -1.0.w,
                         ),
                         textAlign: TextAlign.right,
                       ),
