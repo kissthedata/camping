@@ -777,8 +777,8 @@ class _CateDialogState extends State<CateDialog>
                               ),
                               Image.asset(
                                 'assets/images/Union.png',
-                                width: 8.w,
-                                height: 8.h,
+                                width: 14.w,
+                                height: 14.h,
                                 color: const Color(0xFF777777),
                               ),
                               SizedBox(
