@@ -1734,13 +1734,13 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
                                       (index) {
                                         if (index == 4) {
                                           return Image.asset(
-                                            'assets/images/ic_detail_star_empty.png',
+                                            'assets/images/home_rating_grey.png',
                                             width: 12.w,
                                             height: 11.h,
                                           );
                                         }
                                         return Image.asset(
-                                          'assets/images/ic_detail_star.png',
+                                          'assets/images/home_rating.png',
                                           width: 12.w,
                                           height: 11.h,
                                         );

@@ -132,9 +132,10 @@ class RecommendState extends State<Recommend> {
                 scrollDirection: Axis.horizontal,
                 itemBuilder: (context, index) {
                   return Padding(
-                    padding: index == 0
-                        ? EdgeInsets.only(left: 16.w)
-                        : EdgeInsets.zero,
+                    padding: EdgeInsets.only(
+                      left: index == 0 ? 16.w : 0,
+                      right: index == 9 ? 16.w : 0,
+                    ),
                     child: GestureDetector(
                       onTap: () {
                         Navigator.push(
@@ -280,40 +281,44 @@ class RecommendState extends State<Recommend> {
   }
 
   Widget _buildCategory() {
-    return Container(
-      padding: EdgeInsets.only(left: 16.w),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // 모듈 타이틀
-          SizedBox(
-            child: Text(
-              '관심 카테고리가 무엇인가요?',
-              style: TextStyle(
-                fontSize: 18.sp,
-                color: Color(0xff111111),
-                fontWeight: FontWeight.w600,
-                letterSpacing:
-                    DisplayUtil.getLetterSpacing(px: 18.sp, percent: -4).w,
-              ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // 모듈 타이틀
+        Container(
+          padding: EdgeInsets.only(left: 16.w),
+          child: Text(
+            '관심 카테고리가 무엇인가요?',
+            style: TextStyle(
+              fontSize: 18.sp,
+              color: Color(0xff111111),
+              fontWeight: FontWeight.w600,
+              letterSpacing:
+                  DisplayUtil.getLetterSpacing(px: 18.sp, percent: -4).w,
             ),
           ),
+        ),
 
-          SizedBox(height: 16.h),
+        SizedBox(height: 16.h),
 
-          // 모듈 리스트
-          SizedBox(
-            height: 160.h,
-            child: ListView.separated(
-              scrollDirection: Axis.horizontal,
-              itemBuilder: (context, index) {
-                return GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (c) => const CampingDetailScreen()));
-                  },
+        // 모듈 리스트
+        SizedBox(
+          height: 160.h,
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            itemBuilder: (context, index) {
+              return GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (c) => const CampingDetailScreen()));
+                },
+                child: Padding(
+                  padding: EdgeInsets.only(
+                    left: index == 0 ? 16.w : 0,
+                    right: index == 9 ? 16.w : 0,
+                  ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -350,16 +355,16 @@ class RecommendState extends State<Recommend> {
                       ),
                     ],
                   ),
-                );
-              },
-              separatorBuilder: (context, index) {
-                return SizedBox(width: 4.w);
-              },
-              itemCount: 10,
-            ),
+                ),
+              );
+            },
+            separatorBuilder: (context, index) {
+              return SizedBox(width: 4.w);
+            },
+            itemCount: 10,
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -441,9 +446,10 @@ class RecommendState extends State<Recommend> {
                 scrollDirection: Axis.horizontal,
                 itemBuilder: (context, index) {
                   return Padding(
-                    padding: index == 0
-                        ? EdgeInsets.only(left: 16.w)
-                        : EdgeInsets.zero,
+                    padding: EdgeInsets.only(
+                      left: index == 0 ? 16.w : 0,
+                      right: index == 9 ? 16.w : 0,
+                    ),
                     child: GestureDetector(
                       onTap: () {
                         Navigator.push(

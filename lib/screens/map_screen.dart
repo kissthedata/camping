@@ -1006,10 +1006,10 @@ class MapScreenState extends State<MapScreen> {
               Positioned(
                 left: 16.w,
                 bottom: isPanelOpen
-                    ? 172.w
+                    ? 172.w + MediaQuery.of(context).viewPadding.top
                     : tapMarkerId.isNotEmpty
-                        ? (172 + 130).w
-                        : 87.w,
+                        ? (172 + 130).w + MediaQuery.of(context).viewPadding.top
+                        : 87.w + MediaQuery.of(context).viewPadding.top,
                 child: _leftOverlay(),
               ),
               // 오버레이 - 우
@@ -1028,7 +1028,7 @@ class MapScreenState extends State<MapScreen> {
               Positioned(
                 left: 16.w,
                 right: 16.w,
-                bottom: 85.w,
+                bottom: 85.w + MediaQuery.of(context).viewPadding.top,
                 child: _buildMarkerCard(),
               ),
               // 패널
@@ -1470,8 +1470,8 @@ class MapScreenState extends State<MapScreen> {
               ),
               Image.asset(
                 'assets/vectors/Vector_2.png',
-                width: 4.w,
-                height: 7.75.h,
+                width: 5.53.w,
+                height: 9.84.h,
               ),
               SizedBox(
                 width: 14.w,

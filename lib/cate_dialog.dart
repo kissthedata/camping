@@ -90,7 +90,6 @@ class _CateDialogState extends State<CateDialog>
     CateItem(name: '바비큐', img: 'barbecue', isSelected: false),
     CateItem(name: '개별 바비큐', img: 'private_barbecue', isSelected: false),
     CateItem(name: '바비큐장', img: 'barbecue_facility', isSelected: false),
-    CateItem(name: '취사시설', img: 'cooking', isSelected: false),
     CateItem(name: 'WI-FI', img: 'wifi', isSelected: false),
     CateItem(name: '개별 샤워실', img: 'private_shower', isSelected: false),
     CateItem(name: '공용 샤워실', img: 'public_shower', isSelected: false),
@@ -98,7 +97,6 @@ class _CateDialogState extends State<CateDialog>
     CateItem(name: '공용 화장실', img: 'public_toilet', isSelected: false),
     CateItem(name: '개수대', img: 'sink', isSelected: false),
     CateItem(name: '분리수거장', img: 'waste', isSelected: false),
-    CateItem(name: '전기', img: 'electronic', isSelected: false),
     CateItem(name: '조식', img: 'breakfast', isSelected: false),
     CateItem(name: '카페', img: 'cafe', isSelected: false),
     CateItem(name: '침대', img: 'bed', isSelected: false),
@@ -699,8 +697,8 @@ class _CateDialogState extends State<CateDialog>
                           isCollapsed(type)
                               ? 'assets/vectors/Vector.png'
                               : 'assets/vectors/Vector_2.png',
-                          width: 4.53.w,
-                          height: 8.84.h,
+                          width: 5.53.w,
+                          height: 9.84.h,
                         ),
                         SizedBox(
                           width: 14.w,
