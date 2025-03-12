@@ -72,26 +72,6 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
         img: 'assets/images/img_detail_review_thumb.png',
         content: '“차박지가 생각보다 넓어서 좋아요~\n근데 화장실은 꽤 걸어...',
         id: '닉네임'),
-    ReviewItem(
-        img: 'assets/images/img_detail_review_thumb2.png',
-        content: '“차박지가 생각보다 넓어서 좋아요~\n근데 화장실은 꽤 걸어...',
-        id: '닉네임'),
-    ReviewItem(
-        img: 'assets/images/img_detail_review_thumb.png',
-        content: '“차박지가 생각보다 넓어서 좋아요~\n근데 화장실은 꽤 걸어...',
-        id: '닉네임'),
-    ReviewItem(
-        img: 'assets/images/img_detail_review_thumb2.png',
-        content: '“차박지가 생각보다 넓어서 좋아요~\n근데 화장실은 꽤 걸어...',
-        id: '닉네임'),
-    ReviewItem(
-        img: 'assets/images/img_detail_review_thumb.png',
-        content: '“차박지가 생각보다 넓어서 좋아요~\n근데 화장실은 꽤 걸어...',
-        id: '닉네임'),
-    ReviewItem(
-        img: 'assets/images/img_detail_review_thumb2.png',
-        content: '“차박지가 생각보다 넓어서 좋아요~\n근데 화장실은 꽤 걸어...',
-        id: '닉네임'),
   ];
 
   bool showAlert = false;
@@ -429,7 +409,7 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
               SizedBox(height: 12.h),
               Container(
                 height: 18.h,
-                padding: EdgeInsets.fromLTRB(6.w, 1.h, 6.w, 0.h),
+                padding: EdgeInsets.fromLTRB(6.w, 2.h, 6.w, 3.h),
                 decoration: BoxDecoration(
                   color: Color(0xffE9F9EF),
                   borderRadius: BorderRadius.circular(4.r),
@@ -554,7 +534,7 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
               SizedBox(height: 20.h),
               Container(
                 height: 60.h,
-                padding: EdgeInsets.fromLTRB(15.w, 9.h, 15.w, 11.h),
+                padding: EdgeInsets.only(left: 15.w),
                 alignment: Alignment.centerLeft,
                 decoration: BoxDecoration(
                   color: Color(0xffF8F8F8),
@@ -962,14 +942,14 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
             ),
           ),
           Positioned(
-            top: 86.h,
+            top: 87.h,
             right: 2.w,
             child: Row(
               children: [
                 Text(
                   "문의하기",
                   style: TextStyle(
-                    fontSize: 10.sp,
+                    fontSize: 12.sp,
                     fontWeight: FontWeight.w400,
                     color: const Color(0xFF777777),
                     decoration: TextDecoration.underline,
@@ -1618,7 +1598,7 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
           ),
         ),
         SizedBox(
-          height: 9.h,
+          height: 12.h,
         ),
         Container(
           alignment: Alignment.centerLeft,
@@ -1655,6 +1635,9 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
               ],
             ),
           ),
+        ),
+        SizedBox(
+          height: 3.h,
         ),
         SizedBox(
           height: 309.h,

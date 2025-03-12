@@ -13,6 +13,8 @@ class InquiryScreen extends StatefulWidget {
 class _InquiryScreenState extends State<InquiryScreen> {
   final textblack = const Color(0xff111111);
 
+  int? selectedInquiredIndex;
+
   final List<String> dropDownItems = [
     "앱 사용 관련 문의",
     "캠핑장 정보 관련 문의",
@@ -87,7 +89,9 @@ class _InquiryScreenState extends State<InquiryScreen> {
                       children: [
                         Expanded(
                           child: Text(
-                            '문의 종류를 선택해주세요',
+                            selectedInquiredIndex == null
+                                ? '문의 종류를 선택해주세요'
+                                : dropDownItems[selectedInquiredIndex!],
                             style: TextStyle(
                               fontSize: 12.sp,
                               fontWeight: FontWeight.w400,
@@ -257,9 +261,9 @@ class _InquiryScreenState extends State<InquiryScreen> {
         height: 153.h,
         padding: EdgeInsets.fromLTRB(
           16.w,
-          16.w,
-          16.w,
           0,
+          16.w,
+          14.h,
         ),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8.r),
@@ -271,8 +275,9 @@ class _InquiryScreenState extends State<InquiryScreen> {
         ),
         child: Column(
           children: [
-            SizedBox(
-              height: 17.h,
+            Container(
+              height: 41.h,
+              alignment: Alignment.centerLeft,
               child: Row(
                 children: [
                   const Expanded(
@@ -287,7 +292,7 @@ class _InquiryScreenState extends State<InquiryScreen> {
               ),
             ),
             SizedBox(
-              height: 14.h,
+              height: 3.h,
             ),
             SizedBox(
               width: 293.w,
@@ -295,18 +300,26 @@ class _InquiryScreenState extends State<InquiryScreen> {
               child: ListView.separated(
                 itemCount: dropDownItems.length,
                 itemBuilder: (context, index) {
-                  return Container(
-                    height: 20.h,
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      dropDownItems[index],
-                      style: TextStyle(
-                        color: const Color(0xFF565656),
-                        fontSize: 14.sp,
-                        fontWeight: FontWeight.w500,
-                        letterSpacing: DisplayUtil.getLetterSpacing(
-                                px: 14.sp, percent: -2.5)
-                            .w,
+                  return GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        selectedInquiredIndex = index;
+                        _dropDownController.hide();
+                      });
+                    },
+                    child: Container(
+                      height: 20.h,
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        dropDownItems[index],
+                        style: TextStyle(
+                          color: const Color(0xFF565656),
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w500,
+                          letterSpacing: DisplayUtil.getLetterSpacing(
+                                  px: 14.sp, percent: -2.5)
+                              .w,
+                        ),
                       ),
                     ),
                   );

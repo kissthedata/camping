@@ -1223,7 +1223,7 @@ class MapScreenState extends State<MapScreen> {
                                             color: Color(0xfff7f7f7),
                                           ),
                                           padding: EdgeInsets.only(
-                                              left: 9.w, right: 3.w),
+                                              left: 9.w, right: 7.w),
                                           child: Row(
                                             children: [
                                               Text(
@@ -1439,7 +1439,13 @@ class MapScreenState extends State<MapScreen> {
     if (cnt > 0) {
       return GestureDetector(
         onTap: () {
-          // toggleActions(type);
+          _panelController.hide().then((_) {
+            showModalBottomSheet(
+              context: context,
+              isScrollControlled: true,
+              builder: (_) => const CateDialog(),
+            );
+          });
         },
         child: Container(
           height: 26.h,

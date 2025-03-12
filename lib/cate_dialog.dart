@@ -221,7 +221,7 @@ class _CateDialogState extends State<CateDialog>
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 652.h,
+      height: 654.h,
       child: Container(
         width: 360.w,
         decoration: BoxDecoration(
@@ -391,6 +391,7 @@ class _CateDialogState extends State<CateDialog>
                     ),
                     child: ListView.separated(
                       itemCount: regions.length,
+                      physics: ClampingScrollPhysics(),
                       separatorBuilder: (context, index) {
                         return Divider(
                           height: 0.5.h,
@@ -435,6 +436,7 @@ class _CateDialogState extends State<CateDialog>
                         itemCount: _getRegionList().length,
                         shrinkWrap: true,
                         padding: EdgeInsets.zero,
+                        physics: ClampingScrollPhysics(),
                         separatorBuilder: (context, index) {
                           return Divider(
                             height: 0.5.h,
@@ -825,7 +827,7 @@ class _CateDialogState extends State<CateDialog>
                   clear();
                 },
                 child: Container(
-                  width: 94.w,
+                  width: 72.w,
                   height: 50.h,
                   alignment: Alignment.center,
                   child: Text(
@@ -838,9 +840,7 @@ class _CateDialogState extends State<CateDialog>
                   ),
                 ),
               ),
-              SizedBox(
-                width: 8.w,
-              ),
+              SizedBox(width: 17.w),
               Expanded(
                 child: GestureDetector(
                   onTap: () => Navigator.pop(

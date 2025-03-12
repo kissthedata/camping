@@ -165,7 +165,6 @@ class _MyScreenState extends State<MyScreen> {
                   ),
                   _buildButtonRow(
                     title: '문의하기',
-                    fontWeight: FontWeight.w400,
                     height: 52.h,
                     isShowBadge: true,
                     clickRow: () {
