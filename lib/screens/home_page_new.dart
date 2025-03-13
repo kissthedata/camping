@@ -38,7 +38,7 @@ class MyHomePageNewState extends State<MyHomePageNew>
           body: Column(
             children: [
               Container(
-                height: 32.h,
+                height: 42.h,
                 color: Colors.white,
                 child: TabBar(
                   controller: _tabController, // 🔹 직접 컨트롤러 연결
@@ -47,14 +47,14 @@ class MyHomePageNewState extends State<MyHomePageNew>
                   indicatorPadding: EdgeInsets.symmetric(horizontal: 16.w),
                   labelColor: Color(0xff111111),
                   labelStyle: TextStyle(
-                      fontSize: 12.sp,
+                      fontSize: 13.sp,
                       fontWeight: FontWeight.w600,
                       letterSpacing:
                           DisplayUtil.getLetterSpacing(px: 12.sp, percent: -3)
                               .w),
                   unselectedLabelColor: Color(0xff777777),
                   unselectedLabelStyle: TextStyle(
-                      fontSize: 12.sp,
+                      fontSize: 13.sp,
                       fontWeight: FontWeight.w500,
                       letterSpacing:
                           DisplayUtil.getLetterSpacing(px: 12.sp, percent: -3)
@@ -114,7 +114,7 @@ class MyHomePageNewState extends State<MyHomePageNew>
               SizedBox(width: 16.w),
             ],
           ),
-          SizedBox(height: 17.h),
+          SizedBox(height: 6.h),
         ],
       ),
     );

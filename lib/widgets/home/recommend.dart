@@ -32,7 +32,7 @@ class RecommendState extends State<Recommend> {
             Container(
               height: 3.92.h,
               color: Color(0xFFF3F5F7),
-              margin: EdgeInsets.symmetric(vertical: 24.h),
+              margin: EdgeInsets.symmetric(vertical: 20.h),
             ),
 
             //관심 카테고리 모듈
@@ -81,6 +81,7 @@ class RecommendState extends State<Recommend> {
                       ),
                       strutStyle: StrutStyle(forceStrutHeight: true),
                     ),
+                    SizedBox(height: 4.w), // 8.w 값을 조절하면 여백이 늘어나거나 줄어듦.
                     Text(
                       '경남 창원시 주변 카라반을 찾아봤어요',
                       style: TextStyle(
@@ -95,23 +96,26 @@ class RecommendState extends State<Recommend> {
                   ],
                 ),
                 Spacer(),
-                Container(
-                  width: 53.42.w,
-                  height: 21.95.h,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(6.r),
-                    color: Color(0xffE6EEF7),
-                  ),
-                  child: Text(
-                    '더보기',
-                    style: TextStyle(
-                      fontSize: 12.sp,
-                      color: Color(0xff398EF3),
-                      fontWeight: FontWeight.w500,
-                      letterSpacing:
-                          DisplayUtil.getLetterSpacing(px: 12.sp, percent: -3)
-                              .w,
+                Transform.translate(
+                  offset: Offset(0, -6.w), // ✅ 값을 줄이면 더 위로 이동
+                  child: Container(
+                    width: 53.42.w,
+                    height: 21.95.h,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(6.r),
+                      color: Color(0xffE6EEF7),
+                    ),
+                    child: Text(
+                      '더보기',
+                      style: TextStyle(
+                        fontSize: 12.sp,
+                        color: Color(0xff398EF3),
+                        fontWeight: FontWeight.w500,
+                        letterSpacing:
+                            DisplayUtil.getLetterSpacing(px: 12.sp, percent: -3)
+                                .w,
+                      ),
                     ),
                   ),
                 ),
@@ -120,11 +124,11 @@ class RecommendState extends State<Recommend> {
             ),
           ),
 
-          SizedBox(height: 19.h),
+          SizedBox(height: 9.h),
 
           // 모듈 리스트
           SizedBox(
-            height: 235.h,
+            height: 227.h,
             child: ListView.separated(
                 scrollDirection: Axis.horizontal,
                 itemBuilder: (context, index) {
@@ -183,9 +187,10 @@ class RecommendState extends State<Recommend> {
                             ),
                           ),
                         ),
-                        SizedBox(height: 4.h),
+                        SizedBox(height: 1.h),
                         Row(
-                          crossAxisAlignment: CrossAxisAlignment.end,
+                          crossAxisAlignment:
+                              CrossAxisAlignment.end, // "오량 대공원" 기준으로 정렬
                           children: [
                             Text(
                               '오량 대공원',
@@ -198,17 +203,20 @@ class RecommendState extends State<Recommend> {
                                     .w,
                               ),
                             ),
-                            SizedBox(width: 4.w),
-                            Text(
-                              '부산시 기장군',
-                              style: TextStyle(
-                                fontSize: 12.sp,
-                                color: Color(0xff4F4F4F),
-                                fontWeight: FontWeight.w600,
-                              ),
-                              strutStyle: StrutStyle(
-                                height: 1.5.h,
-                                forceStrutHeight: true,
+                            SizedBox(width: 5.5.w),
+                            Transform.translate(
+                              offset: Offset(0, 2.w), // ✅ "부산시 기장군"만 3.w 아래로 이동
+                              child: Text(
+                                '부산시 기장군',
+                                style: TextStyle(
+                                  fontSize: 12.sp,
+                                  color: Color(0xff4F4F4F),
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                strutStyle: StrutStyle(
+                                  height: 1.5.h,
+                                  forceStrutHeight: true,
+                                ),
                               ),
                             ),
                           ],
@@ -233,7 +241,7 @@ class RecommendState extends State<Recommend> {
                               style: TextStyle(
                                 color: const Color(0xFF777777),
                                 fontSize: 12.sp,
-                                fontWeight: FontWeight.w500,
+                                fontWeight: FontWeight.w600,
                               ),
                             ),
                             SizedBox(width: 1.w),
@@ -286,7 +294,7 @@ class RecommendState extends State<Recommend> {
 
           // 모듈 리스트
           SizedBox(
-            height: 160.h,
+            height: 162.h,
             child: ListView.separated(
               scrollDirection: Axis.horizontal,
               itemBuilder: (context, index) {
@@ -373,6 +381,7 @@ class RecommendState extends State<Recommend> {
                       ),
                       strutStyle: StrutStyle(forceStrutHeight: true),
                     ),
+                    SizedBox(height: 4.w), // 8.w 값을 조절하면 여백이 늘어나거나 줄어듦.
                     Text(
                       '경남 창원시 주변 글랭핑장을 찾아봤어요',
                       style: TextStyle(
@@ -387,23 +396,26 @@ class RecommendState extends State<Recommend> {
                   ],
                 ),
                 Spacer(),
-                Container(
-                  width: 53.42.w,
-                  height: 21.95.h,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(6.r),
-                    color: Color(0xffE6EEF7),
-                  ),
-                  child: Text(
-                    '더보기',
-                    style: TextStyle(
-                      fontSize: 12.sp,
-                      color: Color(0xff398EF3),
-                      fontWeight: FontWeight.w500,
-                      letterSpacing:
-                          DisplayUtil.getLetterSpacing(px: 12.sp, percent: -3)
-                              .w,
+                Transform.translate(
+                  offset: Offset(0, -6.w), // ✅ 값을 줄이면 더 위로 이동
+                  child: Container(
+                    width: 53.42.w,
+                    height: 21.95.h,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(6.r),
+                      color: Color(0xffE6EEF7),
+                    ),
+                    child: Text(
+                      '더보기',
+                      style: TextStyle(
+                        fontSize: 12.sp,
+                        color: Color(0xff398EF3),
+                        fontWeight: FontWeight.w500,
+                        letterSpacing:
+                            DisplayUtil.getLetterSpacing(px: 12.sp, percent: -3)
+                                .w,
+                      ),
                     ),
                   ),
                 ),
@@ -412,11 +424,11 @@ class RecommendState extends State<Recommend> {
             ),
           ),
 
-          SizedBox(height: 19.h),
+          SizedBox(height: 9.h),
 
           // 모듈 리스트
           SizedBox(
-            height: 235.h,
+            height: 228.h,
             child: ListView.separated(
                 scrollDirection: Axis.horizontal,
                 itemBuilder: (context, index) {
@@ -475,7 +487,7 @@ class RecommendState extends State<Recommend> {
                             ),
                           ),
                         ),
-                        SizedBox(height: 4.h),
+                        SizedBox(height: 1.h),
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
@@ -490,17 +502,20 @@ class RecommendState extends State<Recommend> {
                                     .w,
                               ),
                             ),
-                            SizedBox(width: 4.w),
-                            Text(
-                              '부산시 기장군',
-                              style: TextStyle(
-                                fontSize: 12.sp,
-                                color: Color(0xff4F4F4F),
-                                fontWeight: FontWeight.w600,
-                              ),
-                              strutStyle: StrutStyle(
-                                height: 1.5.h,
-                                forceStrutHeight: true,
+                            SizedBox(width: 5.5.w),
+                            Transform.translate(
+                              offset: Offset(0, 2.w), // ✅ "부산시 기장군"만 3.w 아래로 이동
+                              child: Text(
+                                '부산시 기장군',
+                                style: TextStyle(
+                                  fontSize: 12.sp,
+                                  color: Color(0xff4F4F4F),
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                strutStyle: StrutStyle(
+                                  height: 1.5.h,
+                                  forceStrutHeight: true,
+                                ),
                               ),
                             ),
                           ],

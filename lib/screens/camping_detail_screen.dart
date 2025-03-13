@@ -454,7 +454,7 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
                     fontSize: 24.sp,
                     letterSpacing: (-0.04).w,
                     height: (1.2).h,
-                    fontWeight: FontWeight.w500,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
               ),
@@ -491,7 +491,7 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
                           color: const Color(0xFF777777),
                           fontSize: 12.sp,
                           height: 1.h,
-                          fontWeight: FontWeight.w500,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
                     ),
@@ -504,7 +504,7 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
                           color: const Color(0xFFb8b8b8),
                           fontSize: 12.sp,
                           height: 1.h,
-                          fontWeight: FontWeight.w500,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
                     ),
@@ -530,7 +530,7 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
                           color: const Color(0xFFb8b8b8),
                           fontSize: 12.sp,
                           height: 1.h,
-                          fontWeight: FontWeight.w500,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
                     ),
@@ -552,7 +552,7 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
               ),
               SizedBox(height: 20.h),
               Container(
-                padding: EdgeInsets.fromLTRB(15.w, 9.h, 15.w, 11.h),
+                padding: EdgeInsets.fromLTRB(15.w, 12.h, 15.w, 11.h),
                 alignment: Alignment.centerLeft,
                 decoration: BoxDecoration(
                   color: Color(0xffF8F8F8),
@@ -565,9 +565,9 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
                       text: TextSpan(
                         style: TextStyle(
                           color: const Color(0xFF111111),
-                          fontSize: 13.sp,
-                          fontWeight: FontWeight.w600,
-                          letterSpacing: -1.0,
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w500,
+                          letterSpacing: -0.5,
                         ),
                         children: [
                           TextSpan(
@@ -577,9 +577,9 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
                             text: '선착순',
                             style: TextStyle(
                               color: const Color(0xFF398EF3),
-                              fontSize: 13.sp,
-                              fontWeight: FontWeight.w600,
-                              letterSpacing: -1.0,
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.w500,
+                              letterSpacing: -0.5,
                             ),
                           ),
                           TextSpan(
@@ -592,9 +592,9 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
                       '해당 캠핑장 이용 시 주의하세요.',
                       style: TextStyle(
                         color: const Color(0xff777777),
-                        fontSize: 10.sp,
+                        fontSize: 11.sp,
                         fontWeight: FontWeight.w400,
-                        letterSpacing: -1.0,
+                        letterSpacing: -0.5,
                       ),
                     ),
                   ],
@@ -958,9 +958,9 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
             child: Row(
               children: [
                 Text(
-                  "문의하기",
+                  "정보수정 요청",
                   style: TextStyle(
-                    fontSize: 10.sp,
+                    fontSize: 11.sp,
                     fontWeight: FontWeight.w400,
                     color: const Color(0xFF777777),
                     decoration: TextDecoration.underline,
@@ -1011,8 +1011,8 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
                         child: Text(
                           "기본 정보",
                           style: TextStyle(
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.w500,
+                            fontSize: 15.sp,
+                            fontWeight: FontWeight.w600,
                             color:
                                 infoTab ? textblack : const Color(0xFF777777),
                           ),
@@ -1034,8 +1034,8 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
                         child: Text(
                           "리뷰",
                           style: TextStyle(
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.w500,
+                            fontSize: 15.sp,
+                            fontWeight: FontWeight.w600,
                             color:
                                 infoTab ? const Color(0xFFb8b8b8) : textblack,
                           ),
@@ -1548,7 +1548,7 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
               );
             }),
           ),
-          SizedBox(height: 25.h),
+          SizedBox(height: 24.h),
           Visibility(
             visible: !isAmenityExpanded,
             child: GestureDetector(
@@ -1576,7 +1576,7 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
               ),
             ),
           ),
-          SizedBox(height: 24.h),
+          SizedBox(height: 25.h),
           Container(
             height: 1.h,
             color: const Color(0xFFdedede),
@@ -1590,7 +1590,7 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
     return Column(
       children: [
         SizedBox(
-          height: 24.h,
+          height: 1.h,
         ),
         SizedBox(
           height: 21.h,
@@ -1634,6 +1634,7 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
                     height: 1.1,
                     color: const Color(0xFF777777),
                     fontWeight: FontWeight.w400,
+                    letterSpacing: -0.5,
                   ),
                 ),
                 SizedBox(

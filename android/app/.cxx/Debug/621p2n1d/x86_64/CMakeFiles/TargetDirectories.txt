@@ -1,0 +1,2 @@
+C:/Users/seomi/camping/android/app/.cxx/Debug/621p2n1d/x86_64/CMakeFiles/edit_cache.dir
+C:/Users/seomi/camping/android/app/.cxx/Debug/621p2n1d/x86_64/CMakeFiles/rebuild_cache.dir

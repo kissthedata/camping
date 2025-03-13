@@ -345,8 +345,8 @@ class MapScreenState extends State<MapScreen> {
             ),
           )
         : Container(
-            height: 40.h + MediaQuery.of(context).viewPadding.top,
-            padding: EdgeInsets.only(top: 20.h),
+            height: 52.h + MediaQuery.of(context).viewPadding.top,
+            padding: EdgeInsets.only(top: 32.h),
             color: Colors.white,
             child: Row(
               children: [
@@ -483,7 +483,7 @@ class MapScreenState extends State<MapScreen> {
             borderRadius: BorderRadius.circular(39.w),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.5),
+                color: Colors.black.withOpacity(0.2),
                 blurRadius: 4,
                 offset: const Offset(0, 1),
               ),
@@ -547,7 +547,7 @@ class MapScreenState extends State<MapScreen> {
                   borderRadius: BorderRadius.circular(20.w),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.5),
+                      color: Colors.black.withOpacity(0.2),
                       blurRadius: 4,
                       offset: const Offset(0, 1),
                     ),
@@ -831,7 +831,7 @@ class MapScreenState extends State<MapScreen> {
             MaterialPageRoute(builder: (c) => const CampingDetailScreen()));
       },
       child: Container(
-        height: 195.w,
+        height: 200.w,
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(16.r),
@@ -858,7 +858,7 @@ class MapScreenState extends State<MapScreen> {
                 ],
               ),
             ),
-            SizedBox(height: 10.w),
+            SizedBox(height: 11.w),
             // 하단
             Container(
               color: Colors.white,
@@ -900,7 +900,7 @@ class MapScreenState extends State<MapScreen> {
                     ],
                   ),
 
-                  SizedBox(height: 7.h),
+                  SizedBox(height: 6.h),
 
                   // 타이틀
                   Row(
@@ -922,7 +922,7 @@ class MapScreenState extends State<MapScreen> {
                           color: const Color(0xFF777777),
                           fontSize: 12.sp,
                           fontWeight: FontWeight.w400,
-                          letterSpacing: -1.0,
+                          letterSpacing: -0.5,
                         ),
                         strutStyle: StrutStyle(
                           height: 1.5.w,
@@ -932,7 +932,7 @@ class MapScreenState extends State<MapScreen> {
                     ],
                   ),
 
-                  SizedBox(height: 5.h),
+                  SizedBox(height: 3.h),
 
                   // 리뷰 및 편의 시설
                   Row(
@@ -956,7 +956,7 @@ class MapScreenState extends State<MapScreen> {
                             '4.7 (34)',
                             style: TextStyle(
                               color: const Color(0xFFB8B8B8),
-                              fontSize: 10.sp,
+                              fontSize: 12.sp,
                               fontWeight: FontWeight.w500,
                               letterSpacing: -1.0,
                             ),
@@ -967,7 +967,7 @@ class MapScreenState extends State<MapScreen> {
                             '좋아요  45',
                             style: TextStyle(
                               color: const Color(0xFFB8B8B8),
-                              fontSize: 10.sp,
+                              fontSize: 12.sp,
                               fontWeight: FontWeight.w500,
                               letterSpacing: -1.0,
                             ),
@@ -1054,7 +1054,7 @@ class MapScreenState extends State<MapScreen> {
                 bottom: isPanelOpen
                     ? 172.w
                     : tapMarkerId.isNotEmpty
-                        ? (172 + 130).w
+                        ? (172 + 135).w
                         : 87.w,
                 child: _leftOverlay(),
               ),
