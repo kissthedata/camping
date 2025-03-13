@@ -165,13 +165,28 @@ class _State extends State<Accuracy> {
                                         widget.callback(_selectedDots);
                                       });
                                     },
-                                    child: Image.asset(
-                                      'assets/vectors/Frame 314.png',
-                                      width: 28.w,
-                                      height: 28.h,
-                                      color: index == _selectedDots
-                                          ? const Color(0xff398EF3)
-                                          : null,
+                                    child: Stack(
+                                      alignment: Alignment.center,
+                                      children: [
+                                        Image.asset(
+                                          'assets/vectors/Frame 314.png',
+                                          width: 28.w,
+                                          height: 28.h,
+                                        ),
+                                        Visibility(
+                                          visible: _selectedDots == index,
+                                          child: Container(
+                                            alignment: Alignment.center,
+                                            width: 17.w,
+                                            height: 17.h,
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(16.r),
+                                              color: Color(0xff398ef3),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 );

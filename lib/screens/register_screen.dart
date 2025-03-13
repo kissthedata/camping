@@ -622,6 +622,8 @@ ID와 비밀번호에 관한 관리 책임은 회원에게 있습니다.
       },
       child: Scaffold(
         body: SafeArea(
+          bottom: false,
+          maintainBottomViewPadding: true,
           child: SingleChildScrollView(
             controller: _scrollController,
             child: Padding(

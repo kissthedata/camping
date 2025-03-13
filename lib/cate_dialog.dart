@@ -384,13 +384,14 @@ class _CateDialogState extends State<CateDialog>
                   // 시/도
                   Container(
                     width: 72.w,
-                    height: 96.h,
+                    height: 97.h,
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(12.r),
                     ),
                     child: ListView.separated(
                       itemCount: regions.length,
+                      padding: EdgeInsets.zero,
                       physics: ClampingScrollPhysics(),
                       separatorBuilder: (context, index) {
                         return Divider(

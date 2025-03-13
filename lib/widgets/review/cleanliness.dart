@@ -159,11 +159,11 @@ class _State extends State<Cleanliness> {
                                       setState(() {
                                         _selectedDots = index;
                                       });
-                                      // Future.delayed(
-                                      //     const Duration(milliseconds: 100),
-                                      //     () {
-                                      //   widget.callback(_selectedDots);
-                                      // });
+                                      Future.delayed(
+                                          const Duration(milliseconds: 100),
+                                          () {
+                                        widget.callback(_selectedDots);
+                                      });
                                     },
                                     child: Stack(
                                       alignment: Alignment.center,
@@ -182,7 +182,7 @@ class _State extends State<Cleanliness> {
                                             decoration: BoxDecoration(
                                               borderRadius:
                                                   BorderRadius.circular(16.r),
-                                              color: Colors.amber,
+                                              color: Color(0xff398ef3),
                                             ),
                                           ),
                                         ),
