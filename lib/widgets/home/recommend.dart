@@ -14,44 +14,40 @@ class Recommend extends StatefulWidget {
 class RecommendState extends State<Recommend> {
   @override
   Widget build(BuildContext context) {
-    return ScreenUtilInit(builder: (context, _) {
-      return SingleChildScrollView(
-        child: Column(
-          children: [
-            //상단 배너
-            Image.asset(
-              'assets/images/sample_main_recommned_banner.png',
-              fit: BoxFit.fitWidth,
-            ),
-
-            SizedBox(height: 24.h),
-
-            //카라반 모듈
-            _buildCaravan(),
-
-            Container(
-              height: 3.92.h,
-              color: Color(0xFFF3F5F7),
-              margin: EdgeInsets.symmetric(vertical: 24.h),
-            ),
-
-            //관심 카테고리 모듈
-            _buildCategory(),
-
-            Container(
-              height: 3.92.h,
-              color: Color(0xFFF3F5F7),
-              margin: EdgeInsets.symmetric(vertical: 24.h),
-            ),
-
-            //글램핑 모듈
-            _buildGlamping(),
-
-            SizedBox(height: 75.h + 90.h),
-          ],
+    return ListView(
+      children: [
+        //상단 배너
+        Image.asset(
+          'assets/images/sample_main_recommned_banner.png',
+          fit: BoxFit.fitWidth,
         ),
-      );
-    });
+
+        SizedBox(height: 24.h),
+
+        //카라반 모듈
+        _buildCaravan(),
+
+        Container(
+          height: 3.92.h,
+          color: Color(0xFFF3F5F7),
+          margin: EdgeInsets.symmetric(vertical: 24.h),
+        ),
+
+        //관심 카테고리 모듈
+        _buildCategory(),
+
+        Container(
+          height: 3.92.h,
+          color: Color(0xFFF3F5F7),
+          margin: EdgeInsets.symmetric(vertical: 24.h),
+        ),
+
+        //글램핑 모듈
+        _buildGlamping(),
+
+        SizedBox(height: 75.h),
+      ],
+    );
   }
 
   Widget _buildCaravan() {
