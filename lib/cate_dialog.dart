@@ -101,15 +101,15 @@ class _CateDialogState extends State<CateDialog>
     CateItem(name: '카페', img: 'cafe', isSelected: false),
     CateItem(name: '침대', img: 'bed', isSelected: false),
     CateItem(name: '화로대', img: 'fire', isSelected: false),
-    CateItem(name: '휠체어\n진입가능', img: 'can_wheel_chair', isSelected: false),
-    CateItem(name: '장애인\n주차공간', img: 'parking_wheel_chair', isSelected: false),
+    CateItem(name: '휠체어 진입', img: 'can_wheel_chair', isSelected: false),
+    CateItem(name: '장애인 주차', img: 'parking_wheel_chair', isSelected: false),
     CateItem(name: '픽업 서비스', img: 'pickup', isSelected: false),
-    CateItem(name: '전기차\n충전소', img: 'electronic_car', isSelected: false),
-    CateItem(name: '트레일러\n진입가능', img: 'trailer', isSelected: false),
-    CateItem(name: '캠핑카\n진입가능', img: 'can_camping_car', isSelected: false),
-    CateItem(name: '카라반\n진입가능', img: 'can_caravan', isSelected: false),
-    CateItem(name: '캠핑카\n예약가능', img: 'reserve_camping_car', isSelected: false),
-    CateItem(name: '카라반\n예약가능', img: 'reserve_caravan', isSelected: false),
+    CateItem(name: '전기차 충전', img: 'electronic_car', isSelected: false),
+    CateItem(name: '트레일러 진입', img: 'trailer', isSelected: false),
+    CateItem(name: '캠핑카 진입', img: 'can_camping_car', isSelected: false),
+    CateItem(name: '카라반 진입', img: 'can_caravan', isSelected: false),
+    CateItem(name: '캠핑카 예약', img: 'reserve_camping_car', isSelected: false),
+    CateItem(name: '카라반 예약', img: 'reserve_caravan', isSelected: false),
   ];
 
   bool isCollapseRegion = true;
