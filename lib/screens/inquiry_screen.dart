@@ -13,11 +13,12 @@ class InquiryScreen extends StatefulWidget {
 class _InquiryScreenState extends State<InquiryScreen> {
   final textblack = const Color(0xff111111);
 
+  int? selectedInquiredIndex;
+
   final List<String> dropDownItems = [
-    "차박지 정보와 실제 정보가 달라요.",
-    "리뷰쓰기가 안돼요.",
-    "차박지 예약은 못하나요?",
-    "편안차박 너무 편해요~!!",
+    "앱 사용 관련 문의",
+    "캠핑장 정보 관련 문의",
+    "기타 문의",
   ];
 
   final _dropDownController = OverlayPortalController();
@@ -30,6 +31,7 @@ class _InquiryScreenState extends State<InquiryScreen> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTapDown: (details) {
+        FocusManager.instance.primaryFocus?.unfocus();
         _dropDownController.hide();
       },
       child: Scaffold(
@@ -87,7 +89,9 @@ class _InquiryScreenState extends State<InquiryScreen> {
                       children: [
                         Expanded(
                           child: Text(
-                            '문의 종류를 선택해주세요',
+                            selectedInquiredIndex == null
+                                ? '문의 종류를 선택해주세요'
+                                : dropDownItems[selectedInquiredIndex!],
                             style: TextStyle(
                               fontSize: 12.sp,
                               fontWeight: FontWeight.w400,
@@ -196,7 +200,7 @@ class _InquiryScreenState extends State<InquiryScreen> {
                       '문의하기',
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 16.sp,
+                        fontSize: 14.sp,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -254,15 +258,15 @@ class _InquiryScreenState extends State<InquiryScreen> {
       },
       child: Container(
         width: 328.w,
-        height: 197.h,
+        height: 153.h,
         padding: EdgeInsets.fromLTRB(
           16.w,
-          16.w,
-          16.w,
           0,
+          16.w,
+          14.h,
         ),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(24.r),
+          borderRadius: BorderRadius.circular(8.r),
           color: Colors.white,
           border: Border.all(
             color: const Color(0xFFd9d9d9),
@@ -271,8 +275,9 @@ class _InquiryScreenState extends State<InquiryScreen> {
         ),
         child: Column(
           children: [
-            SizedBox(
-              height: 17.h,
+            Container(
+              height: 41.h,
+              alignment: Alignment.centerLeft,
               child: Row(
                 children: [
                   const Expanded(
@@ -287,23 +292,34 @@ class _InquiryScreenState extends State<InquiryScreen> {
               ),
             ),
             SizedBox(
-              height: 14.h,
+              height: 3.h,
             ),
             SizedBox(
               width: 293.w,
-              height: 128.h,
+              height: 92.h,
               child: ListView.separated(
                 itemCount: dropDownItems.length,
                 itemBuilder: (context, index) {
-                  return Container(
-                    height: 20.h,
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      dropDownItems[index],
-                      style: TextStyle(
-                        color: const Color(0xFF565656),
-                        fontSize: 14.sp,
-                        fontWeight: FontWeight.w500,
+                  return GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        selectedInquiredIndex = index;
+                        _dropDownController.hide();
+                      });
+                    },
+                    child: Container(
+                      height: 20.h,
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        dropDownItems[index],
+                        style: TextStyle(
+                          color: const Color(0xFF565656),
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w500,
+                          letterSpacing: DisplayUtil.getLetterSpacing(
+                                  px: 14.sp, percent: -2.5)
+                              .w,
+                        ),
                       ),
                     ),
                   );

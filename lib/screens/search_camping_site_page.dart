@@ -224,6 +224,7 @@ class SearchCampingSitePageState extends State<SearchCampingSitePage> {
       minTextAdapt: true,
       builder: (context, child) {
         return Scaffold(
+          resizeToAvoidBottomInset: false,
           appBar: _buildAppBar(),
           body: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -344,8 +345,7 @@ class SearchCampingSitePageState extends State<SearchCampingSitePage> {
                       runSpacing: 16.h, // 세로 간격
                       children: [1, 2, 3, 4, 5, 6].map((item) {
                         return SizedBox(
-                          width:
-                              (MediaQuery.of(context).size.width / 2).w - 50.w,
+                          width: 143.w,
                           height: 16.h,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -400,12 +400,12 @@ class SearchCampingSitePageState extends State<SearchCampingSitePage> {
 
               // 최근 본 장소
               Container(
-                margin: EdgeInsets.symmetric(horizontal: 16.w),
                 alignment: Alignment.centerLeft,
                 child: Column(
                   children: [
                     Row(
                       children: [
+                        SizedBox(width: 16.w),
                         Text(
                           '최근 본 장소',
                           style: TextStyle(
@@ -425,62 +425,67 @@ class SearchCampingSitePageState extends State<SearchCampingSitePage> {
                           scrollDirection: Axis.horizontal,
                           shrinkWrap: true,
                           itemBuilder: (context, item) {
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(5.w),
-                                  child: SizedBox(
-                                    width: 138,
-                                    height: 106,
-                                    child: Image.network(
-                                      'https://picsum.photos/seed/picsum/138/106',
-                                      fit: BoxFit.cover,
+                            return Padding(
+                              padding: item == 0
+                                  ? EdgeInsets.only(left: 16.w)
+                                  : EdgeInsets.zero,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(5.w),
+                                    child: SizedBox(
+                                      width: 138,
+                                      height: 106,
+                                      child: Image.network(
+                                        'https://picsum.photos/seed/picsum/138/106',
+                                        fit: BoxFit.cover,
+                                      ),
                                     ),
                                   ),
-                                ),
-                                SizedBox(
-                                  height: 6.w,
-                                ),
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                    Text(
-                                      '캠핑장명',
-                                      style: TextStyle(
-                                        color: const Color(0xFF111111),
-                                        fontSize: 12.sp,
-                                        fontWeight: FontWeight.w500,
-                                        letterSpacing:
-                                            DisplayUtil.getLetterSpacing(
-                                                    px: 12.sp, percent: -5)
-                                                .w,
+                                  SizedBox(
+                                    height: 6.w,
+                                  ),
+                                  Row(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      Text(
+                                        '캠핑장명',
+                                        style: TextStyle(
+                                          color: const Color(0xFF111111),
+                                          fontSize: 12.sp,
+                                          fontWeight: FontWeight.w500,
+                                          letterSpacing:
+                                              DisplayUtil.getLetterSpacing(
+                                                      px: 12.sp, percent: -5)
+                                                  .w,
+                                        ),
+                                        strutStyle: StrutStyle(
+                                          height: 1.3.h,
+                                          forceStrutHeight: true,
+                                        ),
                                       ),
-                                      strutStyle: StrutStyle(
-                                        height: 1.3.h,
-                                        forceStrutHeight: true,
+                                      SizedBox(width: 4.w),
+                                      Text(
+                                        '대구광역시',
+                                        style: TextStyle(
+                                          color: const Color(0xFF9d9d9d),
+                                          fontSize: 8.sp,
+                                          fontWeight: FontWeight.w400,
+                                          letterSpacing:
+                                              DisplayUtil.getLetterSpacing(
+                                                      px: 8.sp, percent: -5)
+                                                  .w,
+                                        ),
+                                        strutStyle: StrutStyle(
+                                          height: 1.3.h,
+                                          forceStrutHeight: true,
+                                        ),
                                       ),
-                                    ),
-                                    SizedBox(width: 4.w),
-                                    Text(
-                                      '대구광역시',
-                                      style: TextStyle(
-                                        color: const Color(0xFF9d9d9d),
-                                        fontSize: 8.sp,
-                                        fontWeight: FontWeight.w400,
-                                        letterSpacing:
-                                            DisplayUtil.getLetterSpacing(
-                                                    px: 8.sp, percent: -5)
-                                                .w,
-                                      ),
-                                      strutStyle: StrutStyle(
-                                        height: 1.3.h,
-                                        forceStrutHeight: true,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
+                                    ],
+                                  ),
+                                ],
+                              ),
                             );
                           },
                           separatorBuilder: (context, item) {

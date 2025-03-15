@@ -3,6 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:map_sample/utils/display_util.dart';
 import 'package:map_sample/widgets/home/recommend.dart';
 
+import 'search_camping_site_page.dart';
+
 class MyHomePageNew extends StatefulWidget {
   const MyHomePageNew({super.key});
 
@@ -38,7 +40,7 @@ class MyHomePageNewState extends State<MyHomePageNew>
           body: Column(
             children: [
               Container(
-                height: 42.h,
+                height: 32.h,
                 color: Colors.white,
                 child: TabBar(
                   controller: _tabController, // 🔹 직접 컨트롤러 연결
@@ -47,14 +49,14 @@ class MyHomePageNewState extends State<MyHomePageNew>
                   indicatorPadding: EdgeInsets.symmetric(horizontal: 16.w),
                   labelColor: Color(0xff111111),
                   labelStyle: TextStyle(
-                      fontSize: 13.sp,
+                      fontSize: 12.sp,
                       fontWeight: FontWeight.w600,
                       letterSpacing:
                           DisplayUtil.getLetterSpacing(px: 12.sp, percent: -3)
                               .w),
                   unselectedLabelColor: Color(0xff777777),
                   unselectedLabelStyle: TextStyle(
-                      fontSize: 13.sp,
+                      fontSize: 12.sp,
                       fontWeight: FontWeight.w500,
                       letterSpacing:
                           DisplayUtil.getLetterSpacing(px: 12.sp, percent: -3)
@@ -100,10 +102,20 @@ class MyHomePageNewState extends State<MyHomePageNew>
                 height: 23.h,
               ),
               Spacer(),
-              Image.asset(
-                'assets/images/main_appbar_search.png',
-                width: 27.w,
-                height: 27.h,
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const SearchCampingSitePage(),
+                    ),
+                  );
+                },
+                child: Image.asset(
+                  'assets/images/main_appbar_search.png',
+                  width: 27.w,
+                  height: 27.h,
+                ),
               ),
               SizedBox(width: 4.w),
               Image.asset(
@@ -114,7 +126,7 @@ class MyHomePageNewState extends State<MyHomePageNew>
               SizedBox(width: 16.w),
             ],
           ),
-          SizedBox(height: 6.h),
+          SizedBox(height: 17.h),
         ],
       ),
     );

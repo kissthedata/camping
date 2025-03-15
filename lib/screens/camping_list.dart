@@ -282,12 +282,13 @@ class _AllCampingSitesPageState extends State<AllCampingSitesPage> {
                   child: Text(
                     '오토캠핑',
                     style: TextStyle(
-                        fontSize: 12.sp,
-                        fontWeight: FontWeight.w500,
-                        color: Color(0xff398EF3),
-                        letterSpacing:
-                            DisplayUtil.getLetterSpacing(px: 12.sp, percent: -2)
-                                .w),
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.w500,
+                      color: Color(0xff398EF3),
+                      letterSpacing:
+                          DisplayUtil.getLetterSpacing(px: 12.sp, percent: -2)
+                              .w,
+                    ),
                   ),
                 ),
                 SizedBox(width: 6.w),

@@ -295,7 +295,6 @@ class _EditInfoScreenState extends State<EditInfoScreen> {
                               ),
                             ],
                           ),
-                          //휴대폰 번호
                           SizedBox(
                             height: 16.h,
                           ),
@@ -504,7 +503,7 @@ class _EditInfoScreenState extends State<EditInfoScreen> {
 
   Widget _buildDropDown() {
     return Container(
-      width: 118.w,
+      width: 119.w,
       height: 135.h,
       decoration: BoxDecoration(
         border: Border.all(

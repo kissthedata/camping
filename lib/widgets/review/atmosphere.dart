@@ -61,6 +61,7 @@ class _State extends State<Atmosphere> {
                   fontSize: 16.sp,
                   fontWeight: FontWeight.w600,
                   color: const Color(0xff398EF3),
+                  letterSpacing: -1.0.w,
                 ),
               ),
               SizedBox(height: 6.h),
@@ -70,6 +71,7 @@ class _State extends State<Atmosphere> {
                   fontSize: 24.sp,
                   fontWeight: FontWeight.w600,
                   color: const Color(0xff111111),
+                  letterSpacing: -1.0.w,
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -83,6 +85,7 @@ class _State extends State<Atmosphere> {
                         color: const Color(0xff111111),
                         fontSize: 12.sp,
                         fontWeight: FontWeight.w600,
+                        letterSpacing: -1.0.w,
                       ),
                     ),
                     TextSpan(
@@ -91,6 +94,7 @@ class _State extends State<Atmosphere> {
                         color: const Color(0xff777777),
                         fontSize: 12.sp,
                         fontWeight: FontWeight.w500,
+                        letterSpacing: -1.0.w,
                       ),
                     ),
                   ],
@@ -115,6 +119,7 @@ class _State extends State<Atmosphere> {
                         fontSize: 22.sp,
                         fontWeight: FontWeight.w600,
                         color: const Color(0xff398ef3),
+                        letterSpacing: -1.0.w,
                       ),
                     ),
                     SizedBox(height: 6.h),
@@ -124,6 +129,7 @@ class _State extends State<Atmosphere> {
                         fontSize: 12.sp,
                         fontWeight: FontWeight.w400,
                         color: const Color(0xff9a9a9a),
+                        letterSpacing: -1.0.w,
                       ),
                     ),
                     SizedBox(height: 19.h),
@@ -159,13 +165,28 @@ class _State extends State<Atmosphere> {
                                         widget.callback(_selectedDots);
                                       });
                                     },
-                                    child: Image.asset(
-                                      'assets/vectors/Frame 314.png',
-                                      width: 28.w,
-                                      height: 28.h,
-                                      color: index == _selectedDots
-                                          ? const Color(0xff398EF3)
-                                          : null,
+                                    child: Stack(
+                                      alignment: Alignment.center,
+                                      children: [
+                                        Image.asset(
+                                          'assets/vectors/Frame 314.png',
+                                          width: 28.w,
+                                          height: 28.h,
+                                        ),
+                                        Visibility(
+                                          visible: _selectedDots == index,
+                                          child: Container(
+                                            alignment: Alignment.center,
+                                            width: 17.w,
+                                            height: 17.h,
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(16.r),
+                                              color: Color(0xff398ef3),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 );
@@ -190,6 +211,7 @@ class _State extends State<Atmosphere> {
                                   fontSize: 12.sp,
                                   fontWeight: FontWeight.w400,
                                   color: const Color(0xff9a9a9a),
+                                  letterSpacing: -1.0.w,
                                 ),
                               ),
                               Text(
@@ -198,6 +220,7 @@ class _State extends State<Atmosphere> {
                                   fontSize: 12.sp,
                                   fontWeight: FontWeight.w400,
                                   color: const Color(0xff9a9a9a),
+                                  letterSpacing: -1.0.w,
                                 ),
                               ),
                             ],
@@ -210,6 +233,7 @@ class _State extends State<Atmosphere> {
                                 fontSize: 12.sp,
                                 fontWeight: FontWeight.w400,
                                 color: const Color(0xff9a9a9a),
+                                letterSpacing: -1.0.w,
                               ),
                             ),
                           ),

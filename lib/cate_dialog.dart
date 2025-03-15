@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:map_sample/utils/display_util.dart';
 
 class CateDialog extends StatefulWidget {
   const CateDialog({
@@ -89,7 +90,6 @@ class _CateDialogState extends State<CateDialog>
     CateItem(name: '바비큐', img: 'barbecue', isSelected: false),
     CateItem(name: '개별 바비큐', img: 'private_barbecue', isSelected: false),
     CateItem(name: '바비큐장', img: 'barbecue_facility', isSelected: false),
-    CateItem(name: '취사시설', img: 'cooking', isSelected: false),
     CateItem(name: 'WI-FI', img: 'wifi', isSelected: false),
     CateItem(name: '개별 샤워실', img: 'private_shower', isSelected: false),
     CateItem(name: '공용 샤워실', img: 'public_shower', isSelected: false),
@@ -97,20 +97,19 @@ class _CateDialogState extends State<CateDialog>
     CateItem(name: '공용 화장실', img: 'public_toilet', isSelected: false),
     CateItem(name: '개수대', img: 'sink', isSelected: false),
     CateItem(name: '분리수거장', img: 'waste', isSelected: false),
-    CateItem(name: '전기', img: 'electronic', isSelected: false),
     CateItem(name: '조식', img: 'breakfast', isSelected: false),
     CateItem(name: '카페', img: 'cafe', isSelected: false),
     CateItem(name: '침대', img: 'bed', isSelected: false),
     CateItem(name: '화로대', img: 'fire', isSelected: false),
-    CateItem(name: '휠체어\n진입가능', img: 'can_wheel_chair', isSelected: false),
-    CateItem(name: '장애인\n주차공간', img: 'parking_wheel_chair', isSelected: false),
+    CateItem(name: '휠체어 진입', img: 'can_wheel_chair', isSelected: false),
+    CateItem(name: '장애인 주차', img: 'parking_wheel_chair', isSelected: false),
     CateItem(name: '픽업 서비스', img: 'pickup', isSelected: false),
-    CateItem(name: '전기차\n충전소', img: 'electronic_car', isSelected: false),
-    CateItem(name: '트레일러\n진입가능', img: 'trailer', isSelected: false),
-    CateItem(name: '캠핑카\n진입가능', img: 'can_camping_car', isSelected: false),
-    CateItem(name: '카라반\n진입가능', img: 'can_caravan', isSelected: false),
-    CateItem(name: '캠핑카\n예약가능', img: 'reserve_camping_car', isSelected: false),
-    CateItem(name: '카라반\n예약가능', img: 'reserve_caravan', isSelected: false),
+    CateItem(name: '전기차 충전', img: 'electronic_car', isSelected: false),
+    CateItem(name: '트레일러 진입', img: 'trailer', isSelected: false),
+    CateItem(name: '캠핑카 진입', img: 'can_camping_car', isSelected: false),
+    CateItem(name: '카라반 진입', img: 'can_caravan', isSelected: false),
+    CateItem(name: '캠핑카 예약', img: 'reserve_camping_car', isSelected: false),
+    CateItem(name: '카라반 예약', img: 'reserve_caravan', isSelected: false),
   ];
 
   bool isCollapseRegion = true;
@@ -222,7 +221,7 @@ class _CateDialogState extends State<CateDialog>
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 614.h,
+      height: 654.h,
       child: Container(
         width: 360.w,
         decoration: BoxDecoration(
@@ -288,13 +287,13 @@ class _CateDialogState extends State<CateDialog>
       labelColor: Colors.black,
       unselectedLabelColor: const Color(0xFF777777), // 선택되지 않은 탭 텍스트 색상
       labelStyle: TextStyle(
-        fontSize: 12.sp,
-        fontWeight: FontWeight.w600,
+        fontSize: 14.sp,
+        fontWeight: FontWeight.w500,
       ),
       dividerColor: const Color(0xFFd4d4d4),
       dividerHeight: (0.5).h,
       unselectedLabelStyle: TextStyle(
-        fontSize: 12.sp,
+        fontSize: 14.sp,
         fontWeight: FontWeight.w500,
       ),
 
@@ -347,13 +346,13 @@ class _CateDialogState extends State<CateDialog>
     return Expanded(
       child: Container(
         color: Color(0xfff8f8f8),
-        padding: EdgeInsets.fromLTRB(16.w, 10.h, 16.w, 0),
+        padding: EdgeInsets.fromLTRB(16.w, 10.h, 16.w, 0.h),
         child: Column(
           children: [
             Row(
               children: [
                 Container(
-                  width: 99.w,
+                  width: 72.w,
                   alignment: Alignment.center,
                   child: Text(
                     '시/도',
@@ -384,14 +383,16 @@ class _CateDialogState extends State<CateDialog>
                 children: [
                   // 시/도
                   Container(
-                    width: 99.w,
-                    height: 96.h,
+                    width: 72.w,
+                    height: 97.h,
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(12.r),
                     ),
                     child: ListView.separated(
                       itemCount: regions.length,
+                      padding: EdgeInsets.zero,
+                      physics: ClampingScrollPhysics(),
                       separatorBuilder: (context, index) {
                         return Divider(
                           height: 0.5.h,
@@ -413,7 +414,9 @@ class _CateDialogState extends State<CateDialog>
                                 color: regions[index].isSelected
                                     ? Color(0xff398EF3)
                                     : Color(0xff777777),
-                                fontWeight: FontWeight.w400,
+                                fontWeight: regions[index].isSelected
+                                    ? FontWeight.w600
+                                    : FontWeight.w400,
                                 fontSize: 12.sp,
                               ),
                             ),
@@ -433,6 +436,8 @@ class _CateDialogState extends State<CateDialog>
                       child: ListView.separated(
                         itemCount: _getRegionList().length,
                         shrinkWrap: true,
+                        padding: EdgeInsets.zero,
+                        physics: ClampingScrollPhysics(),
                         separatorBuilder: (context, index) {
                           return Divider(
                             height: 0.5.h,
@@ -467,14 +472,38 @@ class _CateDialogState extends State<CateDialog>
                             child: Container(
                               width: 72.w,
                               height: 32.h,
-                              alignment: Alignment.center,
+                              alignment: Alignment.centerLeft,
+                              padding: EdgeInsets.only(left: 12.w),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.only(
+                                  topLeft: index == 0
+                                      ? Radius.circular(12.r)
+                                      : Radius.zero,
+                                  topRight: index == 0
+                                      ? Radius.circular(12.r)
+                                      : Radius.zero,
+                                  bottomLeft:
+                                      index == _getRegionList().length - 1
+                                          ? Radius.circular(12.r)
+                                          : Radius.zero,
+                                  bottomRight:
+                                      index == _getRegionList().length - 1
+                                          ? Radius.circular(12.r)
+                                          : Radius.zero,
+                                ),
+                                color: _getRegionList()[index].isSelected
+                                    ? Color(0xffF5FAFF)
+                                    : Color(0xffffffff),
+                              ),
                               child: Text(
                                 _getRegionList()[index].name,
                                 style: TextStyle(
                                   color: _getRegionList()[index].isSelected
                                       ? Color(0xff398EF3)
                                       : Color(0xff777777),
-                                  fontWeight: FontWeight.w400,
+                                  fontWeight: _getRegionList()[index].isSelected
+                                      ? FontWeight.w600
+                                      : FontWeight.w400,
                                   fontSize: 12.sp,
                                 ),
                               ),
@@ -556,7 +585,7 @@ class _CateDialogState extends State<CateDialog>
                                   ? const Color(0xFF398ef3)
                                   : const Color(0xFF868686),
                               fontSize: 12.sp,
-                              fontWeight: FontWeight.w500,
+                              fontWeight: FontWeight.w600,
                             ),
                             textAlign: TextAlign.center,
                           ),
@@ -614,10 +643,12 @@ class _CateDialogState extends State<CateDialog>
                 fontSize: 12.sp,
                 fontWeight: FontWeight.w500,
                 color: Color(0xFF868686),
+                letterSpacing:
+                    DisplayUtil.getLetterSpacing(px: 12.sp, percent: -2).w,
               ),
             ),
           ),
-          SizedBox(height: 9.69.h),
+          SizedBox(height: 7.h),
           _buildChipList(list, type, title),
           SizedBox(height: 9.69.h),
         ],
@@ -626,145 +657,157 @@ class _CateDialogState extends State<CateDialog>
   }
 
   Widget _buildChipList(List<dynamic> list, int type, String title) {
-    return Container(
-      height: 26.h,
-      padding: EdgeInsets.only(right: 16.w),
-      child: Row(
-        children: [
-          //지역, 시설, 주변환경
-          if (list.isNotEmpty) ...[
-            GestureDetector(
-              onTap: () {
-                toggleActions(type);
-              },
-              child: Container(
-                height: 26.h,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(25.r),
-                  border: Border.all(
-                    color: const Color(0xFF398ef3),
-                    width: 1.w,
+    return Stack(
+      children: [
+        SizedBox(
+          height: 26.h,
+          child: Row(
+            children: [
+              //지역, 시설, 주변환경
+              if (list.isNotEmpty) ...[
+                GestureDetector(
+                  onTap: () {
+                    toggleActions(type);
+                  },
+                  child: Container(
+                    height: 26.h,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(25.r),
+                      border: Border.all(
+                        color: const Color(0xFF398ef3),
+                        width: 1.w,
+                      ),
+                    ),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          width: 14.w,
+                        ),
+                        Text(
+                          '$title ${list.where((item) => item.name != '전체').toList().length}개',
+                          style: TextStyle(
+                            color: const Color(0xFF398EF3),
+                            fontSize: 12.sp,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        SizedBox(
+                          width: 6.2.w,
+                        ),
+                        Image.asset(
+                          isCollapsed(type)
+                              ? 'assets/vectors/Vector.png'
+                              : 'assets/vectors/Vector_2.png',
+                          width: 5.53.w,
+                          height: 9.84.h,
+                        ),
+                        SizedBox(
+                          width: 14.w,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      width: 14.w,
+              ] else ...[
+                Container(
+                  height: 26.h,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(25.r),
+                    border: Border.all(
+                      color: const Color(0xFF868686),
+                      width: 1.w,
                     ),
-                    Text(
-                      '$title ${list.where((item) => item.name != '전체').toList().length}개',
+                  ),
+                  padding: EdgeInsets.symmetric(horizontal: 14.w),
+                  child: Center(
+                    child: Text(
+                      '$title 없음',
                       style: TextStyle(
-                        color: const Color(0xFF398EF3),
+                        color: const Color(0xFF868686),
                         fontSize: 12.sp,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    SizedBox(
-                      width: 6.2.w,
-                    ),
-                    Image.asset(
-                      isCollapsed(type)
-                          ? 'assets/vectors/Vector.png'
-                          : 'assets/vectors/Vector_2.png',
-                      width: 4.w,
-                      height: 7.75.h,
-                    ),
-                    SizedBox(
-                      width: 14.w,
-                    ),
-                  ],
+                  ),
                 ),
+              ],
+
+              SizedBox(
+                width: 8.w,
               ),
-            ),
-          ] else ...[
-            Container(
-              height: 26.h,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(25.r),
-                border: Border.all(
-                  color: const Color(0xFF868686),
-                  width: 1.w,
-                ),
-              ),
-              padding: EdgeInsets.symmetric(horizontal: 14.w),
-              child: Center(
-                child: Text(
-                  '$title 없음',
-                  style: TextStyle(
-                    color: const Color(0xFF868686),
-                    fontSize: 12.sp,
-                    fontWeight: FontWeight.w600,
+
+              Visibility(
+                visible: !isCollapsed(type),
+                child: Expanded(
+                  child: ListView.separated(
+                    separatorBuilder: (context, index) {
+                      return SizedBox(
+                        width: 4.w,
+                      );
+                    },
+                    scrollDirection: Axis.horizontal,
+                    itemCount: _getSelectedList(type).length,
+                    itemBuilder: (context, index) {
+                      return GestureDetector(
+                        onTap: () {
+                          _removeItem(type, index);
+                        },
+                        child: Container(
+                          height: 26.h,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(25.r),
+                          ),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              SizedBox(
+                                width: 14.w,
+                              ),
+                              Text(
+                                list[index]?.name ?? '',
+                                style: TextStyle(
+                                  color: const Color(0xFF398EF3),
+                                  fontSize: 12.sp,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              SizedBox(
+                                width: 4.w,
+                              ),
+                              Image.asset(
+                                'assets/images/Union.png',
+                                width: 14.w,
+                                height: 14.h,
+                                color: const Color(0xFF777777),
+                              ),
+                              SizedBox(
+                                width: 14.w,
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
                   ),
                 ),
               ),
-            ),
-          ],
-
-          SizedBox(
-            width: 6.2.w,
+            ],
           ),
-
-          Visibility(
-            visible: !isCollapsed(type),
-            child: Expanded(
-              child: ListView.separated(
-                separatorBuilder: (context, index) {
-                  return SizedBox(
-                    width: 4.w,
-                  );
-                },
-                scrollDirection: Axis.horizontal,
-                itemCount: _getSelectedList(type).length,
-                itemBuilder: (context, index) {
-                  return GestureDetector(
-                    onTap: () {
-                      _removeItem(type, index);
-                    },
-                    child: Container(
-                      height: 26.h,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(25.r),
-                      ),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          SizedBox(
-                            width: 14.w,
-                          ),
-                          Text(
-                            list[index]?.name ?? '',
-                            style: TextStyle(
-                              color: const Color(0xFF398EF3),
-                              fontSize: 12.sp,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          SizedBox(
-                            width: 4.w,
-                          ),
-                          Image.asset(
-                            'assets/images/Union.png',
-                            width: 8.w,
-                            height: 8.h,
-                            color: const Color(0xFF777777),
-                          ),
-                          SizedBox(
-                            width: 14.w,
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
+        ),
+        Positioned(
+          right: 0,
+          child: Image.asset(
+            width: 26.46.w,
+            height: 26.h,
+            fit: BoxFit.fitWidth,
+            'assets/vectors/Rectangle 666.png',
           ),
-        ],
-      ),
+        )
+      ],
     );
   }
 
@@ -785,7 +828,7 @@ class _CateDialogState extends State<CateDialog>
                   clear();
                 },
                 child: Container(
-                  width: 94.w,
+                  width: 72.w,
                   height: 50.h,
                   alignment: Alignment.center,
                   child: Text(
@@ -798,9 +841,7 @@ class _CateDialogState extends State<CateDialog>
                   ),
                 ),
               ),
-              SizedBox(
-                width: 8.w,
-              ),
+              SizedBox(width: 17.w),
               Expanded(
                 child: GestureDetector(
                   onTap: () => Navigator.pop(

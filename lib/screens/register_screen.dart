@@ -622,6 +622,8 @@ ID와 비밀번호에 관한 관리 책임은 회원에게 있습니다.
       },
       child: Scaffold(
         body: SafeArea(
+          bottom: false,
+          maintainBottomViewPadding: true,
           child: SingleChildScrollView(
             controller: _scrollController,
             child: Padding(
@@ -632,7 +634,7 @@ ID와 비밀번호에 관한 관리 책임은 회원에게 있습니다.
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox(
-                      height: 27.h,
+                      height: 16.h,
                     ),
                     //Back 버튼
                     GestureDetector(
@@ -922,8 +924,8 @@ ID와 비밀번호에 관한 관리 책임은 회원에게 있습니다.
                                   const Spacer(),
                                   Image.asset(
                                     'assets/images/ic_down.png',
-                                    width: 5.w,
-                                    height: 10.h,
+                                    width: 14.w,
+                                    height: 14.h,
                                   ),
                                   SizedBox(
                                     width: 13.w,
@@ -1203,7 +1205,7 @@ ID와 비밀번호에 관한 관리 책임은 회원에게 있습니다.
               style: TextStyle(
                 color: const Color(0xFFb4b4b4),
                 fontSize: 12.sp,
-                fontWeight: FontWeight.w800,
+                fontWeight: FontWeight.w500,
                 decoration: TextDecoration.underline,
                 decorationColor: const Color(0xFFb4b4b4), // 밑줄 색상
                 decorationThickness: 1.h, // 밑줄 두께

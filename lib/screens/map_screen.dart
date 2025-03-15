@@ -251,59 +251,6 @@ class MapScreenState extends State<MapScreen> {
                           ),
                         ),
                       ),
-                      // Expanded(
-                      //   child: Container(
-                      //     height: 40.w,
-                      //     decoration: BoxDecoration(
-                      //       color: const Color(0xFFF3F5F7),
-                      //       borderRadius: BorderRadius.circular(20.w),
-                      //       boxShadow: [
-                      //         BoxShadow(
-                      //           color: Colors.black.withOpacity(0.5),
-                      //           offset: const Offset(0, 2),
-                      //           blurRadius: 10,
-                      //         )
-                      //       ],
-                      //     ),
-                      //     child: TextFormField(
-                      //       controller: _searchController,
-                      //       onChanged: (value) {
-                      //         //
-                      //       },
-                      //       style: TextStyle(
-                      //         color: Colors.black,
-                      //         fontSize: 12.sp,
-                      //         fontWeight: FontWeight.w500,
-                      //       ),
-                      //       decoration: InputDecoration(
-                      //         border: InputBorder.none,
-                      //         prefixIcon: Container(
-                      //           margin: EdgeInsets.only(left: 16.w, right: 8.w),
-                      //           alignment: Alignment.center,
-                      //           child: Image.asset(
-                      //             'assets/images/ic_search.png',
-                      //             color: const Color(0xFF5D646C),
-                      //             width: 16.w,
-                      //             height: 16.w,
-                      //             fit: BoxFit.cover,
-                      //             gaplessPlayback: true,
-                      //           ),
-                      //         ),
-                      //         prefixIconConstraints: BoxConstraints(
-                      //           maxWidth: 40.w,
-                      //           maxHeight: 40.w,
-                      //         ),
-                      //         hintText: '원하시는 차박지를 검색해보세요!',
-                      //         hintStyle: TextStyle(
-                      //           color: const Color(0xFFA7A7A7),
-                      //           fontSize: 12.sp,
-                      //           fontWeight: FontWeight.w500,
-                      //         ),
-                      //         contentPadding: EdgeInsets.only(top: 8.w),
-                      //       ),
-                      //     ),
-                      //   ),
-                      // ),
                       SizedBox(width: 16.w),
                       // 필터
                       Align(
@@ -328,10 +275,10 @@ class MapScreenState extends State<MapScreen> {
                           },
                           child: SizedBox(
                             width: 29.38.w,
-                            height: 29.38.w,
+                            height: 29.38.h,
                             child: Image.asset(
                               'assets/images/Frame 559.png',
-                              fit: BoxFit.cover,
+                              fit: BoxFit.contain,
                               gaplessPlayback: true,
                             ),
                           ),
@@ -345,8 +292,8 @@ class MapScreenState extends State<MapScreen> {
             ),
           )
         : Container(
-            height: 52.h + MediaQuery.of(context).viewPadding.top,
-            padding: EdgeInsets.only(top: 32.h),
+            height: 40.h + MediaQuery.of(context).viewPadding.top,
+            padding: EdgeInsets.only(top: 20.h),
             color: Colors.white,
             child: Row(
               children: [
@@ -483,7 +430,7 @@ class MapScreenState extends State<MapScreen> {
             borderRadius: BorderRadius.circular(39.w),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.2),
+                color: Colors.black.withOpacity(0.5),
                 blurRadius: 4,
                 offset: const Offset(0, 1),
               ),
@@ -547,7 +494,7 @@ class MapScreenState extends State<MapScreen> {
                   borderRadius: BorderRadius.circular(20.w),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.2),
+                      color: Colors.black.withOpacity(0.5),
                       blurRadius: 4,
                       offset: const Offset(0, 1),
                     ),
@@ -635,7 +582,8 @@ class MapScreenState extends State<MapScreen> {
                   shrinkWrap: true,
                   itemBuilder: (context, index) {
                     return Padding(
-                      padding: EdgeInsets.only(right: 4.w),
+                      padding: EdgeInsets.only(
+                          left: index == 0 ? 16.w : 0, right: 4.w),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(4.w),
                         child: Image.network(
@@ -657,7 +605,9 @@ class MapScreenState extends State<MapScreen> {
                 children: [
                   Container(
                     height: 18.h,
+                    margin: EdgeInsets.only(left: 16.w),
                     padding: EdgeInsets.symmetric(horizontal: 6.w),
+                    alignment: Alignment.center,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(4.r),
                       color: Color(0xffD7E8FD),
@@ -665,12 +615,13 @@ class MapScreenState extends State<MapScreen> {
                     child: Text(
                       '오토캠핑',
                       style: TextStyle(
-                          color: Color(0xff398EF3),
-                          fontSize: 10.sp,
-                          fontWeight: FontWeight.w600,
-                          letterSpacing: DisplayUtil.getLetterSpacing(
-                                  px: 10.sp, percent: -2)
-                              .w),
+                        color: Color(0xff398EF3),
+                        fontSize: 10.sp,
+                        fontWeight: FontWeight.w600,
+                        letterSpacing:
+                            DisplayUtil.getLetterSpacing(px: 10.sp, percent: -2)
+                                .w,
+                      ),
                     ),
                   ),
                   Container(
@@ -690,127 +641,133 @@ class MapScreenState extends State<MapScreen> {
               SizedBox(height: 7.h),
 
               // 타이틀
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text(
-                    '캠핑장명',
-                    style: TextStyle(
-                      color: const Color(0xFF111111),
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.w600,
-                      letterSpacing:
-                          DisplayUtil.getLetterSpacing(px: 16.sp, percent: -2.5)
-                              .w,
+              Padding(
+                padding: EdgeInsets.only(left: 16.w),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      '캠핑장명',
+                      style: TextStyle(
+                        color: const Color(0xFF111111),
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w600,
+                        letterSpacing: DisplayUtil.getLetterSpacing(
+                                px: 16.sp, percent: -2.5)
+                            .w,
+                      ),
+                      strutStyle: StrutStyle(
+                        height: 1.3.h,
+                        forceStrutHeight: true,
+                      ),
                     ),
-                    strutStyle: StrutStyle(
-                      height: 1.3.h,
-                      forceStrutHeight: true,
+                    SizedBox(width: 4.w),
+                    Text(
+                      '대구광역시',
+                      style: TextStyle(
+                        color: const Color(0xFF9d9d9d),
+                        fontSize: 12.sp,
+                        fontWeight: FontWeight.w400,
+                        letterSpacing:
+                            DisplayUtil.getLetterSpacing(px: 12.sp, percent: -3)
+                                .w,
+                      ),
+                      strutStyle: StrutStyle(
+                        height: 1.3.w,
+                        forceStrutHeight: true,
+                      ),
                     ),
-                  ),
-                  SizedBox(width: 4.w),
-                  Text(
-                    '대구광역시',
-                    style: TextStyle(
-                      color: const Color(0xFF9d9d9d),
-                      fontSize: 12.sp,
-                      fontWeight: FontWeight.w400,
-                      letterSpacing:
-                          DisplayUtil.getLetterSpacing(px: 12.sp, percent: -3)
-                              .w,
-                    ),
-                    strutStyle: StrutStyle(
-                      height: 1.3.w,
-                      forceStrutHeight: true,
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
 
               SizedBox(height: 5.h),
 
               // 리뷰 및 편의 시설
-              Row(
-                children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      // 아이콘
-                      SizedBox(
-                        width: 12.w,
-                        height: 11.w,
-                        child: Image.asset(
-                          'assets/images/home_rating.png',
-                          fit: BoxFit.cover,
-                          gaplessPlayback: true,
+              Padding(
+                padding: EdgeInsets.only(left: 16.w),
+                child: Row(
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        // 아이콘
+                        SizedBox(
+                          width: 12.w,
+                          height: 11.w,
+                          child: Image.asset(
+                            'assets/images/home_rating.png',
+                            fit: BoxFit.cover,
+                            gaplessPlayback: true,
+                          ),
                         ),
-                      ),
-                      SizedBox(width: 4.w),
-                      // 평점
-                      Text(
-                        '4.3',
-                        style: TextStyle(
-                          color: const Color(0xFFB8B8B8),
-                          fontSize: 12.sp,
-                          fontWeight: FontWeight.w500,
-                          letterSpacing: -1.0,
+                        SizedBox(width: 4.w),
+                        // 평점
+                        Text(
+                          '4.3',
+                          style: TextStyle(
+                            color: const Color(0xFFB8B8B8),
+                            fontSize: 12.sp,
+                            fontWeight: FontWeight.w500,
+                            letterSpacing: -1.0,
+                          ),
                         ),
-                      ),
-                      SizedBox(width: 10.w),
-                      // 리뷰
-                      Text(
-                        '리뷰  12',
-                        style: TextStyle(
-                          color: const Color(0xFFB8B8B8),
-                          fontSize: 12.sp,
-                          fontWeight: FontWeight.w500,
-                          letterSpacing: -1.0,
+                        SizedBox(width: 10.w),
+                        // 리뷰
+                        Text(
+                          '리뷰  12',
+                          style: TextStyle(
+                            color: const Color(0xFFB8B8B8),
+                            fontSize: 12.sp,
+                            fontWeight: FontWeight.w500,
+                            letterSpacing: -1.0,
+                          ),
                         ),
-                      ),
-                      SizedBox(width: 10.w),
-                      // 좋아요
-                      Text(
-                        '좋아요  45',
-                        style: TextStyle(
-                          color: const Color(0xFFB8B8B8),
-                          fontSize: 12.sp,
-                          fontWeight: FontWeight.w500,
-                          letterSpacing: -1.0,
+                        SizedBox(width: 10.w),
+                        // 좋아요
+                        Text(
+                          '좋아요  45',
+                          style: TextStyle(
+                            color: const Color(0xFFB8B8B8),
+                            fontSize: 12.sp,
+                            fontWeight: FontWeight.w500,
+                            letterSpacing: -1.0,
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                  Spacer(),
-                  Row(
-                    spacing: 1.w,
-                    children: facilities.take(4).map((item) {
-                      return SizedBox(
-                        width: 18.37.w,
-                        height: 18.37.h,
-                        child: Image.asset(
-                          'assets/images/map_facilities_$item.png',
-                          fit: BoxFit.cover,
-                          gaplessPlayback: true,
-                        ),
-                      );
-                    }).toList(),
-                  ),
-                  SizedBox(width: 5.w),
-                  Visibility(
-                    visible: facilities.length > 4,
-                    child: Text(
-                      '+${facilities.length - 4}',
-                      style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          color: Color(0xff777777),
-                          fontSize: 10.sp,
-                          letterSpacing: DisplayUtil.getLetterSpacing(
-                                  px: 10.sp, percent: -2.5)
-                              .w),
+                      ],
                     ),
-                  ),
-                  SizedBox(width: 16.w),
-                ],
+                    Spacer(),
+                    Row(
+                      spacing: 1.w,
+                      children: facilities.take(4).map((item) {
+                        return SizedBox(
+                          width: 18.37.w,
+                          height: 18.37.h,
+                          child: Image.asset(
+                            'assets/images/map_facilities_$item.png',
+                            fit: BoxFit.cover,
+                            gaplessPlayback: true,
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                    SizedBox(width: 5.w),
+                    Visibility(
+                      visible: facilities.length > 4,
+                      child: Text(
+                        '+${facilities.length - 4}',
+                        style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            color: Color(0xff777777),
+                            fontSize: 10.sp,
+                            letterSpacing: DisplayUtil.getLetterSpacing(
+                                    px: 10.sp, percent: -2.5)
+                                .w),
+                      ),
+                    ),
+                    SizedBox(width: 16.w),
+                  ],
+                ),
               ),
             ],
           ),
@@ -831,7 +788,7 @@ class MapScreenState extends State<MapScreen> {
             MaterialPageRoute(builder: (c) => const CampingDetailScreen()));
       },
       child: Container(
-        height: 200.w,
+        height: 195.w,
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(16.r),
@@ -858,7 +815,7 @@ class MapScreenState extends State<MapScreen> {
                 ],
               ),
             ),
-            SizedBox(height: 11.w),
+            SizedBox(height: 10.w),
             // 하단
             Container(
               color: Colors.white,
@@ -900,7 +857,7 @@ class MapScreenState extends State<MapScreen> {
                     ],
                   ),
 
-                  SizedBox(height: 6.h),
+                  SizedBox(height: 7.h),
 
                   // 타이틀
                   Row(
@@ -922,7 +879,6 @@ class MapScreenState extends State<MapScreen> {
                           color: const Color(0xFF777777),
                           fontSize: 12.sp,
                           fontWeight: FontWeight.w400,
-                          letterSpacing: -0.5,
                         ),
                         strutStyle: StrutStyle(
                           height: 1.5.w,
@@ -932,7 +888,7 @@ class MapScreenState extends State<MapScreen> {
                     ],
                   ),
 
-                  SizedBox(height: 3.h),
+                  SizedBox(height: 5.h),
 
                   // 리뷰 및 편의 시설
                   Row(
@@ -943,10 +899,10 @@ class MapScreenState extends State<MapScreen> {
                           // 아이콘
                           SizedBox(
                             width: 12.w,
-                            height: 11.w,
+                            height: 11.h,
                             child: Image.asset(
                               'assets/images/home_rating.png',
-                              fit: BoxFit.cover,
+                              fit: BoxFit.contain,
                               gaplessPlayback: true,
                             ),
                           ),
@@ -956,20 +912,18 @@ class MapScreenState extends State<MapScreen> {
                             '4.7 (34)',
                             style: TextStyle(
                               color: const Color(0xFFB8B8B8),
-                              fontSize: 12.sp,
+                              fontSize: 10.sp,
                               fontWeight: FontWeight.w500,
-                              letterSpacing: -1.0,
                             ),
                           ),
                           SizedBox(width: 10.w),
                           // 좋아요
                           Text(
-                            '좋아요  45',
+                            '좋아요 45',
                             style: TextStyle(
                               color: const Color(0xFFB8B8B8),
-                              fontSize: 12.sp,
+                              fontSize: 10.sp,
                               fontWeight: FontWeight.w500,
-                              letterSpacing: -1.0,
                             ),
                           ),
                         ],
@@ -1052,10 +1006,10 @@ class MapScreenState extends State<MapScreen> {
               Positioned(
                 left: 16.w,
                 bottom: isPanelOpen
-                    ? 172.w
+                    ? 172.w + MediaQuery.of(context).viewPadding.top
                     : tapMarkerId.isNotEmpty
-                        ? (172 + 135).w
-                        : 87.w,
+                        ? (172 + 130).w + MediaQuery.of(context).viewPadding.top
+                        : 87.w + MediaQuery.of(context).viewPadding.top,
                 child: _leftOverlay(),
               ),
               // 오버레이 - 우
@@ -1074,7 +1028,7 @@ class MapScreenState extends State<MapScreen> {
               Positioned(
                 left: 16.w,
                 right: 16.w,
-                bottom: 85.w,
+                bottom: 85.w + MediaQuery.of(context).viewPadding.top,
                 child: _buildMarkerCard(),
               ),
               // 패널
@@ -1269,7 +1223,7 @@ class MapScreenState extends State<MapScreen> {
                                             color: Color(0xfff7f7f7),
                                           ),
                                           padding: EdgeInsets.only(
-                                              left: 9.w, right: 3.w),
+                                              left: 9.w, right: 7.w),
                                           child: Row(
                                             children: [
                                               Text(
@@ -1304,10 +1258,7 @@ class MapScreenState extends State<MapScreen> {
                           // 리스트
                           Expanded(
                             child: ListView.separated(
-                              padding: EdgeInsets.only(
-                                left: 16.w,
-                                bottom: (75 + 32).w,
-                              ),
+                              padding: EdgeInsets.only(bottom: (75 + 32).w),
                               itemCount: 9,
                               controller: controller,
                               itemBuilder: (context, index) {
@@ -1488,7 +1439,13 @@ class MapScreenState extends State<MapScreen> {
     if (cnt > 0) {
       return GestureDetector(
         onTap: () {
-          // toggleActions(type);
+          _panelController.hide().then((_) {
+            showModalBottomSheet(
+              context: context,
+              isScrollControlled: true,
+              builder: (_) => const CateDialog(),
+            );
+          });
         },
         child: Container(
           height: 26.h,
@@ -1519,8 +1476,8 @@ class MapScreenState extends State<MapScreen> {
               ),
               Image.asset(
                 'assets/vectors/Vector_2.png',
-                width: 4.w,
-                height: 7.75.h,
+                width: 5.53.w,
+                height: 9.84.h,
               ),
               SizedBox(
                 width: 14.w,

@@ -15,7 +15,7 @@ class CustomBottomAppBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity, // 너비를 화면 전체로 설정
-      height: 75, // 고정된 높이
+      height: 75 + MediaQuery.of(context).viewPadding.bottom, // 고정된 높이,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.vertical(
@@ -30,7 +30,7 @@ class CustomBottomAppBar extends StatelessWidget {
         ],
       ),
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 44.w),
+        padding: EdgeInsets.fromLTRB(44.w, 12.h, 44.w, 0.h),
         child: Row(
           children: [
             Expanded(
@@ -80,7 +80,7 @@ class CustomBottomAppBar extends StatelessWidget {
     return InkWell(
       onTap: () => onItemSelected(index),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Image.asset(
             'assets/images/bottom_${iconPath}_${selectedIndex == index ? 'selected' : 'normal'}.png',

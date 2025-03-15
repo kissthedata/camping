@@ -72,26 +72,6 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
         img: 'assets/images/img_detail_review_thumb.png',
         content: '“차박지가 생각보다 넓어서 좋아요~\n근데 화장실은 꽤 걸어...',
         id: '닉네임'),
-    ReviewItem(
-        img: 'assets/images/img_detail_review_thumb2.png',
-        content: '“차박지가 생각보다 넓어서 좋아요~\n근데 화장실은 꽤 걸어...',
-        id: '닉네임'),
-    ReviewItem(
-        img: 'assets/images/img_detail_review_thumb.png',
-        content: '“차박지가 생각보다 넓어서 좋아요~\n근데 화장실은 꽤 걸어...',
-        id: '닉네임'),
-    ReviewItem(
-        img: 'assets/images/img_detail_review_thumb2.png',
-        content: '“차박지가 생각보다 넓어서 좋아요~\n근데 화장실은 꽤 걸어...',
-        id: '닉네임'),
-    ReviewItem(
-        img: 'assets/images/img_detail_review_thumb.png',
-        content: '“차박지가 생각보다 넓어서 좋아요~\n근데 화장실은 꽤 걸어...',
-        id: '닉네임'),
-    ReviewItem(
-        img: 'assets/images/img_detail_review_thumb2.png',
-        content: '“차박지가 생각보다 넓어서 좋아요~\n근데 화장실은 꽤 걸어...',
-        id: '닉네임'),
   ];
 
   bool showAlert = false;
@@ -140,6 +120,7 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
           return Scaffold(
             body: SafeArea(
               top: false,
+              bottom: false,
               child: Stack(
                 children: [
                   SingleChildScrollView(
@@ -174,7 +155,7 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
                               color: Colors.white,
                             ),
                             _buildStickyHeader(
-                              '차박지 상세정보',
+                              '캠핑장 상세정보',
                               Colors.white,
                             ),
                             _buildTab(null),
@@ -428,10 +409,10 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
               SizedBox(height: 12.h),
               Container(
                 height: 18.h,
-                padding: EdgeInsets.fromLTRB(6.w, 1.h, 6.w, 0.h),
+                padding: EdgeInsets.fromLTRB(6.w, 2.h, 6.w, 3.h),
                 decoration: BoxDecoration(
                   color: Color(0xffE9F9EF),
-                  borderRadius: BorderRadius.circular(100.r),
+                  borderRadius: BorderRadius.circular(4.r),
                 ),
                 child: Text(
                   '카라반',
@@ -454,7 +435,7 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
                     fontSize: 24.sp,
                     letterSpacing: (-0.04).w,
                     height: (1.2).h,
-                    fontWeight: FontWeight.w600,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
               ),
@@ -473,7 +454,7 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
               ),
               SizedBox(height: 8.h),
               SizedBox(
-                height: 12.h,
+                height: 13.h,
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
@@ -491,7 +472,7 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
                           color: const Color(0xFF777777),
                           fontSize: 12.sp,
                           height: 1.h,
-                          fontWeight: FontWeight.w600,
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
                     ),
@@ -504,7 +485,7 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
                           color: const Color(0xFFb8b8b8),
                           fontSize: 12.sp,
                           height: 1.h,
-                          fontWeight: FontWeight.w600,
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
                     ),
@@ -530,7 +511,7 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
                           color: const Color(0xFFb8b8b8),
                           fontSize: 12.sp,
                           height: 1.h,
-                          fontWeight: FontWeight.w600,
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
                     ),
@@ -552,7 +533,8 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
               ),
               SizedBox(height: 20.h),
               Container(
-                padding: EdgeInsets.fromLTRB(15.w, 12.h, 15.w, 11.h),
+                height: 60.h,
+                padding: EdgeInsets.only(left: 15.w),
                 alignment: Alignment.centerLeft,
                 decoration: BoxDecoration(
                   color: Color(0xffF8F8F8),
@@ -560,14 +542,17 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     RichText(
                       text: TextSpan(
                         style: TextStyle(
                           color: const Color(0xFF111111),
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w500,
-                          letterSpacing: -0.5,
+                          fontSize: 13.sp,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: DisplayUtil.getLetterSpacing(
+                                  px: 13.sp, percent: -2.5)
+                              .w,
                         ),
                         children: [
                           TextSpan(
@@ -577,9 +562,11 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
                             text: '선착순',
                             style: TextStyle(
                               color: const Color(0xFF398EF3),
-                              fontSize: 14.sp,
-                              fontWeight: FontWeight.w500,
-                              letterSpacing: -0.5,
+                              fontSize: 13.sp,
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: DisplayUtil.getLetterSpacing(
+                                      px: 13.sp, percent: -2.5)
+                                  .w,
                             ),
                           ),
                           TextSpan(
@@ -592,9 +579,11 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
                       '해당 캠핑장 이용 시 주의하세요.',
                       style: TextStyle(
                         color: const Color(0xff777777),
-                        fontSize: 11.sp,
+                        fontSize: 10.sp,
                         fontWeight: FontWeight.w400,
-                        letterSpacing: -0.5,
+                        letterSpacing: DisplayUtil.getLetterSpacing(
+                                px: 10.sp, percent: -2.5)
+                            .w,
                       ),
                     ),
                   ],
@@ -953,14 +942,14 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
             ),
           ),
           Positioned(
-            top: 86.h,
+            top: 87.h,
             right: 2.w,
             child: Row(
               children: [
                 Text(
-                  "정보수정 요청",
+                  "문의하기",
                   style: TextStyle(
-                    fontSize: 11.sp,
+                    fontSize: 12.sp,
                     fontWeight: FontWeight.w400,
                     color: const Color(0xFF777777),
                     decoration: TextDecoration.underline,
@@ -986,7 +975,7 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
             top: 0,
             child: Container(
               width: 360.w,
-              height: (46.5).h,
+              height: 47.h,
               decoration: const BoxDecoration(
                 border: Border(
                   bottom: BorderSide(
@@ -1011,8 +1000,8 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
                         child: Text(
                           "기본 정보",
                           style: TextStyle(
-                            fontSize: 15.sp,
-                            fontWeight: FontWeight.w600,
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w500,
                             color:
                                 infoTab ? textblack : const Color(0xFF777777),
                           ),
@@ -1034,8 +1023,8 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
                         child: Text(
                           "리뷰",
                           style: TextStyle(
-                            fontSize: 15.sp,
-                            fontWeight: FontWeight.w600,
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w500,
                             color:
                                 infoTab ? const Color(0xFFb8b8b8) : textblack,
                           ),
@@ -1480,7 +1469,7 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
           ),
         ),
         Positioned(
-          top: 0,
+          top: 0.h,
           child: Container(
             width: 360.w,
             height: 10.h,
@@ -1548,7 +1537,7 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
               );
             }),
           ),
-          SizedBox(height: 24.h),
+          SizedBox(height: 25.h),
           Visibility(
             visible: !isAmenityExpanded,
             child: GestureDetector(
@@ -1576,7 +1565,7 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
               ),
             ),
           ),
-          SizedBox(height: 25.h),
+          SizedBox(height: 24.h),
           Container(
             height: 1.h,
             color: const Color(0xFFdedede),
@@ -1590,10 +1579,7 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
     return Column(
       children: [
         SizedBox(
-          height: 1.h,
-        ),
-        SizedBox(
-          height: 21.h,
+          height: 24.h,
           child: Row(
             children: [
               SizedBox(
@@ -1612,13 +1598,13 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
           ),
         ),
         SizedBox(
-          height: 9.h,
+          height: 12.h,
         ),
         Container(
           alignment: Alignment.centerLeft,
           padding: EdgeInsets.only(left: 16.w),
           child: Container(
-            width: 66.w,
+            width: 62.w,
             height: 22.h,
             padding: EdgeInsets.fromLTRB(7.w, 3.h, 7.w, 3.h),
             decoration: BoxDecoration(
@@ -1634,7 +1620,8 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
                     height: 1.1,
                     color: const Color(0xFF777777),
                     fontWeight: FontWeight.w400,
-                    letterSpacing: -0.5,
+                    letterSpacing:
+                        DisplayUtil.getLetterSpacing(px: 12.sp, percent: -3).w,
                   ),
                 ),
                 SizedBox(
@@ -1649,214 +1636,219 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
             ),
           ),
         ),
-        Container(
+        SizedBox(
+          height: 3.h,
+        ),
+        SizedBox(
           height: 309.h,
-          padding: EdgeInsets.only(
-            left: 14.w,
-          ),
           child: ListView.builder(
             itemCount: reviewItems.length,
             shrinkWrap: true,
             scrollDirection: Axis.horizontal,
             itemBuilder: (context, index) {
               ReviewItem item = reviewItems[index];
-              return Align(
-                alignment: Alignment.topCenter,
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (c) => const CampingReviewScreen()),
-                    );
-                  },
-                  child: Container(
-                    width: 237.w,
-                    height: 277.h,
-                    margin: EdgeInsets.fromLTRB(
-                      2.w,
-                      16.h,
-                      8.w,
-                      16.h,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(24.r),
-                      boxShadow: [
-                        BoxShadow(
-                          color: const Color(0x1A000000),
-                          blurRadius: 20.r,
-                          offset: const Offset(0, 1),
-                        ),
-                      ],
-                    ),
-                    child: Stack(
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(24.r),
-                          child: Image.asset(
-                            item.img,
-                            fit: BoxFit.fill,
-                            width: 237.w,
-                            height: 277.h,
+              return Padding(
+                padding:
+                    index == 0 ? EdgeInsets.only(left: 16.w) : EdgeInsets.zero,
+                child: Align(
+                  alignment: Alignment.topCenter,
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (c) => const CampingReviewScreen()),
+                      );
+                    },
+                    child: Container(
+                      width: 237.w,
+                      height: 277.h,
+                      margin: EdgeInsets.fromLTRB(
+                        2.w,
+                        16.h,
+                        8.w,
+                        16.h,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(24.r),
+                        boxShadow: [
+                          BoxShadow(
+                            color: const Color(0x1A000000),
+                            blurRadius: 15.r,
+                            offset: const Offset(0, 1),
                           ),
-                        ),
-                        Positioned(
-                          top: 150.h,
-                          left: 0,
-                          right: 0,
-                          child: Container(
-                            height: 127.h,
-                            width: 237.w,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.vertical(
-                                bottom: Radius.circular(24.r),
-                              ),
-                              color: Colors.white,
+                        ],
+                      ),
+                      child: Stack(
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(24.r),
+                            child: Image.asset(
+                              item.img,
+                              fit: BoxFit.fill,
+                              width: 237.w,
+                              height: 277.h,
                             ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                SizedBox(
-                                  height: 12.h,
+                          ),
+                          Positioned(
+                            top: 150.h,
+                            left: 0,
+                            right: 0,
+                            child: Container(
+                              height: 127.h,
+                              width: 237.w,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.vertical(
+                                  bottom: Radius.circular(24.r),
                                 ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: List.generate(
-                                    5,
-                                    (index) {
-                                      if (index == 4) {
+                                color: Colors.white,
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  SizedBox(
+                                    height: 12.h,
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: List.generate(
+                                      5,
+                                      (index) {
+                                        if (index == 4) {
+                                          return Image.asset(
+                                            'assets/images/home_rating_grey.png',
+                                            width: 12.w,
+                                            height: 11.h,
+                                          );
+                                        }
                                         return Image.asset(
-                                          'assets/images/ic_detail_star_empty.png',
+                                          'assets/images/home_rating.png',
                                           width: 12.w,
                                           height: 11.h,
                                         );
-                                      }
-                                      return Image.asset(
-                                        'assets/images/ic_detail_star.png',
-                                        width: 12.w,
-                                        height: 11.h,
-                                      );
-                                    },
+                                      },
+                                    ),
                                   ),
-                                ),
-                                SizedBox(
-                                  height: 8.h,
-                                ),
-                                SizedBox(
-                                  height: 12.h,
-                                  child: Row(
+                                  SizedBox(
+                                    height: 8.h,
+                                  ),
+                                  SizedBox(
+                                    height: 12.h,
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          '‘청결도 ',
+                                          style: TextStyle(
+                                            fontSize: 10.sp,
+                                            height: 1.2,
+                                            color: const Color(0xFFb5b5b5),
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                        Text(
+                                          '보통’',
+                                          style: TextStyle(
+                                            fontSize: 10.sp,
+                                            height: 1.2,
+                                            color: const Color(0xFF8b8b8b),
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: 12.w,
+                                        ),
+                                        Text(
+                                          '‘주변소음 ',
+                                          style: TextStyle(
+                                            fontSize: 10.sp,
+                                            height: 1.2,
+                                            color: const Color(0xFFb5b5b5),
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                        Text(
+                                          '조용함’',
+                                          style: TextStyle(
+                                            height: 1.2,
+                                            fontSize: 10.sp,
+                                            color: const Color(0xFF8b8b8b),
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: 12.w,
+                                        ),
+                                        Text(
+                                          '‘정확도 ',
+                                          style: TextStyle(
+                                            fontSize: 10.sp,
+                                            height: 1.2,
+                                            color: const Color(0xFFb5b5b5),
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                        Text(
+                                          '높음’',
+                                          style: TextStyle(
+                                            fontSize: 10.sp,
+                                            color: const Color(0xFF8b8b8b),
+                                            height: 1.2,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 8.h,
+                                  ),
+                                  Text(
+                                    item.content,
+                                    style: TextStyle(
+                                      fontSize: 12.sp,
+                                      height: 1.2,
+                                      color: textblack,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  SizedBox(
+                                    height: 9.h,
+                                  ),
+                                  Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      Text(
-                                        '‘청결도 ',
-                                        style: TextStyle(
-                                          fontSize: 10.sp,
-                                          height: 1.2,
-                                          color: const Color(0xFFb5b5b5),
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                      Text(
-                                        '보통’',
-                                        style: TextStyle(
-                                          fontSize: 10.sp,
-                                          height: 1.2,
-                                          color: const Color(0xFF8b8b8b),
-                                          fontWeight: FontWeight.w500,
+                                      Container(
+                                        width: 20.w,
+                                        height: 20.h,
+                                        decoration: const BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: Color(0xFFcbcbcb),
                                         ),
                                       ),
                                       SizedBox(
-                                        width: 12.w,
+                                        width: 4.w,
                                       ),
                                       Text(
-                                        '‘주변소음 ',
+                                        item.id,
                                         style: TextStyle(
-                                          fontSize: 10.sp,
-                                          height: 1.2,
-                                          color: const Color(0xFFb5b5b5),
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                      Text(
-                                        '조용함’',
-                                        style: TextStyle(
-                                          height: 1.2,
-                                          fontSize: 10.sp,
-                                          color: const Color(0xFF8b8b8b),
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        width: 12.w,
-                                      ),
-                                      Text(
-                                        '‘정확도 ',
-                                        style: TextStyle(
-                                          fontSize: 10.sp,
-                                          height: 1.2,
-                                          color: const Color(0xFFb5b5b5),
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                      Text(
-                                        '높음’',
-                                        style: TextStyle(
-                                          fontSize: 10.sp,
-                                          color: const Color(0xFF8b8b8b),
-                                          height: 1.2,
+                                          fontSize: 12.sp,
+                                          height: 1.1,
+                                          color: const Color(0xFF777777),
                                           fontWeight: FontWeight.w500,
                                         ),
                                       ),
                                     ],
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 8.h,
-                                ),
-                                Text(
-                                  item.content,
-                                  style: TextStyle(
-                                    fontSize: 12.sp,
-                                    height: 1.2,
-                                    color: textblack,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                  textAlign: TextAlign.center,
-                                ),
-                                SizedBox(
-                                  height: 9.h,
-                                ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Container(
-                                      width: 20.w,
-                                      height: 20.h,
-                                      decoration: const BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: Color(0xFFcbcbcb),
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      width: 4.w,
-                                    ),
-                                    Text(
-                                      item.id,
-                                      style: TextStyle(
-                                        fontSize: 12.sp,
-                                        height: 1.1,
-                                        color: const Color(0xFF777777),
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                  ],
-                                )
-                              ],
+                                  )
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),
