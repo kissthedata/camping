@@ -23,14 +23,14 @@ class CustomBottomAppBar extends StatelessWidget {
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 10,
+            color: Colors.black.withAlpha(26),
+            blurRadius: 20,
             offset: const Offset(0, -3),
           ),
         ],
       ),
       child: Padding(
-        padding: EdgeInsets.fromLTRB(44.w, 12.h, 44.w, 0.h),
+        padding: EdgeInsets.fromLTRB(38.w, 12.h, 38.w, 0.h),
         child: Row(
           children: [
             Expanded(

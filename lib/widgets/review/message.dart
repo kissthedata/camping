@@ -104,7 +104,6 @@ class Message extends StatelessWidget {
                   child: Column(
                     children: [
                       Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 16),
                         width: 328.w, // 가로
                         height: 195.h, // 세로
                         decoration: BoxDecoration(
@@ -127,7 +126,7 @@ class Message extends StatelessWidget {
                                 color: const Color(0xff777777),
                                 fontSize: 12.sp,
                                 fontWeight: FontWeight.w400,
-                                letterSpacing: -1.0.w,
+                                letterSpacing: -0.5.w,
                               ),
                               hintMaxLines: 2,
                               contentPadding: EdgeInsets.only(

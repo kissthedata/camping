@@ -105,7 +105,7 @@ class _State extends State<Accuracy> {
                 width: 328.w,
                 height: 173.h,
                 alignment: Alignment.center,
-                margin: const EdgeInsets.symmetric(horizontal: 24),
+                margin: const EdgeInsets.symmetric(horizontal: 16),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(16),
                   color: const Color(0xffffffff),
@@ -170,7 +170,7 @@ class _State extends State<Accuracy> {
                                       children: [
                                         Image.asset(
                                           'assets/vectors/Frame 314.png',
-                                          width: 28.w,
+                                          width: 32.w,
                                           height: 28.h,
                                         ),
                                         Visibility(

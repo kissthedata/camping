@@ -1629,8 +1629,8 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
                 ),
                 Image.asset(
                   'assets/images/detail_sort.png',
-                  width: 14.w,
-                  height: 14.h,
+                  width: 13.w,
+                  height: 13.h,
                 ),
               ],
             ),
@@ -1865,8 +1865,8 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
                 MaterialPageRoute(builder: (c) => const ReviewScreen()));
           },
           child: Container(
-            height: 50,
-            width: 311.w,
+            height: 56,
+            width: 328.w,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8.r),
               color: Color(0xFF398EF3),

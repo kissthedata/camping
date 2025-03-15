@@ -105,7 +105,7 @@ class _State extends State<Atmosphere> {
                 width: 328.w,
                 height: 173.h,
                 alignment: Alignment.center,
-                margin: const EdgeInsets.symmetric(horizontal: 24),
+                margin: const EdgeInsets.symmetric(horizontal: 16),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(16),
                   color: const Color(0xffffffff),
@@ -170,7 +170,7 @@ class _State extends State<Atmosphere> {
                                       children: [
                                         Image.asset(
                                           'assets/vectors/Frame 314.png',
-                                          width: 28.w,
+                                          width: 32.w,
                                           height: 28.h,
                                         ),
                                         Visibility(
@@ -198,7 +198,7 @@ class _State extends State<Atmosphere> {
                     ),
                     SizedBox(height: 14.h),
                     Container(
-                      margin: EdgeInsets.symmetric(horizontal: 35.w),
+                      margin: EdgeInsets.symmetric(horizontal: 33.w),
                       child: Stack(
                         alignment: Alignment.center, // 컨테이너의 정중앙에 보통 배치
                         children: [
@@ -220,7 +220,7 @@ class _State extends State<Atmosphere> {
                                   fontSize: 12.sp,
                                   fontWeight: FontWeight.w400,
                                   color: const Color(0xff9a9a9a),
-                                  letterSpacing: -1.0.w,
+                                  letterSpacing: -0.5.w,
                                 ),
                               ),
                             ],

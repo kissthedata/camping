@@ -105,7 +105,7 @@ class _State extends State<Cleanliness> {
                 width: 328.w,
                 height: 173.h,
                 alignment: Alignment.center,
-                margin: EdgeInsets.symmetric(horizontal: 24.w),
+                margin: EdgeInsets.symmetric(horizontal: 16.w),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(16),
                   color: const Color(0xffffffff),
@@ -145,7 +145,7 @@ class _State extends State<Cleanliness> {
                           ),
                         ),
                         Container(
-                          margin: EdgeInsets.symmetric(horizontal: 25.w),
+                          margin: EdgeInsets.symmetric(horizontal: 35.w),
                           child: Center(
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
@@ -153,7 +153,7 @@ class _State extends State<Cleanliness> {
                                 return Container(
                                   margin: index == 4
                                       ? null
-                                      : EdgeInsets.only(right: 25.w),
+                                      : EdgeInsets.only(right: 22.w),
                                   child: GestureDetector(
                                     onTap: () {
                                       setState(() {
@@ -170,7 +170,7 @@ class _State extends State<Cleanliness> {
                                       children: [
                                         Image.asset(
                                           'assets/vectors/Frame 314.png',
-                                          width: 28.w,
+                                          width: 32.w,
                                           height: 28.h,
                                         ),
                                         Visibility(

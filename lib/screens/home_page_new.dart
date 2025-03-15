@@ -49,14 +49,14 @@ class MyHomePageNewState extends State<MyHomePageNew>
                   indicatorPadding: EdgeInsets.symmetric(horizontal: 16.w),
                   labelColor: Color(0xff111111),
                   labelStyle: TextStyle(
-                      fontSize: 12.sp,
+                      fontSize: 14.sp,
                       fontWeight: FontWeight.w600,
                       letterSpacing:
                           DisplayUtil.getLetterSpacing(px: 12.sp, percent: -3)
                               .w),
                   unselectedLabelColor: Color(0xff777777),
                   unselectedLabelStyle: TextStyle(
-                      fontSize: 12.sp,
+                      fontSize: 14.sp,
                       fontWeight: FontWeight.w500,
                       letterSpacing:
                           DisplayUtil.getLetterSpacing(px: 12.sp, percent: -3)

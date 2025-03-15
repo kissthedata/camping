@@ -22,7 +22,7 @@ class Done extends StatelessWidget {
                   width: 80.15.w,
                   height: 80.15.h,
                 ),
-                SizedBox(height: 33.85.h),
+                SizedBox(height: 13.85.h),
                 Text(
                   '리뷰가 등록되었습니다',
                   style: TextStyle(
@@ -31,7 +31,7 @@ class Done extends StatelessWidget {
                     color: const Color(0xff111111),
                   ),
                 ),
-                SizedBox(height: 9.h),
+                SizedBox(height: 3.h),
                 Text(
                   '캠퍼들에게 리뷰는 큰 도움이 됩니다.',
                   style: TextStyle(
