@@ -170,7 +170,11 @@ class _State extends State<Atmosphere> {
                                       children: [
                                         Image.asset(
                                           'assets/vectors/Frame 314.png',
+<<<<<<< HEAD
                                           width: 32.w,
+=======
+                                          width: 28.w,
+>>>>>>> e9409e94126492ed3c00f75df32bd7ad4fa45ec8
                                           height: 28.h,
                                         ),
                                         Visibility(
@@ -220,7 +224,11 @@ class _State extends State<Atmosphere> {
                                   fontSize: 12.sp,
                                   fontWeight: FontWeight.w400,
                                   color: const Color(0xff9a9a9a),
+<<<<<<< HEAD
                                   letterSpacing: -0.5.w,
+=======
+                                  letterSpacing: -1.0.w,
+>>>>>>> e9409e94126492ed3c00f75df32bd7ad4fa45ec8
                                 ),
                               ),
                             ],

@@ -79,7 +79,10 @@ class RecommendState extends State<Recommend> {
                         ),
                         strutStyle: StrutStyle(forceStrutHeight: true),
                       ),
+<<<<<<< HEAD
                       SizedBox(height: 3.h),
+=======
+>>>>>>> e9409e94126492ed3c00f75df32bd7ad4fa45ec8
                       Text(
                         '경남 창원시 주변 카라반을 찾아봤어요',
                         style: TextStyle(
@@ -95,7 +98,11 @@ class RecommendState extends State<Recommend> {
                   ),
                   Spacer(),
                   Container(
+<<<<<<< HEAD
                     width: 43.42.w,
+=======
+                    width: 53.42.w,
+>>>>>>> e9409e94126492ed3c00f75df32bd7ad4fa45ec8
                     height: 21.95.h,
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
@@ -394,7 +401,10 @@ class RecommendState extends State<Recommend> {
                         ),
                         strutStyle: StrutStyle(forceStrutHeight: true),
                       ),
+<<<<<<< HEAD
                       SizedBox(height: 3.h),
+=======
+>>>>>>> e9409e94126492ed3c00f75df32bd7ad4fa45ec8
                       Text(
                         '경남 창원시 주변 글랭핑장을 찾아봤어요',
                         style: TextStyle(
@@ -410,7 +420,11 @@ class RecommendState extends State<Recommend> {
                   ),
                   Spacer(),
                   Container(
+<<<<<<< HEAD
                     width: 43.42.w,
+=======
+                    width: 53.42.w,
+>>>>>>> e9409e94126492ed3c00f75df32bd7ad4fa45ec8
                     height: 21.95.h,
                     alignment: Alignment.center,
                     decoration: BoxDecoration(

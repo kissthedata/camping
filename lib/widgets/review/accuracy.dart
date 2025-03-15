@@ -170,7 +170,11 @@ class _State extends State<Accuracy> {
                                       children: [
                                         Image.asset(
                                           'assets/vectors/Frame 314.png',
+<<<<<<< HEAD
                                           width: 32.w,
+=======
+                                          width: 28.w,
+>>>>>>> e9409e94126492ed3c00f75df32bd7ad4fa45ec8
                                           height: 28.h,
                                         ),
                                         Visibility(
