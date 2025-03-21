@@ -115,126 +115,138 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
-        designSize: const Size(360, 800),
+        designSize: const Size(360, 800), // 화면 디자인 기준 크기 설정
         builder: (context, child) {
           return Scaffold(
             body: SafeArea(
-              top: false,
-              bottom: false,
+              top: false, // 상단 여백 제거
+              bottom: false, // 하단 여백 제거
               child: Stack(
                 children: [
                   SingleChildScrollView(
-                    controller: _scrollController,
+                    // 스크롤 가능한 화면 구성
+                    controller: _scrollController, // 스크롤 동작 제어를 위한 컨트롤러
                     child: Column(
                       children: [
-                        //상단 이미지
-                        _buildTopImage(),
-                        //타이틀 영역
-                        _buildTitle(),
-                        //탭 영역
-                        _buildTab(_targetKey),
-                        //본문 영역
-                        _buildContent(),
+                        // 상단 이미지 섹션
+                        _buildTopImage(), // 이미지 렌더링 메서드 호출
+                        // 타이틀 섹션
+                        _buildTitle(), // 타이틀 렌더링 메서드 호출
+                        // 탭 섹션
+                        _buildTab(
+                            _targetKey), // 탭 렌더링 메서드 호출 (매개변수로 _targetKey 전달)
+                        // 본문 섹션
+                        _buildContent(), // 본문 콘텐츠 렌더링 메서드 호출
                       ],
                     ),
                   ),
-                  //상단 투명 앱바
+                  // 상단 투명 앱바
                   Positioned(
-                    top: 0.h,
-                    child: _buildHeader('캠핑장 상세정보', Colors.transparent),
+                    top: 0.h, // 화면 상단에 고정 위치
+                    child: _buildHeader(
+                      '캠핑장 상세정보', // 헤더 타이틀 텍스트
+                      Colors.transparent, // 헤더 배경색 설정 (투명)
+                    ),
                   ),
-                  //상단 투명 앱바
+                  // 상단 투명 앱바
                   if (_isSticky) ...[
+                    // 조건문: _isSticky가 true일 때만 실행
                     Positioned(
-                        top: 0.h,
-                        child: Column(
-                          children: [
-                            Container(
-                              height: 20.h,
-                              width: 360.w,
-                              color: Colors.white,
-                            ),
-                            _buildStickyHeader(
-                              '캠핑장 상세정보',
-                              Colors.white,
-                            ),
-                            _buildTab(null),
-                          ],
-                        ))
+                      top: 0.h, // 화면의 가장 위에 위치
+                      child: Column(
+                        children: [
+                          Container(
+                            height: 20.h, // 투명 영역 높이
+                            width: 360.w, // 투명 영역 너비
+                            color: Colors.white, // 투명 영역 배경색
+                          ),
+                          _buildStickyHeader(
+                            '캠핑장 상세정보', // 헤더 타이틀 텍스트
+                            Colors.white, // 헤더 배경색
+                          ),
+                          _buildTab(null), // 탭 위젯 호출 (매개변수로 null 전달)
+                        ],
+                      ),
+                    ),
                   ],
 
                   if (showAlert) ...[
+                    // showAlert가 true일 때 실행
                     Positioned(
-                      top: 0,
-                      left: 0,
+                      top: 0, // 화면 상단에 위치
+                      left: 0, // 화면 왼쪽에 위치
                       child: Material(
-                        color: Colors.transparent,
+                        color: Colors.transparent, // 배경색을 투명하게 설정
                         child: Container(
-                          width: 360.w,
-                          height: 800.h,
-                          color: const Color(0x69000000),
-                          alignment: Alignment.center,
+                          width: 360.w, // 화면의 전체 너비
+                          height: 800.h, // 화면의 전체 높이
+                          color: const Color(0x69000000), // 반투명 검은색 배경
+                          alignment: Alignment.center, // 자식 위젯을 중앙 정렬
                           child: Container(
                             decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10.r),
-                              color: const Color(0xC44D5865),
+                              borderRadius:
+                                  BorderRadius.circular(10.r), // 둥근 모서리
+                              color: const Color(0xC44D5865), // 반투명 회색 배경
                               boxShadow: const [
+                                // 그림자 효과
                                 BoxShadow(
-                                  color: Color(0x4D000000),
-                                  blurRadius: 6,
-                                  offset: Offset(0, 0),
+                                  color: Color(0x4D000000), // 그림자 색상
+                                  blurRadius: 6, // 그림자의 흐림 정도
+                                  offset: Offset(0, 0), // 그림자 위치
                                 ),
                               ],
                             ),
-                            width: 328.w,
-                            height: 62.h,
+                            width: 328.w, // 알림 컨테이너의 너비
+                            height: 62.h, // 알림 컨테이너의 높이
                             child: Row(
                               children: [
                                 SizedBox(
-                                  width: 17.w,
+                                  width: 17.w, // 왼쪽 여백
                                 ),
                                 Container(
                                   decoration: const BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: Color(0xFF31e44d),
+                                    shape: BoxShape.circle, // 원형 모양
+                                    color: Color(0xFF31e44d), // 녹색 배경
                                   ),
-                                  alignment: Alignment.center,
-                                  width: 22.w,
-                                  height: 22.h,
+                                  alignment: Alignment.center, // 내부 콘텐츠 중앙 정렬
+                                  width: 22.w, // 원의 너비
+                                  height: 22.h, // 원의 높이
                                   child: Image.asset(
-                                    'assets/images/ic_check_alert.png',
-                                    width: 10.w,
-                                    height: 6.h,
+                                    'assets/images/ic_check_alert.png', // 체크 아이콘 이미지 경로
+                                    width: 10.w, // 이미지 너비
+                                    height: 6.h, // 이미지 높이
                                   ),
                                 ),
                                 SizedBox(
-                                  width: 12.w,
+                                  width: 12.w, // 이미지와 텍스트 사이 간격
                                 ),
                                 Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.start, // 텍스트를 왼쪽 정렬
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.center, // 텍스트를 수직 중앙 정렬
                                   children: [
                                     Text(
-                                      '클립보드에 복사완료!',
+                                      '클립보드에 복사완료!', // 알림 제목
                                       style: TextStyle(
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 14.sp,
-                                        color: Colors.white,
+                                        fontWeight: FontWeight.w500, // 텍스트 굵기
+                                        fontSize: 14.sp, // 텍스트 크기
+                                        color: Colors.white, // 텍스트 색상
                                       ),
                                     ),
                                     SizedBox(
-                                      height: 1.h,
+                                      height: 1.h, // 제목과 설명 사이 간격
                                     ),
                                     Text(
-                                      '차박지 주소가 클립보드에 복사되었습니다.',
+                                      '차박지 주소가 클립보드에 복사되었습니다.', // 알림 설명
                                       style: TextStyle(
-                                        fontWeight: FontWeight.w400,
-                                        fontSize: 12.sp,
-                                        color: Colors.white,
+                                        fontWeight: FontWeight.w400, // 텍스트 굵기
+                                        fontSize: 12.sp, // 텍스트 크기
+                                        color: Colors.white, // 텍스트 색상
                                       ),
                                     ),
                                   ],
-                                )
+                                ),
                               ],
                             ),
                           ),
@@ -251,47 +263,51 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
 
   Widget _buildHeader(String title, Color color) {
     return Container(
-      width: 360.w,
-      height: 70.h,
+      width: 360.w, // 헤더의 너비 설정
+      height: 70.h, // 헤더의 높이 설정
       decoration: const BoxDecoration(
         gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
+          // 상단에서 하단으로 그라데이션 효과
+          begin: Alignment.topCenter, // 시작점 (위쪽)
+          end: Alignment.bottomCenter, // 끝점 (아래쪽)
           colors: [
-            Color(0x59FFFFFF),
-            Color(0x00FFFFFF),
+            Color(0x59FFFFFF), // 반투명 흰색
+            Color(0x00FFFFFF), // 투명
           ],
         ),
       ),
       padding: EdgeInsets.only(
-        top: 20.h,
+        top: 20.h, // 내부 상단 여백
       ),
       child: Stack(
         children: [
           Positioned(
-            left: 16.w,
-            top: (13.5).h,
+            // 뒤로가기 버튼 위치 설정
+            left: 16.w, // 왼쪽 여백
+            top: (13.5).h, // 상단 위치
             child: GestureDetector(
+              // 터치 동작 감지
               onTap: () {
-                Navigator.of(context).pop();
+                Navigator.of(context).pop(); // 뒤로가기 동작 수행
               },
               child: Image.asset(
-                'assets/images/detail_back.png',
-                width: 23.w,
-                height: 23.h,
+                'assets/images/detail_back.png', // 뒤로가기 버튼 이미지 경로
+                width: 23.w, // 이미지의 너비
+                height: 23.h, // 이미지의 높이
               ),
             ),
           ),
           Center(
+            // 헤더의 중앙에 텍스트 배치
             child: Text(
-              title,
+              title, // 헤더 타이틀 텍스트
               style: TextStyle(
-                color: Colors.white,
-                fontSize: 16.sp,
-                fontWeight: FontWeight.w600,
+                color: Colors.white, // 텍스트 색상 (흰색)
+                fontSize: 16.sp, // 텍스트 크기
+                fontWeight: FontWeight.w600, // 텍스트 굵기
               ),
             ),
-          )
+          ),
         ],
       ),
     );
@@ -299,32 +315,35 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
 
   Widget _buildStickyHeader(String title, Color color) {
     return Container(
-      width: 360.w,
-      height: 50.h,
-      color: color,
+      width: 360.w, // 헤더의 너비 설정
+      height: 50.h, // 헤더의 높이 설정
+      color: color, // 매개변수로 전달된 색상을 배경색으로 설정
       child: Stack(
         children: [
           Positioned(
-            left: 16.w,
-            top: (13.5).h,
+            // 뒤로가기 버튼 배치
+            left: 16.w, // 왼쪽 여백 설정
+            top: (13.5).h, // 상단 위치 설정
             child: GestureDetector(
+              // 터치 이벤트 감지
               onTap: () {
-                Navigator.of(context).pop();
+                Navigator.of(context).pop(); // 현재 화면을 닫고 이전 화면으로 이동
               },
               child: Image.asset(
-                'assets/images/ic_back.png',
-                width: 23.w,
-                height: 23.h,
+                'assets/images/ic_back.png', // 뒤로가기 버튼 이미지 경로
+                width: 23.w, // 이미지의 너비
+                height: 23.h, // 이미지의 높이
               ),
             ),
           ),
           Center(
+            // 헤더 중앙에 텍스트 배치
             child: Text(
-              title,
+              title, // 헤더의 제목으로 표시할 텍스트
               style: TextStyle(
-                color: textblack,
-                fontSize: 16.sp,
-                fontWeight: FontWeight.w600,
+                color: textblack, // 텍스트 색상 설정 (textblack 변수 사용)
+                fontSize: 16.sp, // 텍스트 크기 설정
+                fontWeight: FontWeight.w600, // 텍스트 굵기 설정
               ),
             ),
           )
@@ -335,53 +354,62 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
 
   Widget _buildTopImage() {
     return SizedBox(
-      width: 360.w,
-      height: 278.h,
+      width: 360.w, // 이미지 영역의 너비
+      height: 278.h, // 이미지 영역의 높이
       child: Stack(
         children: [
           PageView.builder(
-            controller: _pageController,
-            itemCount: images.length,
+            // 스크롤 가능한 페이지 뷰 생성
+            controller: _pageController, // 페이지 컨트롤러 연결
+            itemCount: images.length, // 이미지 개수
             itemBuilder: (context, index) {
+              // 각 페이지에 이미지 렌더링
               return Image.asset(
-                images[index],
-                fit: BoxFit.fill,
+                images[index], // 이미지 경로
+                fit: BoxFit.fill, // 이미지를 컨테이너에 꽉 차게 표시
               );
             },
             onPageChanged: (value) {
+              // 페이지 변경 시 동작
               setState(() {
-                _currentPage = value;
+                _currentPage = value; // 현재 페이지 값 업데이트
               });
             },
           ),
           Positioned(
-            top: 254.h,
-            left: 0,
-            right: 0,
+            // 하단 인디케이터 위치
+            top: 254.h, // 상단에서의 거리 설정
+            left: 0, // 왼쪽 정렬
+            right: 0, // 오른쪽 정렬
             child: Container(
-              alignment: Alignment.center,
+              alignment: Alignment.center, // 자식 위젯을 중앙 정렬
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center, // 인디케이터 중앙 정렬
                 children: List.generate(
+                  // 이미지 개수만큼 인디케이터 생성
                   images.length,
                   (index) {
                     return AnimatedContainer(
-                      duration: const Duration(milliseconds: 300),
-                      width: _currentPage == index ? 15.w : 4.w,
-                      height: 4.h,
-                      margin: const EdgeInsets.symmetric(horizontal: 5.0),
-                      child: _currentPage == index
+                      // 애니메이션 효과를 가진 컨테이너
+                      duration:
+                          const Duration(milliseconds: 300), // 애니메이션 지속 시간
+                      width:
+                          _currentPage == index ? 15.w : 4.w, // 현재 페이지는 넓게 표시
+                      height: 4.h, // 인디케이터 높이
+                      margin: const EdgeInsets.symmetric(
+                          horizontal: 5.0), // 인디케이터 간 간격
+                      child: _currentPage == index // 현재 페이지 확인
                           ? Container(
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(
-                                    12.r), // 선택된 인디케이터는 직사각형에 radius 적용
-                                color: Colors.blue, // 선택된 인디케이터는 파란색
+                                    12.r), // 선택된 인디케이터 둥근 직사각형
+                                color: Colors.blue, // 선택된 인디케이터 색상
                               ),
                             )
                           : Container(
                               decoration: const BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Colors.white,
+                                shape: BoxShape.circle, // 일반 인디케이터는 원형
+                                color: Colors.white, // 일반 인디케이터 색상
                               ),
                             ),
                     );
@@ -397,111 +425,112 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
 
   Widget _buildTitle() {
     return Container(
-      height: 189.h,
-      width: 360.w,
-      color: Colors.white,
-      padding: EdgeInsets.symmetric(horizontal: 16.w),
+      height: 189.h, // 제목 섹션 높이
+      width: 360.w, // 전체 너비 설정
+      color: Colors.white, // 배경색 흰색
+      padding: EdgeInsets.symmetric(horizontal: 16.w), // 좌우 패딩 설정
       child: Stack(
         children: [
           Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start, // 왼쪽 정렬
             children: [
-              SizedBox(height: 12.h),
+              SizedBox(height: 12.h), // 상단 여백 추가
               Container(
-                height: 18.h,
-                padding: EdgeInsets.fromLTRB(6.w, 2.h, 6.w, 3.h),
+                height: 18.h, // 카테고리 태그 높이
+                padding: EdgeInsets.fromLTRB(6.w, 2.h, 6.w, 3.h), // 내부 패딩
                 decoration: BoxDecoration(
-                  color: Color(0xffE9F9EF),
-                  borderRadius: BorderRadius.circular(4.r),
+                  color: Color(0xffE9F9EF), // 배경색 (연한 녹색)
+                  borderRadius: BorderRadius.circular(4.r), // 둥근 모서리 적용
                 ),
                 child: Text(
-                  '카라반',
+                  '카라반', // 카테고리 텍스트
                   style: TextStyle(
-                      fontSize: 10.sp,
-                      fontWeight: FontWeight.w600,
-                      color: Color(0xff33c46f),
+                      fontSize: 10.sp, // 글자 크기
+                      fontWeight: FontWeight.w600, // 글자 두께 (SemiBold)
+                      color: Color(0xff33c46f), // 글자색 (녹색)
                       letterSpacing:
                           DisplayUtil.getLetterSpacing(px: 10.sp, percent: -2)
-                              .w),
+                              .w), // 자간 설정
                 ),
               ),
-              SizedBox(height: 6.h),
+              SizedBox(height: 6.h), // 제목과 카테고리 태그 사이 여백
               SizedBox(
-                height: 29.h,
+                height: 29.h, // 제목 영역 높이
                 child: Text(
-                  title,
+                  title, // 캠핑장 제목
                   style: TextStyle(
-                    color: textblack,
-                    fontSize: 24.sp,
-                    letterSpacing: (-0.04).w,
-                    height: (1.2).h,
-                    fontWeight: FontWeight.w500,
+                    color: textblack, // 글자 색상 (검정)
+                    fontSize: 24.sp, // 글자 크기
+                    letterSpacing: (-0.04).w, // 자간 조정
+                    height: (1.2).h, // 줄 간격 조정
+                    fontWeight: FontWeight.w500, // 글자 두께 (Medium)
                   ),
                 ),
               ),
               SizedBox(
-                height: 17.h,
+                height: 17.h, // 주소 영역 높이
                 child: Text(
-                  addr,
+                  addr, // 캠핑장 주소
                   style: TextStyle(
-                    color: Color(0xff777777),
-                    fontSize: 14.sp,
-                    letterSpacing: (-0.02).w,
-                    height: (1.2).h,
-                    fontWeight: FontWeight.w500,
+                    color: Color(0xff777777), // 글자 색상 (회색)
+                    fontSize: 14.sp, // 글자 크기
+                    letterSpacing: (-0.02).w, // 자간 조정
+                    height: (1.2).h, // 줄 간격 조정
+                    fontWeight: FontWeight.w500, // 글자 두께 (Medium)
                   ),
                 ),
               ),
-              SizedBox(height: 8.h),
+              SizedBox(height: 8.h), // 별점과 주소 사이 여백
               SizedBox(
-                height: 13.h,
+                height: 13.h, // 별점 및 평균 점수 표시 영역 높이
                 child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center, // 아이콘과 텍스트 정렬
                   children: [
                     Image.asset(
-                      'assets/images/ic_detail_star.png',
-                      width: 12.w,
-                      height: 12.h,
+                      'assets/images/ic_detail_star.png', // 별점 아이콘
+                      width: 12.w, // 아이콘 너비
+                      height: 12.h, // 아이콘 높이
                     ),
-                    SizedBox(width: 4.w),
+                    SizedBox(width: 4.w), // 아이콘과 점수 사이 여백
                     SizedBox(
-                      height: 12.h,
+                      height: 12.h, // 점수 텍스트 높이
                       child: Text(
-                        avg.toString(),
+                        avg.toString(), // 평균 별점 표시
                         style: TextStyle(
-                          color: const Color(0xFF777777),
-                          fontSize: 12.sp,
-                          height: 1.h,
-                          fontWeight: FontWeight.w500,
+                          color: const Color(0xFF777777), // 글자 색상 (회색)
+                          fontSize: 12.sp, // 글자 크기
+                          height: 1.h, // 줄 간격 조정
+                          fontWeight: FontWeight.w500, // 글자 두께 (Medium)
                         ),
                       ),
                     ),
-                    SizedBox(width: 10.w),
+                    SizedBox(width: 10.w), // 별점과 리뷰 텍스트 사이 여백
                     SizedBox(
-                      height: 17.h,
+                      height: 17.h, // "리뷰" 텍스트 높이
                       child: Text(
-                        '리뷰',
+                        '리뷰', // 리뷰 라벨
                         style: TextStyle(
-                          color: const Color(0xFFb8b8b8),
-                          fontSize: 12.sp,
-                          height: 1.h,
-                          fontWeight: FontWeight.w500,
+                          color: const Color(0xFFb8b8b8), // 연한 회색 글자 색상
+                          fontSize: 12.sp, // 글자 크기
+                          height: 1.h, // 줄 간격 조정
+                          fontWeight: FontWeight.w500, // 글자 두께 (Medium)
                         ),
                       ),
                     ),
-                    SizedBox(width: 4.w),
+                    SizedBox(width: 4.w), // "리뷰" 텍스트와 숫자 사이 여백
                     SizedBox(
-                      height: 17.h,
+                      height: 17.h, // 리뷰 개수 텍스트 높이
                       child: Text(
-                        reviewCnt.toString(),
+                        reviewCnt.toString(), // 리뷰 개수 표시
                         style: TextStyle(
-                          color: const Color(0xFFb8b8b8),
-                          fontSize: 12.sp,
-                          height: 1.h,
-                          fontWeight: FontWeight.w500,
+                          color: const Color(0xFFb8b8b8), // 연한 회색 글자 색상
+                          fontSize: 12.sp, // 글자 크기
+                          height: 1.h, // 줄 간격 조정
+                          fontWeight: FontWeight.w500, // 글자 두께 (Medium)
                         ),
                       ),
                     ),
+
                     SizedBox(width: 10.w),
                     SizedBox(
                       height: 17.h,
@@ -531,27 +560,28 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
                   ],
                 ),
               ),
-              SizedBox(height: 20.h),
+
+              SizedBox(height: 20.h), // 상단 여백 추가
               Container(
-                height: 60.h,
-                padding: EdgeInsets.only(left: 15.w),
-                alignment: Alignment.centerLeft,
+                height: 60.h, // 컨테이너 높이
+                padding: EdgeInsets.only(left: 15.w), // 왼쪽 여백
+                alignment: Alignment.centerLeft, // 텍스트 정렬을 왼쪽으로
                 decoration: BoxDecoration(
-                  color: Color(0xffF8F8F8),
-                  borderRadius: BorderRadius.circular(8.r),
+                  color: Color(0xffF8F8F8), // 배경색
+                  borderRadius: BorderRadius.circular(8.r), // 둥근 모서리
                 ),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start, // 텍스트를 왼쪽 정렬
+                  mainAxisAlignment: MainAxisAlignment.center, // 세로 정렬을 중앙으로
                   children: [
                     RichText(
                       text: TextSpan(
                         style: TextStyle(
-                          color: const Color(0xFF111111),
-                          fontSize: 13.sp,
-                          fontWeight: FontWeight.w600,
+                          color: const Color(0xFF111111), // 텍스트 색상
+                          fontSize: 13.sp, // 폰트 크기
+                          fontWeight: FontWeight.w600, // 폰트 두께
                           letterSpacing: DisplayUtil.getLetterSpacing(
-                                  px: 13.sp, percent: -2.5)
+                                  px: 13.sp, percent: -2.5) // 글자 간격 조정
                               .w,
                         ),
                         children: [
@@ -592,24 +622,25 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
             ],
           ),
           Positioned(
-            top: 38.h,
-            right: 0.w,
+            top: 38.h, // 상단 위치 설정
+            right: 0.w, // 오른쪽 위치 설정
             child: Row(
               children: [
                 GestureDetector(
                   onTap: () {
                     showModalBottomSheet(
+                      // 바텀 시트 표시
                       context: context,
-                      isScrollControlled: true,
+                      isScrollControlled: true, // 스크롤 제어
                       builder: (_) {
                         return Container(
-                          width: 360.w,
-                          height: 190.h,
+                          width: 360.w, // 너비 설정
+                          height: 190.h, // 높이 설정
                           padding: EdgeInsets.fromLTRB(
-                            16.w,
-                            20.h,
-                            16.w,
-                            0,
+                            16.w, // 왼쪽 여백
+                            20.h, // 상단 여백
+                            16.w, // 오른쪽 여백
+                            0, // 하단 여백
                           ),
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.vertical(
@@ -657,30 +688,109 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
                                         CrossAxisAlignment.start,
                                     children: [
                                       Container(
-                                        width: 70.w,
-                                        height: 70.h,
+                                        width: 70.w, // 너비 설정
+                                        height: 70.h, // 높이 설정
                                         decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(4.r),
-                                          color: const Color(0xFFf3f5f7),
+                                          borderRadius: BorderRadius.circular(
+                                              4.r), // 둥근 모서리 설정
+                                          color: const Color(
+                                              0xFFf3f5f7), // 배경 색 설정
                                           border: Border.all(
-                                            color: const Color(0x6BBFBFBF),
-                                            width: 1.w,
+                                            color: const Color(
+                                                0x6BBFBFBF), // 테두리 색 설정
+                                            width: 1.w, // 테두리 두께 설정
                                           ),
                                         ),
                                         child: Container(
-                                          margin: EdgeInsets.all(4.w),
+                                          margin:
+                                              EdgeInsets.all(4.w), // 내부 여백 설정
                                           decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(2.r),
+                                            borderRadius: BorderRadius.circular(
+                                                2.r), // 둥근 모서리 설정
                                           ),
-                                          width: 62.w,
-                                          height: 62.h,
-                                          alignment: Alignment.center,
+                                          width: 62.w, // 이미지 너비 설정
+                                          height: 62.h, // 이미지 높이 설정
+                                          alignment: Alignment.center, // 중앙 정렬
                                           child: Image.asset(
-                                            'assets/images/ic_photo.png',
-                                            width: 12.w,
-                                            height: 12.h,
+                                            'assets/images/ic_photo.png', // 이미지 파일
+                                            width: 12.w, // 이미지 너비 설정
+                                            height: 12.h, // 이미지 높이 설정
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 9.h, // 여백 설정
+                                      ),
+                                      Container(
+                                        padding: EdgeInsets.only(
+                                          left: 3.w, // 왼쪽 여백 설정
+                                        ),
+                                        child: Text(
+                                          '저장명', // 텍스트
+                                          style: TextStyle(
+                                            fontSize: 12.sp, // 폰트 크기 설정
+                                            fontWeight:
+                                                FontWeight.w500, // 폰트 두께 설정
+                                            color: const Color(
+                                                0xFF242424), // 텍스트 색 설정
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 1.h, // 여백 설정
+                                      ),
+                                      Container(
+                                        padding: EdgeInsets.only(
+                                          left: 3.w, // 왼쪽 여백 설정
+                                        ),
+                                        child: Text(
+                                          '12개 캠핑장', // 텍스트
+                                          style: TextStyle(
+                                            fontSize: 10.sp, // 폰트 크기 설정
+                                            fontWeight:
+                                                FontWeight.w500, // 폰트 두께 설정
+                                            color: const Color(
+                                                0xFFababab), // 텍스트 색 설정
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    width: 16.w, // 여백 설정
+                                  ),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start, // 왼쪽 정렬
+                                    children: [
+                                      Container(
+                                        width: 70.w, // 너비 설정
+                                        height: 70.h, // 높이 설정
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(
+                                              4.r), // 둥근 모서리 설정
+                                          color: const Color(
+                                              0xFFF3F5F7), // 배경 색 설정
+                                          border: Border.all(
+                                            color: const Color(
+                                                0x6BBFBFBF), // 테두리 색 설정
+                                            width: 1.w, // 테두리 두께 설정
+                                          ),
+                                        ),
+                                        child: Container(
+                                          margin:
+                                              EdgeInsets.all(4.w), // 내부 여백 설정
+                                          width: 62.w, // 이미지 너비 설정
+                                          height: 62.h, // 이미지 높이 설정
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(
+                                                2.r), // 둥근 모서리 설정
+                                          ),
+                                          alignment: Alignment.center, // 중앙 정렬
+                                          child: Image.asset(
+                                            'assets/images/ic_photo.png', // 이미지 파일
+                                            width: 12.w, // 이미지 너비 설정
+                                            height: 12.h, // 이미지 높이 설정
                                           ),
                                         ),
                                       ),
@@ -719,106 +829,40 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
                                     ],
                                   ),
                                   SizedBox(
-                                    width: 16.w,
+                                    width: 16.w, // 여백 설정
                                   ),
                                   Column(
                                     crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                        CrossAxisAlignment.start, // 왼쪽 정렬
                                     children: [
                                       Container(
-                                        width: 70.w,
-                                        height: 70.h,
+                                        width: 70.w, // 너비 설정
+                                        height: 70.h, // 높이 설정
                                         decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(4.r),
-                                          color: const Color(0xFFF3F5F7),
+                                          borderRadius: BorderRadius.circular(
+                                              4.r), // 둥근 모서리 설정
+                                          color: const Color(
+                                              0xFFf3f5f7), // 배경 색 설정
                                           border: Border.all(
-                                            color: const Color(0x6BBFBFBF),
-                                            width: 1.w,
+                                            color: const Color(
+                                                0x6BBFBFBF), // 테두리 색 설정
+                                            width: 1.w, // 테두리 두께 설정
                                           ),
                                         ),
                                         child: Container(
-                                          margin: EdgeInsets.all(4.w),
-                                          width: 62.w,
-                                          height: 62.h,
+                                          margin:
+                                              EdgeInsets.all(4.w), // 내부 여백 설정
+                                          width: 62.w, // 이미지 너비 설정
+                                          height: 62.h, // 이미지 높이 설정
                                           decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(2.r),
+                                            borderRadius: BorderRadius.circular(
+                                                2.r), // 둥근 모서리 설정
                                           ),
-                                          alignment: Alignment.center,
+                                          alignment: Alignment.center, // 중앙 정렬
                                           child: Image.asset(
-                                            'assets/images/ic_photo.png',
-                                            width: 12.w,
-                                            height: 12.h,
-                                          ),
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        height: 9.h,
-                                      ),
-                                      Container(
-                                        padding: EdgeInsets.only(
-                                          left: 3.w,
-                                        ),
-                                        child: Text(
-                                          '저장명',
-                                          style: TextStyle(
-                                            fontSize: 12.sp,
-                                            fontWeight: FontWeight.w500,
-                                            color: const Color(0xFF242424),
-                                          ),
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        height: 1.h,
-                                      ),
-                                      Container(
-                                        padding: EdgeInsets.only(
-                                          left: 3.w,
-                                        ),
-                                        child: Text(
-                                          '12개 캠핑장',
-                                          style: TextStyle(
-                                            fontSize: 10.sp,
-                                            fontWeight: FontWeight.w500,
-                                            color: const Color(0xFFababab),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    width: 16.w,
-                                  ),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Container(
-                                        width: 70.w,
-                                        height: 70.h,
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(4.r),
-                                          color: const Color(0xFFf3f5f7),
-                                          border: Border.all(
-                                            color: const Color(0x6BBFBFBF),
-                                            width: 1.w,
-                                          ),
-                                        ),
-                                        child: Container(
-                                          margin: EdgeInsets.all(4.w),
-                                          width: 62.w,
-                                          height: 62.h,
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(2.r),
-                                          ),
-                                          alignment: Alignment.center,
-                                          child: Image.asset(
-                                            'assets/images/ic_photo.png',
-                                            width: 12.w,
-                                            height: 12.h,
+                                            'assets/images/ic_photo.png', // 이미지 파일
+                                            width: 12.w, // 이미지 너비 설정
+                                            height: 12.h, // 이미지 높이 설정
                                           ),
                                         ),
                                       ),
@@ -966,19 +1010,21 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
 
   Widget _buildTab(Key? key) {
     return SizedBox(
-      key: key,
-      width: 360.w,
-      height: 47.h,
+      key: key, // 위젯의 키 설정
+      width: 360.w, // 위젯의 너비
+      height: 47.h, // 위젯의 높이
       child: Stack(
+        // Stack 위젯 사용
         children: [
           Positioned(
-            top: 0,
+            top: 0, // 위치 설정 (위쪽 0)
             child: Container(
-              width: 360.w,
-              height: 47.h,
+              width: 360.w, // 너비 설정
+              height: 47.h, // 높이 설정
               decoration: const BoxDecoration(
                 border: Border(
                   bottom: BorderSide(
+                    // 하단 테두리 설정
                     color: Color(0xFFd5d5d5), // 테두리 색상
                     width: 1.0, // 테두리 두께
                   ),
@@ -1037,14 +1083,14 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
             ),
           ),
           Positioned(
-            bottom: 0,
-            left: infoTab ? 0 : 180.w,
+            bottom: 0, // 화면 하단에 위치
+            left: infoTab ? 0 : 180.w, // infoTab이 true일 경우 왼쪽 0, 아니면 180.w로 이동
             child: Container(
-              width: 180.w,
-              height: 2.h,
-              color: const Color(0xFF398EF3),
+              width: 180.w, // 너비 180.w로 설정
+              height: 2.h, // 높이 2.h로 설정
+              color: const Color(0xFF398EF3), // 파란색 배경
             ),
-          ),
+          )
         ],
       ),
     );
@@ -1064,13 +1110,13 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
     return Stack(
       children: [
         Container(
-          width: 360.w,
-          padding: EdgeInsets.symmetric(horizontal: 16.w),
+          width: 360.w, // 전체 너비 설정
+          padding: EdgeInsets.symmetric(horizontal: 16.w), // 좌우 여백 설정
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start, // 왼쪽 정렬
             children: [
               SizedBox(
-                height: 23.h,
+                height: 23.h, // 상단 여백 설정
               ),
               //리뷰 평점
               GestureDetector(
@@ -1078,68 +1124,70 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (c) => const CampingReviewScreen()),
+                        builder: (c) =>
+                            const CampingReviewScreen()), // 리뷰 화면으로 이동
                   );
                 },
                 child: Container(
-                  height: 99.h,
+                  height: 99.h, // 높이 설정
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(16.r),
-                    color: const Color(0xFFF3F4F8),
+                    borderRadius: BorderRadius.circular(16.r), // 둥근 모서리 설정
+                    color: const Color(0xFFF3F4F8), // 배경 색 설정
                   ),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center, // 가로 정렬: 가운데
+                    crossAxisAlignment: CrossAxisAlignment.center, // 세로 정렬: 가운데
                     children: [
                       Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisAlignment:
+                            MainAxisAlignment.center, // 세로 정렬: 가운데
                         children: [
                           Text(
-                            avg.toString(),
+                            avg.toString(), // 평균값 표시
                             style: TextStyle(
-                              fontSize: 32.sp,
-                              color: textblack,
-                              fontWeight: FontWeight.w600,
+                              fontSize: 32.sp, // 글씨 크기 설정
+                              color: textblack, // 글씨 색 설정
+                              fontWeight: FontWeight.w600, // 글씨 두께 설정
                             ),
                           ),
                           Row(
                             children: [
                               Image.asset(
-                                'assets/images/ic_detail_star.png',
-                                width: 12.w,
-                                height: 11.h,
+                                'assets/images/ic_detail_star.png', // 별 아이콘
+                                width: 12.w, // 크기 설정 (너비)
+                                height: 11.h, // 크기 설정 (높이)
                               ),
                               SizedBox(
-                                width: 2.w,
+                                width: 2.w, // 간격 설정
                               ),
                               Image.asset(
-                                'assets/images/ic_detail_star.png',
-                                width: 12.w,
-                                height: 11.h,
+                                'assets/images/ic_detail_star.png', // 별 아이콘
+                                width: 12.w, // 크기 설정 (너비)
+                                height: 11.h, // 크기 설정 (높이)
                               ),
                               SizedBox(
-                                width: 2.w,
+                                width: 2.w, // 간격 설정
                               ),
                               Image.asset(
-                                'assets/images/ic_detail_star.png',
-                                width: 12.w,
-                                height: 11.h,
+                                'assets/images/ic_detail_star.png', // 별 아이콘
+                                width: 12.w, // 크기 설정 (너비)
+                                height: 11.h, // 크기 설정 (높이)
                               ),
                               SizedBox(
-                                width: 2.w,
+                                width: 2.w, // 간격 설정
                               ),
                               Image.asset(
-                                'assets/images/ic_detail_star.png',
-                                width: 12.w,
-                                height: 11.h,
+                                'assets/images/ic_detail_star.png', // 별 아이콘
+                                width: 12.w, // 크기 설정 (너비)
+                                height: 11.h, // 크기 설정 (높이)
                               ),
                               SizedBox(
-                                width: 2.w,
+                                width: 2.w, // 간격 설정
                               ),
                               Image.asset(
-                                'assets/images/ic_detail_star_half.png',
-                                width: 12.w,
-                                height: 11.h,
+                                'assets/images/ic_detail_star_half.png', // 반 별 아이콘
+                                width: 12.w, // 크기 설정 (너비)
+                                height: 11.h, // 크기 설정 (높이)
                               ),
                             ],
                           ),
@@ -1147,11 +1195,11 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
                             height: 5.h,
                           ),
                           Text(
-                            '$reviewCnt명의 리뷰',
+                            '$reviewCnt명의 리뷰', // 리뷰 개수 텍스트
                             style: TextStyle(
-                              fontSize: 8.sp,
-                              color: const Color(0xFF787878),
-                              fontWeight: FontWeight.w500,
+                              fontSize: 8.sp, // 글자 크기 설정
+                              color: const Color(0xFF787878), // 글자 색 설정 (회색)
+                              fontWeight: FontWeight.w500, // 글자 두께 설정
                             ),
                           ),
                         ],
@@ -1168,16 +1216,16 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
                         width: 21.w,
                       ),
                       Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center, // 중간 정렬
                         children: [
                           _reviewPoint(
-                            167.w,
-                            4.h,
-                            'ic_detail_star',
-                            '5',
-                            80,
-                            '23',
-                            const Color(0xFF398ef3),
+                            167.w, // 너비
+                            4.h, // 높이
+                            'ic_detail_star', // 아이콘 파일 이름
+                            '5', // 별점
+                            80, // 최대 점수
+                            '23', // 리뷰 개수
+                            const Color(0xFF398ef3), // 색상
                           ),
                           SizedBox(
                             height: 2.h,
@@ -1491,27 +1539,28 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
 
   Widget _contentAmeniti() {
     return Container(
-      height:
-          isAmenityExpanded ? 320.h + (30 * ((amenityCnt - 10) ~/ 2).h) : 320.h,
-      width: 360.w,
+      height: isAmenityExpanded
+          ? 320.h + (30 * ((amenityCnt - 10) ~/ 2).h) // 높이 설정: 편의시설 개수에 따라 확장
+          : 320.h, // 기본 높이
+      width: 360.w, // 너비 설정
       padding: EdgeInsets.symmetric(
-        horizontal: 21.w,
+        horizontal: 21.w, // 좌우 여백 설정
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start, // 왼쪽 정렬
         children: [
           SizedBox(
-            height: 24.h,
+            height: 24.h, // 상단 여백
           ),
           SizedBox(
-            height: 21.h,
+            height: 21.h, // 제목 영역 높이
             child: Text(
-              '캠핑장 편의시설',
+              '캠핑장 편의시설', // 제목 텍스트
               style: TextStyle(
-                fontSize: 18.sp,
-                height: 1.1,
-                color: textblack,
-                fontWeight: FontWeight.w600,
+                fontSize: 18.sp, // 폰트 크기 설정
+                height: 1.1, // 줄 간격 설정
+                color: textblack, // 텍스트 색상
+                fontWeight: FontWeight.w600, // 글꼴 두께 설정
               ),
             ),
           ),
@@ -1579,49 +1628,50 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
     return Column(
       children: [
         SizedBox(
-          height: 24.h,
+          height: 24.h, // 높이 설정: 상단 여백
           child: Row(
             children: [
               SizedBox(
-                width: 20.w,
+                width: 20.w, // 왼쪽 여백 설정
               ),
               Text(
-                '캠핑장 추천 리뷰',
+                '캠핑장 추천 리뷰', // 텍스트 설정: 제목
                 style: TextStyle(
-                  fontSize: 18.sp,
-                  height: 1.1,
-                  color: textblack,
-                  fontWeight: FontWeight.w600,
+                  fontSize: 18.sp, // 폰트 크기 설정
+                  height: 1.1, // 줄 간격 설정
+                  color: textblack, // 텍스트 색상 설정
+                  fontWeight: FontWeight.w600, // 글꼴 두께 설정
                 ),
               ),
             ],
           ),
         ),
         SizedBox(
-          height: 12.h,
+          height: 12.h, // 크기 설정: 상단 여백
         ),
         Container(
-          alignment: Alignment.centerLeft,
-          padding: EdgeInsets.only(left: 16.w),
+          alignment: Alignment.centerLeft, // 왼쪽 정렬
+          padding: EdgeInsets.only(left: 16.w), // 왼쪽 여백 설정
           child: Container(
-            width: 62.w,
-            height: 22.h,
-            padding: EdgeInsets.fromLTRB(7.w, 3.h, 7.w, 3.h),
+            width: 62.w, // 내부 컨테이너 너비
+            height: 22.h, // 내부 컨테이너 높이
+            padding: EdgeInsets.fromLTRB(7.w, 3.h, 7.w, 3.h), // 패딩 설정
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(6.r),
-              color: Color(0xfff7f7f7),
+              borderRadius: BorderRadius.circular(6.r), // 둥근 모서리 설정
+              color: Color(0xfff7f7f7), // 배경색 설정
             ),
             child: Row(
               children: [
                 Text(
-                  '최신순',
+                  '최신순', // 텍스트 설정
                   style: TextStyle(
-                    fontSize: 12.sp,
-                    height: 1.1,
-                    color: const Color(0xFF777777),
-                    fontWeight: FontWeight.w400,
+                    fontSize: 12.sp, // 폰트 크기 설정
+                    height: 1.1, // 줄 간격 설정
+                    color: const Color(0xFF777777), // 텍스트 색상 설정
+                    fontWeight: FontWeight.w400, // 글꼴 두께 설정
                     letterSpacing:
-                        DisplayUtil.getLetterSpacing(px: 12.sp, percent: -3).w,
+                        DisplayUtil.getLetterSpacing(px: 12.sp, percent: -3)
+                            .w, // 글자 간격 설정
                   ),
                 ),
                 SizedBox(
@@ -1661,54 +1711,57 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
                       );
                     },
                     child: Container(
-                      width: 237.w,
-                      height: 277.h,
+                      width: 237.w, // 너비 설정
+                      height: 277.h, // 높이 설정
                       margin: EdgeInsets.fromLTRB(
-                        2.w,
-                        16.h,
-                        8.w,
-                        16.h,
+                        2.w, // 왼쪽 여백
+                        16.h, // 위쪽 여백
+                        8.w, // 오른쪽 여백
+                        16.h, // 아래쪽 여백
                       ),
                       decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(24.r),
+                        color: Colors.white, // 배경색 설정
+                        borderRadius: BorderRadius.circular(24.r), // 둥근 모서리 설정
                         boxShadow: [
                           BoxShadow(
-                            color: const Color(0x1A000000),
-                            blurRadius: 15.r,
-                            offset: const Offset(0, 1),
+                            color: const Color(0x1A000000), // 그림자 색 설정
+                            blurRadius: 15.r, // 그림자 흐림 정도 설정
+                            offset: const Offset(0, 1), // 그림자의 위치 설정
                           ),
                         ],
                       ),
                       child: Stack(
                         children: [
                           ClipRRect(
-                            borderRadius: BorderRadius.circular(24.r),
+                            borderRadius:
+                                BorderRadius.circular(24.r), // 이미지의 모서리를 둥글게 설정
                             child: Image.asset(
-                              item.img,
-                              fit: BoxFit.fill,
-                              width: 237.w,
-                              height: 277.h,
+                              item.img, // 이미지 파일 경로
+                              fit: BoxFit.fill, // 이미지의 크기를 지정된 영역에 맞게 채우기
+                              width: 237.w, // 이미지의 너비 설정
+                              height: 277.h, // 이미지의 높이 설정
                             ),
                           ),
                           Positioned(
-                            top: 150.h,
-                            left: 0,
-                            right: 0,
+                            top: 150.h, // top 위치 설정
+                            left: 0, // 왼쪽 위치 설정
+                            right: 0, // 오른쪽 위치 설정
                             child: Container(
-                              height: 127.h,
-                              width: 237.w,
+                              height: 127.h, // 높이 설정
+                              width: 237.w, // 너비 설정
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.vertical(
-                                  bottom: Radius.circular(24.r),
+                                  bottom:
+                                      Radius.circular(24.r), // 하단 모서리 둥글게 설정
                                 ),
-                                color: Colors.white,
+                                color: Colors.white, // 배경색 설정
                               ),
                               child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
+                                crossAxisAlignment:
+                                    CrossAxisAlignment.center, // 중앙 정렬
                                 children: [
                                   SizedBox(
-                                    height: 12.h,
+                                    height: 12.h, // 상단에 여백 설정
                                   ),
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
@@ -1819,26 +1872,29 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
                                     height: 9.h,
                                   ),
                                   Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.center, // 중앙 정렬
                                     children: [
                                       Container(
-                                        width: 20.w,
-                                        height: 20.h,
+                                        width: 20.w, // 원의 너비 설정
+                                        height: 20.h, // 원의 높이 설정
                                         decoration: const BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          color: Color(0xFFcbcbcb),
+                                          shape: BoxShape.circle, // 원 형태
+                                          color: Color(0xFFcbcbcb), // 회색 배경색
                                         ),
                                       ),
                                       SizedBox(
-                                        width: 4.w,
+                                        width: 4.w, // 아이템 간 간격 설정
                                       ),
                                       Text(
-                                        item.id,
+                                        item.id, // 아이템의 ID를 텍스트로 표시
                                         style: TextStyle(
-                                          fontSize: 12.sp,
-                                          height: 1.1,
-                                          color: const Color(0xFF777777),
-                                          fontWeight: FontWeight.w500,
+                                          fontSize: 12.sp, // 폰트 크기 설정
+                                          height: 1.1, // 텍스트 높이 설정
+                                          color: const Color(
+                                              0xFF777777), // 텍스트 색상 설정
+                                          fontWeight:
+                                              FontWeight.w500, // 폰트 두께 설정
                                         ),
                                       ),
                                     ],
@@ -1857,30 +1913,32 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
           ),
         ),
         SizedBox(
-          height: 20.h,
+          height: 20.h, // 위에 여백 추가
         ),
         GestureDetector(
           onTap: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (c) => const ReviewScreen()));
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (c) => const ReviewScreen())); // 리뷰 작성 페이지로 이동
           },
           child: Container(
-            height: 56,
-            width: 328.w,
+            height: 56, // 컨테이너 높이 설정
+            width: 328.w, // 컨테이너 너비 설정
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8.r),
-              color: Color(0xFF398EF3),
+              borderRadius: BorderRadius.circular(8.r), // 둥근 모서리 적용
+              color: Color(0xFF398EF3), // 배경색 설정
             ),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center, // 텍스트 중앙 정렬
               children: [
                 Text(
-                  '리뷰 작성하기',
+                  '리뷰 작성하기', // 텍스트 내용
                   style: TextStyle(
-                    fontSize: 14.sp,
-                    height: 1.1,
-                    color: const Color(0xffffffff),
-                    fontWeight: FontWeight.w500,
+                    fontSize: 14.sp, // 폰트 크기
+                    height: 1.1, // 텍스트 높이
+                    color: const Color(0xffffffff), // 텍스트 색상 (흰색)
+                    fontWeight: FontWeight.w500, // 폰트 두께
                   ),
                 ),
               ],

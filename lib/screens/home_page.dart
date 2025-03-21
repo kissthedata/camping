@@ -118,63 +118,71 @@ class MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
-      designSize: const Size(360, 1140),
-      minTextAdapt: true,
+      designSize: const Size(360, 1140), // 화면 디자인 기준 크기 설정
+      minTextAdapt: true, // 텍스트 크기 자동 조정 활성화
       builder: (context, child) {
         return Scaffold(
-          appBar: _buildHeader(),
-          extendBody: true,
-          backgroundColor: const Color(0xFFF3F5F7),
-          extendBodyBehindAppBar: true,
+          appBar: _buildHeader(), // 상단 헤더 생성 메서드 호출
+          extendBody: true, // Body 영역을 확장
+          backgroundColor: const Color(0xFFF3F5F7), // 배경 색상 설정
+          extendBodyBehindAppBar: true, // AppBar 뒤로 Body 확장
           body: Column(
             children: [
               Expanded(
                 child: SingleChildScrollView(
-                  padding: EdgeInsets.only(bottom: (75 + 32).w),
+                  // 스크롤 가능한 영역
+                  padding: EdgeInsets.only(bottom: (75 + 32).w), // 하단 패딩 추가
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start, // 왼쪽 정렬
                     children: [
-                      // 상단 메인
-                      _buildTop(),
-                      SizedBox(height: 24.w),
-                      // 카드
-                      _buildInfoCards(),
-                      SizedBox(height: 44.w),
-                      // 편안차박 PICK!
+                      // 상단 메인 영역
+                      _buildTop(), // 메인 상단 구성 메서드 호출
+                      SizedBox(height: 24.w), // 상단 영역과 카드 사이 간격
+
+                      // 카드 섹션
+                      _buildInfoCards(), // 정보 카드 구성 메서드 호출
+                      SizedBox(height: 44.w), // 카드와 다음 섹션 사이 간격
+
+                      // "편안차박 PICK!"
                       _buildSection(
-                        totalHeight: 223.w,
-                        width: 222.w,
-                        height: 160.w,
-                        title1: '편안차박 ',
-                        title2: 'PICK!',
-                        title2Color: const Color(0xFF398EF3),
-                        subTitle: '이런 차박지는 어때요?',
+                        totalHeight: 223.w, // 섹션 전체 높이
+                        width: 222.w, // 항목 너비
+                        height: 160.w, // 항목 높이
+                        title1: '편안차박 ', // 섹션 제목 첫 부분
+                        title2: 'PICK!', // 섹션 제목 두 번째 부분
+                        title2Color: const Color(0xFF398EF3), // 제목 두 번째 부분의 색상
+                        subTitle: '이런 차박지는 어때요?', // 섹션 부제
                         onTapItem: (int index) {
+                          // 항목 클릭 시 이벤트 처리
                           ShareData().showSnackbar(context, content: '$index');
                         },
                         onTapMore: () {
+                          // "더 보기" 클릭 시 이벤트 처리
                           ShareData().showSnackbar(context, content: 'more');
                         },
                       ),
-                      SizedBox(height: 51.w),
-                      // xx님 근처 차박지
+                      SizedBox(height: 51.w), // 다음 섹션과의 간격
+
+                      // 사용자의 근처 차박지 섹션
                       ValueListenableBuilder(
-                        valueListenable: ShareData().isLogin,
+                        valueListenable: ShareData().isLogin, // 사용자 로그인 상태 감지
                         builder: (context, value, child) {
                           return _buildSection(
-                            totalHeight: 235.w,
-                            width: 148.w,
-                            height: 172.w,
-                            title1: value ? '[김성식]' : '회원',
-                            title2: '근처 차박지',
-                            subTitle: '대구광역시 주변 인기많은 차박지를 찾아봤어요!',
+                            totalHeight: 235.w, // 섹션 전체 높이
+                            width: 148.w, // 항목 너비
+                            height: 172.w, // 항목 높이
+                            title1: value ? '[김성식]' : '회원', // 사용자 이름 또는 '회원' 표시
+                            title2: '근처 차박지', // 섹션 제목 두 번째 부분
+                            subTitle: '대구광역시 주변 인기많은 차박지를 찾아봤어요!', // 부제
                             onTapItem: (int index) {
+                              // 항목 클릭 시 이벤트 처리
                               ShareData().showSnackbar(
                                 context,
                                 content: '$index',
                               );
                             },
                             onTapMore: () {
+                              // "더 보기" 클릭 시 이벤트 처리
                               ShareData().showSnackbar(
                                 context,
                                 content: 'more',
@@ -183,21 +191,11 @@ class MyHomePageState extends State<MyHomePage> {
                           );
                         },
                       ),
-                      // _buildSection
+
+                      // 이전 코드 주석 처리된 섹션 참고
                       // _buildSectionTitle('이런 차박지는 어때요?'),
-                      // _buildHeader(),
                       // _buildWeatherInfo(),
                       // _buildActionSections(),
-
-                      // // 일반 차박지 섹션
-                      // _buildSectionTitle('이런 차박지는 어때요?'),
-                      // _buildFeaturedCampingSites(
-                      //     _campingSites, '이런 차박지는 어때요?'),
-
-                      // // 추천 차박지 섹션
-                      // _buildSectionTitle('사용자님 추천 차박지를 찾아봤어요!'),
-                      // _buildFeaturedCampingSites(
-                      //     _recommendedSites, '사용자님 추천 차박지를 찾아봤어요!'),
                     ],
                   ),
                 ),
@@ -213,91 +211,94 @@ class MyHomePageState extends State<MyHomePage> {
     return AppBar(
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(
-          bottom: Radius.circular(16),
+          bottom: Radius.circular(16), // 하단 모서리를 둥글게 설정
         ),
       ),
-      elevation: 20.h,
-      shadowColor: Colors.black,
-      toolbarHeight: 96.w,
-      surfaceTintColor: Colors.white,
-      backgroundColor: Colors.white,
+      elevation: 20.h, // AppBar 그림자 높이
+      shadowColor: Colors.black, // 그림자 색상
+      toolbarHeight: 96.w, // AppBar의 높이 설정
+      surfaceTintColor: Colors.white, // 표면 틴트 색상
+      backgroundColor: Colors.white, // 배경색 설정
       flexibleSpace: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
+        mainAxisAlignment: MainAxisAlignment.end, // 아래쪽 정렬
         children: [
-          // 검색
+          // 검색 영역
           Container(
-            height: 40.w,
-            margin: EdgeInsets.only(left: 16.w, right: 19.w),
+            height: 40.w, // 검색창 영역 높이
+            margin: EdgeInsets.only(left: 16.w, right: 19.w), // 좌우 여백
             child: Row(
               children: [
                 // 검색창
-                Expanded(child: _buildSearchBox()),
-                SizedBox(width: 14.w),
-                // 알림
+                Expanded(child: _buildSearchBox()), // 검색 상자 추가
+                SizedBox(width: 14.w), // 검색창과 알림 아이콘 간격
+                // 알림 아이콘
                 GestureDetector(
                   onTap: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const AlarmListScreen(),
+                        builder: (context) =>
+                            const AlarmListScreen(), // 알림 화면으로 이동
                       ),
                     );
                   },
                   child: SizedBox(
-                    width: 27.w,
-                    height: 27.w,
+                    width: 27.w, // 알림 아이콘 너비
+                    height: 27.w, // 알림 아이콘 높이
                     child: Image.asset(
-                      'assets/images/home_alarm.png',
-                      fit: BoxFit.cover,
-                      gaplessPlayback: true,
+                      'assets/images/home_alarm.png', // 알림 아이콘 이미지 경로
+                      fit: BoxFit.cover, // 아이콘 크기 맞춤
+                      gaplessPlayback: true, // 깜빡임 방지
                     ),
                   ),
                 ),
               ],
             ),
           ),
-          // 날씨
+          // 날씨 정보 영역
           Container(
-            height: 41.w,
-            margin: EdgeInsets.only(left: 24.w),
-            alignment: Alignment.centerLeft,
+            height: 41.w, // 날씨 영역 높이
+            margin: EdgeInsets.only(left: 24.w), // 왼쪽 여백
+            alignment: Alignment.centerLeft, // 왼쪽 정렬
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start, // 시작점 기준 정렬
+              crossAxisAlignment: CrossAxisAlignment.center, // 수직 중심 정렬
               children: [
-                // 지역
+                // 지역 아이콘
                 Image.asset(
-                  'assets/images/home_location.png',
-                  width: 13,
-                  height: 14,
-                  gaplessPlayback: true,
+                  'assets/images/home_location.png', // 위치 아이콘 경로
+                  width: 13, // 너비 설정
+                  height: 14, // 높이 설정
+                  gaplessPlayback: true, // 깜빡임 방지
                 ),
-                SizedBox(width: 4.w),
+                SizedBox(width: 4.w), // 아이콘과 텍스트 간격
+                // 지역명
                 Text(
-                  '대구광역시',
+                  '대구광역시', // 지역 텍스트
                   style: TextStyle(
-                    color: const Color(0xFF474747),
-                    fontSize: 12.sp,
-                    fontWeight: FontWeight.w500,
-                    letterSpacing: -1.5,
+                    color: const Color(0xFF474747), // 텍스트 색상
+                    fontSize: 12.sp, // 텍스트 크기
+                    fontWeight: FontWeight.w500, // 텍스트 굵기
+                    letterSpacing: -1.5, // 글자 간격 조정
                   ),
                 ),
-                SizedBox(width: 16.w),
-                // 상태
+                SizedBox(width: 16.w), // 다음 요소 간격
+                // 날씨 상태 아이콘
                 SizedBox(
-                  width: 14.w,
-                  height: 14.w,
+                  width: 14.w, // 아이콘 너비
+                  height: 14.w, // 아이콘 높이
                   child: SvgPicture.asset(
-                    'assets/vectors/vector_1_x2.svg',
+                    'assets/vectors/vector_1_x2.svg', // SVG 아이콘 경로
                     colorFilter: const ColorFilter.mode(
-                      Color(0xFF474747),
-                      BlendMode.srcATop,
+                      Color(0xFF474747), // 색상
+                      BlendMode.srcATop, // 색상 조합 모드
                     ),
                   ),
                 ),
                 SizedBox(width: 4.w),
+                // 날씨 상태 텍스트
                 Text(
-                  '맑음',
+                  '맑음', // 날씨 상태
                   style: TextStyle(
                     color: const Color(0xFF474747),
                     fontSize: 12.sp,
@@ -308,9 +309,9 @@ class MyHomePageState extends State<MyHomePage> {
                 SizedBox(width: 16.w),
                 // 온도
                 Container(
-                  margin: EdgeInsets.only(top: 2.w),
+                  margin: EdgeInsets.only(top: 2.w), // 위쪽 마진
                   child: Text(
-                    '31°C',
+                    '31°C', // 현재 온도
                     style: TextStyle(
                       color: const Color(0xFF474747),
                       fontSize: 14.sp,
@@ -318,14 +319,14 @@ class MyHomePageState extends State<MyHomePage> {
                       letterSpacing: -1.5,
                     ),
                     strutStyle: const StrutStyle(
-                      forceStrutHeight: true,
+                      forceStrutHeight: true, // 줄 높이 강제 적용
                     ),
                   ),
                 ),
                 SizedBox(width: 16.w),
-                // 비
+                // 강수 확률
                 Text(
-                  '비',
+                  '비', // 강수 상태
                   style: TextStyle(
                     color: const Color(0xFF777777),
                     fontSize: 12.sp,
@@ -335,7 +336,7 @@ class MyHomePageState extends State<MyHomePage> {
                 ),
                 SizedBox(width: 4.w),
                 Text(
-                  '70%',
+                  '70%', // 강수 확률
                   style: TextStyle(
                     color: const Color(0xFFB4B4B4),
                     fontSize: 12.sp,
@@ -346,7 +347,7 @@ class MyHomePageState extends State<MyHomePage> {
                 SizedBox(width: 16.w),
                 // 풍량
                 Text(
-                  '풍량',
+                  '풍량', // 바람 상태
                   style: TextStyle(
                     color: const Color(0xff777777),
                     fontSize: 12.sp,
@@ -356,7 +357,7 @@ class MyHomePageState extends State<MyHomePage> {
                 ),
                 SizedBox(width: 4.w),
                 Text(
-                  '23㎥/s',
+                  '23㎥/s', // 풍량 정보
                   style: TextStyle(
                     color: const Color(0xFFB4B4B4),
                     fontSize: 12.sp,
@@ -375,6 +376,7 @@ class MyHomePageState extends State<MyHomePage> {
   Widget _buildSearchBox() {
     return GestureDetector(
       onTap: () {
+        // 검색 창을 클릭했을 때 "SearchCampingSitePage"로 화면 이동
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -383,29 +385,31 @@ class MyHomePageState extends State<MyHomePage> {
         );
       },
       child: Container(
-        height: 40.w,
+        height: 40.w, // 검색창의 높이
         decoration: BoxDecoration(
-          color: const Color(0xFFF3F5F7),
-          borderRadius: BorderRadius.circular(40.w),
+          color: const Color(0xFFF3F5F7), // 검색창 배경색 (밝은 회색)
+          borderRadius: BorderRadius.circular(40.w), // 둥근 테두리 설정
         ),
-        padding: EdgeInsets.symmetric(horizontal: 13.w),
+        padding: EdgeInsets.symmetric(horizontal: 13.w), // 내부 좌우 여백 설정
         child: Row(
           children: [
+            // 검색 아이콘
             Image.asset(
-              'assets/images/ic_search.png',
-              color: const Color(0xFF5D646C),
-              width: 16.w,
-              height: 16.w,
-              gaplessPlayback: true,
+              'assets/images/ic_search.png', // 검색 아이콘 이미지 경로
+              color: const Color(0xFF5D646C), // 아이콘 색상 (회색)
+              width: 16.w, // 아이콘 너비
+              height: 16.w, // 아이콘 높이
+              gaplessPlayback: true, // 이미지 깜빡임 방지
             ),
-            SizedBox(width: 8.w),
+            SizedBox(width: 8.w), // 아이콘과 텍스트 간 간격
+            // 안내 텍스트
             Expanded(
               child: Text(
-                '원하시는 차박지를 검색해보세요!',
+                '원하시는 차박지를 검색해보세요!', // 검색창 기본 안내 문구
                 style: TextStyle(
-                  color: const Color(0xFFA7A7A7),
-                  fontSize: 12.sp,
-                  fontWeight: FontWeight.w500,
+                  color: const Color(0xFFA7A7A7), // 텍스트 색상 (연한 회색)
+                  fontSize: 12.sp, // 텍스트 크기
+                  fontWeight: FontWeight.w500, // 텍스트 두께 (Medium)
                 ),
               ),
             ),
@@ -417,55 +421,60 @@ class MyHomePageState extends State<MyHomePage> {
 
   /// 상단 메인
   Widget _buildTop() {
-    double topPadding = MediaQuery.of(context).viewPadding.top;
+    double topPadding =
+        MediaQuery.of(context).viewPadding.top; // 기기 상태바 높이 가져오기
 
     return Stack(
       children: [
+        // 배경 이미지와 그라데이션 효과
         Container(
-          margin: EdgeInsets.only(top: (70 + topPadding).w),
-          height: 314.w,
+          margin: EdgeInsets.only(top: (70 + topPadding).w), // 상태바와의 거리 설정
+          height: 314.w, // 컨테이너 높이
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
+              // 그라데이션 효과
+              begin: Alignment.topCenter, // 위쪽에서 시작
+              end: Alignment.bottomCenter, // 아래쪽으로 끝
               colors: [
-                Colors.black.withOpacity(0.8),
-                Colors.black.withOpacity(0),
+                Colors.black.withOpacity(0.8), // 검정색 불투명도 0.8
+                Colors.black.withOpacity(0), // 투명
               ],
             ),
           ),
           child: SizedBox(
-            width: 360.w,
-            height: 314.w,
+            width: 360.w, // 컨테이너 너비
+            height: 314.w, // 컨테이너 높이
             child: Image.asset(
-              'assets/images/home_top_img.png',
-              fit: BoxFit.cover,
-              gaplessPlayback: true,
+              'assets/images/home_top_img.png', // 배경 이미지 경로
+              fit: BoxFit.cover, // 컨테이너 전체를 채우도록 이미지 맞춤
+              gaplessPlayback: true, // 이미지 깜빡임 방지
             ),
           ),
         ),
+        // "캠핑 매거진 보러가기" 버튼
         Positioned(
-          right: 16.w,
-          bottom: 20.w,
+          right: 16.w, // 오른쪽 간격
+          bottom: 20.w, // 하단 간격
           child: GestureDetector(
             onTap: () {
+              // 버튼 클릭 시 스낵바를 통해 메시지 표시
               ShareData().showSnackbar(context, content: '캠핑 매거진 보러가기');
             },
             child: Row(
               children: [
                 Text(
-                  '캠핑 매거진 보러가기',
+                  '캠핑 매거진 보러가기', // 안내 텍스트
                   style: TextStyle(
-                    color: Colors.white.withOpacity(0.6),
-                    fontSize: 12.sp,
-                    fontWeight: FontWeight.w500,
+                    color: Colors.white.withOpacity(0.6), // 흰색, 불투명도 0.6
+                    fontSize: 12.sp, // 텍스트 크기
+                    fontWeight: FontWeight.w500, // 텍스트 두께
                   ),
                 ),
-                SizedBox(width: 4.w),
+                SizedBox(width: 4.w), // 텍스트와 아이콘 간 간격
                 SvgPicture.asset(
-                  'assets/vectors/more.svg',
-                  width: 14.w,
-                  height: 14.w,
+                  'assets/vectors/more.svg', // 추가 아이콘 (SVG 경로)
+                  width: 14.w, // 아이콘 너비
+                  height: 14.w, // 아이콘 높이
                 ),
               ],
             ),
@@ -475,63 +484,66 @@ class MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  ///
+  /// 정보 카드 위젯을 생성하는 함수
   Widget _buildInfoCards() {
+    // 개별 카드 아이템을 생성하는 함수
     Widget cardItem({
-      required String assets,
-      required String title,
-      required String desc,
-      required VoidCallback onTap,
+      required String assets, // 아이콘 이미지 경로
+      required String title, // 카드의 제목
+      required String desc, // 카드의 설명
+      required VoidCallback onTap, // 클릭 이벤트 콜백
     }) {
       return GestureDetector(
-        onTap: onTap,
+        onTap: onTap, // 카드 클릭 시 동작 정의
         child: Container(
           padding: EdgeInsets.symmetric(
-            vertical: 16.w,
-            horizontal: 20.w,
+            vertical: 16.w, // 상하 여백
+            horizontal: 20.w, // 좌우 여백
           ),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Colors.white, // 카드 배경색
             border: Border.all(
-              color: const Color(0xFFEEEEEE),
+              color: const Color(0xFFEEEEEE), // 테두리 색상 (밝은 회색)
             ),
-            borderRadius: BorderRadius.circular(16.w),
+            borderRadius: BorderRadius.circular(16.w), // 둥근 모서리
           ),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start, // 왼쪽 정렬
             children: [
               // 아이콘
               SizedBox(
-                height: 35.w,
+                height: 35.w, // 아이콘 높이
                 child: Image.asset(
-                  assets,
-                  fit: BoxFit.cover,
-                  gaplessPlayback: true,
+                  assets, // 이미지 경로
+                  fit: BoxFit.cover, // 아이콘 크기를 컨테이너에 맞춤
+                  gaplessPlayback: true, // 이미지 깜빡임 방지
                 ),
               ),
-              SizedBox(height: 14.w),
-              // 타이틀
+              SizedBox(height: 14.w), // 아이콘과 제목 간 간격
+
+              // 카드의 제목
               Text(
-                title,
+                title, // 제목 텍스트
                 style: TextStyle(
-                  color: const Color(0xFF111111),
-                  fontSize: 20.sp,
-                  fontWeight: FontWeight.w600,
-                  letterSpacing: -1.0,
+                  color: const Color(0xFF111111), // 텍스트 색상 (진한 회색)
+                  fontSize: 20.sp, // 텍스트 크기
+                  fontWeight: FontWeight.w600, // 텍스트 두께 (Semi-Bold)
+                  letterSpacing: -1.0, // 글자 간격 조정
                 ),
               ),
-              SizedBox(height: 4.w),
-              // 설명
+              SizedBox(height: 4.w), // 제목과 설명 간 간격
+
+              // 카드의 설명
               Text(
-                desc,
+                desc, // 설명 텍스트
                 style: TextStyle(
-                  color: const Color(0xFF949494),
-                  fontSize: 12.sp,
-                  fontWeight: FontWeight.w500,
-                  letterSpacing: -0.5,
+                  color: const Color(0xFF949494), // 텍스트 색상 (회색)
+                  fontSize: 12.sp, // 텍스트 크기
+                  fontWeight: FontWeight.w500, // 텍스트 두께 (Medium)
+                  letterSpacing: -0.5, // 글자 간격 조정
                 ),
                 strutStyle: const StrutStyle(
-                  forceStrutHeight: true,
+                  forceStrutHeight: true, // 줄 높이 강제 적용
                 ),
               ),
             ],
@@ -541,27 +553,30 @@ class MyHomePageState extends State<MyHomePage> {
     }
 
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 16.w),
+      margin: EdgeInsets.symmetric(horizontal: 16.w), // 컨테이너 좌우 여백 설정
       child: Row(
+        // 가로 정렬을 위한 Row 위젯 사용
         children: [
+          // 첫 번째 카드 아이템
           Expanded(
             child: cardItem(
-              assets: 'assets/images/home_map.png',
-              title: '지도보기',
-              desc: '차박지와 주변을\n한눈에 검색',
+              assets: 'assets/images/home_map.png', // 첫 번째 카드의 아이콘 이미지 경로
+              title: '지도보기', // 카드 제목
+              desc: '차박지와 주변을\n한눈에 검색', // 카드 설명 (줄바꿈 포함)
               onTap: () {
-                ShareData().selectedPage.value = 1;
+                ShareData().selectedPage.value = 1; // 카드 클릭 시 선택된 페이지를 1로 설정
               },
             ),
           ),
-          SizedBox(width: 12.w),
+          SizedBox(width: 12.w), // 두 카드 사이 간격
+          // 두 번째 카드 아이템
           Expanded(
             child: cardItem(
-              assets: 'assets/images/home_list.png',
-              title: '차박지 목록',
-              desc: '카테고리로 원하는\n차박지 검색',
+              assets: 'assets/images/home_list.png', // 두 번째 카드의 아이콘 이미지 경로
+              title: '차박지 목록', // 카드 제목
+              desc: '카테고리로 원하는\n차박지 검색', // 카드 설명 (줄바꿈 포함)
               onTap: () {
-                ShareData().selectedPage.value = 2;
+                ShareData().selectedPage.value = 2; // 카드 클릭 시 선택된 페이지를 2로 설정
               },
             ),
           ),

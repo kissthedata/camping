@@ -54,13 +54,14 @@ class _ScrapListScreenState extends State<ScrapListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
+        // 화면의 안전 영역 내에서 표시
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(16.0), // 전체 패딩 설정
           child: Column(
             children: [
-              _buildHeader(),
-              SizedBox(height: 16),
-              _buildScrapList(),
+              _buildHeader(), // 헤더 섹션 추가
+              SizedBox(height: 16), // 헤더와 목록 사이 여백 추가
+              _buildScrapList(), // 스크랩 목록 표시
             ],
           ),
         ),
@@ -73,24 +74,24 @@ class _ScrapListScreenState extends State<ScrapListScreen> {
     return Row(
       children: [
         IconButton(
-          icon: Icon(Icons.arrow_back, size: 24),
+          icon: Icon(Icons.arrow_back, size: 24), // 뒤로 가기 버튼
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.pop(context); // 뒤로 가기 기능
           },
         ),
         Expanded(
           child: Center(
             child: Text(
-              '좋아요한 장소',
+              '좋아요한 장소', // 페이지 타이틀
               style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.w600,
-                color: Color(0xFF172243),
+                fontSize: 24, // 글자 크기 설정
+                fontWeight: FontWeight.w600, // 글자 굵기 설정 (Semi-Bold)
+                color: Color(0xFF172243), // 글자 색상 설정 (네이비 계열)
               ),
             ),
           ),
         ),
-        SizedBox(width: 48),
+        SizedBox(width: 48), // 타이틀과 끝부분 간격 유지
       ],
     );
   }
@@ -98,13 +99,14 @@ class _ScrapListScreenState extends State<ScrapListScreen> {
   /// 스크랩 목록 표시
   Widget _buildScrapList() {
     return Expanded(
-      child: _scraps.isEmpty
-          ? Center(child: Text('좋아요한 장소가 없습니다.'))
+      child: _scraps.isEmpty // 스크랩된 장소가 없는 경우
+          ? Center(child: Text('좋아요한 장소가 없습니다.')) // 빈 상태 표시
           : ListView.builder(
-              itemCount: _scraps.length,
+              // 스크랩 목록을 리스트뷰로 표시
+              itemCount: _scraps.length, // 스크랩된 항목 개수
               itemBuilder: (context, index) {
-                final scrap = _scraps[index];
-                return _buildScrapItem(scrap);
+                final scrap = _scraps[index]; // 개별 차박지 정보 가져오기
+                return _buildScrapItem(scrap); // 차박지 아이템 빌드
               },
             ),
     );
@@ -114,29 +116,31 @@ class _ScrapListScreenState extends State<ScrapListScreen> {
   Widget _buildScrapItem(CarCampingSite site) {
     return GestureDetector(
       onTap: () {
-        // 차박지 상세 화면으로 이동
+        // 아이템 클릭 시 상세 화면으로 이동
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => InfoCampingSiteScreen(site: site),
+            builder: (context) =>
+                InfoCampingSiteScreen(site: site), // 상세 페이지로 이동
           ),
         );
       },
       child: Container(
-        margin: EdgeInsets.only(bottom: 16.0),
+        margin: EdgeInsets.only(bottom: 16.0), // 아이템 사이 간격 추가
         decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Color(0xFFBCBCBC), width: 1.5),
+          color: Colors.white, // 배경색 설정 (흰색)
+          borderRadius: BorderRadius.circular(12), // 테두리를 둥글게 설정
+          border:
+              Border.all(color: Color(0xFFBCBCBC), width: 1.5), // 테두리 스타일 설정
         ),
         child: ListTile(
-          contentPadding: EdgeInsets.all(16.0),
+          contentPadding: EdgeInsets.all(16.0), // 내부 패딩 설정
           title: Text(
-            site.name,
+            site.name, // 차박지 이름 표시
             style: TextStyle(
-              fontSize: 18.0,
-              fontWeight: FontWeight.w500,
-              color: Color(0xFF172243),
+              fontSize: 18.0, // 글자 크기 설정
+              fontWeight: FontWeight.w500, // 글자 굵기 설정 (Medium)
+              color: Color(0xFF172243), // 글자 색상 설정 (네이비 계열)
             ),
           ),
         ),
