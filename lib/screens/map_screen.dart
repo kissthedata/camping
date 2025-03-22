@@ -164,43 +164,46 @@ class MapScreenState extends State<MapScreen> {
     });
   }
 
-  /// 앱바
+  /// 앱바를 구성하는 위젯
   Widget _buildAppBar() {
-    return tapMarkerId.isEmpty
+    return tapMarkerId.isEmpty // 조건부 렌더링: `tapMarkerId`가 비어있을 때만 렌더링
         ? Container(
-            color: Colors.transparent,
-            margin:
-                EdgeInsets.only(top: MediaQuery.of(context).viewPadding.top),
-            height: 40.h + MediaQuery.of(context).viewPadding.top,
+            color: Colors.transparent, // 배경색을 투명하게 설정
+            margin: EdgeInsets.only(
+              top: MediaQuery.of(context).viewPadding.top, // 상태바 높이만큼 여백 추가
+            ),
+            height: 40.h + MediaQuery.of(context).viewPadding.top, // 앱바 높이
             child: Column(
               children: [
-                // 상단
+                // 상단 섹션
                 SizedBox(
-                  height: 40.h + MediaQuery.of(context).viewPadding.top,
+                  height:
+                      40.h + MediaQuery.of(context).viewPadding.top, // 크기 설정
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.start, // 자식 위젯을 왼쪽 정렬
+                    crossAxisAlignment: CrossAxisAlignment.center, // 수직 중앙 정렬
                     children: [
-                      // 뒤로가기
+                      // 뒤로가기 버튼
                       Align(
-                        alignment: Alignment.centerLeft,
+                        alignment: Alignment.centerLeft, // 왼쪽 정렬
                         child: GestureDetector(
                           onTap: () {
-                            ShareData().selectedPage.value = 0;
+                            ShareData().selectedPage.value = 0; // 페이지 전환
                           },
                           child: Container(
-                            width: 23.w,
-                            height: 23.w,
-                            margin: EdgeInsets.only(left: 16.w),
+                            width: 23.w, // 버튼 너비
+                            height: 23.w, // 버튼 높이
+                            margin: EdgeInsets.only(left: 16.w), // 좌측 여백
                             child: Image.asset(
-                              'assets/images/ic_back.png',
-                              gaplessPlayback: true,
+                              'assets/images/ic_back.png', // 뒤로가기 아이콘 경로
+                              gaplessPlayback: true, // 이미지 깜빡임 방지
                             ),
                           ),
                         ),
                       ),
-                      SizedBox(width: 16.w),
-                      // 검색
+                      SizedBox(width: 16.w), // 간격 추가
+
+                      // 검색 바
                       Expanded(
                         child: GestureDetector(
                           onTap: () {
@@ -208,41 +211,47 @@ class MapScreenState extends State<MapScreen> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) =>
-                                    const SearchCampingSitePage(),
+                                    const SearchCampingSitePage(), // 검색 페이지로 이동
                               ),
                             );
                           },
                           child: Container(
-                            height: 40.w,
+                            height: 40.w, // 검색창 높이
                             decoration: BoxDecoration(
-                              color: const Color(0xFFF3F5F7),
-                              borderRadius: BorderRadius.circular(20.w),
+                              color: const Color(0xFFF3F5F7), // 검색창 배경색
+                              borderRadius:
+                                  BorderRadius.circular(20.w), // 둥근 테두리
                               boxShadow: [
                                 BoxShadow(
-                                  color: Colors.black.withOpacity(0.2),
-                                  offset: const Offset(0, 2),
-                                  blurRadius: 10,
-                                )
+                                  color:
+                                      Colors.black.withOpacity(0.2), // 그림자 색상
+                                  offset: const Offset(0, 2), // 그림자 위치
+                                  blurRadius: 10, // 그림자 흐림 정도
+                                ),
                               ],
                             ),
-                            padding: EdgeInsets.symmetric(horizontal: 13.w),
+                            padding:
+                                EdgeInsets.symmetric(horizontal: 13.w), // 내부 여백
                             child: Row(
                               children: [
+                                // 검색 아이콘
                                 Image.asset(
-                                  'assets/images/ic_search.png',
-                                  color: const Color(0xFF5D646C),
-                                  width: 16.w,
-                                  height: 16.w,
-                                  gaplessPlayback: true,
+                                  'assets/images/ic_search.png', // 검색 아이콘 경로
+                                  color: const Color(0xFF5D646C), // 아이콘 색상
+                                  width: 16.w, // 아이콘 너비
+                                  height: 16.w, // 아이콘 높이
+                                  gaplessPlayback: true, // 이미지 깜빡임 방지
                                 ),
-                                SizedBox(width: 8.w),
+                                SizedBox(width: 8.w), // 아이콘과 텍스트 사이 간격
+
+                                // 검색 안내 텍스트
                                 Expanded(
                                   child: Text(
-                                    '원하시는 여행지를 검색해보세요!',
+                                    '원하시는 여행지를 검색해보세요!', // 안내 텍스트
                                     style: TextStyle(
-                                      color: const Color(0xFFA7A7A7),
-                                      fontSize: 12.sp,
-                                      fontWeight: FontWeight.w500,
+                                      color: const Color(0xFFA7A7A7), // 텍스트 색상
+                                      fontSize: 12.sp, // 텍스트 크기
+                                      fontWeight: FontWeight.w500, // 텍스트 굵기
                                     ),
                                   ),
                                 ),
@@ -251,35 +260,39 @@ class MapScreenState extends State<MapScreen> {
                           ),
                         ),
                       ),
-                      SizedBox(width: 16.w),
-                      // 필터
+                      SizedBox(width: 16.w), // 오른쪽 간격 추가
+                      // 필터 버튼 위젯
                       Align(
-                        alignment: Alignment.centerRight,
+                        alignment: Alignment.centerRight, // 버튼을 오른쪽 정렬
                         child: GestureDetector(
                           onTap: () async {
+                            // 선택된 항목이 있을 경우 초기화
                             if (_selectedItem.isNotEmpty) {
-                              _selectedItem.clear();
+                              _selectedItem.clear(); // 선택된 아이템 비우기
                             }
 
+                            // 하단 모달 시트를 열어 선택된 항목 가져오기
                             _selectedItem = await showModalBottomSheet(
                               context: context,
-                              isScrollControlled: true,
-                              builder: (_) => const CateDialog(),
+                              isScrollControlled: true, // 스크롤 가능 모달 활성화
+                              builder: (_) => const CateDialog(), // 모달에 표시할 위젯
                             );
 
-                            isPanelOpen = true;
-                            tapMarkerId = '';
+                            // 패널 상태 업데이트
+                            isPanelOpen = true; // 패널이 열렸음을 표시
+                            tapMarkerId = ''; // 마커 ID 초기화
                             setState(() {
-                              _panelController.animatePanelToPosition(0.74);
+                              _panelController.animatePanelToPosition(
+                                  0.74); // 패널 위치를 0.74로 이동
                             });
                           },
                           child: SizedBox(
-                            width: 29.38.w,
-                            height: 29.38.h,
+                            width: 29.38.w, // 필터 버튼의 너비
+                            height: 29.38.h, // 필터 버튼의 높이
                             child: Image.asset(
-                              'assets/images/Frame 559.png',
-                              fit: BoxFit.contain,
-                              gaplessPlayback: true,
+                              'assets/images/Frame 559.png', // 필터 아이콘 경로
+                              fit: BoxFit.contain, // 아이콘 크기를 컨테이너에 맞춤
+                              gaplessPlayback: true, // 깜빡임 방지
                             ),
                           ),
                         ),
@@ -292,64 +305,71 @@ class MapScreenState extends State<MapScreen> {
             ),
           )
         : Container(
-            height: 40.h + MediaQuery.of(context).viewPadding.top,
-            padding: EdgeInsets.only(top: 20.h),
-            color: Colors.white,
+            height: 40.h +
+                MediaQuery.of(context)
+                    .viewPadding
+                    .top, // 상태바 높이를 포함한 컨테이너 높이 설정
+            padding: EdgeInsets.only(top: 20.h), // 상단 여백 추가
+            color: Colors.white, // 배경색 설정 (흰색)
             child: Row(
               children: [
-                // 뒤로가기
+                // 뒤로가기 버튼
                 Align(
-                  alignment: Alignment.centerLeft,
+                  alignment: Alignment.centerLeft, // 버튼을 왼쪽 정렬
                   child: GestureDetector(
-                    onTap: () => Navigator.of(context).pop(),
+                    onTap: () =>
+                        Navigator.of(context).pop(), // 버튼 클릭 시 이전 화면으로 이동
                     child: Container(
-                      width: 23.w,
-                      height: 23.w,
-                      margin: EdgeInsets.only(left: 16.w),
+                      width: 23.w, // 버튼의 너비 설정
+                      height: 23.w, // 버튼의 높이 설정
+                      margin: EdgeInsets.only(left: 16.w), // 왼쪽 여백
                       child: Image.asset(
-                        'assets/images/ic_back_new.png',
-                        gaplessPlayback: true,
+                        'assets/images/ic_back_new.png', // 뒤로가기 아이콘 이미지 경로
+                        gaplessPlayback: true, // 이미지 깜빡임 방지
                       ),
                     ),
                   ),
                 ),
 
-                SizedBox(width: 16.w),
-                // 타이틀
+                SizedBox(width: 16.w), // 가로 간격 추가 (16.w 만큼의 너비)
+
+                /// 타이틀을 화면 중앙에 배치
                 Center(
                   child: Text(
-                    '캠핑장명',
+                    '캠핑장명', // 제목 텍스트
                     style: TextStyle(
-                      color: const Color(0xFF111111),
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.w600,
+                      color: const Color(0xFF111111), // 텍스트 색상 (검정)
+                      fontSize: 16.sp, // 텍스트 크기 (반응형)
+                      fontWeight: FontWeight.w600, // 텍스트 두께 (Semi-Bold)
                     ),
                   ),
                 ),
 
                 Spacer(),
 
-                // 닫기
+                // 닫기 버튼
                 Align(
-                  alignment: Alignment.centerLeft,
+                  alignment: Alignment.centerLeft, // 닫기 버튼을 왼쪽 정렬
                   child: GestureDetector(
                     onTap: () {
+                      // 닫기 버튼 클릭 시 실행되는 동작
                       setState(() {
-                        tapMarkerId = '';
+                        tapMarkerId = ''; // 관련 마커 ID 초기화
                       });
                     },
                     child: Container(
-                      width: 24.w,
-                      height: 24.w,
-                      margin: EdgeInsets.only(left: 16.w),
+                      width: 24.w, // 닫기 버튼의 너비
+                      height: 24.w, // 닫기 버튼의 높이
+                      margin: EdgeInsets.only(left: 16.w), // 버튼 왼쪽 여백
                       child: Image.asset(
-                        'assets/images/map_close.png',
-                        gaplessPlayback: true,
+                        'assets/images/map_close.png', // 닫기 아이콘 이미지 경로
+                        gaplessPlayback: true, // 이미지 변경 시 깜빡임 방지
                       ),
                     ),
                   ),
                 ),
 
+// 닫기 버튼과 다른 요소 간 간격
                 SizedBox(width: 16.w),
               ],
             ),

@@ -97,7 +97,8 @@ class _InfoEditScreenState extends State<InfoEditScreen> {
                 _buildInputContainer(_passwordController, "새 비밀번호 입력", true),
                 SizedBox(height: 12),
                 _buildTextLabel("비밀번호 확인"),
-                _buildInputContainer(_confirmPasswordController, "비밀번호 확인", true),
+                _buildInputContainer(
+                    _confirmPasswordController, "비밀번호 확인", true),
                 SizedBox(height: 30),
                 _buildActionButton(),
               ],
@@ -108,66 +109,81 @@ class _InfoEditScreenState extends State<InfoEditScreen> {
     );
   }
 
+  /// 헤더 위젯을 생성
   Widget _buildHeader(BuildContext context) {
     return Row(
       children: [
+        // 뒤로 가기 버튼
         IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pop(context),
+          icon: Icon(Icons.arrow_back), // 뒤로 가기 아이콘
+          onPressed: () => Navigator.pop(context), // 이전 화면으로 이동
         ),
+        // 중앙 제목
         Expanded(
           child: Text(
-            "정보 수정",
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+            "정보 수정", // 헤더 텍스트
+            textAlign: TextAlign.center, // 텍스트를 가운데 정렬
+            style: TextStyle(
+              fontSize: 20, // 텍스트 크기
+              fontWeight: FontWeight.w600, // 텍스트 굵기 (Semi-Bold)
+            ),
           ),
         ),
-        SizedBox(width: 48),
+        SizedBox(width: 48), // 오른쪽 여백 확보
       ],
     );
   }
 
+  /// 라벨 텍스트를 구성
   Widget _buildTextLabel(String text) {
     return Text(
       text,
-      style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
+      style: TextStyle(
+        fontSize: 14, // 텍스트 크기
+        fontWeight: FontWeight.w400, // 텍스트 굵기 (Regular)
+      ),
     );
   }
 
-  Widget _buildInputContainer(
-      TextEditingController controller, String hintText,
+  /// 입력 필드를 포함한 컨테이너 생성
+  Widget _buildInputContainer(TextEditingController controller, String hintText,
       [bool obscureText = false]) {
     return Container(
-      margin: EdgeInsets.only(top: 8),
+      margin: EdgeInsets.only(top: 8), // 상단 마진
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
-        color: Color(0xfff8f8f8),
+        borderRadius: BorderRadius.circular(12), // 둥근 모서리
+        color: Color(0xfff8f8f8), // 배경색 (밝은 회색)
       ),
       child: TextFormField(
-        controller: controller,
-        obscureText: obscureText,
+        controller: controller, // 텍스트 입력값을 관리하는 컨트롤러
+        obscureText: obscureText, // 텍스트 숨김 여부 설정
         decoration: InputDecoration(
-          hintText: hintText,
-          border: InputBorder.none,
-          contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
+          hintText: hintText, // 입력 힌트 텍스트
+          border: InputBorder.none, // 입력 필드 테두리 제거
+          contentPadding: EdgeInsets.symmetric(horizontal: 16.0), // 텍스트 여백
         ),
       ),
     );
   }
 
+  /// 수정 버튼 위젯 생성
   Widget _buildActionButton() {
     return Container(
-      width: double.infinity,
-      height: 56,
+      width: double.infinity, // 버튼 너비를 화면 전체로 확장
+      height: 56, // 버튼 높이
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
-        color: Color(0xff398ef3),
+        borderRadius: BorderRadius.circular(12), // 둥근 모서리
+        color: Color(0xff398ef3), // 버튼 배경색 (파란색 계열)
       ),
       child: TextButton(
-        onPressed: _saveInfo,
+        onPressed: _saveInfo, // 버튼 클릭 시 실행할 함수
         child: Text(
-          "수정하기",
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.white),
+          "수정하기", // 버튼 텍스트
+          style: TextStyle(
+            fontSize: 16, // 텍스트 크기
+            fontWeight: FontWeight.w500, // 텍스트 굵기 (Medium)
+            color: Colors.white, // 텍스트 색상 (흰색)
+          ),
         ),
       ),
     );

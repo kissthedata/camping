@@ -105,64 +105,77 @@ class _MyPageState extends State<MyPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: isLoading
-            ? Center(child: CircularProgressIndicator())
+        // 시스템 UI 영역과 겹치지 않도록 안전한 영역 확보
+        child: isLoading // 로딩 상태 확인
+            ? Center(
+                child: CircularProgressIndicator(), // 로딩 중일 때 원형 로딩 표시
+              )
             : Column(
+                // 로딩이 끝났을 때 화면을 구성하는 열 위젯
                 children: [
-                  _buildHeader(),
-                  SizedBox(height: 30),
-                  _buildUserInfo(),
-                  SizedBox(height: 40),
-                  _buildMenuList(),
+                  _buildHeader(), // 헤더 위젯
+                  SizedBox(height: 30), // 헤더와 사용자 정보 사이 간격
+                  _buildUserInfo(), // 사용자 정보 위젯
+                  SizedBox(height: 40), // 사용자 정보와 메뉴 리스트 사이 간격
+                  _buildMenuList(), // 메뉴 리스트 위젯
                 ],
               ),
       ),
     );
   }
 
+  /// 마이페이지 상단 헤더를 구성하는 위젯
   Widget _buildHeader() {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 16.0),
+        padding: const EdgeInsets.symmetric(vertical: 16.0), // 상하 여백 추가
         child: Text(
-          '마이페이지',
+          '마이페이지', // 헤더 제목 텍스트
           style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
+            fontSize: 20, // 텍스트 크기
+            fontWeight: FontWeight.bold, // 텍스트 굵기
           ),
         ),
       ),
     );
   }
 
+  /// 사용자 정보를 표시하는 위젯
   Widget _buildUserInfo() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 32.0),
+      padding: const EdgeInsets.symmetric(horizontal: 32.0), // 좌우 여백 추가
       child: Row(
         children: [
+          // 사용자 프로필 이미지
           CircleAvatar(
-            radius: 40,
-            backgroundColor: Colors.grey[300],
-            child: Icon(Icons.person, size: 40, color: Colors.white),
+            radius: 40, // 원형 아바타 크기
+            backgroundColor: Colors.grey[300], // 아바타 배경색
+            child: Icon(
+              Icons.person, // 사람 아이콘
+              size: 40, // 아이콘 크기
+              color: Colors.white, // 아이콘 색상
+            ),
           ),
-          SizedBox(width: 16),
+          SizedBox(width: 16), // 아바타와 텍스트 간 간격
           Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start, // 텍스트를 왼쪽 정렬
             children: [
+              // 사용자 닉네임 표시
               Text(
-                _nicknameController.text,
+                _nicknameController.text, // 닉네임 컨트롤러에서 가져온 텍스트
                 style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w600,
+                  fontSize: 24, // 텍스트 크기
+                  fontWeight: FontWeight.w600, // 텍스트 굵기 (Semi-Bold)
                 ),
               ),
-              SizedBox(height: 8),
+              SizedBox(height: 8), // 닉네임과 설명 텍스트 간 간격
+              // 사용자 설명 표시
               Text(
-                _descriptionController.text,
+                _descriptionController.text, // 설명 컨트롤러에서 가져온 텍스트
                 style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w400,
-                  color: Colors.blue,
+                  fontSize: 14, // 텍스트 크기
+                  fontWeight: FontWeight.w400, // 텍스트 굵기 (Regular)
+                  color: Colors.blue, // 텍스트 색상 (파란색)
                 ),
               ),
             ],
@@ -172,65 +185,99 @@ class _MyPageState extends State<MyPage> {
     );
   }
 
+  /// 메뉴 리스트를 구성하는 위젯
   Widget _buildMenuList() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      padding: const EdgeInsets.symmetric(horizontal: 16.0), // 좌우 여백 설정
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start, // 자식 위젯을 왼쪽 정렬
         children: [
+          // "정보 수정" 메뉴 항목
           _buildMenuItem(
-            '정보 수정',
-            Icons.edit,
-            _navigateToInfoEditScreen,
+            '정보 수정', // 메뉴 제목
+            Icons.edit, // 아이콘
+            _navigateToInfoEditScreen, // 클릭 시 실행할 함수
           ),
+          // "좋아요한 장소" 메뉴 항목
           _buildMenuItem(
-            '좋아요한 장소',
-            Icons.favorite,
+            '좋아요한 장소', // 메뉴 제목
+            Icons.favorite, // 아이콘
             () {
               Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => ScrapListScreen()),
+                context, // 현재 빌드 컨텍스트
+                MaterialPageRoute(
+                  builder: (context) => ScrapListScreen(), // 좋아요한 장소 화면으로 이동
+                ),
               );
             },
           ),
-          _buildMenuItem('문의하기', Icons.mail, _showContactDialog),
-          _buildMenuItem('로그아웃', Icons.logout, () => _logout(context)),
+          // "문의하기" 메뉴 항목
+          _buildMenuItem(
+            '문의하기', // 메뉴 제목
+            Icons.mail, // 아이콘
+            _showContactDialog, // 클릭 시 실행할 함수
+          ),
+          // "로그아웃" 메뉴 항목
+          _buildMenuItem(
+            '로그아웃', // 메뉴 제목
+            Icons.logout, // 아이콘
+            () => _logout(context), // 클릭 시 로그아웃 실행
+          ),
         ],
       ),
     );
   }
 
+  /// 메뉴 항목을 생성하는 위젯
   Widget _buildMenuItem(String title, IconData icon, VoidCallback onTap) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: onTap, // 메뉴 항목 클릭 시 실행할 함수
       child: Container(
-        margin: EdgeInsets.symmetric(vertical: 12),
+        margin: EdgeInsets.symmetric(vertical: 12), // 메뉴 항목 상하 여백
         child: Row(
           children: [
-            Icon(icon, size: 24, color: Colors.grey[700]),
-            SizedBox(width: 16),
-            Text(
-              title,
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+            // 아이콘
+            Icon(
+              icon, // 전달받은 아이콘 데이터
+              size: 24, // 아이콘 크기
+              color: Colors.grey[700], // 아이콘 색상 (짙은 회색)
             ),
-            Spacer(),
-            Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey),
+            SizedBox(width: 16), // 아이콘과 텍스트 사이 간격
+            // 메뉴 제목 텍스트
+            Text(
+              title, // 전달받은 메뉴 제목
+              style: TextStyle(
+                fontSize: 16, // 텍스트 크기
+                fontWeight: FontWeight.w500, // 텍스트 굵기 (Medium)
+              ),
+            ),
+            Spacer(), // 텍스트와 오른쪽 아이콘 사이 공간을 균등하게 채움
+            // 우측 화살표 아이콘
+            Icon(
+              Icons.arrow_forward_ios, // 화살표 아이콘
+              size: 16, // 아이콘 크기
+              color: Colors.grey, // 아이콘 색상 (회색)
+            ),
           ],
         ),
       ),
     );
   }
 
+  /// '문의하기' 대화상자를 표시하는 함수
   void _showContactDialog() {
     showDialog(
-      context: context,
+      context: context, // 현재 위젯 트리의 컨텍스트
       builder: (context) => AlertDialog(
-        title: Text('문의하기'),
-        content: Text('이메일: qorskawls12@naver.com\n전화: 010-2493-4475'),
+        title: Text('문의하기'), // 대화상자 제목
+        content: Text(
+          '이메일: qorskawls12@naver.com\n전화: 010-2493-4475', // 문의 정보 내용
+        ),
         actions: [
+          // 닫기 버튼
           TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text('닫기'),
+            onPressed: () => Navigator.pop(context), // 대화상자 닫기
+            child: Text('닫기'), // 버튼 텍스트
           ),
         ],
       ),

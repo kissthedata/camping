@@ -296,7 +296,8 @@ class _RegionPageState extends State<RegionPage> {
       return;
     }
 
-    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
     NLatLng currentPosition = NLatLng(position.latitude, position.longitude);
 
     setState(() {
@@ -430,26 +431,28 @@ class _RegionPageState extends State<RegionPage> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text(
-            '지역 선택',
+            '지역 선택', // 다이얼로그 제목
             style: TextStyle(
-              fontFamily: 'Pretendard',
-              fontWeight: FontWeight.w600,
-              fontSize: 20,
+              fontFamily: 'Pretendard', // 폰트 설정
+              fontWeight: FontWeight.w600, // 글자 굵기 (Semi-Bold)
+              fontSize: 20, // 글자 크기
             ),
           ),
           content: SingleChildScrollView(
+            // 스크롤 가능하도록 설정
             child: ListBody(
+              // 리스트 형태로 지역 선택 항목 구성
               children: <Widget>[
                 ListTile(
                   title: Text(
-                    '강원도',
+                    '강원도', // 지역명
                     style: TextStyle(
                       fontFamily: 'Pretendard',
-                      fontWeight: FontWeight.w400,
-                      fontSize: 18,
+                      fontWeight: FontWeight.w400, // 글자 굵기 (Regular)
+                      fontSize: 18, // 글자 크기
                     ),
                   ),
-                  onTap: () => _onRegionSelected('강원도'),
+                  onTap: () => _onRegionSelected('강원도'), // 선택 시 실행되는 함수
                 ),
                 ListTile(
                   title: Text(
@@ -512,16 +515,16 @@ class _RegionPageState extends State<RegionPage> {
           actions: <Widget>[
             TextButton(
               child: Text(
-                '취소',
+                '취소', // 취소 버튼 텍스트
                 style: TextStyle(
                   fontFamily: 'Pretendard',
-                  fontWeight: FontWeight.w600,
+                  fontWeight: FontWeight.w600, // 글자 굵기 (Semi-Bold)
                   fontSize: 18,
-                  color: Colors.black,
+                  color: Colors.black, // 글자 색상
                 ),
               ),
               onPressed: () {
-                Navigator.of(context).pop();
+                Navigator.of(context).pop(); // 다이얼로그 닫기
               },
             ),
           ],
@@ -566,29 +569,29 @@ class _RegionPageState extends State<RegionPage> {
       builder: (BuildContext context) {
         return Dialog(
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16.0),
+            borderRadius: BorderRadius.circular(16.0), // 다이얼로그 모서리를 둥글게 설정
           ),
           child: Container(
-            padding: EdgeInsets.all(16.0),
+            padding: EdgeInsets.all(16.0), // 내부 패딩 설정
             decoration: BoxDecoration(
-              color: Color(0xFFEFEFEF),
-              borderRadius: BorderRadius.circular(16.0),
+              color: Color(0xFFEFEFEF), // 배경색 설정 (연한 회색)
+              borderRadius: BorderRadius.circular(16.0), // 컨테이너 모서리를 둥글게 설정
             ),
             child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min, // 다이얼로그 크기를 내용에 맞춤
+              crossAxisAlignment: CrossAxisAlignment.start, // 내용 왼쪽 정렬
               children: [
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween, // 양쪽 정렬
                   children: [
                     Expanded(
                       child: Text(
-                        site.name,
+                        site.name, // 차박지 이름 표시
                         style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 24,
-                          fontFamily: 'Pretendard',
-                          fontWeight: FontWeight.w600,
+                          color: Colors.black, // 텍스트 색상 설정
+                          fontSize: 24, // 텍스트 크기 설정
+                          fontFamily: 'Pretendard', // 폰트 설정
+                          fontWeight: FontWeight.w600, // 글자 굵기 설정 (Semi-Bold)
                         ),
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -607,37 +610,42 @@ class _RegionPageState extends State<RegionPage> {
                     ),
                   ],
                 ),
-                SizedBox(height: 10),
-                if (!site.isVerified)
+                SizedBox(height: 10), // 위젯 간 간격 추가
+
+                if (!site.isVerified) // 차박지가 검증되지 않은 경우 안내 메시지 표시
                   Text(
-                    '* 회원 추천 차박지입니다.',
+                    '* 회원 추천 차박지입니다.', // 검증되지 않은 차박지 경고 메시지
                     style: TextStyle(
-                      color: Colors.red,
-                      fontSize: 10,
-                      fontFamily: 'Pretendard',
-                      fontWeight: FontWeight.w600,
+                      color: Colors.red, // 빨간색 경고 메시지
+                      fontSize: 10, // 글자 크기 설정
+                      fontFamily: 'Pretendard', // 폰트 설정
+                      fontWeight: FontWeight.w600, // 글자 굵기 설정 (Semi-Bold)
                     ),
                   ),
-                SizedBox(height: 10),
+
+                SizedBox(height: 10), // 위젯 간 간격 추가
+
                 Text(
-                  '$address',
+                  '$address', // 차박지 주소 표시
                   style: TextStyle(
-                    color: Color(0xFF454545),
-                    fontSize: 17,
-                    fontFamily: 'Pretendard',
-                    fontWeight: FontWeight.w400,
+                    color: Color(0xFF454545), // 다크 그레이 색상 적용
+                    fontSize: 17, // 텍스트 크기 설정
+                    fontFamily: 'Pretendard', // 폰트 설정
+                    fontWeight: FontWeight.w400, // 글자 굵기 설정 (Regular)
                   ),
                 ),
-                SizedBox(height: 10),
+
+                SizedBox(height: 10), // 위젯 간 간격 추가
+
                 Row(
                   children: [
                     Text(
-                      '위도: ${site.latitude.toStringAsFixed(6)}',
+                      '위도: ${site.latitude.toStringAsFixed(6)}', // 위도 정보 (소수점 6자리까지 표시)
                       style: TextStyle(
-                        color: Color(0xFF727272),
-                        fontSize: 12,
-                        fontFamily: 'Pretendard',
-                        fontWeight: FontWeight.w700,
+                        color: Color(0xFF727272), // 회색 계열 색상 적용
+                        fontSize: 12, // 글자 크기 설정
+                        fontFamily: 'Pretendard', // 폰트 설정
+                        fontWeight: FontWeight.w700, // 글자 굵기 설정 (Bold)
                       ),
                     ),
                     SizedBox(width: 10),
@@ -675,57 +683,66 @@ class _RegionPageState extends State<RegionPage> {
                     if (site.parkinglot) _buildTag('주차장'),
                   ],
                 ),
-                SizedBox(height: 20),
+                SizedBox(height: 20), // 위젯 간 간격 추가
+
                 Text(
-                  '실제 리뷰',
+                  '실제 리뷰', // "실제 리뷰" 섹션 제목
                   style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 14,
-                    fontFamily: 'Pretendard',
-                    fontWeight: FontWeight.w600,
+                    color: Colors.black, // 텍스트 색상 (검은색)
+                    fontSize: 14, // 텍스트 크기 설정
+                    fontFamily: 'Pretendard', // 폰트 설정
+                    fontWeight: FontWeight.w600, // 글자 굵기 설정 (Semi-Bold)
                   ),
                 ),
-                SizedBox(height: 10),
+
+                SizedBox(height: 10), // 리뷰 제목과 리뷰 컨테이너 사이 간격 추가
+
                 Container(
-                  width: double.infinity,
-                  padding: EdgeInsets.all(16.0),
+                  width: double.infinity, // 가로 길이를 최대한 활용
+                  padding: EdgeInsets.all(16.0), // 내부 패딩 설정
                   decoration: ShapeDecoration(
-                    color: Colors.white,
+                    color: Colors.white, // 배경색 (흰색)
                     shape: RoundedRectangleBorder(
-                      side: BorderSide(width: 1, color: Color(0xFFDBDBDB)),
-                      borderRadius: BorderRadius.circular(16),
+                      side: BorderSide(
+                          width: 1, color: Color(0xFFDBDBDB)), // 테두리 색상 및 두께 설정
+                      borderRadius:
+                          BorderRadius.circular(16), // 컨테이너 모서리를 둥글게 설정
                     ),
                   ),
                   child: Text(
-                    site.details.isNotEmpty ? site.details : '리뷰가 없습니다.',
+                    site.details.isNotEmpty
+                        ? site.details
+                        : '리뷰가 없습니다.', // 리뷰 내용 표시 (없으면 기본 메시지)
                     style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 14,
-                      fontFamily: 'Pretendard',
-                      fontWeight: FontWeight.w400,
+                      color: Colors.black, // 텍스트 색상 (검은색)
+                      fontSize: 14, // 텍스트 크기 설정
+                      fontFamily: 'Pretendard', // 폰트 설정
+                      fontWeight: FontWeight.w400, // 글자 굵기 설정 (Regular)
                     ),
                   ),
                 ),
-                SizedBox(height: 20),
+                SizedBox(height: 20), // 위젯 간 간격 추가
+
                 Container(
-                  width: double.infinity,
+                  width: double.infinity, // 버튼 가로 길이를 최대한 활용
                   child: ElevatedButton(
                     onPressed: () {
-                      Navigator.of(context).pop();
+                      Navigator.of(context).pop(); // 다이얼로그 또는 화면 닫기
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xFFB0B2B9),
+                      backgroundColor: Color(0xFFB0B2B9), // 버튼 배경색 설정 (회색)
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
+                        borderRadius:
+                            BorderRadius.circular(16), // 버튼 모서리를 둥글게 설정
                       ),
                     ),
                     child: Text(
-                      '닫기',
+                      '닫기', // 버튼 텍스트
                       style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontFamily: 'Pretendard',
-                        fontWeight: FontWeight.w400,
+                        color: Colors.white, // 텍스트 색상 (흰색)
+                        fontSize: 16, // 텍스트 크기 설정
+                        fontFamily: 'Pretendard', // 폰트 설정
+                        fontWeight: FontWeight.w400, // 글자 굵기 설정 (Regular)
                       ),
                     ),
                   ),
@@ -773,59 +790,69 @@ class _RegionPageState extends State<RegionPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
+        // 여러 위젯을 겹쳐서 배치하는 Stack 위젯
         children: [
+          // 네이버 지도
           NaverMap(
             options: NaverMapViewOptions(
-              symbolScale: 1.2,
-              pickTolerance: 2,
-              initialCameraPosition:
-                  NCameraPosition(target: NLatLng(36.34, 127.77), zoom: 6.3),
-              mapType: NMapType.basic,
+              symbolScale: 1.2, // 지도 심볼 크기 조정
+              pickTolerance: 2, // 터치 감도 설정
+              initialCameraPosition: NCameraPosition(
+                  target: NLatLng(36.34, 127.77), zoom: 6.3), // 초기 지도 위치 및 줌 설정
+              mapType: NMapType.basic, // 지도 유형 기본 설정
             ),
             onMapReady: (controller) {
+              // 지도 로드 완료 시 실행
               setState(() {
-                _mapController = controller;
+                _mapController = controller; // 지도 컨트롤러 저장
               });
-              _addMarkers();
+              _addMarkers(); // 지도에 마커 추가
             },
           ),
+
+          // 상단 헤더 영역
           Positioned(
             left: 0,
             top: 0,
             child: Container(
-              width: MediaQuery.of(context).size.width,
-              height: 115,
+              width: MediaQuery.of(context).size.width, // 화면 너비 전체 사용
+              height: 115, // 헤더 높이 설정
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: Colors.white, // 배경색 설정 (흰색)
                 borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(16),
-                  bottomRight: Radius.circular(16),
+                  bottomLeft: Radius.circular(16), // 왼쪽 하단 모서리 둥글게 설정
+                  bottomRight: Radius.circular(16), // 오른쪽 하단 모서리 둥글게 설정
                 ),
-                border: Border.all(color: Colors.grey, width: 1),
+                border: Border.all(color: Colors.grey, width: 1), // 테두리 설정
               ),
               child: Stack(
+                // 헤더 내부에 여러 위젯을 겹쳐서 배치
                 children: [
+                  // 뒤로 가기 버튼
                   Positioned(
-                    left: 16,
-                    top: 40,
+                    left: 16, // 왼쪽 여백 16픽셀
+                    top: 40, // 위쪽 여백 40픽셀
                     child: IconButton(
-                      icon: Icon(Icons.arrow_back, size: 45),
-                      color: Color(0xFF162233),
+                      icon: Icon(Icons.arrow_back, size: 45), // 뒤로 가기 아이콘
+                      color: Color(0xFF162233), // 아이콘 색상 (진한 네이비)
                       onPressed: () {
-                        Navigator.pop(context);
+                        Navigator.pop(context); // 뒤로 가기 기능
                       },
                     ),
                   ),
+
+                  // 중앙 로고 이미지
                   Positioned(
-                    left: MediaQuery.of(context).size.width / 2 - 63,
-                    top: 50,
+                    left:
+                        MediaQuery.of(context).size.width / 2 - 63, // 화면 중앙 정렬
+                    top: 50, // 위쪽 여백 50픽셀
                     child: Container(
-                      width: 126,
-                      height: 48,
+                      width: 126, // 이미지 너비
+                      height: 48, // 이미지 높이
                       decoration: BoxDecoration(
                         image: DecorationImage(
-                          image: AssetImage('assets/images/편안차박.png'),
-                          fit: BoxFit.contain,
+                          image: AssetImage('assets/images/편안차박.png'), // 로고 이미지
+                          fit: BoxFit.contain, // 이미지 크기 조정 (원본 비율 유지)
                         ),
                       ),
                     ),
@@ -856,109 +883,126 @@ class _RegionPageState extends State<RegionPage> {
             ),
           ),
           Positioned(
-            top: 180,
-            left: 20,
+            top: 180, // 화면 상단에서 180픽셀 떨어진 위치
+            left: 20, // 왼쪽에서 20픽셀 떨어진 위치
             child: FloatingActionButton(
-              onPressed: _getCurrentLocation,
-              child: Icon(Icons.gps_fixed, color: Colors.white),
-              backgroundColor: Color(0xFF162233),
-              heroTag: 'regionPageHeroTag',
+              onPressed: _getCurrentLocation, // 현재 위치를 가져오는 함수 실행
+              child: Icon(Icons.gps_fixed, color: Colors.white), // GPS 아이콘 표시
+              backgroundColor: Color(0xFF162233), // 버튼 배경색 (진한 네이비)
+              heroTag: 'regionPageHeroTag', // Hero 애니메이션 태그 설정
             ),
           ),
           Positioned(
-            top: 180,
-            right: 20,
+            top: 180, // 화면 상단에서 180픽셀 떨어진 위치
+            right: 20, // 오른쪽에서 20픽셀 떨어진 위치
             child: FloatingActionButton(
-              onPressed: () => _showRegionSelectionDialog(),
-              child: Icon(Icons.manage_search_sharp, color: Colors.white),
-              backgroundColor: Color(0xFF162233),
+              onPressed: () => _showRegionSelectionDialog(), // 지역 선택 다이얼로그 실행
+              child: Icon(Icons.manage_search_sharp,
+                  color: Colors.white), // 검색 아이콘 표시
+              backgroundColor: Color(0xFF162233), // 버튼 배경색 (진한 네이비)
             ),
           ),
           SlidingUpPanel(
-            controller: _panelController,
-            panelSnapping: true,
-            minHeight: 0,
-            maxHeight: MediaQuery.of(context).size.height * 0.45,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+            controller: _panelController, // 패널 컨트롤러 설정
+            panelSnapping: true, // 패널이 자연스럽게 스냅되도록 설정
+            minHeight: 0, // 패널의 최소 높이 (기본적으로 숨겨진 상태)
+            maxHeight:
+                MediaQuery.of(context).size.height * 0.45, // 패널 최대 높이 (화면의 45%)
+            borderRadius: BorderRadius.vertical(
+                top: Radius.circular(16)), // 패널의 상단 모서리 둥글게 설정
             panel: ListView.builder(
-              itemCount: _filteredCampingSites.length,
+              itemCount: _filteredCampingSites.length, // 필터링된 차박지 목록 개수
               itemBuilder: (context, index) {
-                final site = _filteredCampingSites[index];
+                final site =
+                    _filteredCampingSites[index]; // 현재 인덱스의 차박지 정보 가져오기
                 return GestureDetector(
                   onTap: () {
                     _updateCameraPosition(
-                      NLatLng(site.latitude, site.longitude),
-                      zoom: 15,
+                      NLatLng(
+                          site.latitude, site.longitude), // 선택한 차박지의 위치로 카메라 이동
+                      zoom: 15, // 줌 레벨 설정
                     );
                   },
                   child: Padding(
-                    padding: const EdgeInsets.all(12.0),
+                    padding: const EdgeInsets.all(12.0), // 패딩 설정
                     child: Container(
-                      width: 400,
-                      height: 160,
+                      width: 400, // 컨테이너 너비 설정
+                      height: 160, // 컨테이너 높이 설정
                       decoration: BoxDecoration(
-                        color: Color(0xFFD9D9D9),
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(color: Color(0xFFBCBCBC), width: 2),
+                        color: Color(0xFFD9D9D9), // 배경색 설정 (연한 회색)
+                        borderRadius: BorderRadius.circular(16), // 모서리를 둥글게 설정
+                        border: Border.all(
+                            color: Color(0xFFBCBCBC),
+                            width: 2), // 테두리 색상 및 두께 설정
                       ),
                       child: Stack(
+                        // 여러 위젯을 겹쳐서 배치
                         children: [
                           Positioned(
-                            left: 26,
-                            top: 12,
+                            left: 26, // 왼쪽에서 26픽셀 떨어진 위치
+                            top: 12, // 위쪽에서 12픽셀 떨어진 위치
                             child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                              crossAxisAlignment:
+                                  CrossAxisAlignment.start, // 왼쪽 정렬
                               children: [
                                 Text(
-                                  site.name,
+                                  site.name, // 차박지 이름 표시
                                   style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 18,
-                                    fontFamily: 'Pretendard',
-                                    fontWeight: FontWeight.w400,
+                                    color: Colors.black, // 텍스트 색상 설정
+                                    fontSize: 18, // 텍스트 크기 설정
+                                    fontFamily: 'Pretendard', // 폰트 설정
+                                    fontWeight:
+                                        FontWeight.w400, // 글자 굵기 설정 (Regular)
                                   ),
                                 ),
                               ],
                             ),
                           ),
                           Positioned(
-                            right: 26,
+                            right: 26, // 오른쪽에서 26픽셀 떨어진 위치
                             child: Row(
                               children: [
                                 IconButton(
-                                  icon: Icon(Icons.star, color: Colors.black),
-                                  onPressed: () => _scrapCampingSpot(site),
+                                  icon: Icon(Icons.star,
+                                      color: Colors.black), // 즐겨찾기 아이콘
+                                  onPressed: () =>
+                                      _scrapCampingSpot(site), // 즐겨찾기 추가 기능 실행
                                 ),
                                 IconButton(
-                                  icon: Icon(Icons.share, color: Colors.black),
-                                  onPressed: () => _shareCampingSpot(site),
+                                  icon: Icon(Icons.share,
+                                      color: Colors.black), // 공유 아이콘
+                                  onPressed: () =>
+                                      _shareCampingSpot(site), // 공유 기능 실행
                                 ),
                               ],
                             ),
                           ),
                           Positioned(
-                            left: 26,
-                            right: 26,
-                            top: 35,
+                            left: 26, // 좌측 여백 26픽셀
+                            right: 26, // 우측 여백 26픽셀
+                            top: 35, // 상단에서 35픽셀 떨어진 위치에 배치
                             child: Divider(
-                              color: Color(0xFFBCBCBC),
-                              thickness: 1,
+                              color: Color(0xFFBCBCBC), // 구분선 색상 (연한 회색)
+                              thickness: 1, // 구분선 두께 설정 (1픽셀)
                             ),
                           ),
                           Positioned(
-                            left: 26,
-                            top: 47,
+                            left: 26, // 좌측 여백 26픽셀
+                            top: 47, // 상단에서 47픽셀 떨어진 위치에 배치
                             child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                              crossAxisAlignment:
+                                  CrossAxisAlignment.start, // 자식 위젯을 왼쪽 정렬
                               children: [
-                                if (site.restRoom)
+                                if (site.restRoom) // 화장실 정보가 있는 경우만 표시
                                   Text(
-                                    '화장실',
+                                    '화장실', // "화장실" 텍스트 출력
                                     style: TextStyle(
-                                      color: Color(0xFF323232),
-                                      fontSize: 16,
-                                      fontFamily: 'Pretendard',
-                                      fontWeight: FontWeight.w400,
+                                      color:
+                                          Color(0xFF323232), // 텍스트 색상 (진한 회색)
+                                      fontSize: 16, // 글자 크기 설정
+                                      fontFamily: 'Pretendard', // 폰트 설정
+                                      fontWeight:
+                                          FontWeight.w400, // 글자 굵기 설정 (Regular)
                                     ),
                                   ),
                                 if (site.animal)
@@ -1012,40 +1056,46 @@ class _RegionPageState extends State<RegionPage> {
               },
             ),
           ),
-          Positioned( 
-            left: 66,
-            bottom: 40,
+          Positioned(
+            left: 66, // 화면 왼쪽에서 66 픽셀 떨어진 위치
+            bottom: 40, // 화면 아래에서 40 픽셀 떨어진 위치
             child: GestureDetector(
               onTap: () {
+                // 버튼 클릭 시 실행
                 if (_panelController.isPanelOpen) {
+                  // 패널이 열려 있으면 닫기
                   _panelController.close();
                   setState(() {
-                    isPanelOpen = false;
+                    isPanelOpen = false; // 패널 상태 업데이트
                   });
                 } else {
+                  // 패널이 닫혀 있으면 열기
                   _panelController.open();
                   setState(() {
-                    isPanelOpen = true;
+                    isPanelOpen = true; // 패널 상태 업데이트
                   });
                 }
               },
               child: Container(
-                width: 280,
-                height: 60,
+                width: 280, // 버튼 너비 설정
+                height: 60, // 버튼 높이 설정
                 decoration: ShapeDecoration(
-                  color: Color(0xFF172243),
+                  color: Color(0xFF172243), // 버튼 배경색 (진한 네이비 계열)
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(36.50),
+                    borderRadius: BorderRadius.circular(36.50), // 모서리를 둥글게 처리
                   ),
                 ),
                 child: Center(
+                  // 텍스트를 중앙 정렬
                   child: Text(
-                    isPanelOpen ? '차박지 목록 닫기' : '차박지 목록 열기',
+                    isPanelOpen
+                        ? '차박지 목록 닫기'
+                        : '차박지 목록 열기', // 패널 상태에 따라 버튼 텍스트 변경
                     style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontFamily: 'Pretendard',
-                      fontWeight: FontWeight.w500,
+                      color: Colors.white, // 텍스트 색상 (흰색)
+                      fontSize: 20, // 텍스트 크기 설정
+                      fontFamily: 'Pretendard', // 폰트 설정
+                      fontWeight: FontWeight.w500, // 글자 굵기 설정 (Medium)
                     ),
                   ),
                 ),
@@ -1059,24 +1109,32 @@ class _RegionPageState extends State<RegionPage> {
 
   /// 아이콘과 함께 필터 버튼을 생성하는 함수
   Widget _buildFilterButtonWithIcon(
-      String label, String category, bool isActive, String iconPath) {
+      String label, // 버튼에 표시될 텍스트
+      String category, // 필터 카테고리 (예: '캠핑장', '카라반')
+      bool isActive, // 현재 필터가 활성화 상태인지 여부
+      String iconPath) {
+    // 아이콘 이미지 경로
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 4.0),
+      padding: const EdgeInsets.symmetric(horizontal: 4.0), // 좌우 여백 추가
       child: ElevatedButton.icon(
-        onPressed: () => _toggleFilter(category),
+        onPressed: () => _toggleFilter(category), // 버튼 클릭 시 필터 토글 함수 호출
         style: ElevatedButton.styleFrom(
-          backgroundColor: isActive ? Colors.lightBlue : Colors.white,
-          side: BorderSide(color: isActive ? Colors.lightBlue : Colors.grey),
+          backgroundColor: isActive
+              ? Colors.lightBlue
+              : Colors.white, // 활성화 시 파란색, 비활성화 시 흰색
+          side: BorderSide(
+              color: isActive ? Colors.lightBlue : Colors.grey), // 테두리 색상 설정
         ),
         icon: Image.asset(
-          iconPath,
-          width: 20,
-          height: 20,
+          iconPath, // 아이콘 이미지 로드
+          width: 20, // 아이콘 너비
+          height: 20, // 아이콘 높이
         ),
         label: Text(
-          label,
+          label, // 버튼 텍스트
           style: TextStyle(
-            color: isActive ? Colors.white : Colors.black,
+            color:
+                isActive ? Colors.white : Colors.black, // 활성화 시 흰색, 비활성화 시 검은색
           ),
         ),
       ),
