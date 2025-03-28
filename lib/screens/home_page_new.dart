@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:map_sample/utils/display_util.dart';
+import 'package:map_sample/widgets/home/caravan.dart';
+import 'package:map_sample/widgets/home/glamping.dart';
 import 'package:map_sample/widgets/home/recommend.dart';
 
+import '../widgets/home/auto_camping.dart';
 import 'search_camping_site_page.dart';
 
 class MyHomePageNew extends StatefulWidget {
@@ -49,7 +52,7 @@ class MyHomePageNewState extends State<MyHomePageNew>
                   indicatorSize: TabBarIndicatorSize.tab, // 인디케이터 크기 설정
                   indicatorPadding:
                       EdgeInsets.symmetric(horizontal: 16.w), // 인디케이터 패딩
-                  labelColor: Color(0xff111111), // 선택된 탭 텍스트 색상
+                  labelColor: const Color(0xff111111), // 선택된 탭 텍스트 색상
                   labelStyle: TextStyle(
                     fontSize: 14.sp, // 텍스트 크기
                     fontWeight: FontWeight.w600, // 텍스트 굵기
@@ -57,7 +60,8 @@ class MyHomePageNewState extends State<MyHomePageNew>
                       px: 12.sp, percent: -3, // 글자 간격 조정
                     ).w,
                   ),
-                  unselectedLabelColor: Color(0xff777777), // 선택되지 않은 탭 텍스트 색상
+                  unselectedLabelColor:
+                      const Color(0xff777777), // 선택되지 않은 탭 텍스트 색상
                   unselectedLabelStyle: TextStyle(
                     fontSize: 14.sp, // 텍스트 크기
                     fontWeight: FontWeight.w500, // 텍스트 굵기
@@ -78,10 +82,10 @@ class MyHomePageNewState extends State<MyHomePageNew>
                 child: TabBarView(
                   controller: _tabController, // 탭바 뷰 컨트롤러
                   children: [
-                    Recommend(), // 추천 탭 콘텐츠
-                    _buildTabContent('오토캠핑 목록'), // 오토캠핑 목록 콘텐츠
-                    _buildTabContent('글램핑 목록'), // 글램핑 목록 콘텐츠
-                    _buildTabContent('카라반 목록'), // 카라반 목록 콘텐츠
+                    const Recommend(),
+                    const AutoCamping(),
+                    const Glamping(),
+                    const Caravan(),
                   ],
                 ),
               ),
@@ -107,7 +111,7 @@ class MyHomePageNewState extends State<MyHomePageNew>
                 width: 39.w, // 로고 너비
                 height: 23.h, // 로고 높이
               ),
-              Spacer(), // 가운데 공간 확보
+              const Spacer(), // 가운데 공간 확보
               GestureDetector(
                 // 검색 버튼
                 onTap: () {
@@ -136,19 +140,6 @@ class MyHomePageNewState extends State<MyHomePageNew>
           ),
           SizedBox(height: 17.h), // 아래 여백
         ],
-      ),
-    );
-  }
-
-// 탭 콘텐츠 생성 메서드
-  Widget _buildTabContent(String title) {
-    return Center(
-      child: Text(
-        title, // 탭 콘텐츠 제목
-        style: TextStyle(
-          fontSize: 18.sp, // 텍스트 크기
-          fontWeight: FontWeight.bold, // 텍스트 굵기
-        ),
       ),
     );
   }

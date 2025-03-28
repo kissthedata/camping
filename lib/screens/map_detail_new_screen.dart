@@ -325,7 +325,7 @@ class MapDetailNewScreenState extends State<MapDetailNewScreen> {
                       _selectedItem = await showModalBottomSheet(
                         context: context,
                         isScrollControlled: true,
-                        builder: (_) => const CateDialog(),
+                        builder: (_) => CateDialog(),
                       );
 
                       ShareData().categoryHeight.value = 0;

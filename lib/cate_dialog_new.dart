@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:map_sample/models/cate_dialog_model.dart';
+import 'package:map_sample/cate_dialog.dart';
 import 'package:map_sample/utils/display_util.dart';
 
-class CateDialog extends StatefulWidget {
-  CateDialogModel? cateDialgModel;
-  CateDialog({super.key, this.cateDialgModel});
+class CateDialogNew extends StatefulWidget {
+  const CateDialogNew({
+    super.key,
+  });
 
   @override
-  State<CateDialog> createState() => _CateDialogState();
+  State<CateDialogNew> createState() => _CateDialogNewState();
 }
 
-class _CateDialogState extends State<CateDialog>
+class _CateDialogNewState extends State<CateDialogNew>
     with SingleTickerProviderStateMixin {
   int selectDistance = 14;
   late TabController _tabController;
@@ -22,7 +23,7 @@ class _CateDialogState extends State<CateDialog>
     CateItem(name: '경북', img: '', isSelected: false),
   ];
 
-  List<Region> regionList = [
+  final List<Region> regionList = [
     Region(city: '전체', name: '전체', isSelected: false),
     Region(city: '대구', name: '전체', isSelected: false),
     Region(city: '경북', name: '전체', isSelected: false),
@@ -119,28 +120,6 @@ class _CateDialogState extends State<CateDialog>
   void initState() {
     super.initState();
     _tabController = TabController(initialIndex: 1, length: 3, vsync: this);
-
-    widget.cateDialgModel ??= CateDialogModel(
-      region: List.empty(growable: true),
-      facilities: List.empty(growable: true),
-      atmosphere: List.empty(),
-    );
-
-    regionList = regionList.map((item) {
-      if (widget.cateDialgModel!.region.contains(item.name)) {
-        item.isSelected = true;
-      }
-
-      return item;
-    }).toList();
-
-    cateItemList = cateItemList.map((item) {
-      if (widget.cateDialgModel!.facilities.contains(item.name)) {
-        item.isSelected = true;
-      }
-
-      return item;
-    }).toList();
   }
 
   /// 시/도 선택 시
@@ -866,19 +845,13 @@ class _CateDialogState extends State<CateDialog>
               SizedBox(width: 17.w),
               Expanded(
                 child: GestureDetector(
-                  onTap: () {
-                    widget.cateDialgModel!.facilities = cateItemList
-                        .where((item) => item.isSelected)
-                        .map((item) => item.name)
-                        .toList();
-
-                    widget.cateDialgModel!.region = regionList
-                        .where((item) => item.isSelected && item.name != '전체')
-                        .map((item) => item.name)
-                        .toList();
-
-                    Navigator.pop(context, widget.cateDialgModel);
-                  },
+                  onTap: () => Navigator.pop(
+                    context,
+                    [
+                      CateItem(name: '방갈로', img: 'bungalow', isSelected: false),
+                      CateItem(name: '방갈로2', img: 'bungalow', isSelected: false)
+                    ],
+                  ),
                   child: Container(
                     height: 50.h,
                     decoration: BoxDecoration(
@@ -908,60 +881,6 @@ class _CateDialogState extends State<CateDialog>
         ],
       ),
     );
-  }
-}
-
-class CateItem {
-  String name;
-  String img;
-  bool isSelected;
-  CateItem({required this.name, required this.img, required this.isSelected});
-}
-
-class Region {
-  final String city;
-  final String name;
-  bool isSelected;
-
-  Region({required this.city, required this.name, required this.isSelected});
-}
-
-class CustomThumbShape extends SliderComponentShape {
-  @override
-  Size getPreferredSize(bool isEnabled, bool isDiscrete) {
-    return Size(18.w, 18.h); // 핸들의 크기 설정
-  }
-
-  @override
-  void paint(
-    PaintingContext context,
-    Offset center, {
-    required Animation<double> activationAnimation,
-    required Animation<double> enableAnimation,
-    required bool isDiscrete,
-    required TextPainter labelPainter,
-    required RenderBox parentBox,
-    required Size sizeWithOverflow,
-    required SliderThemeData sliderTheme,
-    required TextDirection textDirection,
-    required double textScaleFactor,
-    required double value,
-  }) {
-    final Canvas canvas = context.canvas;
-
-    // 그림자 추가
-    final Paint shadowPaint = Paint()
-      ..color = const Color(0x66000000)
-      ..maskFilter = MaskFilter.blur(BlurStyle.normal, 3.0.r); // 그림자 블러 효과
-
-    final Paint thumbPaint = Paint()
-      ..color = sliderTheme.thumbColor ?? Colors.white;
-
-    // 그림자 그리기
-    canvas.drawCircle(center, 9.r, shadowPaint);
-
-    // 핸들 그리기
-    canvas.drawCircle(center, 9.r, thumbPaint);
   }
 }
 

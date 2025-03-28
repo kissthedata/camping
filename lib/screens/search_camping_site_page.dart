@@ -5,6 +5,8 @@ import 'package:map_sample/models/car_camping_site.dart';
 import 'package:map_sample/share_data.dart';
 import 'package:map_sample/utils/display_util.dart';
 
+import 'camping_list.dart';
+
 class SearchCampingSitePage extends StatefulWidget {
   const SearchCampingSitePage({super.key});
 
@@ -283,9 +285,11 @@ class SearchCampingSitePageState extends State<SearchCampingSitePage> {
                   return ListTile(
                     onTap: () {
                       // 리스트 아이템 클릭 시 실행
-                      ShareData().showSnackbar(
+                      Navigator.push(
                         context,
-                        content: '동천 유원지[$item]', // 클릭한 항목 표시
+                        MaterialPageRoute(
+                          builder: (c) => const AllCampingSitesPage(),
+                        ),
                       );
                     },
                     minTileHeight: 50.w, // 최소 높이 설정

@@ -31,7 +31,7 @@ class MapScreenState extends State<MapScreen> {
   NMapType _currentMapType = NMapType.basic;
   final PanelController _panelController = PanelController(); // Panel 컨트롤러 추가
   bool isPanelOpen = false; // 패널이 열려있는지 상태 확인
-  List<CateItem?> _selectedItem = [];
+  final List<CateItem?> _selectedItem = [];
   String tapMarkerId = '';
   bool showFab = false;
 
@@ -272,10 +272,11 @@ class MapScreenState extends State<MapScreen> {
                             }
 
                             // 하단 모달 시트를 열어 선택된 항목 가져오기
-                            _selectedItem = await showModalBottomSheet(
+                            // _selectedItem = await showModalBottomSheet(
+                            await showModalBottomSheet(
                               context: context,
                               isScrollControlled: true, // 스크롤 가능 모달 활성화
-                              builder: (_) => const CateDialog(), // 모달에 표시할 위젯
+                              builder: (_) => CateDialog(), // 모달에 표시할 위젯
                             );
 
                             // 패널 상태 업데이트
@@ -1138,8 +1139,7 @@ class MapScreenState extends State<MapScreen> {
                                                 showModalBottomSheet(
                                                   context: context,
                                                   isScrollControlled: true,
-                                                  builder: (_) =>
-                                                      const CateDialog(),
+                                                  builder: (_) => CateDialog(),
                                                 );
                                               });
                                             });
@@ -1463,7 +1463,7 @@ class MapScreenState extends State<MapScreen> {
             showModalBottomSheet(
               context: context,
               isScrollControlled: true,
-              builder: (_) => const CateDialog(),
+              builder: (_) => CateDialog(),
             );
           });
         },
