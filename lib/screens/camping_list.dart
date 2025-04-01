@@ -157,6 +157,8 @@ class _AllCampingSitesPageState extends State<AllCampingSitesPage> {
   bool _filterAnimal = false;
   int _selectedFileterButton = 0;
 
+  final ScrollController _scrollController = ScrollController();
+
   @override
   void initState() {
     super.initState();
@@ -169,6 +171,19 @@ class _AllCampingSitesPageState extends State<AllCampingSitesPage> {
       ShareData().categoryHeight.value = 45;
     }
     _loadCampingSites();
+
+    _scrollController.addListener(_scrollListener);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_scrollListener);
+    super.dispose();
+  }
+
+  // 스크롤 리스너
+  void _scrollListener() {
+    _dropDownController.hide();
   }
 
   Future<void> _loadCampingSites() async {
@@ -848,15 +863,20 @@ class _AllCampingSitesPageState extends State<AllCampingSitesPage> {
           valueListenable: ShareData().categoryHeight, // 관찰할 ValueNotifier
           builder: (context, value, child) {
             // 상태 변화 시 실행되는 빌더 함수
-            return Scaffold(
-              appBar: _buildAppBar(value.toDouble()), // 동적으로 AppBar 높이를 설정
-              backgroundColor: Colors.white, // 화면 배경색을 흰색으로 설정
-              // body: _filteredCampingSites.isEmpty
-              //     ? const Center(child: CircularProgressIndicator())
-              //     : _buildCampingSitesList(), // 로딩 상태와 데이터를 선택적으로 표시 (현재 주석 처리)
-              body: _campingList.isEmpty
-                  ? _emptyView()
-                  : _buildCampingSitesList(), // 캠핑장 리스트를 렌더링하는 메서드 호출
+            return GestureDetector(
+              onTapDown: (details) {
+                _dropDownController.hide();
+              },
+              child: Scaffold(
+                appBar: _buildAppBar(value.toDouble()), // 동적으로 AppBar 높이를 설정
+                backgroundColor: Colors.white, // 화면 배경색을 흰색으로 설정
+                // body: _filteredCampingSites.isEmpty
+                //     ? const Center(child: CircularProgressIndicator())
+                //     : _buildCampingSitesList(), // 로딩 상태와 데이터를 선택적으로 표시 (현재 주석 처리)
+                body: _campingList.isEmpty
+                    ? _emptyView()
+                    : _buildCampingSitesList(), // 캠핑장 리스트를 렌더링하는 메서드 호출
+              ),
             );
           },
         );
@@ -930,6 +950,7 @@ class _AllCampingSitesPageState extends State<AllCampingSitesPage> {
     return Stack(
       children: [
         ListView.separated(
+          controller: _scrollController,
           padding: EdgeInsets.only(
             bottom: (75 + 32).w, // 리스트의 하단 패딩 (75와 32를 더한 값)
           ),

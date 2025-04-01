@@ -919,11 +919,13 @@ class _CampingDetailScreenState extends State<CampingDetailScreen>
                                             width: 1.w,
                                           ),
                                         ),
-                                        child: Image.asset(
-                                          'assets/images/ic_round-plus.png',
-                                          width: 20.w,
-                                          height: 20.h,
-                                          color: const Color(0xFFc9c9c9),
+                                        child: Center(
+                                          child: Image.asset(
+                                            'assets/images/ic_round-plus.png',
+                                            width: 20.w,
+                                            height: 20.h,
+                                            color: const Color(0xFFc9c9c9),
+                                          ),
                                         ),
                                       ),
                                       SizedBox(
